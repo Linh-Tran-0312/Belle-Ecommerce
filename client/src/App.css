@@ -1,0 +1,110 @@
+body {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+/* Home Page Css*/
+.parallax {
+	height: 500px;
+}
+
+.wrapBlog {
+	display: table;
+    margin: 20px;
+}
+.latestBlog .wrapBlog .article__gridImage,
+.latestBlog .wrapBlog .article__gridMeta {
+	display: table-cell;
+	vertical-align: middle;
+	float: none;
+}
+.latestBlog .wrapBlog .article__gridMeta {
+	width: 55%;
+}
+.latestBlog .wrapBlog .wrapBlogInner {
+	background: rgba(255, 255, 255, 0.8);
+	padding: 20px;
+	margin-left: -30px;
+	position: relative;
+}
+.latestBlog .article__gridExcerpt {
+	font-size: 12px;
+	margin-bottom: 10px;
+    margin-top: 10px;
+}
+.article__gridImage img {
+	max-width: 100%;
+}
+.blogTitle {
+	font-size: 20px;
+	margin-top: 20px;
+	text-decoration: none;
+	color: black;
+	text-transform: capitalize;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.blogLink {
+	text-decoration: none;
+	color: #007bff;
+	font-family: Arial, Helvetica, sans-serif;
+	display: block;
+    font-size: 14px ;
+}
+.wrapBlogInner li {
+	list-style: none;
+}
+.parallaxContentBox {
+ background-color: transparent;
+ width: 90%;
+ max-width: 400px !important;
+}
+.parallaxTitle {
+	font-size: 25px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: 600;
+}
+.parallaxContent {
+	font-family: Helvetica, sans-serif;
+	padding-bottom: 20px;
+	font-weight: 500;
+}
+.linkParallax {
+	background-color: black;
+	color: white;
+	padding: 15px;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-family: Helvetica, sans-serif;
+	margin-top: 20px;
+	font-size: 0.8em;
+}
+@media screen and (max-width: 600px) {
+	.parallax {
+		height: 250px !important;
+	}
+    .blogTitle {
+        font-size: 16px !important;
+        margin-top: 20px;
+        text-decoration: none;
+        color: black;
+        text-transform: capitalize;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .blogLink {
+        text-decoration: none;
+        color: #007bff;
+        text-transform: capitalize;
+        font-family: Arial, Helvetica, sans-serif;
+        display: block;
+        font-size: 10px !important;
+    }
+	.parallaxTitle {
+		font-size: 20px;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+}
+@media screen and (max-width: 900px) {
+	.parallax {
+		height: 350px;
+	}
+}
