@@ -3,6 +3,10 @@ body {
 	padding: 0;
 	margin: 0;
 }
+.link {
+	text-decoration: none;
+	color:rgb(0, 0, 0);
+}
 /* Home Page Css*/
 .parallax {
 	height: 500px;
@@ -78,7 +82,205 @@ body {
 	margin-top: 20px;
 	font-size: 0.8em;
 }
-@media screen and (max-width: 600px) {
+
+/* Product Page Css*/
+
+.breadCrumbs {
+	padding: 15px;
+	background-color: #f9f9f9;
+	text-align: left;
+	margin-bottom: 20px;
+}
+.productSingle__title {
+	margin-top: 20px;
+	font-size: 18px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.prInfoRow {
+	display: flex;
+	justify-content: flex-start;
+    margin-bottom: 10px;
+}
+.productStock {
+
+}
+.instock {
+	color: #447900;
+	font-family: Helvetica, sans-serif;
+}
+.outstock {
+	color: #973441;
+}
+.productSku {
+margin-left: 20px;
+font-size: 13px;
+font-family: Helvetica, sans-serif;
+}
+.variantSku {
+	margin-right: 20px;
+	font-size: 13px;
+	font-family: Helvetica, sans-serif;
+}
+.productSingle__price {
+	display: inline-block;
+    margin-right: 10px;
+    color: #555;
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 15px;
+	font-family: Helvetica, sans-serif;
+}
+.productPrice__price {
+	font-size: 1.46154em;
+    padding-left: 3px;
+	font-weight: 600;
+    display: inline-block;
+}
+.rte {
+	color: #555;
+    margin-bottom: 20px;
+}
+.color {
+	display: flex;
+	justify-content: flex-start;
+	margin-left: 10px;
+}
+.spanColor {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	border-radius: 50%;
+	border-color: white;
+	border-style: double;
+}
+.featureTitle {
+	display: inline-block !important;
+	padding: 5px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+}
+.size {
+	display: flex;
+	justify-content: flex-start;
+	margin-left: 10px;
+}
+.spanSize {
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	margin-right: 10px;
+	border: 1px solid black;
+	text-align: center;
+}
+.featureButtonBox {
+	margin-top: 20px;
+	padding: 10px;
+	display: flex;
+	justify-content: flex-start;
+}
+.quantityButtonBox {
+	margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    width: 105px;
+    box-shadow: none;
+    border: 1px solid rgba(31, 31, 31, 0.5);
+    border-radius: 0
+  }
+  .quantityInput {
+    width: 30px;
+    text-align: center;
+    border: none;  
+  }
+  .quantityInput:focus {
+      outline: none 
+  }
+  .quantityButton {
+     width: 35px !important;
+     height: 45px;
+     cursor: pointer;
+     background-color: rgb(180, 180, 180);
+     border-radius: 0;
+     box-shadow: none;
+     border: 1px
+  }
+  .addToCartButton {
+	width: 100%;
+	height: 47px;
+	cursor: pointer;
+	background-color: rgb(0, 0, 0);
+	color: white;
+	font-weight: 400;
+	border-radius: 0;
+	box-shadow: none;
+	border: 1px
+  }
+  .wishListBox {
+	  margin-top: 10px;
+	  display: flex;
+	  justify-content: flex-start;
+	  align-items: center;
+  }
+  .featuresBox {
+	  margin-top: 100px !important;
+	  margin-bottom: 40px;
+  }
+  .productFeatures {
+	  display: flex;
+	  justify-content: space-between;
+	  align-items: flex-start;
+	  margin: 10px;
+  }
+  .productFeatures img {
+	  max-width: 40px;
+	  object-fit: contain;
+	  margin-right: 10px;
+  }
+  .productFeatureDetails {
+	  font-family: Arial, Helvetica, sans-serif
+  }
+  .productFeatureDetails span {
+	display: block;
+	font-size: 17px;
+	font-weight: 700;
+	font-family: Arial, Helvetica, sans-serif;
+  }
+  .ratingBox {
+	  margin-top: 30px;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  justify-content: center;
+	  border: 1px solid black;
+	  padding: 20px 40px
+  }
+  .reviewOverall {
+	  font-size: 25px;
+	  font-weight: 400;
+	  font-family: Arial, Helvetica, sans-serif;
+  }
+  .reviewRating {
+	  font-size: 50px;
+	  font-weight: 900;
+	  color: #e1dc61;
+	  font-family: Arial, Helvetica, sans-serif;
+  }
+  .reviewCount {
+	  font-size: 20px;
+	  font-weight: 200;
+	  font-family: Arial, Helvetica, sans-serif;
+  }
+  .starLine {
+	  display: flex;
+	  align-items: center;
+	  font-size: 16px ;
+  }
+  /* Blog Page Css*/
+  .articleImg {
+	  width: 100%
+  }
+  @media screen and (max-width: 600px) {
 	.parallax {
 		height: 250px !important;
 	}
@@ -101,6 +303,10 @@ body {
 	.parallaxTitle {
 		font-size: 20px;
 		font-family: Arial, Helvetica, sans-serif;
+	}
+	.featuresBox {
+		margin-top: 50px !important;
+		margin-bottom: 40px;
 	}
 }
 @media screen and (max-width: 900px) {

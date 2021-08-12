@@ -5,20 +5,23 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import { Button, IconButton } from '@material-ui/core';
+import { Button, IconButton, Box } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import StarIcon from '@material-ui/icons/Star';
 import StarHalfIcon from '@material-ui/icons/StarHalf';
+import { Link } from 'react-router-dom';
+import Rating from './Rating';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
         maxWidth: 300,
-        height: 380,
+        height: 385,
         [theme.breakpoints.down('xs')]: {
-            height: 280,
+            height: 285,
             margin: 10,
         },
         position: 'relative',
@@ -34,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
             animation: "$fadeDown .3s ease-in-out"
           },
         transition: 'transform .2s',
-        boxShadow: 'none',
-        border: '1px solid #c9c9c9',
+     
+      
         borderRadius: 0,
         margin: 20,
     },
@@ -64,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-around',
     position: 'absolute',
-    bottom: 80,
+    bottom: 85,
     width: '100%',
     zIndex: 2,
     visibility: 'hidden',
@@ -90,12 +93,18 @@ const useStyles = makeStyles((theme) => ({
       transform: "translateY(0)"
     }
   },
+  link: {
+    textDecoration: 'none',
+    color: 'black',
+
+},
 }));
 
 export default function ProductItem() {
     const classes = useStyles();
 
     return (
+
         <Card className={classes.root}>
             <CardActionArea>
                 <CardMedia
@@ -117,18 +126,19 @@ export default function ProductItem() {
           classes={{img: classes.img}}
         />
                 <CardContent className={classes.content} >
+             
                     <Typography variant="body2" component="h4">
+                    <Link to='/product' className={classes.link}>
                         Lizard
+                        </Link>
                     </Typography>
                     <Typography variant="subtitle2" component="h2" style={{fontWeight: 'bold'}}>
                         $ 240
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        <StarIcon style={{ color: '#e1dc61', fontSize: 20 }} />
-                        <StarIcon style={{ color: '#e1dc61', fontSize: 20 }} />
-                        <StarIcon style={{ color: '#e1dc61', fontSize: 20 }} />
-                        <StarHalfIcon style={{ color: '#e1dc61', fontSize: 20 }} />
+                    <Typography component="h5" gutterBottom>
+                       <Rating rating={3.4} size={20}/>
                     </Typography>
+                 
                 </CardContent>
             </CardActionArea>
             <CardActions className={classes.action}>
@@ -143,5 +153,5 @@ export default function ProductItem() {
                 </IconButton>
             </CardActions>
         </Card>
-    );
+   );
 }

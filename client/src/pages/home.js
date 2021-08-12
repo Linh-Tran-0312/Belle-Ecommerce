@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import Banner from '../components/Banner/Banner';
 import { Link } from 'react-router-dom';
-import CollectionSwiper from '../components/CollectionSwiper';
+import CollectionSwiper from '../components/CategorySwiper';
 import { Parallax, Background } from "react-parallax";
 import { Box, Typography, Grid, Container} from '@material-ui/core';
 import ProductItem from '../components/ProductItem';
@@ -48,8 +48,8 @@ const HomePage = () =>  {
                 <Grid container>
                     {
                         [0,1,2,3,4,5,6,7].map(item =>
-                            <Grid item  container lg={3} md={4} sm={6} xs={6} direction="row" justifyContent="center">
-                                <ProductItem key={item}/>
+                            <Grid key={item} item  container lg={3} md={4} sm={6} xs={6} direction="row" justifyContent="center">
+                                <ProductItem />
                             </Grid>
                             )
                     }
@@ -70,7 +70,7 @@ const HomePage = () =>  {
                     <Grid item xs={12} sm={12} md={6} lg={6}>
                         <div className="wrapBlog">
                             <Link to="blog-left-sidebar.html" className="article__gridImage">
-                                    <img src="./post-img1.jpg" alt="It's all about how you wear" title="It's all about how you wear" class="blur-up lazyloaded"/>
+                                    <img src="./post-img1.jpg" alt="It's all about how you wear" title="It's all about how you wear"/>
                             </Link>
                             <div className="article__gridMeta article__grid-metaHasImage">
                                 <div className="wrapBlogInner">
@@ -91,7 +91,7 @@ const HomePage = () =>  {
                     <Grid item xs={12} sm={12} md={6} lg={6}>
                         <div className="wrapBlog">
                             <Link to="blog-left-sidebar.html" className="article__gridImage">
-                                    <img src="./post-img2.jpg" alt="It's all about how you wear" title="It's all about how you wear" class="blur-up lazyloaded"/>
+                                    <img src="./post-img2.jpg" alt="It's all about how you wear" title="It's all about how you wear" />
                             </Link>
                             <div className="article__gridMeta article__grid-metaHasImage">
                                 <div className="wrapBlogInner">

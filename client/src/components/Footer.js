@@ -9,7 +9,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const useStyle = makeStyles(() => ({
     mobileBox: {
         borderTop: '1px solid gray',
-        paddingTop: 20
+        paddingTop: 20,
+        color: 'white',
+        backgroundColor: '#141414',
     },
     mobile: {
      
@@ -17,8 +19,8 @@ const useStyle = makeStyles(() => ({
     },
     link: {
         textDecoration: 'none',
-        color: 'black',
-
+        color: 'white',
+       
     },
     paper: {
         display: 'flex',
@@ -27,6 +29,8 @@ const useStyle = makeStyles(() => ({
         padding: 60,
         borderTop: '1px solid gray',
         borderRadius: 0,
+        backgroundColor: '#141414',
+        color: 'white'
     },
     contact: {
         marginLeft: 30,
@@ -35,22 +39,29 @@ const useStyle = makeStyles(() => ({
     details : {
         display: 'flex',
         flexDirection: 'column',
+        paddingLeft: 30
     }
 }))
+
 const StyledAccordion = withStyles(() => ({
     root: {
         "&$expanded": {
             margin: "auto"
         },
-        boxShadow: 'none'
+        boxShadow: 'none',
+        backgroundColor: '#141414',
+        color: 'white'
     },
     expanded: {}
 }))(Accordion);
 const StyledAccordionSummary = withStyles({
     root: {
-      borderBottom: '1px solid gray'
+      borderBottom: '1px solid gray',
+      backgroundColor: '#141414',
+      color: 'white'
     }
   })(AccordionSummary);
+
 const Footer = () => {
     const classes = useStyle();
     const [isDesktopView, setIsDesktopView] = useState(true);
@@ -134,47 +145,47 @@ const Footer = () => {
                 <div  className={classes.mobile}>
                 <StyledAccordion>
                     <StyledAccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
+                        expandIcon={<ExpandMoreIcon style={{color: 'white'}} />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
                         <Typography component="h6">Quick Shop</Typography>
                     </StyledAccordionSummary>
                     <AccordionDetails className={classes.details}>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Women</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Men</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Kids</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Accessories</Link></Typography>
+                        <Typography variant="subtitle2"  gutterBottom><Link to="/shop" className={classes.link}>Women</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Men</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Kids</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Accessories</Link></Typography>
                     </AccordionDetails>
                 </StyledAccordion>
                 <StyledAccordion>
                     <StyledAccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
+                        expandIcon={<ExpandMoreIcon style={{color: 'white'}}/>}
                         aria-controls="panel2a-content"
                         id="panel2a-header"
                     >
                         <Typography component="h6">Information</Typography>
                     </StyledAccordionSummary>
                     <AccordionDetails className={classes.details}>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>About us</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Careers</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Privacy policy</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Terms &amp; condition</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>About us</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Careers</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Privacy policy</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Terms &amp; condition</Link></Typography>
                     </AccordionDetails>
                 </StyledAccordion>
                 <StyledAccordion>
                     <StyledAccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
+                        expandIcon={<ExpandMoreIcon style={{color: 'white'}}/>}
                         aria-controls="panel2a-content"
                         id="panel2a-header"
                     >
                         <Typography component="h6">Customer Services</Typography>
                     </StyledAccordionSummary>
                     <AccordionDetails className={classes.details}>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Contact Us</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>FAQ's</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Orders and Returns</Link></Typography>
-                        <Typography variant="subtitle2"  ><Link to="/shop" className={classes.link}>Support Center</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Contact Us</Link></Typography>
+                        <Typography variant="subtitle2"  gutterBottom><Link to="/shop" className={classes.link}>FAQ's</Link></Typography>
+                        <Typography variant="subtitle2"  gutterBottom><Link to="/shop" className={classes.link}>Orders and Returns</Link></Typography>
+                        <Typography variant="subtitle2" gutterBottom ><Link to="/shop" className={classes.link}>Support Center</Link></Typography>
                     </AccordionDetails>
                 </StyledAccordion>
                 <Typography component="h6" style={{marginLeft: 16, marginTop: 10}} gutterBottom>Contact Us</Typography>

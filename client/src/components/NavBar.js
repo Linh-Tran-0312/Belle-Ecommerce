@@ -1,5 +1,4 @@
 
-
 import {
     AppBar,
     Toolbar,
@@ -220,7 +219,7 @@ export default function NarBar() {
     };
 
     const Logo = (
-        <img src="./logo.svg" alt="logo" className={logo} />
+        <img src={window.location.origin + '/logo.svg'} alt="logo" className={logo} />
     );
 
     const getMenuButtons = () => {

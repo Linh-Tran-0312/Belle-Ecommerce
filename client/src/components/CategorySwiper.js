@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import "swiper/swiper.min.css";
 import "swiper/components/pagination/pagination.min.css"
 
-import "./styles.css";
+ 
 import { makeStyles } from "@material-ui/core";
 
 // import Swiper core and required modules
