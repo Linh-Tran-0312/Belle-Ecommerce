@@ -17,7 +17,7 @@ const ShopPage = () => {
             <Banner />
             <Box my={5} textAlign="center">
                 <Box my={5} textAlign="center">
-                    <Typography variant="h4">Our Products</Typography>
+                    <Typography variant="h4">Our Products AA</Typography>
                 </Box>
                 <Grid container>
                     <Grid item lg={3} md={4} sm={12} xs={12}>
