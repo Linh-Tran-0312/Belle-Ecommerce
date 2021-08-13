@@ -12,11 +12,13 @@ import {
     Badge
 } from "@material-ui/core";
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import SearchBar from './SearchBar';
+import CartPopover from "../CartPopup";
 const headersData = [
     {
         label: "HOME",
@@ -38,15 +40,14 @@ const headersData = [
 
 const useStyles = makeStyles((theme) => ({
 
-    header: {
+    root: {
         backgroundColor: "#white",
-        paddingRight: "40px",
-        paddingLeft: "118px",
+    position: 'sticky',
+    top:0,
         "@media (max-width: 900px)": {
             paddingLeft: 0,
         },
-        width: '100%'
-
+        width: '100%',
     },
     menuButton: {
         fontFamily: "Open Sans, sans-serif",
@@ -67,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         backgroundColor: "white",
         color: 'black',
-        width: '100%'
     },
     drawerContainer: {
         padding: "20px 30px",
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NarBar() {
-    const { header, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo } = useStyles();
+    const { root, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo } = useStyles();
 
     const [state, setState] = useState({
         mobileView: false,
@@ -131,17 +131,7 @@ export default function NarBar() {
                     <IconButton color="inherit" onClick={handleOpenSearch}>
                         <SearchIcon />
                     </IconButton>
-                    <IconButton color="inherit">
-                        <Badge
-                            badgeContent={3}
-                            color="error"
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}>
-                            <LocalMallIcon />
-                        </Badge>
-                    </IconButton>
+                    <CartPopover />
 
                 </div>
             </Toolbar>
@@ -183,17 +173,7 @@ export default function NarBar() {
                     <IconButton color="inherit" onClick={handleOpenSearch}>
                         <SearchIcon />
                     </IconButton>
-                    <IconButton color="inherit">
-                        <Badge
-                            badgeContent={3}
-                            color="error"
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}>
-                            <LocalMallIcon />
-                        </Badge>
-                    </IconButton>
+                    <CartPopover />
 
                 </div>
             </Toolbar>
@@ -244,9 +224,14 @@ export default function NarBar() {
         <header>
             {
                 search ? <SearchBar closeSearch={handleCloseSearch} /> :
-                    <AppBar className={header} color="inherit" position="relative">
+              <div  className={root}>
+                        <AppBar position="sticky"  >
                         {mobileView ? displayMobile() : displayDesktop()}
-                    </AppBar>
+                    </AppBar>       
+              </div>
+                   
+ 
+                    
             }
 
         </header>

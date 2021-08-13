@@ -12,8 +12,8 @@ const useStyle = makeStyles({
         }
     }
 })
-export default ({children}) => {
+export default ({width, height, children}) => {
     const classes = useStyle();
-return <Button className={classes.button}>{children}</Button>
+return <Button className={classes.button} style={{width, height}}>{children}</Button>
 
 }

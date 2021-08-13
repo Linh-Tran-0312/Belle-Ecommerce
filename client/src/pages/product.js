@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ProductImage from "../components/ProductImage";
 import Layout from "../components/Layout";
-import { Container, Grid, Breadcrumbs, Box, Link, Typography, Tabs, Tab, Paper, Button, makeStyles } from '@material-ui/core';
+import { Container, Grid, Breadcrumbs, Box, Typography, Tabs, Tab, Paper, Button, makeStyles } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -18,6 +18,8 @@ import Rating from '../components/Rating';
 import Comment from '../components/Comment';
 import SizeChart from '../components/SizeChart';
 import CommentForm from '../components/CommentForm';
+import QtyButton from '../components/QtyButton';
+import { Link } from 'react-router-dom';
 const useStyle = makeStyles({
     tabPaper : {
         boxShadow: 'none',
@@ -69,21 +71,24 @@ const ProductPage = () => {
         <Layout>
            {/*  Breadcrumbs section */}
             <div className="breadCrumbs">
+                <Box px={3} py={1}>
                 <Breadcrumbs separator="›" aria-label="breadcrumb">
-                    <Link color="inherit" href="/"  >
-                        Home
+                    <Link className="link" to="/"  >
+                    <Typography variant="subtitle2">Home</Typography>
                     </Link>
-                    <Link color="inherit" href="/getting-started/installation/" >
-                        Shop
+                    <Link className="link" to="/shop" >
+                    <Typography variant="subtitle2">Shop</Typography>
                     </Link>
-                    <Link color="inherit" href="/getting-started/installation/" >
-                        Accessories
+                    <Link className="link" to="/shop/accessory" >
+                    <Typography variant="subtitle2">Accessory</Typography>
                     </Link>
                     <Typography color="textPrimary">Product</Typography>
                 </Breadcrumbs>
+                </Box>
+              
             </div>
              {/*  Product summary section */}
-            <Container maxWidth="md" className="featuresBox">
+            <Container maxWidth="md"  >
                 <Grid container>
                     <Grid item md={6} sm={6} xs={12}>
                         <Box px={4}>
@@ -92,7 +97,7 @@ const ProductPage = () => {
 
                     </Grid>
                     <Grid item md={6} sm={6} xs={12}>
-                        <h1 className="productSingle__title">Product With Bottom Thumbs</h1>
+                        <span className="productSingle__title">Product With Bottom Thumbs</span>
                         <div className="prInfoRow">
                             <div className="productStock"> <span className="instock">In Stock</span></div>
                             <div className="productSku">SKU: <span className="variantSku">19115-rdxs</span></div>
@@ -124,18 +129,10 @@ const ProductPage = () => {
                             <span className="spanSize">XL</span>
                         </div>
                         <div className="featureButtonBox">
-                            <div className="quantityButtonBox">
-                                <button className="quantityButton" >
-                                    <RemoveIcon fontSize="small" />
-                                </button>
-                                <input
-                                    className="quantityInput"
-                                    value={2}
-                                />
-                                <button className="quantityButton"  >
-                                    <AddIcon />
-                                </button>
-                            </div>
+                            <Box mr={2}>
+                            <QtyButton width={35} height={45} quantity={2}/>
+                            </Box>
+                          
                             <button className="addToCartButton">ADD TO CART</button>
                         </div>
                         <div className="wishListBox">

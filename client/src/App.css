@@ -7,6 +7,13 @@ body {
 	text-decoration: none;
 	color:rgb(0, 0, 0);
 }
+.fontRoSlab {
+	font-family: "Roboto slab";
+}
+.fontSize20 {
+	font-size: 18px;
+	margin-bottom: 20px;
+}
 /* Home Page Css*/
 .parallax {
 	height: 500px;
@@ -86,20 +93,19 @@ body {
 /* Product Page Css*/
 
 .breadCrumbs {
-	padding: 15px;
 	background-color: #f9f9f9;
 	text-align: left;
 	margin-bottom: 20px;
 }
 .productSingle__title {
-	margin-top: 20px;
-	font-size: 18px;
-	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	font-family: "Roboto Slab", Helvetica, sans-serif;
 }
 .prInfoRow {
 	display: flex;
 	justify-content: flex-start;
     margin-bottom: 10px;
+	margin-top: 10px;
 }
 .productStock {
 
@@ -179,32 +185,7 @@ font-family: Helvetica, sans-serif;
 	display: flex;
 	justify-content: flex-start;
 }
-.quantityButtonBox {
-	margin-right: 20px;
-    display: flex;
-    justify-content: center;
-    width: 105px;
-    box-shadow: none;
-    border: 1px solid rgba(31, 31, 31, 0.5);
-    border-radius: 0
-  }
-  .quantityInput {
-    width: 30px;
-    text-align: center;
-    border: none;  
-  }
-  .quantityInput:focus {
-      outline: none 
-  }
-  .quantityButton {
-     width: 35px !important;
-     height: 45px;
-     cursor: pointer;
-     background-color: rgb(180, 180, 180);
-     border-radius: 0;
-     box-shadow: none;
-     border: 1px
-  }
+
   .addToCartButton {
 	width: 100%;
 	height: 47px;
@@ -277,9 +258,22 @@ font-family: Helvetica, sans-serif;
 	  font-size: 16px ;
   }
   /* Blog Page Css*/
+  .pageTitle {
+	  border-bottom: 1px solid rgb(168, 165, 165);
+	  padding: 15px;
+	  font-size: 26px;
+	  font-weight: 200;
+	  font-family: 'Roboto Slab', Times, serif;
+  }
   .articleImg {
 	  width: 100%
   }
+  /* Contact Page Css*/
+  .mapContainer div:first-of-type {
+	position: relative !important;
+	width: 100%;
+	height: 100%;
+	}
   @media screen and (max-width: 600px) {
 	.parallax {
 		height: 250px !important;

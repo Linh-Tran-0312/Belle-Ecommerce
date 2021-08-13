@@ -11,16 +11,25 @@ export default () => {
 
     return (
         <Layout>
-            <div className="breadCrumbs">
-                <Breadcrumbs separator="›" aria-label="breadcrumb">
-                    <Link  className="link"  >
-                        Home
-                    </Link>
-                    <Link  className="link" >
-                        Blogs
-                    </Link>
-                    <Typography color="textPrimary">Article</Typography>
-                </Breadcrumbs>
+           <div className="breadCrumbs">
+                <div className="pageTitle">
+                    <Box textAlign="center" py={1}>
+                        <Typography variant="inherit">BLOG ARTICLE</Typography>
+                    </Box>
+                </div>
+                <Box ml={5} py={1}>
+                    <Breadcrumbs separator="›" aria-label="breadcrumb">
+                        <Link className="link" to="" >
+                            <Typography variant="subtitle2">Home</Typography>
+
+                        </Link>
+                        <Link className="link" to="" >
+                            <Typography variant="subtitle2">Blogs</Typography>
+
+                        </Link>
+                        <Typography variant="subtitle2">Article</Typography>
+                    </Breadcrumbs>
+                </Box>
             </div>
             <Box px={3}>
                 <Grid container spacing={2}>

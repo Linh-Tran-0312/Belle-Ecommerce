@@ -13,8 +13,8 @@ const styles = {
     },
     img : {
         margin: '20px',
-        maxwidth: '100%',
-        objectFit: 'cover'
+        maxWidth: '100%',
+        objectFit: 'cover',
     }
 }
 export default () => {
