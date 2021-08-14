@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 // Import Swiper styles
 import "swiper/swiper.min.css";
 import "swiper/components/pagination/pagination.min.css"
-
+import "../App.css";
  
 import { makeStyles } from "@material-ui/core";
 
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
         objectFit: 'cover'
     },
     button: {
-        width: '50%',
+       
         bottom: '20px',
         textDecoration: 'none',
         fontFamily: "Helvetica",
@@ -69,13 +69,14 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'white',
         visibility: 'hidden',
         position: 'absolute',  
+        [theme.breakpoints.down('sm')] : {
+           fontSize: 14
+          },
           
     },
     myswiper : {
         width: '80%',
-        [theme.breakpoints.down('sm')] : {
-            width: '100%',
-          }
+
     }
 }))
 
@@ -85,12 +86,10 @@ export default function App() {
 
 
     return (
-        <>
-            <Swiper slidesPerView={2} spaceBetween={0} pagination={{
-                "clickable": true
-            }} breakpoints={{
+        <div className="categoryContainer">
+            <Swiper slidesPerView={2} spaceBetween={0} breakpoints={{
                 "440": {
-                    "slidesPerView": 2,
+                    "slidesPerView": 3,
                     "spaceBetween": 20
                 },
                 "640": {
@@ -138,6 +137,6 @@ export default function App() {
                     </div>           
                 </SwiperSlide>
           </Swiper>
-        </>
+        </div>
     )
 }

@@ -130,7 +130,7 @@ const ProductPage = () => {
                         </div>
                         <div className="featureButtonBox">
                             <Box mr={2}>
-                            <QtyButton width={35} height={45} quantity={2}/>
+                            <QtyButton width={105} height={45} quantity={2}/>
                             </Box>
                           
                             <button className="addToCartButton">ADD TO CART</button>

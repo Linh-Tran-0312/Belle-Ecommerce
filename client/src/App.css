@@ -3,9 +3,17 @@ body {
 	padding: 0;
 	margin: 0;
 }
+.sectionTitle {
+	font-size: 1.9em;
+	font-family: "Roboto slab";
+}
 .link {
 	text-decoration: none;
 	color:rgb(0, 0, 0);
+}
+.linkWhite {
+	text-decoration: none;
+	color: white;
 }
 .fontRoSlab {
 	font-family: "Roboto slab";
@@ -15,6 +23,10 @@ body {
 	margin-bottom: 20px;
 }
 /* Home Page Css*/
+.categoryContainer .swiper-slide  {
+	margin-right: 20px !important;
+
+}
 .parallax {
 	height: 500px;
 }
@@ -275,6 +287,10 @@ font-family: Helvetica, sans-serif;
 	height: 100%;
 	}
   @media screen and (max-width: 600px) {
+	.sectionTitle {
+		font-size: 24px;
+		font-family: "Roboto slab";
+	}
 	.parallax {
 		height: 250px !important;
 	}
@@ -301,6 +317,10 @@ font-family: Helvetica, sans-serif;
 	.featuresBox {
 		margin-top: 50px !important;
 		margin-bottom: 40px;
+	}
+	.categoryContainer .swiper-slide  {
+		margin-right: 10px !important;
+	
 	}
 }
 @media screen and (max-width: 900px) {

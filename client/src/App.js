@@ -7,10 +7,14 @@ import Product from './pages/product'
 import './App.css';
 import Blogs from './pages/blogs.js';
 import Blog from './pages/blog.js';
+import Cart from './pages/cart';
+import Checkout from './pages/checkout';
 const App =  () => {
     return(
         <Router>
             <Switch>
+            <Route path="/checkout" component={Checkout}/>
+            <Route path="/cart" component={Cart}/>
             <Route path="/shop" component={Shop}/>
             <Route path="/contact" component={Contact}/>
             <Route path="/product" component={Product}/>

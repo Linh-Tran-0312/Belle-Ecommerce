@@ -19,8 +19,10 @@ const HomePage = () =>  {
         <Layout>
             <Banner/>
             <Box textAlign="center" mt={5} style={{marginTop: 80}}>
+              
                 <Box my={4}>
-                <Typography variant="h4" component="h4" >Our Collection</Typography>
+                <h2 className="sectionTitle">Our Collections</h2>
+                <span className="fontRoSlab">A wide range of product lines for your choice  </span>
                 </Box>
                 <Box  flexDirection="column" justifyContent="center" alignItems="center">
                     <CollectionSwiper />
@@ -43,7 +45,8 @@ const HomePage = () =>  {
             </Box>
             <Box textAlign="center" mx={4} my={5} style={{marginTop: 80}}>
                 <Box my={4}>
-                <Typography variant="h4" component="h4" gutterBottom >New Arrivals</Typography>
+                <h2 className="sectionTitle">New Arrivals</h2>
+                <p className="fontRoSlab">Grab these new items before they are gone!</p>
                 </Box>
                 <Grid container>
                     {
@@ -62,7 +65,7 @@ const HomePage = () =>  {
                 <Grid container>
                     <Grid item xs={12} lg={12} sm={12} md={12}>
                         <Box textAlign="center" my={3}>
-                        <Typography variant="h4" component="h4">Latest From our Blog</Typography>   
+                        <h2 className="sectionTitle">Latest From Our Blogs</h2>  
                         </Box>
                     </Grid>
                 </Grid>
