@@ -17,7 +17,18 @@ const useStyle = makeStyles(() => ({
         fontSize: 30,
         cursor: 'pointer'
     },
-    
+    textfield : {
+        '& .MuiOutlinedInput-root' : {
+            borderRadius: 0,
+            '&.Mui-focused fieldset': {
+                borderColor: '#e8e9eb',
+            },
+        },
+        '& .MuiInputLabel-root': {
+            color: 'black'
+        },
+
+    }
 }))
 
 const Star = ({pos, ratedPos, selectPos}) => {
@@ -64,6 +75,7 @@ const ReviewForm = () => {
                         shrink: true,
                     }}
                     variant="outlined"
+                    className={classes.textfield}
             /> 
             <TextField
                     id="outlined-multiline-static"
@@ -76,6 +88,7 @@ const ReviewForm = () => {
                     }}
                     style={{ margin: 8 }}
                     variant="outlined"
+                    className={classes.textfield}
             />
             <Box textAlign="right" my={2}>
             <BlackButton>

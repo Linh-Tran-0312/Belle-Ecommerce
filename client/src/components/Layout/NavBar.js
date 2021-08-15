@@ -42,8 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
     root: {
         backgroundColor: "#white",
-    position: 'sticky',
-    top:0,
+   
         "@media (max-width: 900px)": {
             paddingLeft: 0,
         },
@@ -87,11 +86,28 @@ const useStyles = makeStyles((theme) => ({
     search: {
         height: '100px',
 
+    },
+    link : {
+        textDecoration: 'none',
+        color: 'white',
+        fontSize: 12,
+        fontFamily: 'Arial'
+    },
+    authBar : {
+        textAlign: 'right',
+        backgroundColor: 'black',
+        padding: 10,
+        [theme.breakpoints.up('sm')] : {
+            paddingRight: 50
+        },
+        [theme.breakpoints.down('xs')] : {
+            paddingRight: 10
+        }
     }
 }));
 
 export default function NarBar() {
-    const { root, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo } = useStyles();
+    const { root, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo, authBar, link } = useStyles();
 
     const [state, setState] = useState({
         mobileView: false,
@@ -124,7 +140,12 @@ export default function NarBar() {
 
     const displayDesktop = () => {
         return (
-            <Toolbar className={toolbar}>
+            <>
+              <div className={authBar}>
+                            <RouterLink to="/auth?page=signin" className={link}>LOGIN &nbsp;|</RouterLink>
+                            <RouterLink to="/auth?page=signup" className={link}>&nbsp;CREATE ACCOUNT</RouterLink>
+                        </div>
+                        <Toolbar className={toolbar}>
                 {Logo}
                 <div>{getMenuButtons()}</div>
                 <div className={icons}>
@@ -135,6 +156,8 @@ export default function NarBar() {
 
                 </div>
             </Toolbar>
+            </>
+           
         );
     };
 
@@ -224,8 +247,8 @@ export default function NarBar() {
         <header>
             {
                 search ? <SearchBar closeSearch={handleCloseSearch} /> :
-              <div  className={root}>
-                        <AppBar position="sticky"  >
+              <div  className={root}>        
+                        <AppBar   position="relative">
                         {mobileView ? displayMobile() : displayDesktop()}
                     </AppBar>       
               </div>

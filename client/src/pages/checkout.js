@@ -1,6 +1,7 @@
 import Layout from "../components/Layout"
 import "../App.css";
-import { Box, Typography, Grid, IconButton, TextField } from '@material-ui/core';
+import { useState } from 'react';
+import { Box, Typography, Grid, IconButton, RadioGroup, TextField } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -13,7 +14,22 @@ import QtyButton from "../components/QtyButton";
 import { Link } from 'react-router-dom';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import BlackButton from "../components/BlackButton";
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+const StyledRadio = withStyles({
+    root: {
+        color: 'black',
+        '&$checked': {
+            color: 'black',
+        },
+    },
+    checked: {},
+})((props) => <Radio color="default" {...props} />);
 const StyledTableCell = withStyles((theme) => ({
     head: {
         color: theme.palette.common.black,
@@ -24,10 +40,34 @@ const StyledTableCell = withStyles((theme) => ({
     },
     body: {
         fontSize: 14,
-        border: '1px solid #e8e9eb'
+        border: '1px solid #e8e9eb',
+        [theme.breakpoints.down('xs')] : {
+            fontSize: 12,
+        }
+    },
+    root: {
+        [theme.breakpoints.down('xs')] : {
+            padding: 6
+        }
     }
 
 }))(TableCell);
+const StyledTextField = withStyles((theme) => ({
+    root: {
+        '& .MuiOutlinedInput-root': {
+            borderRadius: 0,
+            '&.Mui-focused fieldset': {
+                borderColor: '#e8e9eb',
+            },
+        },
+        '& .MuiInputLabel-root': {
+            color: 'black'
+        },
+
+
+    }
+
+}))(TextField);
 const useStyle = makeStyles((theme) => ({
     itemImg: {
         width: '70px',
@@ -37,7 +77,8 @@ const useStyle = makeStyles((theme) => ({
         marginButton: '10px'
     },
     table: {
-        minWidth: 350,
+        minWidth: 320,
+        marginBottom: 20,
     },
     priceCol: {
         [theme.breakpoints.down('xs')]: {
@@ -56,10 +97,18 @@ const useStyle = makeStyles((theme) => ({
         '& .MuiOutlinedInput-root': {
             borderRadius: 0,
         }
-    }
+    },
+    root: {
+        width: '100%',
+    },
 }))
 export default () => {
     const classes = useStyle();
+    const [ method, setMethod ] = useState(null);
+
+    const handleChangeMethod = (e) => {
+        setMethod(e.target.value);
+    }
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
@@ -71,8 +120,58 @@ export default () => {
             </div>
             <Box mx={2} my={4}>
                 <Grid container spacing={3} direction="row" justifyContent="center">
+                <Grid item lg={6} md={6} sm={12}>
+                        <Box sx={{ padding: { xs: 2, sm : 3 }}}  border={1} borderColor="grey.500">
+                            <h3 variant="h6" className="fontRoSlab">BILLING DETAILS</h3>
+                            <Box my={2} >
+                                <Grid container spacing={2}>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="First Name" variant="outlined" fullWidth required />
+                                    </Grid>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="Last Name" variant="outlined" fullWidth required />
+                                    </Grid>
+                                </Grid>
+
+                            </Box>
+                            <Box my={2}>
+                                <Grid container spacing={2}>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="Email" variant="outlined" fullWidth required />
+                                    </Grid>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="Telephone" variant="outlined" fullWidth required />
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                            <Box my={2}>
+                                <Grid container spacing={2}>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="City" variant="outlined" fullWidth required />
+                                    </Grid>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="District" variant="outlined" fullWidth required />
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                            <Box my={2}>
+                                <Grid container spacing={2}>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="Ward" variant="outlined" fullWidth required />
+                                    </Grid>
+                                    <Grid item lg={6} md={4} sm={6} xs={12}>
+                                        <StyledTextField label="Street" variant="outlined" fullWidth required />
+                                    </Grid>
+                                </Grid>
+
+                            </Box>
+                            <Typography variant="caption">Your note:</Typography>
+                            <StyledTextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root: classes.noteTextField }} />
+                        </Box>
+                    </Grid>
+               
                     <Grid item lg={6} md={6} sm={12}>
-                        <Box p={3} border={1} borderColor="grey.500">
+                        <Box sx={{ padding: { xs: 2, sm : 3 }}} border={1} borderColor="grey.500">
                             <h3 variant="h6" className="fontRoSlab">YOUR ORDER</h3>
                             <TableContainer >
                                 <Table className={classes.table} aria-label="customized table">
@@ -93,7 +192,7 @@ export default () => {
                                                 <StyledTableCell align="center" >$99</StyledTableCell>
                                                 <StyledTableCell align="center">XL</StyledTableCell>
                                                 <StyledTableCell align="center">1</StyledTableCell>
-                                                <StyledTableCell align="center">$991</StyledTableCell>
+                                                <StyledTableCell align="center">$943491</StyledTableCell>
                                             </TableRow>
                                         ))}
                                         <TableRow  >
@@ -108,73 +207,118 @@ export default () => {
                                     </TableBody>
                                 </Table>
                             </TableContainer>
+                            <hr />
+                            <h3 variant="h6" className="fontRoSlab">PAYMENT METHOD</h3>
+                            <div className={classes.root}>
+                            <RadioGroup aria-label="payment" name="method" value={method} onChange={handleChangeMethod}>
 
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-label="Expand"
+                                        aria-controls="additional-actions1-content"
+                                        id="additional-actions1-header"
+                                    >
+
+                                            <FormControlLabel
+                                                aria-label="Acknowledge"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onFocus={(event) => event.stopPropagation()}
+                                                control={<StyledRadio />}
+                                                label="CASH ON DELIVERY"
+                                                value="CASH"
+                                            />
+                                  
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography color="textSecondary">
+                                            The click event of the nested action will propagate up and expand the accordion unless
+                                            you explicitly stop it.
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-label="Expand"
+                                        aria-controls="additional-actions2-content"
+                                        id="additional-actions2-header"
+                                    >
+
+                                            <FormControlLabel
+                                                aria-label="Acknowledge"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onFocus={(event) => event.stopPropagation()}
+                                                control={<StyledRadio />}
+                                                label="DIRECT BANK TRANSFER"
+                                                value="TRANSFER"
+                                            />
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography color="textSecondary">
+                                            The focus event of the nested action will propagate up and also focus the accordion
+                                            unless you explicitly stop it.
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-label="Expand"
+                                        aria-controls="additional-actions3-content"
+                                        id="additional-actions3-header"
+                                    >
+
+                                            <FormControlLabel
+                                                aria-label="Acknowledge"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onFocus={(event) => event.stopPropagation()}
+                                                control={<StyledRadio />}
+                                                label="PAYMENT GATEWAY"
+                                                value="GATEWAY"
+                                            />
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography color="textSecondary">
+                                            If you forget to put an aria-label on the nested action, the label of the action will
+                                            also be included in the label of the parent button that controls the accordion
+                                            expansion.
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-label="Expand"
+                                        aria-controls="additional-actions3-content"
+                                        id="additional-actions3-header"
+                                    >
+
+                                            <FormControlLabel
+                                                aria-label="Acknowledge"
+                                                onClick={(event) => event.stopPropagation()}
+                                                onFocus={(event) => event.stopPropagation()}
+                                                control={<StyledRadio />}
+                                                label="USING E-WALLET"
+                                                value="EWALLET"
+                                            />
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Typography color="textSecondary">
+                                            If you forget to put an aria-label on the nested action, the label of the action will
+                                            also be included in the label of the parent button that controls the accordion
+                                            expansion.
+                                        </Typography>
+                                    </AccordionDetails>
+                                </Accordion>
+                                </RadioGroup>
+                            </div>
+                            <Box my={2} textAlign="center">
+                                    <BlackButton height={'50px'}><strong>place order</strong></BlackButton>
+                            </Box>
                         </Box>
                     </Grid>
-                    <Grid item lg={6} md={6} sm={12}>
-                        <Box p={3} border={1} borderColor="grey.500">
-                            <h3 variant="h6" className="fontRoSlab">BILLING DETAILS</h3>
-                            <Box my={2} >
-                                <Grid container spacing={2}>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="First Name" variant="outlined" fullWidth required />
-                                    </Grid>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="Last Name" variant="outlined" fullWidth required />
-                                    </Grid>
-                                </Grid>
-
-                            </Box>
-                            <Box my={2}>
-                                <Grid container spacing={2}>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="Email" variant="outlined" fullWidth required />
-                                    </Grid>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="Telephone" variant="outlined" fullWidth required />
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <Box my={2}>
-                                <Grid container spacing={2}>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="City" variant="outlined" fullWidth required />
-                                    </Grid>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="District" variant="outlined" fullWidth required />
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <Box my={2}>
-                                <Grid container spacing={2}>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="Ward" variant="outlined" fullWidth required />
-                                    </Grid>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <TextField label="Street" variant="outlined" fullWidth required />
-                                    </Grid>
-                                </Grid>
-
-                            </Box>
-                            <TextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root: classes.noteTextField }} />
-                        </Box>
-                        <Box mt={3} p={3} border={1} borderColor="grey.500">
-                            <Grid container direction="row" justifyContent="space-between">
-                                <Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>SUBTOTAL</Typography>
-                                <Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>$735.00</Typography>
-                            </Grid>
-                            <Typography variant="caption" gutterBottom>Shipping &amp; taxes calculated at checkout</Typography>
-                            <Box>
-                                <Box my={2}>
-                                    <BlackButton width={'100%'}>check out</BlackButton>
-                                </Box>
-                                <img alt="" src={window.location.origin + "/payment-img.jpg"} style={{ width: '100%' }} />
-
-                            </Box>
-                        </Box>
-
-                    </Grid>
-                </Grid>
+                  </Grid>
             </Box>
         </Layout>
     )

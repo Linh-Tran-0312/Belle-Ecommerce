@@ -1,12 +1,22 @@
-import { Box, Typography, TextField, Chip} from '@material-ui/core';
+import { Box, Chip, TextField, Typography } from '@material-ui/core';
 import BlackButton from './BlackButton';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { useState } from 'react';
- import FaceIcon from '@material-ui/icons/Face';
+import { makeStyles } from '@material-ui/core';
 
+const useStyle = makeStyles((theme) => ({
+    textfield : {
+        '& .MuiOutlinedInput-root' : {
+            borderRadius: 0,
+            '&.Mui-focused fieldset': {
+                borderColor: '#e8e9eb',
+            },
+        },
+        '& .MuiInputLabel-root': {
+            color: 'black'
+        },
 
+    }}))
 const CommentForm = () => {
-
+    const classes = useStyle();
     const handleDelete = () => {
         console.info('You clicked the delete icon.');
       };
@@ -44,6 +54,7 @@ const CommentForm = () => {
                     }}
                     style={{ margin: 8 }}
                     variant="outlined"
+                    className={classes.textfield}
             />
             <Box textAlign="right" my={2}>
             <BlackButton>
