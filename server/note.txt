@@ -1,0 +1,58 @@
+TS NODE CONFIG
+We will use ts-node to run the typescript code directly
+And to restart the ts-node on every code change, we will use nodemon which will watch the code and re-run the command on any changes.
+In "package.json":
+        "scripts": {
+            "build": "tsc",
+            "dev": "nodemon",
+        },
+
+        "nodemonConfig": {
+            "watch": [
+            "src"
+            ],
+            "ext": "ts",
+            "exec": "ts-node src/index.ts"
+        }
+---------------------
+MORGAN
+We use morgan to logs the requests.
+app.use(morgan("tiny"))
+---------------------
+SWAGGER INTEGRATION
+We need to add tsoa to generates a JSON file with OpenAPI Specifications for all the APIs
+We also need swagger-ui-express to host the Swagger JSON with Swagger UI
+In tsconfig.json:
+        {
+        "compilerOptions": {
+            ...
+            "experimentalDecorators": true,
+            "emitDecoratorMetadata": true
+        }
+        }
+We also need to config tsoa.json:
+        {
+            "entryFile": "src/index.ts",
+            "noImplicitAdditionalProperties": "throw-on-extras",
+            "spec": {
+                "outputDirectory": "public",
+                "specVersion": 3
+            }
+        }
+We add tsoa spec to generate Swagger docs
+We will be running the swagger command before build and dev command with prebuild and predev Respectively.
+We add concurrently to the dev command, which will run the nodemon and tsoa spec on parallel
+The Swagger docs will get auto-updated on every code change during development.
+In package.json:
+        "scripts": {
+            "start": "node build/index.js",
+            "predev": "npm run swagger",
+            "prebuild": "npm run swagger",
+            "build": "tsc",
+            "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\"",
+            "swagger": "tsoa spec",
+        },
+---------------------
+DOCKER SETUP
+After creating the Dockerfile, we need to run the docker build to create a docker image from the Dockerfile. 
+docker build -t express-ts . (express-ts is the name of project)
