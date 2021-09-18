@@ -56,3 +56,12 @@ In package.json:
 DOCKER SETUP
 After creating the Dockerfile, we need to run the docker build to create a docker image from the Dockerfile. 
 docker build -t express-ts . (express-ts is the name of project)
+----------------------
+CHECK DATABASE
+Open postgres container: psql -U postgres
+\l              # list database.
+\c express-ts   # select `express-ts` database.
+\dt             # list all tables.
+\d user         # Show `user` table definition.
+\d post         # Show `post` table definition.
+\d comment      # Show `comment` table definition.

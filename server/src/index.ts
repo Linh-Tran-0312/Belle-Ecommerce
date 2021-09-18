@@ -1,4 +1,7 @@
 import express, { Application } from "express";
+import "reflect-metadata";
+import { createConnection } from "typeorm";
+import dbConfig from './config/DatabaseConfig';
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import pingRoute from './api/routes/ping';
@@ -23,6 +26,11 @@ app.use(
 app.get("/", (req,res) => res.send({"message" : "Hello ABa to Belle Api build on TypeScript"}))
 app.use(pingRoute)
 
-app.listen(PORT, () => {
-  console.log("Server is running on port", PORT);
-});
+createConnection(dbConfig).then((_connection) => {
+  app.listen(PORT, () => {
+    console.log("Server is running on port", PORT);
+  });
+}).catch((err) => {
+  console.log("Unable to connect to db", err);
+  process.exit(1);
+})
