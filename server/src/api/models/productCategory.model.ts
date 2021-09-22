@@ -1,5 +1,11 @@
 import { CreateDateColumn, Column, PrimaryGeneratedColumn, Entity } from "typeorm";
 
+export interface IProductCategoryModel {
+    id?: number;
+    name?: string;
+    imgPath?: number;
+}
+
 @Entity()
 export class ProductCategory {
 
@@ -10,9 +16,9 @@ export class ProductCategory {
     name!: string;
 
     @Column({nullable: true})
-    imagePath!: string
+    imgPath!: string
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz"})
     createdAt!: Date;
 
 }

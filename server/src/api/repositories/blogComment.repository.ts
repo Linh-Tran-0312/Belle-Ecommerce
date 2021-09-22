@@ -8,4 +8,5 @@ export class BlogCommentRepository extends BaseRepository<BlogComment> implement
     constructor() {
         super(getRepository(BlogComment));
     }
+    
 }

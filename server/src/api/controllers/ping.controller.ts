@@ -5,7 +5,7 @@ interface PingMessage {
 }
 @Route("ping")
 @Tags('Ping Controller')
-export default class PingController {
+export class PingController {
     @Get("/")
     public async getMessage(): Promise<PingMessage> {
         return {

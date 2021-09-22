@@ -1,6 +1,15 @@
 
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 import { BlogCategory, BlogComment } from "./";
+
+export interface IBlogModel {
+    id?: number;
+    title?: string;
+    categoryId?: number;
+    imgPath?: string;
+    content?: string;
+    commentAllow?: boolean;   
+}
 
 @Entity()
 export class Blog {
@@ -10,7 +19,11 @@ export class Blog {
     @Column()
     title!: string;
 
+    @Column({nullable: true})
+    categoryId!: number;
+
     @ManyToOne(() => BlogCategory, blogCategory => blogCategory.blogs, { onDelete: "SET NULL"})
+    @JoinColumn()
     category!: BlogCategory;
 
     @Column({nullable: true})
@@ -25,6 +38,6 @@ export class Blog {
     @OneToMany(() => BlogComment, blogComment => blogComment.blog)
     comments!: BlogComment[];
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz"})
     createdAt!: Date;
 }

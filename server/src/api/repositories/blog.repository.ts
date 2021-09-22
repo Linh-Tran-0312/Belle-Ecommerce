@@ -8,8 +8,4 @@ export class BlogRepository extends BaseRepository<Blog> implements IBaseReposit
     constructor() {
         super(getRepository(Blog));
     }
-
-    public findOneWithRelations(id: number | string, relations: string[]): Promise<Blog | undefined> {
-        return this.entity.findOne(id, {relations: relations})
-    }
 }

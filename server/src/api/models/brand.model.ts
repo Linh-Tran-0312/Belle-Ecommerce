@@ -1,5 +1,11 @@
 import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn } from "typeorm";
 
+export interface IBrandModel {
+    id?: number;
+    name?: string;
+    imgPath?: string;
+}
+
 @Entity()
 export class Brand {
 
@@ -12,7 +18,7 @@ export class Brand {
     @Column({nullable: true})
     imgPath!: string;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz"})
     createdAt!: Date;
 
 }

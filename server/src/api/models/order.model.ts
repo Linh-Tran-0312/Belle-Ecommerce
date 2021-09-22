@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User, OrderDetail } from "./";
+import { IOrderDetailModel } from "./orderDetail.model";
 
 enum Status {
     ORDERING = "ordering",
@@ -14,13 +15,31 @@ enum PaymentMethod {
     EWALLET = "e-wallet"
 }
 
+export interface IOrderModel {
+    id?: number;
+    userId?: string;
+    categoryId?: number;
+    status?: Status;
+    paymentMethod?: PaymentMethod;
+    paymentCheck?: boolean;
+    note?: string;
+    address?: string;
+    shipping?: number;
+    total?: number;
+    orderAt?: Date;  
+}
+
 @Entity()
-export class Order  {
+export class Order {
 
     @PrimaryGeneratedColumn()
-    id!: Number;
+    id!: number;
 
-    @ManyToOne(()=> User)
+    @Column("uuid")
+    userId!: string;
+
+    @ManyToOne(()=> User, user => user.orders)
+    @JoinColumn()
     user!: string;
 
     @Column({type: "enum",
@@ -48,7 +67,7 @@ export class Order  {
     @Column({default: 0})
     total!: number;
   
-    @Column({nullable: true})
+    @Column({type: "timestamptz",nullable: true})
     orderAt!: Date;
 
     @OneToMany(() => OrderDetail, orderDetail => orderDetail.order)

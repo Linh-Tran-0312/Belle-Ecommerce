@@ -1,21 +1,41 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Brand, ProductCategory, ProductComment, ProductVariant, ProductReview } from './';
 
-
+export interface IProductModel {
+    id?: number;
+    sku?: string;
+    categoryId?: number;
+    brandId?: number;
+    imgPaths?: string[];
+    name?: string;
+    summary?: string;
+    description?: string;
+    overallReview?: number;
+    reviewCount?: number;
+    price?: number;   
+}
 
 @Entity()
 export class Product {
 
     @PrimaryGeneratedColumn()
-    id!: Number;
+    id!: number;
 
     @Column({nullable: true})
     sku!: string;
 
+    @Column({nullable: true})
+    categoryId!: number;
+
     @ManyToOne(() => ProductCategory, { onDelete: 'SET NULL'})
+    @JoinColumn()
     category!: ProductCategory;
 
+    @Column({nullable: true})
+    brandId!: number;
+
     @ManyToOne(() => Brand, { onDelete: 'SET NULL'})
+    @JoinColumn()
     brand!: Brand;
 
     @Column()
@@ -37,9 +57,9 @@ export class Product {
     price!: number;
 
     @Column("simple-array",{ nullable: true})
-    imagePaths!: string[];
+    imgPaths!: string[];
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz"})
     createdAt!: Date;
 
     @OneToMany(() => ProductComment, productComment => productComment.product)

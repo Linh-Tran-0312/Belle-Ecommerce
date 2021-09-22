@@ -1,8 +1,15 @@
 {
-    "entryFile": "src/index.ts",
+    "entryFile": "./src/index.ts",
+    "basePath": "/api",
     "noImplicitAdditionalProperties": "throw-on-extras",
     "spec": {
       "outputDirectory": "public",
       "specVersion": 3
+    },
+    "routes": {
+      "basePath": "/",
+      "entryFile": "./src/index.ts",
+      "routesDir": "./src/api/routes",
+      "middleware": "express"
     }
   }

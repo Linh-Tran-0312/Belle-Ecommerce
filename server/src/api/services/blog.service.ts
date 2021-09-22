@@ -1,28 +1,28 @@
-import { IBaseRepository, BlogCategoryRepository, BlogCommentRepository, BlogRepository } from "../repostitories"
-import { Blog, BlogComment, BlogCategory } from "../models";
-import { Service, Inject } from "typedi";
+import { Inject, Service } from "typedi";
+import { Blog } from "../models";
+import { BlogRepository } from "../repositories";
+import { BaseService, IBaseService } from "./base.service";
+import { ILike } from "typeorm";
 
-@Service({ id: "blog-service"})
-export class BlogService {
-    private _blogRepo: IBaseRepository<Blog>;
-    private _blogCommentRepo: IBaseRepository<BlogComment>;
-    private _blogCategoryRepo: IBaseRepository<BlogCategory>;
-
-    constructor(
-        @Inject("blog-repository")
-        blogRepo: BlogRepository,
-        @Inject("blogComment-repository")
-        blogCommentRepo: BlogCommentRepository,
-        @Inject("blogCategory-repository")
-        blogCategoryRepo: BlogCategoryRepository
-    ) {
-        this._blogRepo =  blogRepo;
-        this._blogCommentRepo = blogCommentRepo;
-        this._blogCategoryRepo = blogCategoryRepo;
+@Service({ id: "blog-service" })
+export class BlogService extends BaseService<Blog, BlogRepository> implements IBaseService<Blog>  {
+    constructor() {
+        super(new BlogRepository())
     }
-
-    public async getBlogs(): Promise<Blog[]> {
-        return this._blogRepo.findWithRelations([])
+    public async getCurrentBlogs():  Promise<Blog[]> {
+        let options = {
+            order: {
+                createdAt: "DESC"
+            },
+            take: 5
+        }
+        return this.repository.findWithCondition(options)
     }
+    public async searchBlogs(categoryId?: number, keyword?: string): Promise<Blog[]> {
+        let options: any = {}
+        if (categoryId && !isNaN(categoryId)) options.where.categoryId = categoryId;
+        if (keyword) options.where.title = ILike(`%${keyword}%`)
+        return this.repository.findWithCondition(options);
 
+    }
 }
