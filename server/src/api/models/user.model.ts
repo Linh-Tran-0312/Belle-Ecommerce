@@ -1,29 +1,27 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from "typeorm";
-import { Order } from ".";
-
+import { Order } from "./order.model";
+import { BaseEntity, IBaseEntity } from "./base.model";
 enum UserRole {
     ADMIN = 'admin',
     EDITOR = 'editor',
     CUSTOMER = 'customer'
 };
 
-export interface IUserModel {
-    id?: number;
-    fname?: string;
+export interface IUserCreateProps {
+    fname: string;
     lname?: string;
     googleId?: string;
-    email?: string;
+    email: string;
     password?: string;
     phone?: string;
     address?: string;
     role?: UserRole;
-    userId?: string;
 }
 
+export interface IUser extends IUserCreateProps, IBaseEntity {}; 
+
 @Entity()
-export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id!: string;
+export class User extends BaseEntity implements IUserCreateProps {
 
     @Column()
     fname!: string;
@@ -53,8 +51,6 @@ export class User {
     })
     role!: UserRole;
 
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
 
     @OneToMany(() => Order, order => order.user)
     orders!: Array<Order>

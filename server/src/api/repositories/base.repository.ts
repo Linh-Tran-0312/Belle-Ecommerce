@@ -1,67 +1,78 @@
 import { UpdateResult, Repository } from "typeorm";
+import { BaseEntity, IBaseEntity } from "../models/base.model";
 
 export interface IBaseRepository<T> {
     create(data: T | any): Promise<T>;
     update(data: T | any, id: number | string): Promise<T | UpdateResult>;
     delete(id: number | string): void;
 
-    findAll( relations?: string[]): Promise<T[]>;
+    findAll(): Promise<T[]>;
+    findWithRelations(relations: string[]): Promise<T[]>;
     findWithCondition(condition: any): Promise<T[]>;
     findOneById(id: number | string, relations?: string[]): Promise<T | null>;
-    
+
 }
 
-export abstract class BaseRepository<T> implements IBaseRepository<T> {
+export abstract class BaseRepository<Props extends IBaseEntity, Class extends BaseEntity & Props,CreateProps>
+    implements IBaseRepository<Props>
+{
 
-    protected entity: Repository<T>
+    protected entity: Repository<Class>;
 
-    constructor(entity: Repository<T>) {
+    protected constructor(entity: Repository<Class>) {
         this.entity = entity;
     }
 
-    public async create(data: T | any): Promise<T> {
+    public async create(data: CreateProps | any): Promise<Props> {
         try {
             return this.entity.save(data);
         } catch (error) {
             throw error;
         }
     }
-    public async update( id: number | string,data: T | any): Promise<T | UpdateResult> {
+    public async update(id: number | string, data: Props | any): Promise<Props | UpdateResult> {
         try {
             return this.entity.update(id, data);
         } catch (error) {
             throw error;
-        }   
+        }
     }
     public async delete(id: number | string): Promise<void> {
         try {
-           await this.entity.delete(id);
-        } catch (error) {
-            throw error;
-        }    
-    }
-    public async findAll(relations?: string[]): Promise<T[]> {
-        try {
-            return this.entity.find({relations});
+            await this.entity.delete(id);
         } catch (error) {
             throw error;
         }
     }
-    public async findWithCondition(condition: any ): Promise<T[]> {
+    public async findAll(): Promise<Props[]> {
+        try {
+            return this.entity.find();
+        } catch (error) {
+            throw error;
+        }
+    }
+    public async findWithRelations(relations: string[]): Promise<Props[]> {
+        try {
+            return this.entity.find({ relations: relations });
+        } catch (error) {
+            throw error;
+        }
+    }
+    public async findWithCondition(condition: any): Promise<Props[]> {
         try {
             return this.entity.find(condition);
         } catch (error) {
             throw error;
         }
     }
-    public async  findOneById<T>(id: number | string, relations?: string[]): Promise<T | null> {
+    public async findOneById(id: number | string, relations?: string[]): Promise<Props | null> {
         try {
-            const item: any = await this.entity.findOne(id, { relations });
-            if(!item) return null
+            const item: Props | any = await this.entity.findOne(id, { relations });
+            if (!item) return null
             return item;
         } catch (error) {
             throw error;
         }
     }
-  
+
 }

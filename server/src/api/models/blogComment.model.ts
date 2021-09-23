@@ -1,18 +1,20 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
-import { Blog, User } from "./";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany} from "typeorm";
+import { IBaseEntity, BaseEntity  } from "./base.model";
+import { Blog } from "./blog.model";
+import { IUser, User } from "./user.model";
 
-export interface IBlogCommentModel {
-    id?: number;
-    text?: string;
-    blogId?: number;
+export interface IBlogCommentCreateProps {
+    text: string;
+    blogId: number;
     parentCommentId?: number;
-    userId?: string;
+    userId: string;
+    user?:IUser;
+    //childComments?: IBlogCommentCreateProps[];
 }
+export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {};
 
 @Entity()
-export class BlogComment {
-    @PrimaryGeneratedColumn()
-    id!: number;
+export class BlogComment extends BaseEntity implements IBlogCommentCreateProps {
 
     @Column()
     text!: string;
@@ -20,7 +22,7 @@ export class BlogComment {
     @Column()
     blogId!: number;
 
-    @ManyToOne(() => Blog, blog => blog.comments, { onDelete:"CASCADE"})
+    @ManyToOne(() => Blog, { onDelete:"CASCADE"})
     @JoinColumn()
     blog!: Blog;
 
@@ -37,9 +39,6 @@ export class BlogComment {
     @ManyToOne(() => User)
     @JoinColumn()
     user!: User;
-
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
 
     @OneToMany(() => BlogComment, blogComment => blogComment.parentComment)
     childComments!: Array<BlogComment>;

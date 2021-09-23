@@ -1,20 +1,21 @@
 
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
-import { BlogCategory, BlogComment } from "./";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { BaseEntity, IBaseEntity } from "./base.model";
+import { BlogCategory, IBlogCategory } from "./blogCategory.model";
 
-export interface IBlogModel {
-    id?: number;
-    title?: string;
-    categoryId?: number;
+export interface IBlogCreateProps {
+    title: string;
+    categoryId: number;
+    category?: IBlogCategory;
     imgPath?: string;
-    content?: string;
+    content: string;
     commentAllow?: boolean;   
-}
+};
+
+export interface IBlog extends IBlogCreateProps, IBaseEntity {};
 
 @Entity()
-export class Blog {
-    @PrimaryGeneratedColumn()
-    id!: number;
+export class Blog extends BaseEntity implements IBlogCreateProps {
 
     @Column()
     title!: string;
@@ -22,7 +23,7 @@ export class Blog {
     @Column({nullable: true})
     categoryId!: number;
 
-    @ManyToOne(() => BlogCategory, blogCategory => blogCategory.blogs, { onDelete: "SET NULL"})
+    @ManyToOne(() => BlogCategory, { onDelete: "SET NULL"})
     @JoinColumn()
     category!: BlogCategory;
 
@@ -35,9 +36,4 @@ export class Blog {
     @Column({default: true})
     commentAllow!: boolean;
 
-    @OneToMany(() => BlogComment, blogComment => blogComment.blog)
-    comments!: BlogComment[];
-
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
 }

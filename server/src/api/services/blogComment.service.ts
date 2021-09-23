@@ -1,17 +1,17 @@
 import { Service } from "typedi";
 import { LessThan } from "typeorm";
-import { BlogComment } from "../models";
+import { BlogComment, IBlogComment} from "../models";
 import { BlogCommentRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 
 
 @Service({ id: "blogComment-service"})
-export class BlogCommentService extends BaseService<BlogComment, BlogCommentRepository> implements IBaseService<BlogComment>  {
+export class BlogCommentService extends BaseService<IBlogComment, BlogCommentRepository> implements IBaseService<IBlogComment>  {
     constructor() {
         super(new BlogCommentRepository())
     }
 
-    async getCommentsOfBlog(blogId: number, date?: Date): Promise<BlogComment[]> {
+    async getCommentsOfBlog(blogId: number, date?: Date): Promise<IBlogComment[]> {
         let options: any = {
             relations: ["childComments","user","childComments.user"],
              where: {

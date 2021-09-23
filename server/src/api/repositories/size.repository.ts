@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+/* import { getRepository } from "typeorm";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 import { Size } from "../models";
 import { Service } from "typedi";
@@ -8,4 +8,4 @@ export class SizeRepository extends BaseRepository<Size> implements IBaseReposit
     constructor() {
         super(getRepository(Size));
     }
-}
+} */

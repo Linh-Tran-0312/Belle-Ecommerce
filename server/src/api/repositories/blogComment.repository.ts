@@ -1,10 +1,8 @@
 import { getRepository } from "typeorm";
-import { BaseRepository, IBaseRepository } from "./base.repository";
-import { BlogComment } from "../models";
-import { Service } from "typedi";
+import { BlogComment, IBlogComment, IBlogCommentCreateProps } from "../models";
+import { BaseRepository } from "./base.repository";
 
-@Service({ id: "blogComment-repository"})
-export class BlogCommentRepository extends BaseRepository<BlogComment> implements IBaseRepository<BlogComment> {
+export class BlogCommentRepository extends BaseRepository<IBlogComment, BlogComment, IBlogCommentCreateProps> {
     constructor() {
         super(getRepository(BlogComment));
     }

@@ -1,5 +1,7 @@
 import { ConnectionOptions } from 'typeorm';
 import * as Entity from '../api/models';
+import  dotenv  from "dotenv";
+dotenv.config();
 
 const config: ConnectionOptions= {
     type: 'postgres',

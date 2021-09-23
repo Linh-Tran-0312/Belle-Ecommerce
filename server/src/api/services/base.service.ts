@@ -1,8 +1,9 @@
-import { IBaseRepository } from "../repositories";
+//import { IBaseRepository } from "../repositories";
 import { Repository } from "typeorm";
-import { BaseRepository } from "../repositories/base.repository";
+import { IBaseRepository } from "../repositories/base.repository";
+import { IBaseEntity } from "../models/base.model";
 
-export interface IBaseService<T> {
+export interface IBaseService<T extends IBaseEntity> {
     create(data: T): Promise<T>;
     delete(id: number | string): Promise<void>;
     update(id: number | string, data: T | any): Promise<T | any>
@@ -13,14 +14,16 @@ export interface IBaseService<T> {
   
 }
 
-export abstract class BaseService<T, R extends BaseRepository<T>> implements IBaseService<T> {
+export abstract class BaseService<T extends IBaseEntity, R extends IBaseRepository<T>> {
     protected repository: R;
     constructor(repository: R) {
         this.repository = repository;
     }
 
     async getAll(relations?: string[]): Promise<T[]> {
-       return this.repository.findAll(relations);
+        if(relations) return this.repository.findWithRelations(relations);
+        return this.repository.findAll();
+       
     };
 
     async getOneById(id: number | string, relations?: string[] ): Promise<T | null> {

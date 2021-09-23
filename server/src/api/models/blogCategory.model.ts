@@ -1,19 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Blog } from ".";
+import { Column, Entity } from "typeorm";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IBlogCategoryModel {
-    id?: number;
-    name?: string;
+export interface IBlogCategoryCreateProps {
+    name: string;
 }
+export interface IBlogCategory extends IBlogCategoryCreateProps, IBaseEntity {}
 
 @Entity()
-export class BlogCategory {
-    @PrimaryGeneratedColumn()
-    id!: number;
-
+export class BlogCategory extends BaseEntity implements IBlogCategoryCreateProps {
     @Column()
     name!: string;
-
-    @OneToMany(() => Blog, blog => blog.category)
-    blogs!: Array<Blog>;
 }

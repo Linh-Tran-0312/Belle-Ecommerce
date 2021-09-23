@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+/* import { getRepository } from "typeorm";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 import { OrderDetail } from "../models";
 import { Service } from "typedi";
@@ -8,4 +8,4 @@ export class OrderDetailRepository extends BaseRepository<OrderDetail> implement
     constructor() {
         super(getRepository(OrderDetail));
     }
-}
+} */

@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+/* import { getRepository } from "typeorm";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 import { Brand } from "../models";
 import { Service } from "typedi";
@@ -12,3 +12,4 @@ export class BrandRepository extends BaseRepository<Brand> implements IBaseRepos
 
 
 
+ */

@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+/* import { getRepository } from "typeorm";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 import { ProductReview } from "../models";
 import { Service } from "typedi";
@@ -8,4 +8,4 @@ export class ProductReviewRepository extends BaseRepository<ProductReview> imple
     constructor() {
         super(getRepository(ProductReview));
     }
-}
+} */
