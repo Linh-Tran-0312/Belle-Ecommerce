@@ -6,6 +6,8 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 import { BlogController } from './../controllers/blogController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { PingController } from './../controllers/pingController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { BlogCategoryController } from './../controllers/blogCategoryController';
 import * as express from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -26,12 +28,36 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "categoryId": {"dataType":"double","required":true},
-            "category": {"ref":"IBlogCategory"},
             "imgPath": {"dataType":"string"},
             "content": {"dataType":"string","required":true},
             "commentAllow": {"dataType":"boolean"},
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
+            "category": {"ref":"IBlogCategory"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string"},
+            "categoryId": {"dataType":"double"},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string"},
+            "commentAllow": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -58,6 +84,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogCommentCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double"},
+            "userId": {"dataType":"string","required":true},
+            "user": {"ref":"IUser"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IBlogComment": {
         "dataType": "refObject",
         "properties": {
@@ -68,6 +106,7 @@ const models: TsoaRoute.Models = {
             "user": {"ref":"IUser"},
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
         },
         "additionalProperties": false,
     },
@@ -76,6 +115,14 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogCategoryCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -92,8 +139,12 @@ export function RegisterRoutes(app: express.Router) {
     // ###########################################################################################################
         app.get('/blogs',
 
-            function BlogController_getAllBlogs(request: any, response: any, next: any) {
+            function BlogController_getBlogs(request: any, response: any, next: any) {
             const args = {
+                    category: {"in":"query","name":"category","dataType":"double"},
+                    limit: {"in":"query","name":"limit","dataType":"double"},
+                    date: {"in":"query","name":"date","dataType":"string"},
+                    search: {"in":"query","name":"search","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -108,14 +159,15 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new BlogController();
 
 
-            const promise = controller.getAllBlogs.apply(controller, validatedArgs as any);
+            const promise = controller.getBlogs.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/blogs/current-blogs',
+        app.post('/blogs',
 
-            function BlogController_getCurrentBlogs(request: any, response: any, next: any) {
+            function BlogController_createBlog(request: any, response: any, next: any) {
             const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCreateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -130,7 +182,7 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new BlogController();
 
 
-            const promise = controller.getCurrentBlogs.apply(controller, validatedArgs as any);
+            const promise = controller.createBlog.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -138,7 +190,7 @@ export function RegisterRoutes(app: express.Router) {
 
             function BlogController_getBlogById(request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -157,10 +209,12 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/blogs/categories',
+        app.patch('/blogs/:id',
 
-            function BlogController_getBlogCategory(request: any, response: any, next: any) {
+            function BlogController_updateBlogById(request: any, response: any, next: any) {
             const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogUpdateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -175,13 +229,36 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new BlogController();
 
 
-            const promise = controller.getBlogCategory.apply(controller, validatedArgs as any);
+            const promise = controller.updateBlogById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/blogs/:id',
+
+            function BlogController_deleteBlogById(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new BlogController();
+
+
+            const promise = controller.deleteBlogById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/blogs/:blogId/comments',
 
-            function BlogController_getMoreCommentsOfBlog(request: any, response: any, next: any) {
+            function BlogController_getCommentsOfBlog(request: any, response: any, next: any) {
             const args = {
                     blogId: {"in":"path","name":"blogId","required":true,"dataType":"string"},
                     date: {"in":"query","name":"date","dataType":"string"},
@@ -199,54 +276,7 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new BlogController();
 
 
-            const promise = controller.getMoreCommentsOfBlog.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/blogs/:categoryId/blogs',
-
-            function BlogController_getBlogsByCategory(request: any, response: any, next: any) {
-            const args = {
-                    categoryId: {"in":"path","name":"categoryId","required":true,"dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.getBlogsByCategory.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/blogs/search',
-
-            function BlogController_searchBlogs(request: any, response: any, next: any) {
-            const args = {
-                    categoryId: {"in":"query","name":"categoryId","dataType":"string"},
-                    keyword: {"in":"query","name":"keyword","dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.searchBlogs.apply(controller, validatedArgs as any);
+            const promise = controller.getCommentsOfBlog.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -269,6 +299,98 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.getMessage.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/blog-categories',
+
+            function BlogCategoryController_getBlogCategory(request: any, response: any, next: any) {
+            const args = {
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new BlogCategoryController();
+
+
+            const promise = controller.getBlogCategory.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/blog-categories',
+
+            function BlogCategoryController_createBlogCategory(request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCategoryCreateProps"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new BlogCategoryController();
+
+
+            const promise = controller.createBlogCategory.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/blog-categories/:id',
+
+            function BlogCategoryController_updateBlogCategoryById(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCategoryCreateProps"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new BlogCategoryController();
+
+
+            const promise = controller.updateBlogCategoryById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/blog-categories/:id',
+
+            function BlogCategoryController_deleteBlogCategoryById(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new BlogCategoryController();
+
+
+            const promise = controller.deleteBlogCategoryById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

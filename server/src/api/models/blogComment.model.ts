@@ -9,9 +9,11 @@ export interface IBlogCommentCreateProps {
     parentCommentId?: number;
     userId: string;
     user?:IUser;
-    //childComments?: IBlogCommentCreateProps[];
 }
-export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {};
+export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {
+    childComments?: IBlogCommentCreateProps[];
+
+};
 
 @Entity()
 export class BlogComment extends BaseEntity implements IBlogCommentCreateProps {

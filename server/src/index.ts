@@ -6,8 +6,9 @@ import morgan from "morgan";
 import  dotenv  from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "./api/routes/routes";
+import  "./api/controllers/pingController";
 import "./api/controllers/blogController";
-import  "./api/controllers/pingController"
+import "./api/controllers/blogCategoryController";
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;

@@ -6,13 +6,14 @@ import { BlogCategory, IBlogCategory } from "./blogCategory.model";
 export interface IBlogCreateProps {
     title: string;
     categoryId: number;
-    category?: IBlogCategory;
     imgPath?: string;
     content: string;
     commentAllow?: boolean;   
 };
 
-export interface IBlog extends IBlogCreateProps, IBaseEntity {};
+export interface IBlog extends IBlogCreateProps, IBaseEntity {
+    category?: IBlogCategory;
+};
 
 @Entity()
 export class Blog extends BaseEntity implements IBlogCreateProps {

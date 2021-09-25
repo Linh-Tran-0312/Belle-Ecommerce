@@ -3,7 +3,7 @@ import { BaseEntity, IBaseEntity } from "../models/base.model";
 
 export interface IBaseRepository<T> {
     create(data: T | any): Promise<T>;
-    update(data: T | any, id: number | string): Promise<T | UpdateResult>;
+    update( id: number | string,data: T | any): Promise<T | UpdateResult>;
     delete(id: number | string): void;
 
     findAll(): Promise<T[]>;
@@ -14,7 +14,7 @@ export interface IBaseRepository<T> {
 }
 
 export abstract class BaseRepository<Props extends IBaseEntity, Class extends BaseEntity & Props,CreateProps>
-    implements IBaseRepository<Props>
+
 {
 
     protected entity: Repository<Class>;
@@ -25,14 +25,22 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Ba
 
     public async create(data: CreateProps | any): Promise<Props> {
         try {
-            return this.entity.save(data);
+            return this.entity.save({...data});
         } catch (error) {
             throw error;
         }
     }
-    public async update(id: number | string, data: Props | any): Promise<Props | UpdateResult> {
+    public async update(id: number | string, data: CreateProps | any): Promise<Props | UpdateResult> {
         try {
-            return this.entity.update(id, data);
+           const updatedItem: any = await this.entity
+                .createQueryBuilder()
+                .update()
+                .set({...data})
+                .where("id = :id", { id })
+                .returning("*")
+                .updateEntity(true)
+                .execute();
+            return updatedItem.raw[0];
         } catch (error) {
             throw error;
         }

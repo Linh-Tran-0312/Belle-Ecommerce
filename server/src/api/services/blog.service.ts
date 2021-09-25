@@ -2,26 +2,31 @@ import { Inject, Service } from "typedi";
 import { Blog, IBlog } from "../models";
 import { BlogRepository, BaseRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-import { ILike } from "typeorm";
+import { ILike, LessThan } from "typeorm";
 
+interface Query  {
+    category: number,
+    limit: number,
+    date: string,
+    search: string
+}
 @Service({ id: "blog-service" })
 export class BlogService extends BaseService<IBlog, BlogRepository> implements IBaseService<IBlog>  {
     constructor() {
         super(new BlogRepository())
     }
-    public async getCurrentBlogs():  Promise<IBlog[]> {
-        let options = {
+
+    public async getBlogs(query: Query): Promise<IBlog[]> {
+        let options: any = {
+            where: {},
             order: {
                 createdAt: "DESC"
             },
-            take: 5
         }
-        return this.repository.findWithCondition(options)
-    }
-    public async searchBlogs(categoryId?: number, keyword?: string): Promise<IBlog[]> {
-        let options: any = {}
-        if (categoryId && !isNaN(categoryId)) options.where.categoryId = categoryId;
-        if (keyword) options.where.title = ILike(`%${keyword}%`)
+        if (query.category > 0 ) options.where.categoryId = query.category;
+        if (!!query.search) options.where.title = ILike(`%${query.search}%`);
+        if(query.limit > 0) options.take = query.limit;
+        if(!!query.date) options.where.createdAt = LessThan(new Date(query.date));  
         return this.repository.findWithCondition(options);
     }
 }

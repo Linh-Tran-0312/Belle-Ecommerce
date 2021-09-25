@@ -1,4 +1,4 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity, IBaseEntity } from "./base.model";
 
 export interface IBlogCategoryCreateProps {
