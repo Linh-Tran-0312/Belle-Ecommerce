@@ -1,20 +1,19 @@
 
-import {Column, PrimaryGeneratedColumn, Entity, ManyToOne, JoinColumn } from "typeorm";
-import { ProductVariant, Order } from "./";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Order, ProductVariant } from "./";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IOrderDetailModel {
-    id?: number;
+export interface IOrderDetailCreateProps {
     orderId?: number;
-    productVariantId?: number;
-    quantity?: number;
-    unitPrice?: number;
+    productVariantId: number;
+    quantity: number;
+    unitPrice: number;
 }
 
-@Entity()
-export class OrderDetail {
+export interface IOrderDetail extends IOrderDetailCreateProps, IBaseEntity {};
 
-    @PrimaryGeneratedColumn()
-    id!: number;
+@Entity()
+export class OrderDetail extends BaseEntity implements IOrderDetailCreateProps {
 
     @Column()
     orderId!: number;

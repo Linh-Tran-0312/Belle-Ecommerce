@@ -7,11 +7,11 @@ export interface IBlogCommentCreateProps {
     text: string;
     blogId: number;
     parentCommentId?: number;
-    userId: string;
-    user?:IUser;
+    userId: number;
 }
 export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {
     childComments?: IBlogCommentCreateProps[];
+    user?:IUser;
 
 };
 
@@ -35,8 +35,8 @@ export class BlogComment extends BaseEntity implements IBlogCommentCreateProps {
     @JoinColumn()
     parentComment!: BlogComment;
 
-    @Column({nullable: true, type: "uuid"})
-    userId!: string;
+    @Column({nullable: true})
+    userId!: number;
 
     @ManyToOne(() => User)
     @JoinColumn()

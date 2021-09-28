@@ -1,25 +1,27 @@
-import { CreateDateColumn, Column, PrimaryGeneratedColumn, Entity, ManyToOne, OneToMany, JoinColumn } from "typeorm";
-import { Product, User } from "./";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { IUser, Product, User } from "./";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IProductCommentModel {
-    id?: number;
-    text?: string;
-    userId?: string;
-    productId?: number;
+export interface IProductCommentCreateProps {
+    text: string;
+    userId: number;
+    productId: number;
     parentCommentId?: number;
+    user?: IUser;
+}
+
+export interface IProductComment extends IProductCommentCreateProps, IBaseEntity {
+    childComment?: IProductCommentCreateProps[];
 }
 
 @Entity()
-export class ProductComment  {
+export class ProductComment extends BaseEntity implements IProductCommentCreateProps  {
 
-    @PrimaryGeneratedColumn()
-    id!: Number;
-
-    @Column({nullable: true, type: "text"})
+    @Column({type: "text"})
     text!: string;
 
-    @Column("uuid")
-    userId!: string;
+    @Column()
+    userId!: number;
 
     @ManyToOne(() => User)
     @JoinColumn()
@@ -39,8 +41,6 @@ export class ProductComment  {
     @JoinColumn()
     parentComment!: ProductComment;
 
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
 
     @OneToMany(() => ProductComment, productComment => productComment.parentComment)
     childComments!: Array<ProductComment>;

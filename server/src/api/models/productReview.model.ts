@@ -1,20 +1,20 @@
-import { CreateDateColumn, Column, PrimaryGeneratedColumn, Entity, ManyToOne, JoinColumn } from "typeorm";
-import { Product, User  } from "./";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { IUser, Product, User } from "./";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IProductReviewModel {
-    id?: number;
+export interface IProductReviewCreateProps {
     title?: string;
     text?: string;
-    productId?: number;
-    rating?: number;
-    userId?: string;
+    productId: number;
+    rating: number;
+    userId: string;
+    user?: IUser;
 }
 
-@Entity()
-export class ProductReview  {
+export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {};
 
-    @PrimaryGeneratedColumn()
-    id!: Number;
+@Entity()
+export class ProductReview  extends BaseEntity implements IProductReviewCreateProps{
 
     @Column({nullable: true})
     title!: string;
@@ -38,8 +38,4 @@ export class ProductReview  {
     @ManyToOne(() => Product, product => product.reviews, { onDelete: "CASCADE"})
     @JoinColumn()
     product!: Product;
-
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
-
 }

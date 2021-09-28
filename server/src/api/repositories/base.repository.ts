@@ -6,17 +6,13 @@ export interface IBaseRepository<T> {
     update( id: number | string,data: T | any): Promise<T | UpdateResult>;
     delete(id: number | string): void;
 
-    findAll(): Promise<T[]>;
-    findWithRelations(relations: string[]): Promise<T[]>;
-    findWithCondition(condition: any): Promise<T[]>;
-    findOneById(id: number | string, relations?: string[]): Promise<T | null>;
+    find(options: any): Promise<T[]>;
+    findOne(options: any): Promise<T | null>;
 
 }
 
 export abstract class BaseRepository<Props extends IBaseEntity, Class extends BaseEntity & Props,CreateProps>
-
 {
-
     protected entity: Repository<Class>;
 
     protected constructor(entity: Repository<Class>) {
@@ -30,7 +26,7 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Ba
             throw error;
         }
     }
-    public async update(id: number | string, data: CreateProps | any): Promise<Props | UpdateResult> {
+    public async update(id: number | string, data: CreateProps | any): Promise<Props> {
         try {
            const updatedItem: any = await this.entity
                 .createQueryBuilder()
@@ -52,30 +48,16 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Ba
             throw error;
         }
     }
-    public async findAll(): Promise<Props[]> {
+    public async find(options :any): Promise<Props[]> {
         try {
-            return this.entity.find();
+            return this.entity.find(options);
         } catch (error) {
             throw error;
         }
     }
-    public async findWithRelations(relations: string[]): Promise<Props[]> {
+    public async findOne(options: any): Promise<Props | null> {
         try {
-            return this.entity.find({ relations: relations });
-        } catch (error) {
-            throw error;
-        }
-    }
-    public async findWithCondition(condition: any): Promise<Props[]> {
-        try {
-            return this.entity.find(condition);
-        } catch (error) {
-            throw error;
-        }
-    }
-    public async findOneById(id: number | string, relations?: string[]): Promise<Props | null> {
-        try {
-            const item: Props | any = await this.entity.findOne(id, { relations });
+            const item: Props | any = await this.entity.findOne(options);
             if (!item) return null
             return item;
         } catch (error) {

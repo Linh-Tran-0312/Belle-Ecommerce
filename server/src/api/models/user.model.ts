@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from "typeorm";
-import { Order } from "./order.model";
+import { StringValidator } from "@tsoa/runtime";
+import { Column, Entity, OneToMany } from "typeorm";
 import { BaseEntity, IBaseEntity } from "./base.model";
+import { Order } from "./order.model";
+
 enum UserRole {
     ADMIN = 'admin',
     EDITOR = 'editor',
@@ -10,15 +12,18 @@ enum UserRole {
 export interface IUserCreateProps {
     fname: string;
     lname?: string;
-    googleId?: string;
     email: string;
-    password?: string;
-    phone?: string;
-    address?: string;
-    role?: UserRole;
+    password: string;
+
 }
 
-export interface IUser extends IUserCreateProps, IBaseEntity {}; 
+export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBaseEntity {
+    password?: string;
+    email?: string;
+    googleId?: string;
+    phone?: string;
+    address?: string;
+}; 
 
 @Entity()
 export class User extends BaseEntity implements IUserCreateProps {
@@ -38,7 +43,7 @@ export class User extends BaseEntity implements IUserCreateProps {
     @Column({ nullable: true })
     phone!: string;
 
-    @Column({select: false})
+    @Column()
     password!: string;
 
     @Column({ nullable: true })

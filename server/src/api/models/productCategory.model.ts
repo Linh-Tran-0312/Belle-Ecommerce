@@ -1,24 +1,20 @@
-import { CreateDateColumn, Column, PrimaryGeneratedColumn, Entity } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IProductCategoryModel {
-    id?: number;
-    name?: string;
-    imgPath?: number;
+export interface IProductCategoryCreateProps {   
+    name: string;
+    imgPath?: string;
 }
 
-@Entity()
-export class ProductCategory {
+export interface IProductCategory extends IProductCategoryCreateProps, IBaseEntity {};
 
-    @PrimaryGeneratedColumn()
-    id!: Number;
+@Entity()
+export class ProductCategory extends BaseEntity implements IProductCategoryCreateProps{
 
     @Column()
     name!: string;
 
     @Column({nullable: true})
     imgPath!: string
-
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
 
 }

@@ -1,25 +1,32 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Brand, ProductCategory, ProductComment, ProductVariant, ProductReview } from './';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Brand, ProductCategory, ProductComment, ProductReview, ProductVariant } from './';
+import { BaseEntity, IBaseEntity } from "./base.model";
+import { IBrand } from "./brand.model";
+import { IProductCategory, IProductCategoryCreateProps } from "./productCategory.model";
+import { IProductVariant } from "./productVariant.model";
 
-export interface IProductModel {
-    id?: number;
+export interface IProductCreateProps {
     sku?: string;
-    categoryId?: number;
-    brandId?: number;
+    categoryId: number;
+    brandId: number;
     imgPaths?: string[];
-    name?: string;
+    name: string;
     summary?: string;
     description?: string;
-    overallReview?: number;
-    reviewCount?: number;
-    price?: number;   
+    price: number;   
 }
 
-@Entity()
-export class Product {
+export interface IProduct extends IProductCategoryCreateProps, IBaseEntity {
+    category?: IProductCategory;
+    brand?: IBrand;
+    overallReview?: number;
+    reviewCount?: number;
+    variantList?: IProductVariant[];
+};
 
-    @PrimaryGeneratedColumn()
-    id!: number;
+@Entity()
+export class Product extends BaseEntity {
+
 
     @Column({nullable: true})
     sku!: string;
@@ -59,8 +66,6 @@ export class Product {
     @Column("simple-array",{ nullable: true})
     imgPaths!: string[];
 
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
 
     @OneToMany(() => ProductComment, productComment => productComment.product)
     comments!: Array<ProductComment>;

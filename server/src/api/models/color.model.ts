@@ -1,15 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IColorModel {
-    id?: number;
-    name?: string;
-    code?: string;  
+export interface IColorCreateProps {
+    code: string;
+    name: string;
 }
 
+export interface IColor extends IColorCreateProps, IBaseEntity {};
+
 @Entity()
-export class Color  {
-    @PrimaryGeneratedColumn()
-    id!: number;
+export class Color  extends BaseEntity implements IColorCreateProps {
 
     @Column()
     code!: string

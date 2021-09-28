@@ -1,19 +1,18 @@
 
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
-import { Product, Size, Color } from "./";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Color, Product, Size } from "./";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IProductVariantModel {
-    id?: number;
-    productId?: number;
-    sizeId?: number;
-    colorId?: number;
-    quantity?: number;
+export interface IProductVariantCreateProps {
+    productId: number;
+    sizeId: number;
+    colorId: number;
+    quantity: number;
 }
+export interface IProductVariant extends IProductVariantCreateProps, IBaseEntity {};
 
 @Entity()
-export class ProductVariant {
-    @PrimaryGeneratedColumn()
-    id!: number;
+export class ProductVariant extends BaseEntity implements IProductVariantCreateProps{
 
     @Column()
     productId!: number;

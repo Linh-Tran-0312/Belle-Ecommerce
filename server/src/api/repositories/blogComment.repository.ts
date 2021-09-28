@@ -6,5 +6,7 @@ export class BlogCommentRepository extends BaseRepository<IBlogComment, BlogComm
     constructor() {
         super(getRepository(BlogComment));
     }
-    
+ /*    public async getCommentsWithUser(): Promise<IBlogComment> {
+        return  
+    } */
 }

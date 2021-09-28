@@ -6,9 +6,16 @@ import morgan from "morgan";
 import  dotenv  from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "./api/routes/routes";
+import { errorHandler } from "./api/middlewares/ErrorHandler";
 import  "./api/controllers/pingController";
 import "./api/controllers/blogController";
 import "./api/controllers/blogCategoryController";
+import './api/controllers/authController';
+import "./api/controllers/userController";
+import "./api/controllers/sizeController";
+import './api/controllers/brandController';
+import "./api/controllers/productCategoryController";
+import "./api/controllers/productController";
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;
@@ -34,6 +41,7 @@ app.get("/", (req,res) => res.send({"message" : "Hello ABa to Belle Api build on
 
 RegisterRoutes(app);
 
+app.use(errorHandler)
 
 //app.listen(PORT, () => console.log(`Server started listening to port ${PORT}`));
 

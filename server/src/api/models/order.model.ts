@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { User, OrderDetail } from "./";
-import { IOrderDetailModel } from "./orderDetail.model";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity, IBaseEntity } from "./base.model";
+import { IOrderDetail, OrderDetail } from "./orderDetail.model";
+import { User } from "./user.model";
 
 enum Status {
     ORDERING = "ordering",
@@ -15,32 +16,24 @@ enum PaymentMethod {
     EWALLET = "e-wallet"
 }
 
-export interface IOrderModel {
-    id?: number;
-    userId?: string;
-    categoryId?: number;
-    status?: Status;
-    paymentMethod?: PaymentMethod;
-    paymentCheck?: boolean;
-    note?: string;
-    address?: string;
-    shipping?: number;
-    total?: number;
-    orderAt?: Date;  
+
+export interface IOrderCreateProps {
+    userId: number;
+    details?: IOrderDetail[];
+
 }
 
+export interface IOrder extends IOrderCreateProps, IBaseEntity {};
+
 @Entity()
-export class Order {
+export class Order  extends BaseEntity implements IOrderCreateProps {
 
-    @PrimaryGeneratedColumn()
-    id!: number;
-
-    @Column("uuid")
-    userId!: string;
+    @Column()
+    userId!: number;
 
     @ManyToOne(()=> User, user => user.orders)
     @JoinColumn()
-    user!: string;
+    user!: User;
 
     @Column({type: "enum",
     enum: Status,
@@ -70,7 +63,7 @@ export class Order {
     @Column({type: "timestamptz",nullable: true})
     orderAt!: Date;
 
-    @OneToMany(() => OrderDetail, orderDetail => orderDetail.order)
-    details!: Array<OrderDetail>;
+    @OneToMany(() => OrderDetail, orderDetail => orderDetail.order, { cascade: true})
+    details!: Array<IOrderDetail>;
 
 }

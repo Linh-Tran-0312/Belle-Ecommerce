@@ -1,11 +1,11 @@
-/* import { getRepository } from "typeorm";
-import { BaseRepository, IBaseRepository } from "./base.repository";
-import { Product } from "../models";
-import { Service } from "typedi";
+ import { Service } from "typedi";
+import { getRepository } from "typeorm";
+import { IProduct, IProductCreateProps, Product } from "../models";
+import { BaseRepository } from "./base.repository";
 
 @Service({ id: "product-repository"})
-export class ProductRepository extends BaseRepository<Product> implements IBaseRepository<Product> {
+export class ProductRepository extends BaseRepository<IProduct, Product, IProductCreateProps>  {
     constructor() {
         super(getRepository(Product));
     }
-} */
+} 

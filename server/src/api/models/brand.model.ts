@@ -1,24 +1,20 @@
-import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { BaseEntity, IBaseEntity } from "./base.model";
 
-export interface IBrandModel {
-    id?: number;
-    name?: string;
+export interface IBrandCreateProps {
+    name: string;
     imgPath?: string;
 }
 
-@Entity()
-export class Brand {
+export interface IBrand extends IBrandCreateProps, IBaseEntity {};
 
-    @PrimaryGeneratedColumn()
-    id!: number;
+@Entity()
+export class Brand extends BaseEntity implements IBrandCreateProps{
 
     @Column()
     name!: string;
 
     @Column({nullable: true})
     imgPath!: string;
-
-    @CreateDateColumn({ type: "timestamptz"})
-    createdAt!: Date;
-
+    
 }

@@ -1,6 +1,6 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Tags } from "tsoa";
-import { IBlog, IBlogComment, IBlogCreateProps } from "../models";
-import { BlogCategoryService, BlogCommentService, BlogService } from "../services";
+import { IBlog, IBlogComment, IBlogCommentCreateProps, IBlogCreateProps } from "../models";
+import { BlogCommentService, BlogService, IBlogQuery, IBlogCommentQuery } from "../services";
 
 export interface IBlogUpdateProps {
     title?: string;
@@ -8,6 +8,11 @@ export interface IBlogUpdateProps {
     imgPath?: string;
     content?: string;
     commentAllow?: boolean; 
+}
+export interface IBlogCommentUpdateProps {
+    text: string;
+    blogId: number;
+    userId: number;
 }
 
 @Route("blogs")
@@ -32,7 +37,7 @@ export class BlogController {
         @Query() search?: string
     ): Promise<IBlog[]> {
        
-        const query = {
+        const query: IBlogQuery = {
             category: 0,
             limit: 0,
             date: "",
@@ -85,9 +90,39 @@ export class BlogController {
      * Get blog comments by blogId, default number of comments is 2 
      */
     @Get("/:blogId/comments")
-    public async getCommentsOfBlog(@Path() blogId: string, @Query() date?: string): Promise<IBlogComment[]> {
-        if (!!date) return this._blogCommentService.getCommentsOfBlog(Number(blogId), new Date(date));
-        return this._blogCommentService.getCommentsOfBlog(Number(blogId));
+    public async getCommentsOfBlog(@Path() blogId: number, @Query() date?: string, @Query() limit?: number): Promise<IBlogComment[]> {
+       
+        const query: IBlogCommentQuery = {
+            limit: 0,
+            date: ""
+        } 
+        if(!!limit && !isNaN(limit)) {
+            query.limit = limit
+        }
+        if(!! date && date.trim() !== "") {
+            query.date = date
+        }
+        return this._blogCommentService.getCommentsOfBlog(blogId, query);
     }
-
+    /**
+     * Create new blog comment
+     */
+    @Post("/comments")
+    public async createComment(@Body() data: IBlogCommentCreateProps): Promise<IBlogComment> {
+        return this._blogCommentService.create(data)
+    }
+    /**
+     * Update a blog comment by its Id, 
+     */
+    @Patch("/comments/:commentId")
+    public async updateCommentById(@Path() commentId: number, @Body() data: IBlogCommentUpdateProps): Promise<IBlogComment> {
+        return this._blogCommentService.update(commentId, data )
+    }
+    /**
+     * Delete a blog comment by its Id, 
+     */
+    @Delete("/comments/:commentId")
+    public async deleteCommentById(@Path() commentId: number): Promise<void> {
+        return this._blogCommentService.delete(commentId)
+    }
 }

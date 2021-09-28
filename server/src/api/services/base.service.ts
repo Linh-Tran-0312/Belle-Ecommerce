@@ -8,26 +8,28 @@ export interface IBaseService<T extends IBaseEntity> {
     delete(id: number | string): Promise<void>;
     update(id: number | string, data: T | any): Promise<T | any>
 
-    getAll(relations?: string[]): Promise<T[]>;
+    getAll(options: any): Promise<T[]>;
     getOneById(id: number | string, relations?: string[] ): Promise<T | null>;
 
-  
 }
 
-export abstract class BaseService<T extends IBaseEntity, R extends IBaseRepository<T>> {
+export abstract class BaseService<T extends IBaseEntity, R extends IBaseRepository<T>> implements IBaseService<T> {
     protected repository: R;
     constructor(repository: R) {
         this.repository = repository;
     }
 
-    async getAll(relations?: string[]): Promise<T[]> {
-        if(relations) return this.repository.findWithRelations(relations);
-        return this.repository.findAll();
-       
+    async getAll(options: any): Promise<T[]> {
+        return this.repository.find(options); 
     };
 
     async getOneById(id: number | string, relations?: string[] ): Promise<T | null> {
-        const item: any = await this.repository.findOneById(id, relations);
+        const item: any = await this.repository.findOne({
+            where: {
+                id
+            },
+            relations
+        });
         if(!item) return null;
         return item
     };

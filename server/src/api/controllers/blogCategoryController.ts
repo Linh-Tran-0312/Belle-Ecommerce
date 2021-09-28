@@ -20,7 +20,7 @@ export class BlogCategoryController {
      */
     @Get("/")
     public async getBlogCategory(): Promise<IBlogCategory[]> {
-        return this._blogCategoryService.getAll();
+        return this._blogCategoryService.getAll({});
     }
     /**
      * Create new blog category

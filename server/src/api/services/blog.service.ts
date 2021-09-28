@@ -4,7 +4,7 @@ import { BlogRepository, BaseRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { ILike, LessThan } from "typeorm";
 
-interface Query  {
+export interface IBlogQuery  {
     category: number,
     limit: number,
     date: string,
@@ -16,7 +16,7 @@ export class BlogService extends BaseService<IBlog, BlogRepository> implements I
         super(new BlogRepository())
     }
 
-    public async getBlogs(query: Query): Promise<IBlog[]> {
+    public async getBlogs(query: IBlogQuery): Promise<IBlog[]> {
         let options: any = {
             where: {},
             order: {
@@ -27,6 +27,6 @@ export class BlogService extends BaseService<IBlog, BlogRepository> implements I
         if (!!query.search) options.where.title = ILike(`%${query.search}%`);
         if(query.limit > 0) options.take = query.limit;
         if(!!query.date) options.where.createdAt = LessThan(new Date(query.date));  
-        return this.repository.findWithCondition(options);
+        return this.repository.find(options);
     }
 }
