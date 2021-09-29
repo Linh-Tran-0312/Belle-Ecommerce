@@ -1,5 +1,5 @@
 import { UpdateResult, Repository } from "typeorm";
-import { BaseEntity, IBaseEntity } from "../models/base.model";
+import { CustomBaseEntity, IBaseEntity } from "../models/base.model";
 
 export interface IBaseRepository<T> {
     create(data: T | any): Promise<T>;
@@ -11,7 +11,7 @@ export interface IBaseRepository<T> {
 
 }
 
-export abstract class BaseRepository<Props extends IBaseEntity, Class extends BaseEntity & Props,CreateProps>
+export abstract class BaseRepository<Props extends IBaseEntity, Class extends CustomBaseEntity & Props,CreateProps>
 {
     protected entity: Repository<Class>;
 

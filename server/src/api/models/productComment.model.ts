@@ -1,13 +1,13 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { IUser, Product, User } from "./";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IProductCommentCreateProps {
     text: string;
     userId: number;
     productId: number;
     parentCommentId?: number;
-    user?: IUser;
+    user?: User;
 }
 
 export interface IProductComment extends IProductCommentCreateProps, IBaseEntity {
@@ -15,7 +15,7 @@ export interface IProductComment extends IProductCommentCreateProps, IBaseEntity
 }
 
 @Entity()
-export class ProductComment extends BaseEntity implements IProductCommentCreateProps  {
+export class ProductComment extends CustomBaseEntity implements IProductCommentCreateProps  {
 
     @Column({type: "text"})
     text!: string;

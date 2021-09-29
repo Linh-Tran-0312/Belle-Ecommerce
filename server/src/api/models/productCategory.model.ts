@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IProductCategoryCreateProps {   
     name: string;
@@ -9,7 +9,7 @@ export interface IProductCategoryCreateProps {
 export interface IProductCategory extends IProductCategoryCreateProps, IBaseEntity {};
 
 @Entity()
-export class ProductCategory extends BaseEntity implements IProductCategoryCreateProps{
+export class ProductCategory extends CustomBaseEntity implements IProductCategoryCreateProps{
 
     @Column()
     name!: string;

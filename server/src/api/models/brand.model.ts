@@ -1,5 +1,5 @@
 import { Column, Entity } from "typeorm";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IBrandCreateProps {
     name: string;
@@ -9,7 +9,7 @@ export interface IBrandCreateProps {
 export interface IBrand extends IBrandCreateProps, IBaseEntity {};
 
 @Entity()
-export class Brand extends BaseEntity implements IBrandCreateProps{
+export class Brand extends CustomBaseEntity implements IBrandCreateProps{
 
     @Column()
     name!: string;

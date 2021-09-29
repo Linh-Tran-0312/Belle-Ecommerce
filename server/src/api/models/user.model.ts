@@ -1,6 +1,7 @@
-import { StringValidator } from "@tsoa/runtime";
-import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity, IBaseEntity } from "./base.model";
+
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
+import { Product } from ".";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 import { Order } from "./order.model";
 
 enum UserRole {
@@ -14,6 +15,7 @@ export interface IUserCreateProps {
     lname?: string;
     email: string;
     password: string;
+    role?: UserRole;
 
 }
 
@@ -26,7 +28,7 @@ export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBa
 }; 
 
 @Entity()
-export class User extends BaseEntity implements IUserCreateProps {
+export class User extends CustomBaseEntity implements IUserCreateProps {
 
     @Column()
     fname!: string;
@@ -56,6 +58,9 @@ export class User extends BaseEntity implements IUserCreateProps {
     })
     role!: UserRole;
 
+    @ManyToMany(() => Product)
+    @JoinTable()
+    wishList!: Product[];
 
     @OneToMany(() => Order, order => order.user)
     orders!: Array<Order>

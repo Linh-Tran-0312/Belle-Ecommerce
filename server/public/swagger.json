@@ -143,6 +143,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UserRole": {
+				"enum": [
+					"admin",
+					"editor",
+					"customer"
+				],
+				"type": "string"
+			},
 			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
 				"properties": {
 					"password": {
@@ -165,6 +173,9 @@
 					},
 					"lname": {
 						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
 					},
 					"id": {
 						"type": "number",
@@ -205,6 +216,9 @@
 					},
 					"lname": {
 						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
 					},
 					"id": {
 						"type": "number",
@@ -327,6 +341,9 @@
 					},
 					"password": {
 						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
 					}
 				},
 				"required": [
@@ -496,6 +513,578 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ProductCategory": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"name",
+					"imgPath"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Brand": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"name",
+					"imgPath"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Product": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"sku": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"brandId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPaths": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"name": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"category": {
+						"$ref": "#/components/schemas/ProductCategory"
+					},
+					"brand": {
+						"$ref": "#/components/schemas/Brand"
+					},
+					"overallReview": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"comments": {
+						"items": {
+							"$ref": "#/components/schemas/ProductComment"
+						},
+						"type": "array"
+					},
+					"variantList": {
+						"items": {
+							"$ref": "#/components/schemas/ProductVariant"
+						},
+						"type": "array"
+					},
+					"reviews": {
+						"items": {
+							"$ref": "#/components/schemas/ProductReview"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"categoryId",
+					"brandId",
+					"name",
+					"price",
+					"sku",
+					"category",
+					"brand",
+					"summary",
+					"description",
+					"overallReview",
+					"reviewCount",
+					"imgPaths",
+					"comments",
+					"variantList",
+					"reviews"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"User": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"googleId": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"wishList": {
+						"items": {
+							"$ref": "#/components/schemas/Product"
+						},
+						"type": "array"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"fname",
+					"email",
+					"password",
+					"lname",
+					"googleId",
+					"phone",
+					"address",
+					"role",
+					"wishList",
+					"orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Status": {
+				"enum": [
+					"ordering",
+					"ordered",
+					"delivery",
+					"canceled",
+					"completed"
+				],
+				"type": "string"
+			},
+			"PaymentMethod": {
+				"enum": [
+					"cod",
+					"banktransfer",
+					"e-wallet"
+				],
+				"type": "string"
+			},
+			"IOrderDetail": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Order": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"note": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"orderAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"userId",
+					"user",
+					"status",
+					"paymentMethod",
+					"paymentCheck",
+					"note",
+					"address",
+					"shipping",
+					"total",
+					"orderAt",
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductComment": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"text": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					},
+					"parentComment": {
+						"$ref": "#/components/schemas/ProductComment"
+					},
+					"childComments": {
+						"items": {
+							"$ref": "#/components/schemas/ProductComment"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"text",
+					"userId",
+					"productId",
+					"user",
+					"product",
+					"parentCommentId",
+					"parentComment",
+					"childComments"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Size": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Color": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"code": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"code",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductVariant": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"sizeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"colorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					},
+					"size": {
+						"$ref": "#/components/schemas/Size"
+					},
+					"color": {
+						"$ref": "#/components/schemas/Color"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"productId",
+					"sizeId",
+					"colorId",
+					"quantity",
+					"product",
+					"size",
+					"color"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductReview": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"text": {
+						"type": "string"
+					},
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"productId",
+					"rating",
+					"userId",
+					"title",
+					"text",
+					"user",
+					"product"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IPagination": {
+				"properties": {
+					"products": {
+						"items": {
+							"$ref": "#/components/schemas/Product"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"products",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SortField": {
+				"enum": [
+					"price",
+					"name",
+					"overallReview"
+				],
+				"type": "string"
+			},
+			"Change": {
+				"enum": [
+					"DESC",
+					"ASC"
+				],
+				"type": "string"
+			},
 			"IProductVariant": {
 				"properties": {
 					"productId": {
@@ -623,11 +1212,35 @@
 			},
 			"IProductUpdateProps": {
 				"properties": {
+					"sku": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"brandId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPaths": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"name": {
 						"type": "string"
 					},
-					"code": {
+					"summary": {
 						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"type": "object",
@@ -1589,10 +2202,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IProduct"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/IPagination"
 								}
 							}
 						}
@@ -1633,10 +2243,27 @@
 					},
 					{
 						"in": "query",
-						"name": "date",
+						"name": "page",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/SortField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
 						}
 					},
 					{

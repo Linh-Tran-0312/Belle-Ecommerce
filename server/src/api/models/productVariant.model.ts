@@ -1,7 +1,7 @@
 
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Color, Product, Size } from "./";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IProductVariantCreateProps {
     productId: number;
@@ -12,7 +12,7 @@ export interface IProductVariantCreateProps {
 export interface IProductVariant extends IProductVariantCreateProps, IBaseEntity {};
 
 @Entity()
-export class ProductVariant extends BaseEntity implements IProductVariantCreateProps{
+export class ProductVariant extends CustomBaseEntity implements IProductVariantCreateProps{
 
     @Column()
     productId!: number;

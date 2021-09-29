@@ -5,7 +5,7 @@ export interface IBaseEntity {
     createdAt: Date;
 }
 
-export class BaseEntity implements IBaseEntity{
+export class CustomBaseEntity implements IBaseEntity{
     @PrimaryGeneratedColumn()
     id!: number;
 

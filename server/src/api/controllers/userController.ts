@@ -2,12 +2,13 @@ import { Body, Delete, Get, Patch, Path, Post, Query, Res, TsoaResponse, Route, 
 import { HttpCode } from "../helpers/HttpCode";
 import { IUser, IUserCreateProps } from "../models";
 import { BlogCommentService, UserService } from "../services";
+
 export interface IUserUpdateProps {
-    title?: string;
-    categoryId?: number;
-    imgPath?: string;
-    content?: string;
-    commentAllow?: boolean; 
+    lname?: string;
+    fname?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
 }
 
 @Route("users")

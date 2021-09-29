@@ -15,7 +15,7 @@ export class BlogCommentService extends BaseService<IBlogComment, BlogCommentRep
         super(new BlogCommentRepository())
     }
 
-    async getCommentsOfBlog(blogId: number, query: IBlogCommentQuery): Promise<IBlogComment[]> {
+ /*    async getCommentsOfBlog(blogId: number, query: IBlogCommentQuery): Promise<IBlogComment[]> {
         let options: any = {
             relations: ["childComments","user","childComments.user"],
              where: {
@@ -38,5 +38,9 @@ export class BlogCommentService extends BaseService<IBlogComment, BlogCommentRep
 
        return comments;
 
+    } */
+    async getCommentsOfBlog(blogId: number, query: IBlogCommentQuery): Promise<IBlogComment[]> {
+        const result = await this.repository.getCommentsWithUser(blogId, query);
+        return result;
     }
 }

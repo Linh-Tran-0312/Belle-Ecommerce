@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany} from "typeorm";
-import { IBaseEntity, BaseEntity  } from "./base.model";
+import { IBaseEntity, CustomBaseEntity  } from "./base.model";
 import { Blog } from "./blog.model";
 import { IUser, User } from "./user.model";
 
@@ -16,7 +16,7 @@ export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {
 };
 
 @Entity()
-export class BlogComment extends BaseEntity implements IBlogCommentCreateProps {
+export class BlogComment extends CustomBaseEntity implements IBlogCommentCreateProps {
 
     @Column()
     text!: string;
@@ -43,5 +43,5 @@ export class BlogComment extends BaseEntity implements IBlogCommentCreateProps {
     user!: User;
 
     @OneToMany(() => BlogComment, blogComment => blogComment.parentComment)
-    childComments!: Array<BlogComment>;
+    childComments!: Array<IBlogComment>;
 }

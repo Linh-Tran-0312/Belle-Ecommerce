@@ -1,7 +1,7 @@
 
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { BaseEntity, IBaseEntity } from "./base.model";
-import { BlogCategory, IBlogCategory } from "./blogCategory.model";
+import { CustomBaseEntity , IBaseEntity } from "./base.model";
+import { BlogCategory, IBlogCategory, } from "./blogCategory.model";
 
 export interface IBlogCreateProps {
     title: string;
@@ -16,7 +16,7 @@ export interface IBlog extends IBlogCreateProps, IBaseEntity {
 };
 
 @Entity()
-export class Blog extends BaseEntity implements IBlogCreateProps {
+export class Blog extends CustomBaseEntity implements IBlogCreateProps {
 
     @Column()
     title!: string;

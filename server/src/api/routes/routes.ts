@@ -85,9 +85,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserRole": {
+        "dataType": "refEnum",
+        "enums": ["admin","editor","customer"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"googleId":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"googleId":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string"},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IUser": {
@@ -100,6 +105,7 @@ const models: TsoaRoute.Models = {
             "address": {"dataType":"string"},
             "fname": {"dataType":"string","required":true},
             "lname": {"dataType":"string"},
+            "role": {"ref":"UserRole"},
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
         },
@@ -154,6 +160,7 @@ const models: TsoaRoute.Models = {
             "lname": {"dataType":"string"},
             "email": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole"},
         },
         "additionalProperties": false,
     },
@@ -251,6 +258,199 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProductCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+            "imgPath": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Brand": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+            "imgPath": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Product": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "sku": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "brandId": {"dataType":"double","required":true},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "name": {"dataType":"string","required":true},
+            "summary": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "category": {"ref":"ProductCategory","required":true},
+            "brand": {"ref":"Brand","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "reviewCount": {"dataType":"double","required":true},
+            "comments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+            "variantList": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductVariant"},"required":true},
+            "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductReview"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "User": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "password": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole","required":true},
+            "googleId": {"dataType":"string","required":true},
+            "phone": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "wishList": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Status": {
+        "dataType": "refEnum",
+        "enums": ["ordering","ordered","delivery","canceled","completed"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaymentMethod": {
+        "dataType": "refEnum",
+        "enums": ["cod","banktransfer","e-wallet"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrderDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"double"},
+            "productVariantId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Order": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"},"required":true},
+            "user": {"ref":"User","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "note": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "shipping": {"dataType":"double","required":true},
+            "total": {"dataType":"double","required":true},
+            "orderAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProductComment": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "text": {"dataType":"string","required":true},
+            "userId": {"dataType":"double","required":true},
+            "productId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "product": {"ref":"Product","required":true},
+            "parentComment": {"ref":"ProductComment","required":true},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Size": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Color": {
+        "dataType": "refObject",
+        "properties": {
+            "code": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProductVariant": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "productId": {"dataType":"double","required":true},
+            "sizeId": {"dataType":"double","required":true},
+            "colorId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "product": {"ref":"Product","required":true},
+            "size": {"ref":"Size","required":true},
+            "color": {"ref":"Color","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProductReview": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "title": {"dataType":"string","required":true},
+            "text": {"dataType":"string","required":true},
+            "productId": {"dataType":"double","required":true},
+            "rating": {"dataType":"double","required":true},
+            "userId": {"dataType":"string","required":true},
+            "user": {"ref":"User","required":true},
+            "product": {"ref":"Product","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IPagination": {
+        "dataType": "refObject",
+        "properties": {
+            "products": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SortField": {
+        "dataType": "refEnum",
+        "enums": ["price","name","overallReview"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Change": {
+        "dataType": "refEnum",
+        "enums": ["DESC","ASC"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IProductVariant": {
         "dataType": "refObject",
         "properties": {
@@ -298,8 +498,14 @@ const models: TsoaRoute.Models = {
     "IProductUpdateProps": {
         "dataType": "refObject",
         "properties": {
+            "sku": {"dataType":"string"},
+            "categoryId": {"dataType":"double"},
+            "brandId": {"dataType":"double"},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"}},
             "name": {"dataType":"string"},
-            "code": {"dataType":"string"},
+            "summary": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "price": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -971,7 +1177,9 @@ export function RegisterRoutes(app: express.Router) {
                     category: {"in":"query","name":"category","dataType":"double"},
                     brand: {"in":"query","name":"brand","dataType":"double"},
                     limit: {"in":"query","name":"limit","dataType":"double"},
-                    date: {"in":"query","name":"date","dataType":"string"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+                    sort: {"in":"query","name":"sort","ref":"SortField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
                     min: {"in":"query","name":"min","dataType":"double"},
                     max: {"in":"query","name":"max","dataType":"double"},

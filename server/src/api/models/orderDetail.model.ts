@@ -1,7 +1,7 @@
 
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Order, ProductVariant } from "./";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IOrderDetailCreateProps {
     orderId?: number;
@@ -13,7 +13,7 @@ export interface IOrderDetailCreateProps {
 export interface IOrderDetail extends IOrderDetailCreateProps, IBaseEntity {};
 
 @Entity()
-export class OrderDetail extends BaseEntity implements IOrderDetailCreateProps {
+export class OrderDetail extends CustomBaseEntity implements IOrderDetailCreateProps {
 
     @Column()
     orderId!: number;

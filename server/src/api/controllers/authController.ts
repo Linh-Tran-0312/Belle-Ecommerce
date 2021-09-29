@@ -1,13 +1,7 @@
 import { Body, Post, Route, Tags } from "tsoa";
 import { IUser, IUserCreateProps } from "../models";
 import { UserService } from "../services";
-export interface IUserUpdateProps {
-    title?: string;
-    categoryId?: number;
-    imgPath?: string;
-    content?: string;
-    commentAllow?: boolean; 
-}
+
 
 export interface ILogin {
     email: string,
@@ -27,12 +21,10 @@ export class AuthController {
      * Allow new users create their accounts
      */
     @Post("/register")
-    public async register(
-        @Body() data: IUserCreateProps,
-    ): Promise<IUser> {
+    public async register(@Body() data: IUserCreateProps): Promise<IUser> {
         return  this._userService.register(data)
     }
-  /**
+    /**
      * Allow users login with their email and password
      */
     @Post("/login")

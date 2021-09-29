@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { IUser, Product, User } from "./";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IProductReviewCreateProps {
     title?: string;
@@ -8,13 +8,13 @@ export interface IProductReviewCreateProps {
     productId: number;
     rating: number;
     userId: string;
-    user?: IUser;
+    user?: User;
 }
 
 export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {};
 
 @Entity()
-export class ProductReview  extends BaseEntity implements IProductReviewCreateProps{
+export class ProductReview  extends CustomBaseEntity implements IProductReviewCreateProps{
 
     @Column({nullable: true})
     title!: string;

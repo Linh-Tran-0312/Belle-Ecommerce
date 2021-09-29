@@ -6,7 +6,7 @@ export { ProductCategoryRepository } from "./category.repository";
 export { ColorRepository } from "./color.repository";
 export { OrderRepository } from "./order.repository";
 export { OrderDetailRepository } from "./orderDetail.repository";
-export { ProductRepository } from "./product.repository";
+export { ProductRepository, IPagination } from "./product.repository";
 export { ProductCommentRepository } from "./productComment.repository";
 export { ProductReviewRepository } from "./productReview.repository";
 export { ProductVariantRepository } from "./productVariant.repository";

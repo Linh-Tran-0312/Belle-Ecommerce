@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { Brand, ProductCategory, ProductComment, ProductReview, ProductVariant } from './';
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 import { IBrand } from "./brand.model";
 import { IProductCategory, IProductCategoryCreateProps } from "./productCategory.model";
 import { IProductVariant } from "./productVariant.model";
@@ -25,7 +25,7 @@ export interface IProduct extends IProductCategoryCreateProps, IBaseEntity {
 };
 
 @Entity()
-export class Product extends BaseEntity {
+export class Product extends CustomBaseEntity implements IProductCreateProps {
 
 
     @Column({nullable: true})

@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { BaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 import { IOrderDetail, OrderDetail } from "./orderDetail.model";
 import { User } from "./user.model";
 
@@ -26,7 +26,7 @@ export interface IOrderCreateProps {
 export interface IOrder extends IOrderCreateProps, IBaseEntity {};
 
 @Entity()
-export class Order  extends BaseEntity implements IOrderCreateProps {
+export class Order  extends CustomBaseEntity implements IOrderCreateProps {
 
     @Column()
     userId!: number;
