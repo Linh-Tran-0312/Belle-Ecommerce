@@ -120,11 +120,11 @@ export default () => {
                         </TableContainer>
                     </Grid>
                     <Grid item lg={4} md={4} sm={12}>
-                           <Box p={3} border={1} borderColor="grey.500"> 
+                           {/* <Box p={3} border={1} borderColor="grey.500"> 
                                <Typography variant="body2" gutterBottom>ADD A NOTE TO YOUR ORDER</Typography>
                                <TextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root : classes.noteTextField}}/>
                             </Box>  
-                            <Box mt={3} p={3} border={1} borderColor="grey.500">
+                             */}<Box  p={3} border={1} borderColor="grey.500">
                                 <Grid container direction="row" justifyContent="space-between">
                                         <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>SUBTOTAL</Typography>
                                         <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>$735.00</Typography>

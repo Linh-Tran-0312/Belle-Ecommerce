@@ -1,6 +1,6 @@
 
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { Color, Product, Size } from "./";
+import { Color, Product, Size, ISize, IColor } from "./";
 import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IProductVariantCreateProps {
@@ -9,7 +9,10 @@ export interface IProductVariantCreateProps {
     colorId: number;
     quantity: number;
 }
-export interface IProductVariant extends IProductVariantCreateProps, IBaseEntity {};
+export interface IProductVariant extends IProductVariantCreateProps, IBaseEntity {
+    size?: ISize;
+    color?: IColor;
+};
 
 @Entity()
 export class ProductVariant extends CustomBaseEntity implements IProductVariantCreateProps{
@@ -17,7 +20,7 @@ export class ProductVariant extends CustomBaseEntity implements IProductVariantC
     @Column()
     productId!: number;
 
-    @ManyToOne(() => Product, product => product.variantList, { onDelete: "CASCADE"})
+    @ManyToOne(() => Product, product => product.variants, { onDelete: "CASCADE"})
     @JoinColumn()
     product!: Product;
 

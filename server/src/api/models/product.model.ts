@@ -21,7 +21,7 @@ export interface IProduct extends IProductCategoryCreateProps, IBaseEntity {
     brand?: IBrand;
     overallReview?: number;
     reviewCount?: number;
-    variantList?: IProductVariant[];
+    variants?: IProductVariant[];
 };
 
 @Entity()
@@ -71,7 +71,7 @@ export class Product extends CustomBaseEntity implements IProductCreateProps {
     comments!: Array<ProductComment>;
 
     @OneToMany(() => ProductVariant, productVariant => productVariant.product)
-    variantList!: Array<ProductVariant>;
+    variants!: Array<ProductVariant>;
 
     @OneToMany(() => ProductReview, productReview => productReview.product )
     reviews!: Array<ProductReview>;

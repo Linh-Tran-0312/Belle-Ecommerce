@@ -5,6 +5,7 @@ export { BlogCommentService, IBlogCommentQuery } from './blogComment.service';
 export { BrandService } from "./brand.service";
 export { ColorService } from "./color.service";
 export { OrderService } from "./order.service";
+export { OrderDetailService } from "./orderDetail.service";
 export { ProductService, IProductQuery, Change, SortField  } from './product.service';
 export { ProductVariantService } from './productVariant.service';
 export { ProductCategoryService } from './productCategory.service';

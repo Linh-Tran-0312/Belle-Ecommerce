@@ -6,6 +6,146 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"IOrderDetail": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IOrder": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderDetailCreateProps": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderCreateProps": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetailCreateProps"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderUpdateItems": {
+				"properties": {
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetailCreateProps"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IBlogCategory": {
 				"properties": {
 					"name": {
@@ -625,7 +765,7 @@
 						},
 						"type": "array"
 					},
-					"variantList": {
+					"variants": {
 						"items": {
 							"$ref": "#/components/schemas/ProductVariant"
 						},
@@ -654,7 +794,7 @@
 					"reviewCount",
 					"imgPaths",
 					"comments",
-					"variantList",
+					"variants",
 					"reviews"
 				],
 				"type": "object",
@@ -738,46 +878,10 @@
 				"enum": [
 					"cod",
 					"banktransfer",
-					"e-wallet"
+					"e-wallet",
+					"gateway"
 				],
 				"type": "string"
-			},
-			"IOrderDetail": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
 			},
 			"Order": {
 				"properties": {
@@ -1085,6 +1189,32 @@
 				],
 				"type": "string"
 			},
+			"IColor": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"code",
+					"name",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IProductVariant": {
 				"properties": {
 					"productId": {
@@ -1110,6 +1240,12 @@
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
+					},
+					"size": {
+						"$ref": "#/components/schemas/ISize"
+					},
+					"color": {
+						"$ref": "#/components/schemas/IColor"
 					}
 				},
 				"required": [
@@ -1153,7 +1289,7 @@
 						"type": "number",
 						"format": "double"
 					},
-					"variantList": {
+					"variants": {
 						"items": {
 							"$ref": "#/components/schemas/IProductVariant"
 						},
@@ -1245,6 +1381,80 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"IProductVariantCreateProps": {
+				"properties": {
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"sizeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"colorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"productId",
+					"sizeId",
+					"colorId",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IProductVariantUpdateProps": {
+				"properties": {
+					"colorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"sizeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IColorCreateProps": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IColorUpdateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -1261,6 +1471,383 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/orders": {
+			"get": {
+				"operationId": "GetOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IOrder"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "For Admin permission\r\nGet all Orders, be able to sort by price, time, user and to filter by price, time, user...\r\nNot done",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new order when user add items to order that is not already existed.\r\nDone",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/{userId}/all": {
+			"get": {
+				"operationId": "GetOrdersOfUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IOrder"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all orders of user by userId\r\nNot done",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{userId}/current": {
+			"get": {
+				"operationId": "GetCurrentOrderOfUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Current order is incomplete order (status: ORDERING)\r\nGet current order of user",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}": {
+			"get": {
+				"operationId": "GetOrderById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Get order details",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateOrderById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update order (add items when use login if there are cart items saved in local storage)",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderUpdateItems"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteOrderById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete order of user",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}/place": {
+			"patch": {
+				"operationId": "PlaceOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Submit current order",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/items": {
+			"post": {
+				"operationId": "AddItemToOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrderDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add (create) item to order",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderDetailCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/items/{itemId}": {
+			"patch": {
+				"operationId": "UpdateItem",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrderDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update order item",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "itemId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderDetailCreateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteItem",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete order items",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "itemId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/blogs": {
 			"get": {
 				"operationId": "GetBlogs",
@@ -2429,6 +3016,106 @@
 				]
 			}
 		},
+		"/products/variant": {
+			"post": {
+				"operationId": "CreateProductVariant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProductVariant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IProductVariantCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/variant/{variantId}": {
+			"patch": {
+				"operationId": "UpdateProductVariant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProductVariant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update product variant partially",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "variantId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IProductVariantUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteProductVariant",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "variantId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/users": {
 			"get": {
 				"operationId": "GetUsers",
@@ -2453,6 +3140,130 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/colors": {
+			"get": {
+				"operationId": "GetColors",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IColor"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all colors",
+				"tags": [
+					"Product Color"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateColor",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IColor"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new color",
+				"tags": [
+					"Product Color"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IColorCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/colors/{id}": {
+			"patch": {
+				"operationId": "UpdateColorById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IColor"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update color info",
+				"tags": [
+					"Product Color"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IColorUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteColorById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete color",
+				"tags": [
+					"Product Color"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		}
 	},

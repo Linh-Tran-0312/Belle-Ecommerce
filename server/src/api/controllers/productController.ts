@@ -1,7 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Query, Tags } from "tsoa";
 import { IPagination } from "../repositories";
-import { IProduct, IProductCreateProps } from "../models";
-import { ProductService, IProductQuery, Change, SortField } from "../services";
+import { IProduct, IProductCreateProps, IProductVariant, IProductVariantCreateProps } from "../models";
+import { ProductService, IProductQuery, Change, SortField, ProductVariantService } from "../services";
 
 export interface IProductUpdateProps {
     sku?: string;
@@ -14,13 +14,20 @@ export interface IProductUpdateProps {
     price?: number; 
 }
 
+export interface IProductVariantUpdateProps {
+    colorId?: number;
+    sizeId?: number;
+    quantity?: number;
+}
+
 @Route("products")
 @Tags('Product')
 export class ProductController {
     private _productService: ProductService;
-
+    private _productVariantService: ProductVariantService;
     constructor() {
         this._productService = new ProductService();
+        this._productVariantService = new ProductVariantService();
     }
 
     /**
@@ -67,7 +74,7 @@ export class ProductController {
      */
      @Get("/:id")
      public async getProductById(@Path() id: number): Promise<IProduct|null> {
-         return this._productService.getOneById(id, ["category","brand"]);
+         return this._productService.getOneById(id, ["category","brand","variants","variants.color","variants.size"]);
      }
     /**
      * Create new product
@@ -89,6 +96,27 @@ export class ProductController {
     @Delete("/:id")
     public async deleteProductById(@Path() id: number): Promise<void> {
         return this._productService.delete(id);
+    }
+     /**
+     * Create product variant
+     */
+    @Post("/variant")
+    public async createProductVariant(@Body() data: IProductVariantCreateProps): Promise<IProductVariant> {
+        return this._productVariantService.create(data);
+    }
+    /**
+     * Update product variant partially
+     */
+    @Patch("/variant/:variantId")
+    public async updateProductVariant(@Path() variantId: number, @Body() data: IProductVariantUpdateProps): Promise<IProductVariant> {
+         return this._productVariantService.update(variantId, data)
+    }
+    /**
+     * Delete product variant
+     */
+    @Delete("/variant/:variantId")
+    public async deleteProductVariant(@Path() variantId: number): Promise<void> {
+        return this._productVariantService.delete(variantId)
     }
 
 }

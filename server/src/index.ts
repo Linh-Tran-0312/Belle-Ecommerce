@@ -14,8 +14,10 @@ import './api/controllers/authController';
 import "./api/controllers/userController";
 import "./api/controllers/sizeController";
 import './api/controllers/brandController';
+import "./api/controllers/colorController";
 import "./api/controllers/productCategoryController";
 import "./api/controllers/productController";
+import "./api/controllers/orderController";
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;
@@ -36,7 +38,7 @@ app.use(express.static("public"));
   })
 ); 
 
-app.get("/", (req,res) => res.send({"message" : "Hello ABa to Belle Api build on TypeScript"}))
+app.get("/", (req,res) => res.send({"message" : "Hello World. This is Belle-Ecommerce Web API created by Linh Tran. Please visit this https://***/docs to test API with Swagger UI"}))
 //app.use(pingRoute)
 
 RegisterRoutes(app);
