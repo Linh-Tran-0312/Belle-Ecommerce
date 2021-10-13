@@ -11,11 +11,12 @@ import Cart from './pages/cart';
 import Checkout from './pages/checkout';
 import Auth from './pages/auth';
 import ErrorPage from './pages/404page';
+import Dashboard from "./pages/admin";
 const App =  () => {
     return(
         <Router>
             <Switch>
-            
+            <Route  path="/admin" component={Dashboard}/>
             <Route exact path="/auth" component={Auth}/>
             <Route exact path="/checkout" component={Checkout}/>
             <Route exact exact path="/cart" component={Cart}/>

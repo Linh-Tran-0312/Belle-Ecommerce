@@ -48,7 +48,7 @@ export class OrderController {
     }
      /**
      * Get all orders of user by userId
-     * Not done
+     * Done
      */
     @Get("/:userId/all")
     public async getOrdersOfUser(@Path() userId: number): Promise<IOrder[]> {

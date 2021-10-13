@@ -1546,7 +1546,7 @@
 						}
 					}
 				},
-				"description": "Get all orders of user by userId\r\nNot done",
+				"description": "Get all orders of user by userId\r\nDone",
 				"tags": [
 					"Order"
 				],

@@ -61,7 +61,12 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                     userId,
                     status: Status.ORDERING
                 },
-                relations: ["details"]
+                relations: ["details",
+                            "details.productVariant",
+                            "details.productVariant.product",
+                            "details.productVariant.size",
+                            "details.productVariant.color"
+                        ]
             }
         const order = await this.repository.findOne(options);
        if(!order) return null;
@@ -72,7 +77,13 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
        const options = {
            where: {
                userId
-           }
+           },
+           relations: ["details",
+           "details.productVariant",
+           "details.productVariant.product",
+           "details.productVariant.size",
+           "details.productVariant.color"
+       ]
        }
         return this.repository.find(options)
     }
