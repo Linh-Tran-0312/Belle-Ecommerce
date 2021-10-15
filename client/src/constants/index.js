@@ -6,3 +6,8 @@ export const AdminPath = {
     REPORTS: "reports",
     CUSTOMERS: "customers"
 }
+
+export const Query = {
+    ASC : "ASC",
+    DESC: "DESC",
+}

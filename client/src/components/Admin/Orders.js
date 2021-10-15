@@ -6,25 +6,27 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Paper, Grid, TextField, Box, MenuItem, FormControl, Select, InputLabel } from "@material-ui/core";
+import { Paper, Grid, TextField, Box, IconButton, MenuItem, Button, FormControl, Select, InputLabel } from "@material-ui/core";
 import Title from './Title';
-
+import MoreIcon from '@material-ui/icons/More';
+import OrderDetail  from "./OrderDetailModal";
+import { Query } from "../../constants";
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
     return { id, date, name, shipTo, paymentMethod, amount };
 }
 
 const rows = [
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
+    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'Done', 312.44),
+    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'Not yet', 866.99),
+    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'Done', 100.81),
+    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'Done', 654.39),
+    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'Not yet', 212.79),
+    createData(10, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'Done', 312.44),
+    createData(11, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'Not yet', 866.99),
+    createData(12, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'Not yet', 100.81),
+    createData(13, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'Not yet', 654.39),
+    createData(14, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'Not yet', 212.79),
 ];
 
 function preventDefault(event) {
@@ -48,32 +50,48 @@ const useStyles = makeStyles((theme) => ({
     },
     textfield : {
         width: "100%"
-    }
+    },
+    formButton : {
+        margin: 5,
+    },
 }));
 const initialState = {
     search: "",
-    paymentMethod: null,
-    sale: null,
-    paymentStatus: null,
-    status: null,
-    period: null,
-    age: null,
-
+    paymentMethod: "",
+    paymentStatus: "",
+    status: "",
+    period: "",
+    sortMethod: ""
 }
 export default function Orders() {
 
     const classes = useStyles();
     const [ filter, setFilter ] = useState(initialState) 
-
+    console.log(filter)
     const handleChange = (e) => {
-        setFilter({...filter, [e.target.name] : e.target.value})
+     /*    if(e.target.name == "sort") {
+            switch(e.target.value) {
+                case "1":
+                    setFilter({...filter, sortField: "orderAt", sortValue: Query.ASC});
+                case "2":
+                    setFilter({...filter, sortField: "orderAt", sortValue: Query.DESC});
+                case "3":
+                    setFilter({...filter, sortField: "total", sortValue: Query.ASC});
+                case "4":
+                    setFilter({...filter, sortField: "total", sortValue: Query.DESC})
+            }
+        } else { */
+            setFilter({...filter, [e.target.name] : e.target.value})
+    }
+    const handleReset  = (e) => {
+        setFilter(initialState);
     }
     return (
         <React.Fragment>
             <Paper className={classes.paper}>
                 <Grid container direction="row" justifyContent="flex-start">
                     <Grid item xs={4} className={classes.formControl} >
-                    <TextField className={classes.textfield} id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's ID, name, address" variant="outlined" />
+                    <TextField className={classes.textfield} id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
                     </Grid>
                     <Grid item  >
                     <FormControl variant="outlined" className={classes.formControl}>
@@ -103,7 +121,7 @@ export default function Orders() {
                             id="demo-simple-select-outlined"
                             value={filter.status}
                             onChange={handleChange}
-                            label="Payment Status"
+                            label="Status"
                             name="status"
                         >
                             <MenuItem value="">
@@ -124,7 +142,7 @@ export default function Orders() {
                             id="demo-simple-select-outlined"
                             value={filter.period}
                             onChange={handleChange}
-                            label="Payment Status"
+                            label="Period"
                             name="period"
                         >
                             <MenuItem value="">
@@ -138,9 +156,36 @@ export default function Orders() {
                         </Select>
                     </FormControl>
                     </Grid>
-                    <Grid item  ></Grid>
-                </Grid>
-         
+                    <Grid item>
+                    <FormControl variant="outlined" className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value={filter.sortMethod}
+                            onChange={handleChange}
+                            label="Sort"
+                            name="sortMethod"
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value="1">Ascending date</MenuItem>
+                            <MenuItem value="2" selected>Descending date</MenuItem>
+                            <MenuItem value="3">Ascending sale</MenuItem>
+                            <MenuItem value="4">Descending sale</MenuItem>
+                        </Select>
+                    </FormControl>
+                    </Grid>
+                    <Grid item  className={classes.formControl}>
+                        <Button variant="contained" color="primary" size="large" className={classes.formButton}>
+                            Apply
+                        </Button>
+                        <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
+                           Reset
+                        </Button>
+                    </Grid>          
+                </Grid> 
             </Paper>
             <Paper className={classes.paper}>
                 <Box>
@@ -151,13 +196,15 @@ export default function Orders() {
                 <Table size="small">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Order ID</TableCell>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Customer</TableCell>
-                            <TableCell>Ship To</TableCell>
-                            <TableCell>Payment Status</TableCell>
-                            <TableCell align="right">Sale Amount</TableCell>
-                            <TableCell>Status</TableCell>
+                            <TableCell><strong>Order ID</strong></TableCell>
+                            <TableCell><strong>Date</strong></TableCell>
+                            <TableCell><strong>Customer</strong></TableCell>
+                            <TableCell><strong>Ship To</strong></TableCell>
+                            <TableCell><strong>Payment Status</strong></TableCell>
+                            <TableCell><strong>Payment Method</strong></TableCell>
+                            <TableCell align="right"><strong>Sale Amount</strong></TableCell>
+                            <TableCell><strong>Status</strong></TableCell>
+                            <TableCell><strong>Details</strong></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -167,9 +214,13 @@ export default function Orders() {
                                 <TableCell>{row.date}</TableCell>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.shipTo}</TableCell>
-                                <TableCell>{row.paymentMethod}</TableCell>
+                                <TableCell  align="center">{row.paymentMethod}</TableCell>
+                                <TableCell>COD</TableCell>
                                 <TableCell align="right">{row.amount}</TableCell>
                                 <TableCell>COMPETED</TableCell>
+                                <TableCell>
+                                     <OrderDetail/>
+                                    </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
