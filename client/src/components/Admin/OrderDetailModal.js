@@ -61,10 +61,7 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 240,
         margin: 20
     },
-    button : {
-        display: "flex",
-        justifyContent: "space-around"
-    }
+
 }));
 
 export default function SimpleModal() {
@@ -147,7 +144,7 @@ export default function SimpleModal() {
             </Box>
             <Box my={2}>
                 <Typography variant="subtitle2"><strong>Hinh thuc thanh toan: COD</strong></Typography>
-                
+
             </Box>
             <Box my={2}>
                 <Typography variant="subtitle2"><strong>Tinh trang thanh toan</strong></Typography>
@@ -169,12 +166,23 @@ export default function SimpleModal() {
                 </FormControl>
             </Box>
             <Divider />
-            <Box my={2} className={classes.button}>
-            <Button variant="contained" color="secondary">Delete</Button>
-            <Button variant="contained" color="default">Cancel</Button>
-                <Button variant="contained" color="primary">SAVE</Button>
+            <Box my={2}>
+                <Grid container direction="row" justifyContent='center' spacing={2}>
+                    <Grid item md={2} sm={2} xs={3}>
+                        <Button variant="contained" fullWidth color="secondary">Delete</Button>
+                    </Grid>
+                    <Grid item md={2} sm={2} xs={3}>
+                        <Button variant="contained" fullWidth color="default">Cancel</Button>
+
+                    </Grid>
+                    <Grid item md={2} sm={2} xs={3}>
+                        <Button variant="contained" fullWidth color="primary">SAVE</Button>
+                    </Grid>
+                </Grid>
+
+
             </Box>
-                            
+
         </div>
     );
 

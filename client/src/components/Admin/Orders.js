@@ -48,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 170,
         margin: 10
     },
-    textfield : {
-        width: "100%"
-    },
     formButton : {
         margin: 5,
     },
@@ -89,12 +86,12 @@ export default function Orders() {
     return (
         <React.Fragment>
             <Paper className={classes.paper}>
-                <Grid container direction="row" justifyContent="flex-start">
-                    <Grid item xs={4} className={classes.formControl} >
-                    <TextField className={classes.textfield} id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
+                <Grid container direction="row" justifyContent="flex-start" spacing={1}>
+                    <Grid item  md={4} sm={12} xs={12}   >
+                    <TextField fullWidth id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
                     </Grid>
-                    <Grid item  >
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <Grid item  md={2} sm={3} xs={6}  >
+                    <FormControl  fullWidth variant="outlined"  >
                         <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
                         <Select
                             labelId="demo-simple-select-outlined-label"
@@ -113,8 +110,8 @@ export default function Orders() {
                         </Select>
                     </FormControl>
                     </Grid>
-                    <Grid item  >
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <Grid item   md={2} sm={3} xs={6} >
+                    <FormControl fullWidth variant="outlined"  >
                         <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
                         <Select
                             labelId="demo-simple-select-outlined-label"
@@ -134,8 +131,8 @@ export default function Orders() {
                         </Select>
                     </FormControl>
                     </Grid>
-                    <Grid item  >
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <Grid item   md={2} sm={3} xs={6} >
+                    <FormControl fullWidth  variant="outlined"  >
                         <InputLabel id="demo-simple-select-outlined-label">Period</InputLabel>
                         <Select
                             labelId="demo-simple-select-outlined-label"
@@ -156,8 +153,8 @@ export default function Orders() {
                         </Select>
                     </FormControl>
                     </Grid>
-                    <Grid item>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <Grid item  md={2} sm={3} xs={6} >
+                    <FormControl fullWidth  variant="outlined"  >
                         <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
                         <Select
                             labelId="demo-simple-select-outlined-label"
@@ -177,7 +174,7 @@ export default function Orders() {
                         </Select>
                     </FormControl>
                     </Grid>
-                    <Grid item  className={classes.formControl}>
+                    <Grid item  md={12} sm={12} xs={12}   >
                         <Button variant="contained" color="primary" size="large" className={classes.formButton}>
                             Apply
                         </Button>
