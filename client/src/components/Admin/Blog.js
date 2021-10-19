@@ -71,8 +71,8 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
-                </Box>
+                {children} 
+            </Box>
             )}
         </div>
     );
@@ -241,7 +241,7 @@ export default function ProductAdmin() {
                             </TableContainer>
                         </Grid>
                     </Grid>
-                    <Box my={5} textAlign="center">
+                    <Box my={5}  >
                         <Pagination count={10} page={page} onChange={handleChangePage} />
                     </Box>
                 </Box>

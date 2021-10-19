@@ -52,7 +52,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    {children} 
                 </Box>
             )}
         </div>
@@ -204,7 +204,6 @@ export default function ProductAdmin() {
                             </Select>
                         </FormControl>
                     </Grid>
-
                     <Grid item md={2} sm={4} xs={6} >
                         <FormControl fullWidth variant="outlined"  >
                             <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
@@ -270,7 +269,7 @@ export default function ProductAdmin() {
                                     </TableHead>
                                     <TableBody>
                                         {rowsCategories.map((row, index) => (
-                                            <TableRow key={row.name}>
+                                            <TableRow key={index}>
                                                 <TableCell component="th" scope="row">
                                                     {`${index + 1}`}
                                                 </TableCell>
@@ -295,7 +294,7 @@ export default function ProductAdmin() {
                 </Box>
                 <Divider />
                 <Box my={5}>
-                    <Grid container xs={12} spacing={2}>
+                    <Grid container spacing={2}>
                         <Grid item sm={6} xs={12}>
                             <Box>
                                 <Button color="primary" fullWidth variant="contained">Add new Product</Button>
@@ -368,7 +367,7 @@ export default function ProductAdmin() {
                             </Box>
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <Box fullWidth p={1} border={1} sx={{ borderColor: "grey" }}>
+                            <Box  p={1} border={1} sx={{ borderColor: "grey" }}>
                                 <Box sx={{ height: '100%', height: 400, overflow: "auto" }}>
                                     <Grid container spacing={3} style={{
                                         margin: 0,
@@ -420,7 +419,7 @@ export default function ProductAdmin() {
                                     </TableHead>
                                     <TableBody>
                                         {rowsCategories.map((row, index) => (
-                                            <TableRow key={row.name}>
+                                            <TableRow key={index}>
                                                 <TableCell component="th" scope="row">
                                                     {`${index + 1}`}
                                                 </TableCell>
@@ -511,7 +510,7 @@ export default function ProductAdmin() {
                                 </TableHead>
                                 <TableBody>
                                     {rowsCategories.map((row, index) => (
-                                        <TableRow key={row.name}>
+                                        <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
@@ -562,7 +561,7 @@ export default function ProductAdmin() {
                                 </TableHead>
                                 <TableBody>
                                     {rowsBrands.map((row, index) => (
-                                        <TableRow key={row.name}>
+                                        <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
@@ -614,7 +613,7 @@ export default function ProductAdmin() {
                                 </TableHead>
                                 <TableBody>
                                     {rowsColors.map((row, index) => (
-                                        <TableRow key={row.name}>
+                                        <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
@@ -674,7 +673,7 @@ export default function ProductAdmin() {
                                 </TableHead>
                                 <TableBody>
                                     {rowsSizes.map((row, index) => (
-                                        <TableRow key={row.name}>
+                                        <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
