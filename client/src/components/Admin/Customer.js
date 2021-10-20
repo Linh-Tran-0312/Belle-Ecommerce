@@ -129,12 +129,10 @@ export default () => {
                     </Button>
                     </Grid>
                     <Grid item md={2} xs={12}>
-                    <Button variant="contained" color="primary" size="large" fullWidth startIcon={<PersonAddIcon/>} className={classes.formButton} onClick={handleReset}>
+                    <Button variant="contained" color="primary" size="large" fullWidth startIcon={<PersonAddIcon/>} className={classes.formButton} >
                         New User
                     </Button>
                     </Grid>
-                   
-
                 </Grid>
             </Grid>
             <Box my={2}>

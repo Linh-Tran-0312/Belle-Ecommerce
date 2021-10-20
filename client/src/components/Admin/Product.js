@@ -15,7 +15,14 @@ import Pagination from '@material-ui/lab/Pagination';
 import { Card, CardMedia, CardActions, CardActionArea, Divider, Slider } from "@material-ui/core";
 import { Box, Typography, Grid, IconButton, Button, TextField, FormControl, Select, InputLabel, MenuItem } from "@material-ui/core";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SaveIcon from '@material-ui/icons/Save';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import ColorLensIcon from '@material-ui/icons/ColorLens';
 import Rating from "../Rating";
+import ColorLens from '@material-ui/icons/ColorLens';
+import { ChromePicker } from "react-color";
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
@@ -52,7 +59,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    {children} 
+                    {children}
                 </Box>
             )}
         </div>
@@ -113,6 +120,8 @@ export default function ProductAdmin() {
     const [price, setPrice] = React.useState([0, 10000]);
     const [page, setPage] = React.useState(1);
 
+    const [colorPicker, setColorPicker] = React.useState("");
+    const [showColorPicker, setShowColorPicker] = React.useState(false)
     const handleChangePage = (event, value) => {
         setPage(value);
     };
@@ -141,6 +150,12 @@ export default function ProductAdmin() {
     };
     const handleReset = (e) => {
         setFilter(initialState);
+    }
+    const handleShowColorPicker = (e) => {
+        setShowColorPicker(preState => !preState)
+    }
+    const handleChangePicker = (color) => {
+        setColorPicker(color.hex)
     }
     return (
         <Paper className={classes.root}>
@@ -241,13 +256,20 @@ export default function ProductAdmin() {
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={12}   >
-                        <Button variant="contained" color="primary" size="large" className={classes.formButton}>
-                            Apply
-                        </Button>
-                        <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
-                            Reset
-                        </Button>
+                    <Grid item xs={12} container direction="row" justifyContent="space-between">
+                        <Grid item>
+                            <Button variant="contained" color="primary" size="large" className={classes.formButton}>
+                                Apply
+                            </Button>
+                            <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
+                                Reset
+                            </Button>
+                        </Grid>
+                        <Grid item md={3} xs={12}>
+                            <Button variant="contained" color="primary" size="large" fullWidth startIcon={<AddBoxIcon />} className={classes.formButton} >
+                                New Product
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Box my={2}>
@@ -296,79 +318,80 @@ export default function ProductAdmin() {
                 <Box my={5}>
                     <Grid container spacing={2}>
                         <Grid item sm={6} xs={12}>
-                            <Box>
-                                <Button color="primary" fullWidth variant="contained">Add new Product</Button>
-                                <Box my={5}>
-                                    <Box my={2}>
-                                        <TextField type="text" fullWidth label="Product name" variant="outlined" value="Zara" />
-                                    </Box>
-                                    <Box my={2}>
-                                        <Grid container spacing={1}>
-                                            <Grid item xs={6}>
-                                                <FormControl variant="outlined" className={classes.fullWidth}>
-                                                    <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
-                                                    <Select
-                                                        labelId="demo-simple-select-outlined-label"
-                                                        id="demo-simple-select-outlined"
-                                                        value="Zara"
+                            <Box >
+                                <Box >
+                                    <TextField type="text" fullWidth label="Product name" variant="outlined" value="Zara" />
+                                </Box>
+                                <Box my={2}>
+                                    <TextField type="text" fullWidth label="SKU code" variant="outlined" value="IKS-2339" />
+                                </Box>
+                                <Box my={2}>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={6}>
+                                            <FormControl variant="outlined" className={classes.fullWidth}>
+                                                <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-outlined-label"
+                                                    id="demo-simple-select-outlined"
+                                                    value="Zara"
 
-                                                        label="Category"
-                                                        name="paymentStatus"
-                                                    >
-                                                        <MenuItem value="Zara">
-                                                            Ao khoac nam
-                                                        </MenuItem>
-                                                        {
-                                                            rowsCategories.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
-                                                        }
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <FormControl variant="outlined" className={classes.fullWidth}>
-                                                    <InputLabel id="demo-simple-select-outlined-label">Brand</InputLabel>
-                                                    <Select
-                                                        labelId="demo-simple-select-outlined-label"
-                                                        id="demo-simple-select-outlined"
-                                                        value="Zara"
-
-                                                        label="Brand"
-                                                        name="paymentStatus"
-                                                    >
-                                                        <MenuItem value="Zara">
-                                                            Zara
-                                                        </MenuItem>
-                                                        {
-                                                            rowsBrands.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
-                                                        }
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
+                                                    label="Category"
+                                                    name="paymentStatus"
+                                                >
+                                                    <MenuItem value="Zara">
+                                                        Ao khoac nam
+                                                    </MenuItem>
+                                                    {
+                                                        rowsCategories.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
+                                                    }
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
+                                        <Grid item xs={6}>
+                                            <FormControl variant="outlined" className={classes.fullWidth}>
+                                                <InputLabel id="demo-simple-select-outlined-label">Brand</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-outlined-label"
+                                                    id="demo-simple-select-outlined"
+                                                    value="Zara"
 
-                                    </Box>
-                                    <Box my={2}>
-                                        <TextField type="text" multiline rows={4} fullWidth label="Summary" variant="outlined" />
-                                    </Box>
-                                    <Box my={2}>
-                                        <TextField type="text" fullWidth label="Price" variant="outlined" value="200000" />
-                                    </Box>
-                                    <Box my={2}>
-                                        <Grid container spacing={2}>
-                                            <Grid item xs={6}>
-                                                <Button fullWidth color="secondary" variant="contained">Delete</Button>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained">Save</Button>
-                                            </Grid>
+                                                    label="Brand"
+                                                    name="paymentStatus"
+                                                >
+                                                    <MenuItem value="Zara">
+                                                        Zara
+                                                    </MenuItem>
+                                                    {
+                                                        rowsBrands.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
+                                                    }
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
-                                    </Box>
+                                    </Grid>
+
+                                </Box>
+                                <Box my={2}>
+                                    <TextField type="text" multiline rows={6} fullWidth label="Summary" variant="outlined" />
+                                </Box>
+                                <Box my={2}>
+                                    <TextField type="text" fullWidth label="Price" variant="outlined" value="200000" />
+                                </Box>
+                                <Box my={2}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
+                                        </Grid>
+                                    </Grid>
                                 </Box>
                             </Box>
+
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <Box  p={1} border={1} sx={{ borderColor: "grey" }}>
-                                <Box sx={{ height: '100%', height: 400, overflow: "auto" }}>
+                            <Box p={1} border={1} sx={{ borderColor: "grey" }}>
+                                <Box sx={{ height: '100%', height: 435, overflow: "auto" }}>
                                     <Grid container spacing={3} style={{
                                         margin: 0,
                                         width: '100%',
@@ -396,46 +419,55 @@ export default function ProductAdmin() {
                                     </Grid>
                                 </Box>
                                 <Box my={1}>
-                                    <Button variant="outlined" color="primary" fullWidth>Add Image</Button>
+                                    <Button variant="outlined" color="primary" fullWidth startIcon={<AddPhotoAlternateIcon />}>Add Image</Button>
                                 </Box>
                             </Box>
                         </Grid>
                     </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item sm={6} xs={12}>
-                            <Box my={2}>
-                                <Typography variant="h6">Ao vest tong nam</Typography>
-                            </Box>
-                            <TableContainer component={Paper}>
-                                <Table aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell  ><strong>No</strong></TableCell>
-                                            <TableCell  ><strong>Color</strong></TableCell>
-                                            <TableCell  ><strong>Size</strong></TableCell>
-                                            <TableCell  ><strong>Quantity</strong></TableCell>
-                                            <TableCell  ><strong></strong></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {rowsCategories.map((row, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell component="th" scope="row">
-                                                    {`${index + 1}`}
-                                                </TableCell>
-                                                <TableCell  >Blue</TableCell>
-                                                <TableCell  >XS</TableCell>
-                                                <TableCell  >29</TableCell>
-                                                <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                    <Box my={4}>
+                        <Grid container spacing={4}>
+                            <Grid item sm={8} xs={12}>
+                                <Box my={2}>
+                                    <Grid container direction="row" justifyContent="space-between">
+                                        <Grid item>
+                                            <Typography variant="h5" color="primary">Variant List</Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Variant</Button>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                                <TableContainer component={Paper}>
+                                    <Table aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell  ><strong>No</strong></TableCell>
+                                                <TableCell  ><strong>Color</strong></TableCell>
+                                                <TableCell  ><strong>Size</strong></TableCell>
+                                                <TableCell  ><strong>Quantity</strong></TableCell>
+                                                <TableCell  ><strong></strong></TableCell>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Grid>
-                        <Grid item sm={6} xs={12}>
-                            <Box>
-                                <Button color="primary" fullWidth variant="contained">Add new Variant</Button>
+                                        </TableHead>
+                                        <TableBody>
+                                            {rowsCategories.map((row, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell component="th" scope="row">
+                                                        {`${index + 1}`}
+                                                    </TableCell>
+                                                    <TableCell  >Blue</TableCell>
+                                                    <TableCell  >XS</TableCell>
+                                                    <TableCell  >29</TableCell>
+                                                    <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Grid>
+                            <Grid item sm={4} xs={12}>
+                                <Box my={2} textAlign="center">
+                                    <Typography variant="h6">Variant Details</Typography>
+                                </Box>
                                 <Box my={5}>
                                     <Box my={2}>
                                         <FormControl variant="outlined" className={classes.fullWidth}>
@@ -481,17 +513,18 @@ export default function ProductAdmin() {
                                     <Box my={2}>
                                         <Grid container spacing={2}>
                                             <Grid item xs={6}>
-                                                <Button fullWidth color="secondary" variant="contained">Delete</Button>
+                                                <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained">Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
                                             </Grid>
                                         </Grid>
                                     </Box>
                                 </Box>
-                            </Box>
+
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </Box>
                 </Box>
 
             </TabPanel>
@@ -504,8 +537,7 @@ export default function ProductAdmin() {
                                     <TableRow>
                                         <TableCell  ><strong>No</strong></TableCell>
                                         <TableCell><strong>Category Name</strong></TableCell>
-                                        <TableCell  ><strong>ID</strong></TableCell>
-                                        <TableCell  ><strong></strong></TableCell>
+                                        <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -515,9 +547,7 @@ export default function ProductAdmin() {
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  >{row.id}</TableCell>
                                             <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
-
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -526,16 +556,16 @@ export default function ProductAdmin() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained">Add new Category</Button>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Category</Button>
                             <Box my={5}>
                                 <TextField type="text" fullWidth label="Category name" variant="outlined" value="Zara" />
                                 <Box my={2}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
-                                            <Button fullWidth color="secondary" variant="contained">Delete</Button>
+                                            <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained">Save</Button>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -555,8 +585,7 @@ export default function ProductAdmin() {
                                     <TableRow>
                                         <TableCell  ><strong>No</strong></TableCell>
                                         <TableCell><strong>Brand Name</strong></TableCell>
-                                        <TableCell  ><strong>ID</strong></TableCell>
-                                        <TableCell  ><strong></strong></TableCell>
+                                        <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -566,9 +595,7 @@ export default function ProductAdmin() {
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  >{row.id}</TableCell>
                                             <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
-
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -577,16 +604,16 @@ export default function ProductAdmin() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained">Add new Brand</Button>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Brand</Button>
                             <Box my={5}>
-                                <TextField type="text" fullWidth label="Category name" variant="outlined" value="Zara" />
+                                <TextField type="text" fullWidth label="Brand name" variant="outlined" value="Zara" />
                                 <Box my={2}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
-                                            <Button fullWidth color="secondary" variant="contained">Delete</Button>
+                                            <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained">Save</Button>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -606,9 +633,8 @@ export default function ProductAdmin() {
                                     <TableRow>
                                         <TableCell  ><strong>No</strong></TableCell>
                                         <TableCell><strong>Color Name</strong></TableCell>
-                                        <TableCell  ><strong>ID</strong></TableCell>
                                         <TableCell  ><strong>Code</strong></TableCell>
-                                        <TableCell  ><strong></strong></TableCell>
+                                        <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -618,10 +644,8 @@ export default function ProductAdmin() {
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name} <OpacityIcon style={{ color: row.code, position: "relative", top: 5 }} /></TableCell>
-                                            <TableCell  >{row.id}</TableCell>
                                             <TableCell  >{row.code}</TableCell>
                                             <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
-
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -630,24 +654,41 @@ export default function ProductAdmin() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained">Add new Color</Button>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Color</Button>
                             <Box my={5}>
                                 <Box my={1}>
                                     <TextField type="text" fullWidth label="Color name" variant="outlined" value="Blue" />
 
                                 </Box>
                                 <Box my={2}>
-                                    <TextField type="text" fullWidth label="Color code" variant="outlined" value="#3e5e4d" />
-
+                                    <Grid container>
+                                        <Grid item xs={10}>
+                                            <TextField type="text" fullWidth label="Color code" variant="outlined" disabled value={colorPicker} />
+                                        </Grid>
+                                        <Grid item xs={2} style={{ position: 'relative' }}>
+                                            <Box style={{ display: showColorPicker ? "block" : "none", position: "absolute", right: 50, top: -250 }}>
+                                                <ChromePicker
+                                                    color={colorPicker}
+                                                    onChangeComplete={handleChangePicker}
+                                                />
+                                            </Box>
+                                            <Box textAlign="center">
+                                            <IconButton onClick={handleShowColorPicker}>
+                                                <ColorLens style={{ color: colorPicker, fontSize: 35 }} />
+                                            </IconButton>
+                                            </Box>
+                                          
+                                        </Grid>
+                                    </Grid>
                                 </Box>
 
                                 <Box my={2}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
-                                            <Button fullWidth color="secondary" variant="contained">Delete</Button>
+                                            <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained">Save</Button>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -667,8 +708,7 @@ export default function ProductAdmin() {
                                     <TableRow>
                                         <TableCell  ><strong>No</strong></TableCell>
                                         <TableCell><strong>Size Name</strong></TableCell>
-                                        <TableCell  ><strong>ID</strong></TableCell>
-                                        <TableCell  ><strong></strong></TableCell>
+                                        <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -678,7 +718,6 @@ export default function ProductAdmin() {
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  >{row.id}</TableCell>
                                             <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
 
                                         </TableRow>
@@ -689,16 +728,16 @@ export default function ProductAdmin() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained">Add new Size</Button>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> }>New Size</Button>
                             <Box my={5}>
-                                <TextField type="text" fullWidth label="Category name" variant="outlined" value="XXL" />
+                                <TextField type="text" fullWidth label="Size name" variant="outlined" value="XXL" />
                                 <Box my={2}>
-                                    <Grid container spacing={2}>
+                                <Grid container spacing={2}>
                                         <Grid item xs={6}>
-                                            <Button fullWidth color="secondary" variant="contained">Delete</Button>
+                                            <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
                                         </Grid>
                                         <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained">Save</Button>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>
