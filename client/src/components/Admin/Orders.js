@@ -186,10 +186,8 @@ export default function Orders() {
             </Paper>
             <Paper className={classes.paper}>
                 <Box>
-                    <Title>All Orders</Title>
-                  
+                    <Title>All Orders</Title>              
                 </Box>
-
                 <Table size="small">
                     <TableHead>
                         <TableRow>

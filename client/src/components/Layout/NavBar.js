@@ -19,6 +19,7 @@ import React, { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import SearchBar from './SearchBar';
 import CartPopover from "../CartPopup";
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 const headersData = [
     {
         label: "HOME",
@@ -153,7 +154,9 @@ export default function NarBar() {
                         <SearchIcon />
                     </IconButton>
                     <CartPopover />
-
+                    <IconButton color="inherit">
+                    <AccountCircleOutlinedIcon/>
+                    </IconButton>     
                 </div>
             </Toolbar>
             </>
@@ -196,8 +199,10 @@ export default function NarBar() {
                     <IconButton color="inherit" onClick={handleOpenSearch}>
                         <SearchIcon />
                     </IconButton>
-                    <CartPopover />
-
+                    <CartPopover />              
+                    <IconButton color="inherit">                       
+                        <AccountCircleOutlinedIcon/>                      
+                    </IconButton> 
                 </div>
             </Toolbar>
         );

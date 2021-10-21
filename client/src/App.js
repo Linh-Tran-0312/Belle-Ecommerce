@@ -12,10 +12,12 @@ import Checkout from './pages/checkout';
 import Auth from './pages/auth';
 import ErrorPage from './pages/404page';
 import Dashboard from "./pages/admin";
+import User from "./pages/user";
 const App =  () => {
     return(
         <Router>
             <Switch>
+            <Route exact path="/user" component={User}/>
             <Route  path="/admin" component={Dashboard}/>
             <Route exact path="/auth" component={Auth}/>
             <Route exact path="/checkout" component={Checkout}/>
