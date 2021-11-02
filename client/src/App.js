@@ -30,7 +30,6 @@ const App =  () => {
             <Route exact path="/" component={Home}/>
             <Route path="*" component={ErrorPage}/>
             </Switch>
-           
         </Router>
     )
 }

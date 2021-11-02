@@ -1,3 +1,6 @@
+
+
+
 export const AdminPath = {
     DASHBOARD: "dashboard",
     ORDERS: "orders",
@@ -10,4 +13,14 @@ export const AdminPath = {
 export const Query = {
     ASC : "ASC",
     DESC: "DESC",
+}
+
+export const ACTION = {
+    GET_BLOG_CATEGORIES: "GET_BLOG_CATEGORIES",
+    CREATE_BLOG_CATEGORY: "CREATE_BLOG_CATEGORY",
+    UPDATE_BLOG_CATEGORY: "UPDATE_BLOG_CATEGORY",
+    DELETE_BLOG_CATEGORY: "DELETE_BLOG_CATEGORY",
+    ERROR_BLOG_CATEGORY: "ERROR_BLOG_CATEGORY",
+    IS_DELETING_BLOG_CATEGORY: "IS_DELETING_BLOG_CATEGORY"
+
 }

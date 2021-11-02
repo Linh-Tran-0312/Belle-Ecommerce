@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
+import blog from "../../actions/blog";
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -15,6 +17,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteButton from "../DeleteButton";
 import { Card, CardMedia, CardActions, CardActionArea, Divider, Slider } from "@material-ui/core";
 import { Box, Typography, Grid, IconButton, Button, TextField, FormControl, Select, InputLabel, MenuItem } from "@material-ui/core";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -22,22 +25,22 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 const useStyles = makeStyles((theme) => ({
-    formButton : {
+    formButton: {
         margin: 5,
     },
     titleBlock: {
-        [theme.breakpoints.down("xs")] : {
+        [theme.breakpoints.down("xs")]: {
             flexDirection: "column-reverse"
         }
     },
-    blogImg : {
+    blogImg: {
         width: "100%",
-       height: "100%",
-       position: "absolute",
-       top: 0,
-       borderRadius: 5
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        borderRadius: 5
     },
-    photoBlock : {
+    photoBlock: {
         border: "1px solid #bcbcbc",
         height: 300,
         position: "relative",
@@ -45,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
         backgroundImage: "url('../blog-default-photo.png')",
         backgroundSize: "cover"
     },
-    blogImgButton : {
+    blogImgButton: {
         position: "absolute",
         bottom: 0,
         zIndex: 10,
         color: "black",
         backgroundColor: "rgba(255,255,255,0.3)",
-        "&:hover" : {
+        "&:hover": {
             backgroundColor: "rgba(255,255,255,0.9)",
             borderColor: "transparent"
         },
@@ -71,8 +74,8 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                {children} 
-            </Box>
+                    {children}
+                </Box>
             )}
         </div>
     );
@@ -96,7 +99,7 @@ const rowsCategories = [
     createCategories('Customer Policy', 3),
     createCategories('Special Events', 4),
 ];
- 
+
 
 const initialState = {
     search: "",
@@ -106,34 +109,78 @@ const initialState = {
     max: "",
     sortMethod: ""
 }
-export default function ProductAdmin() {
+const initCategory = {
+    id: null,
+    name: ""
+};
+const initBlog = {
+    id: null,
+    title: "",
+    categoryId: null,
+    imgPath: "",
+    content: "",
+    commentAllow: true
+}
+export default function BlogAdmin() {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const dispatch = useDispatch();
+    const [tab, setTab] = React.useState(0);
+
+    // Category State
+    const blogCategories = useSelector(state => state.blog).categories;
+    const isDeletingBlogCategory = useSelector(state => state.blog).isDeletingBlogCategory;
+    const [category, setCategory] = useState(initCategory);
+    const [showCategory, setShowCategory] = useState(false);
+
+    // Blog 
+    const [ blog, setBlog ] = useState(initBlog);
+    const [showBlog, setShowBlog] = useState(false);
+    const [filter, setFilter] = React.useState(initialState)
+   
     const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
     const [page, setPage] = React.useState(1);
 
+    //Change tab between Blog Tab and Category Tab
+    const handleChangeTab = (event, newValue) => {
+        setTab(newValue);
+    };
+
+    // Handle events in Category Tab
+    const handleSelectCategory = (value) => {
+        setShowCategory(true);
+        setCategory({ id: value.id, name: value.name })
+    }
+    const handleAddNewCategory = () => {
+        setShowCategory(true);
+        setCategory(initCategory);
+    }
+    const handleCategoryChange = (e) => {
+        setCategory({...category, name: e.target.value})
+    }
+    const handleSubmitCategory = (e) => {
+        if(category.id == null)
+        {
+            dispatch(blog.createBlogCategory({name : category.name}))
+        } else {
+            dispatch(blog.updateBlogCategory(category.id, {name: category.name}))
+        }
+    }
+    const handleDeleteCategory = (e) => {
+        dispatch(blog.deleteBlogCategory(category.id));
+        setCategory(initCategory);
+        setShowCategory(false);
+    }
+   
+    // Handle events in Blog Tab
+    
     const handleChangePage = (event, value) => {
         setPage(value);
     };
-    const handleChangeTab = (event, newValue) => {
-        setValue(newValue);
-    };
-    const [filter, setFilter] = React.useState(initialState)
-    console.log(filter)
-    const handleChange = (e) => {
-        /*    if(e.target.name == "sort") {
-               switch(e.target.value) {
-                   case "1":
-                       setFilter({...filter, sortField: "orderAt", sortValue: Query.ASC});
-                   case "2":
-                       setFilter({...filter, sortField: "orderAt", sortValue: Query.DESC});
-                   case "3":
-                       setFilter({...filter, sortField: "total", sortValue: Query.ASC});
-                   case "4":
-                       setFilter({...filter, sortField: "total", sortValue: Query.DESC})
-               }
-           } else { */
-        setFilter({ ...filter, [e.target.name]: e.target.value })
+    const handleBlogChange = (e) => {
+        setBlog({ ...blog, [e.target.name]: e.target.value })
+    }
+    const handleBlogFilterChange = (e) => {
+
     }
     const handleEditorStateChange = (value) => {
         setEditorState(value);
@@ -144,7 +191,7 @@ export default function ProductAdmin() {
     return (
         <Paper className={classes.root}>
             <Tabs
-                value={value}
+                value={tab}
                 onChange={handleChangeTab}
                 indicatorColor="primary"
                 textColor="primary"
@@ -153,7 +200,7 @@ export default function ProductAdmin() {
                 <Tab label="Blog"  {...a11yProps(0)} />
                 <Tab label="Category"  {...a11yProps(1)} />
             </Tabs>
-            <TabPanel value={value} index={0}>
+            <TabPanel value={tab} index={0}>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                     <Grid item md={6} sm={12} xs={12}   >
                         <TextField fullWidth id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
@@ -200,13 +247,19 @@ export default function ProductAdmin() {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12}   >
-                        <Button variant="contained" color="primary" size="large" className={classes.formButton}>
-                            Apply
-                        </Button>
-                        <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
-                            Reset
-                        </Button>
+                    <Grid item xs={12} container direction="row" justifyContent="space-between">
+                        <Grid item>
+                            <Button variant="contained" color="primary" size="large" className={classes.formButton}>
+                                Apply
+                            </Button>
+                            <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
+                                Reset
+                            </Button>
+                        </Grid>
+                        <Grid item sm={3} xs={12}>
+                            <Button variant="contained" size="large" fullWidth color="primary" startIcon={<PostAddIcon />}>New Blog</Button>
+
+                        </Grid>
                     </Grid>
                 </Grid>
                 <Box my={2}>
@@ -247,17 +300,48 @@ export default function ProductAdmin() {
                 </Box>
                 <Divider />
                 <Box my={2}>
-                    <Grid container className={classes.titleBlock} spacing={2}>
-                        <Grid item md={8} sm={6} xs={12}>
-                            <TextField fullWidth type="text" name="title" label="Title" variant="outlined" required value="Spring Collection in Paris"/>
+                    <Grid container spacing={1}>
+                        <Grid item md={7} sm={12} xs={12}>
+                        <TextField fullWidth type="text" name="title" label="Title" variant="outlined" required value="Spring Collection in Paris" />
                         </Grid>
-                        <Grid item md={4} sm={6} xs={12}>
-                                 <Button variant="contained" size="large" fullWidth color="primary" style={{ height: "100%"}} startIcon={<PostAddIcon/>}>New Blog</Button>
-                         </Grid>
+                        <Grid item md={3} sm={6} xs={12}>
+                        <FormControl fullWidth variant="outlined"  >
+                            <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={blog.categoryId}
+                                onChange={handleBlogChange}
+                                label="Category"
+                                name="categoryId"
+                            >
+                                {
+                                    blogCategories.map(c => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem> )
+                                }
+                            </Select>
+                        </FormControl>
+                        </Grid>
+                        <Grid item md={2} sm={6} xs={12}>
+                        <FormControl fullWidth variant="outlined"  >
+                            <InputLabel id="demo-simple-select-outlined-label">Comment Allow</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={blog.commentAllow}
+                                onChange={handleBlogChange}
+                                label="Comment Allow"
+                                name="commentAllow"
+                            >
+                                 <MenuItem   value="true">Allow</MenuItem>
+                                 <MenuItem   value="false">Not Allow</MenuItem>
+                            </Select>
+                        </FormControl>
+                        </Grid>
                     </Grid>
                 </Box>
+            
                 <Box className={classes.photoBlock}>
-                    <img className={classes.blogImg} alt="" src=""/>
+                    <img className={classes.blogImg} alt="" src={blog.imgPath} />
                     <Button variant="outlined" fullWidth className={classes.blogImgButton} color="primary">Add cover photo</Button>
                 </Box>
                 <Box>
@@ -267,21 +351,21 @@ export default function ProductAdmin() {
                         wrapperClassName="wrapperClassName"
                         editorClassName="editorClassName"
                         onEditorStateChange={handleEditorStateChange}
-                        editorStyle={{ height: 500, border: "1px solid #bcbcbc"}}
+                        editorStyle={{ height: 500, border: "1px solid #bcbcbc" }}
                     />
                 </Box>
                 <Box my={2}>
                     <Grid container direction="row" justifyContent='center' spacing={2}>
-                                            <Grid item sm={3} md={2} xs={4}>
-                                            <Button variant="contained" color="secondary" fullWidth startIcon={<DeleteIcon/>} >Delete</Button>
-                                            </Grid>
-                                            <Grid item sm={3} md={2} xs={4}>
-                                            <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon/>} >Save</Button>
-                                            </Grid>
+                        <Grid item sm={3} md={2} xs={4}>
+                            <Button variant="contained" color="secondary" fullWidth startIcon={<DeleteIcon />} >Delete</Button>
+                        </Grid>
+                        <Grid item sm={3} md={2} xs={4}>
+                            <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} >Save</Button>
+                        </Grid>
                     </Grid>
                 </Box>
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={tab} index={1}>
                 <Grid container spacing={2}>
                     <Grid item sm={6} xs={12}>
                         <TableContainer component={Paper}>
@@ -290,17 +374,17 @@ export default function ProductAdmin() {
                                     <TableRow>
                                         <TableCell  ><strong>No</strong></TableCell>
                                         <TableCell><strong>Category Name</strong></TableCell>
-                                        <TableCell  ><strong></strong></TableCell>
+                                        <TableCell  ><strong>Detail</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsCategories.map((row, index) => (
+                                    {blogCategories.map((row, index) => (
                                         <TableRow key={row.name}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><IconButton size="small" onClick={() => handleSelectCategory(row)}><MoreHorizIcon /></IconButton></TableCell>
 
                                         </TableRow>
                                     ))}
@@ -310,21 +394,40 @@ export default function ProductAdmin() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained">Add new Category</Button>
-                            <Box my={5}>
-                                <TextField type="text" fullWidth label="Category name" variant="outlined" value="Zara" />
-                                <Box my={2}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <Button fullWidth color="secondary" startIcon={<DeleteIcon/>} variant="contained">Delete</Button>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Button color="primary" fullWidth startIcon={<SaveIcon/>} variant="contained">Save</Button>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
+                            <Button color="primary" fullWidth variant="contained" onClick={handleAddNewCategory}>Add new Category</Button>
+                            {
+                                showCategory && (
+                                    <Box my={5}>
+                                        <TextField type="text" fullWidth label="Category name" name="name" variant="outlined" value={category.name} onChange={handleCategoryChange}  />
+                                        <Box my={2}>
+                                            <Grid container spacing={2}>
+                                                {
+                                                    !category.id ? (
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
+                                                            </Grid>
+                                                        </>
 
-                            </Box>
+                                                    ) : (
+                                                        <>
+                                                            <Grid item xs={6}>
+                                                                <DeleteButton message="Are your sure to delete this blog category" deleteFn={handleDeleteCategory} status={isDeletingBlogCategory} />
+                                                            </Grid>
+                                                            <Grid item xs={6}>
+                                                                <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
+                                                            </Grid>
+                                                        </>
+                                                    )
+                                                }
+
+                                            </Grid>
+                                        </Box>
+
+                                    </Box>
+                                )
+                            }
+
 
                         </Box>
                     </Grid>

@@ -24,7 +24,7 @@ export class Blog extends CustomBaseEntity implements IBlogCreateProps {
     @Column({nullable: true})
     categoryId!: number;
 
-    @ManyToOne(() => BlogCategory, { onDelete: "SET NULL"})
+    @ManyToOne(() => BlogCategory, { onDelete: "CASCADE"})
     @JoinColumn()
     category!: BlogCategory;
 

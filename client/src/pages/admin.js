@@ -15,8 +15,10 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useState, useEffect} from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import blog from "../actions/blog";
 import Dashboard from "../components/Admin/Dashboard";
 import Order from "../components/Admin/Orders";
 import Product from "../components/Admin/Product";
@@ -115,12 +117,18 @@ const useStyles = makeStyles((theme) => ({
 export default function AdminPage() {
   const location = useLocation();
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(true);
   const [ page, setPage ] = React.useState(AdminPath.DASHBOARD);
 
+  console.log("Admin re-render")
   React.useEffect(() => {
     setPage(location.pathname.substring(7));
   },[location]);
+
+  useEffect(() => {
+    dispatch(blog.getBlogCategories());
+  },[])
 
   const handleDrawerOpen = () => {
     setOpen(true);

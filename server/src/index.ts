@@ -4,6 +4,7 @@ import { createConnection } from "typeorm";
 import dbConfig from './config/DatabaseConfig';
 import morgan from "morgan";
 import  dotenv  from "dotenv";
+import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "./api/routes/routes";
 import { errorHandler } from "./api/middlewares/ErrorHandler";
@@ -26,6 +27,7 @@ const app: Application = express();
 
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(cors());
 // allow external access to swagger file in public folder and config swagger route 
 app.use(express.static("public"));
  app.use(
