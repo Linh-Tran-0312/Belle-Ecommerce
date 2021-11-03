@@ -86,6 +86,50 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlogCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Blog": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string","required":true},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean","required":true},
+            "category": {"ref":"BlogCategory","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogs": {
+        "dataType": "refObject",
+        "properties": {
+            "blogs": {"dataType":"array","array":{"dataType":"refObject","ref":"Blog"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlogField": {
+        "dataType": "refEnum",
+        "enums": ["title","createdAt"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Change": {
+        "dataType": "refEnum",
+        "enums": ["DESC","ASC"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IBlogCategory": {
         "dataType": "refObject",
         "properties": {
@@ -484,7 +528,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IPagination": {
+    "IProducts": {
         "dataType": "refObject",
         "properties": {
             "products": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
@@ -493,14 +537,9 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "SortField": {
+    "ProductField": {
         "dataType": "refEnum",
         "enums": ["price","name","overallReview"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Change": {
-        "dataType": "refEnum",
-        "enums": ["DESC","ASC"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IColor": {
@@ -885,7 +924,9 @@ export function RegisterRoutes(app: express.Router) {
             const args = {
                     category: {"in":"query","name":"category","dataType":"double"},
                     limit: {"in":"query","name":"limit","dataType":"double"},
-                    date: {"in":"query","name":"date","dataType":"string"},
+                    sort: {"in":"query","name":"sort","ref":"BlogField"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+                    change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
             };
 
@@ -1537,7 +1578,7 @@ export function RegisterRoutes(app: express.Router) {
                     brand: {"in":"query","name":"brand","dataType":"double"},
                     limit: {"in":"query","name":"limit","dataType":"double"},
                     page: {"in":"query","name":"page","dataType":"double"},
-                    sort: {"in":"query","name":"sort","ref":"SortField"},
+                    sort: {"in":"query","name":"sort","ref":"ProductField"},
                     change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
                     min: {"in":"query","name":"min","dataType":"double"},

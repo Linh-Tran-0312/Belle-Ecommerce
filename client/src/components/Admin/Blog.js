@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from '@material-ui/core/styles';
-import blog from "../../actions/blog";
+import blogAction from "../../actions/blog";
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -101,24 +101,23 @@ const rowsCategories = [
 ];
 
 
-const initialState = {
+const initFilter = {
     search: "",
     category: "",
-    brand: "",
-    min: "",
-    max: "",
-    sortMethod: ""
+    sortMethod: "",
+    page: 1,
+    limit: 2
 }
 const initCategory = {
-    id: null,
+    id: "",
     name: ""
 };
 const initBlog = {
-    id: null,
+    id: "",
     title: "",
-    categoryId: null,
+    categoryId: "",
     imgPath: "",
-    content: "",
+    content: EditorState.createEmpty(),
     commentAllow: true
 }
 export default function BlogAdmin() {
@@ -133,12 +132,16 @@ export default function BlogAdmin() {
     const [showCategory, setShowCategory] = useState(false);
 
     // Blog 
-    const [ blog, setBlog ] = useState(initBlog);
+    const pageCount = useSelector(state => state.blog).pagination.total;
+    //const page = useSelector(state => state.blog).pagination.page;
+    const blogs = useSelector(state => state.blog).blogs;
+    const blog = useSelector(state => state.blog).blog;
+    //const [blog, setBlog] = useState(initBlog);
     const [showBlog, setShowBlog] = useState(false);
-    const [filter, setFilter] = React.useState(initialState)
-   
-    const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
-    const [page, setPage] = React.useState(1);
+    const [filter, setFilter] = useState(initFilter);
+
+    //const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
+    //const [page, setPage] = React.useState(1);
 
     //Change tab between Blog Tab and Category Tab
     const handleChangeTab = (event, newValue) => {
@@ -155,14 +158,13 @@ export default function BlogAdmin() {
         setCategory(initCategory);
     }
     const handleCategoryChange = (e) => {
-        setCategory({...category, name: e.target.value})
+        setCategory({ ...category, name: e.target.value })
     }
     const handleSubmitCategory = (e) => {
-        if(category.id == null)
-        {
-            dispatch(blog.createBlogCategory({name : category.name}))
+        if (!category.id) {
+            dispatch(blog.createBlogCategory({ name: category.name }))
         } else {
-            dispatch(blog.updateBlogCategory(category.id, {name: category.name}))
+            dispatch(blog.updateBlogCategory(category.id, { name: category.name }))
         }
     }
     const handleDeleteCategory = (e) => {
@@ -170,24 +172,51 @@ export default function BlogAdmin() {
         setCategory(initCategory);
         setShowCategory(false);
     }
-   
+
     // Handle events in Blog Tab
-    
+    useEffect(() => {
+        dispatch(blogAction.getBlogs(filter));
+    },[])
+    const handleFilterChange = (e) => {
+        setFilter({...filter, [e.target.name]: e.target.value, page: 1 });
+    };
+    const handleResetFilter = (e) => {
+        setFilter(initFilter);
+    };
+    const handleSubmitFilter = (e) => {
+        dispatch(blogAction.getBlogs(filter)) 
+    }
     const handleChangePage = (event, value) => {
-        setPage(value);
+        //setFilter({...filter, page : value});
+        dispatch(blogAction.getBlogs({...filter, page: value})) 
+    };
+    const handleAddNewBlog = (e) => {
+        setShowBlog(true)
     };
     const handleBlogChange = (e) => {
-        setBlog({ ...blog, [e.target.name]: e.target.value })
-    }
-    const handleBlogFilterChange = (e) => {
-
-    }
-    const handleEditorStateChange = (value) => {
-        setEditorState(value);
+        //setBlog({ ...blog, [e.target.name]: e.target.value })
     };
-    const handleReset = (e) => {
-        setFilter(initialState);
+    const handleEditorStateChange = (value) => {
+        //setBlog({ ...blog, content: value });
+    };
+    const handleSubmitBlog = (e) => {
+        if(!blog.id)
+        {
+            dispatch(blog.createBlog(blog))
+        } else {
+            dispatch(blog.updateBlog(blog.id,blog));
+        }
     }
+    const handleDeleteBlog = (e) => {
+        dispatch(blog.deleteBlog(blog.id));
+       // setBlog(initBlog);
+        setShowBlog(false);
+    }
+
+
+    
+    
+    
     return (
         <Paper className={classes.root}>
             <Tabs
@@ -200,31 +229,31 @@ export default function BlogAdmin() {
                 <Tab label="Blog"  {...a11yProps(0)} />
                 <Tab label="Category"  {...a11yProps(1)} />
             </Tabs>
-            <TabPanel value={tab} index={0}>
+        <TabPanel value={tab} index={0}>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                     <Grid item md={6} sm={12} xs={12}   >
-                        <TextField fullWidth id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
+                        <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
                     </Grid>
                     <Grid item md={3} sm={6} xs={6}  >
-                        <FormControl fullWidth variant="outlined"  >
-                            <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                value={filter.category}
-                                onChange={handleChange}
-                                label="Category"
-                                name="category"
-                            >
-                                <MenuItem value="">
+                    <FormControl fullWidth variant="outlined"  >
+                                <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={filter.category}
+                                    onChange={handleFilterChange}
+                                    label="Category"
+                                    name="category"
+                                >
+                                    <MenuItem value="">
                                     <em>All</em>
-                                </MenuItem>
-                                <MenuItem value="1">Ao khoac nam</MenuItem>
-                                <MenuItem value="2">Ao khoac nu</MenuItem>
-                                <MenuItem value="3">Phu kien</MenuItem>
-                                <MenuItem value="4">Vay</MenuItem>
-                            </Select>
-                        </FormControl>
+                                    </MenuItem>
+                                    {
+                                        blogCategories.map(c => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)
+                                    }
+                                </Select>
+                            </FormControl>
+                                       
                     </Grid>
                     <Grid item md={3} sm={6} xs={6} >
                         <FormControl fullWidth variant="outlined"  >
@@ -233,7 +262,7 @@ export default function BlogAdmin() {
                                 labelId="demo-simple-select-outlined-label"
                                 id="demo-simple-select-outlined"
                                 value={filter.sortMethod}
-                                onChange={handleChange}
+                                onChange={handleFilterChange}
                                 label="Sort"
                                 name="sortMethod"
                             >
@@ -241,7 +270,7 @@ export default function BlogAdmin() {
                                     <em>None</em>
                                 </MenuItem>
                                 <MenuItem value="1">Ascending date</MenuItem>
-                                <MenuItem value="2" selected>Descending date</MenuItem>
+                                <MenuItem value="2" >Descending date</MenuItem>
                                 <MenuItem value="3">Ascending name</MenuItem>
                                 <MenuItem value="4">Descending name</MenuItem>
                             </Select>
@@ -249,16 +278,15 @@ export default function BlogAdmin() {
                     </Grid>
                     <Grid item xs={12} container direction="row" justifyContent="space-between">
                         <Grid item>
-                            <Button variant="contained" color="primary" size="large" className={classes.formButton}>
+                            <Button variant="contained" color="primary" size="large" className={classes.formButton} onClick={handleSubmitFilter}>
                                 Apply
                             </Button>
-                            <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
+                            <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleResetFilter}>
                                 Reset
                             </Button>
                         </Grid>
                         <Grid item sm={3} xs={12}>
-                            <Button variant="contained" size="large" fullWidth color="primary" startIcon={<PostAddIcon />}>New Blog</Button>
-
+                            <Button variant="contained" size="large" fullWidth color="primary" onClick={handleAddNewBlog} startIcon={<PostAddIcon />}>New Blog</Button>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -273,18 +301,18 @@ export default function BlogAdmin() {
                                             <TableCell><strong>Title</strong></TableCell>
                                             <TableCell  ><strong>Category</strong></TableCell>
                                             <TableCell  ><strong>Date</strong></TableCell>
-                                            <TableCell  ><strong></strong></TableCell>
+                                            <TableCell  ><strong>Detail</strong></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rowsCategories.map((row, index) => (
-                                            <TableRow key={row.name}>
+                                        {blogs.map((row, index) => (
+                                            <TableRow key={row.id}>
                                                 <TableCell component="th" scope="row">
-                                                    {`${index + 1}`}
+                                                    {`${(filter.page - 1)*filter.limit + index + 1}`}
                                                 </TableCell>
-                                                <TableCell  >Blog unit</TableCell>
-                                                <TableCell  >{row.name}</TableCell>
-                                                <TableCell  >May 02, 2017</TableCell>
+                                                <TableCell  >{row.title}</TableCell>
+                                                <TableCell  >{row.category.name}</TableCell>
+                                                <TableCell  >{row.createdAt.slice(0,10)}</TableCell>
                                                 <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
 
                                             </TableRow>
@@ -295,58 +323,61 @@ export default function BlogAdmin() {
                         </Grid>
                     </Grid>
                     <Box my={5}  >
-                        <Pagination count={10} page={page} onChange={handleChangePage} />
+                        <Pagination count={Math.floor(pageCount/filter.limit)} page={filter.page} onChange={handleChangePage} />
                     </Box>
                 </Box>
                 <Divider />
-                <Box my={2}>
+                {
+                    showBlog && (
+                        <>
+                         <Box my={2}>
                     <Grid container spacing={1}>
                         <Grid item md={7} sm={12} xs={12}>
-                        <TextField fullWidth type="text" name="title" label="Title" variant="outlined" required value="Spring Collection in Paris" />
+                            <TextField fullWidth type="text" name="title" label="Title" variant="outlined" required value="Spring Collection in Paris" />
                         </Grid>
                         <Grid item md={3} sm={6} xs={12}>
-                        <FormControl fullWidth variant="outlined"  >
-                            <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                value={blog.categoryId}
-                                onChange={handleBlogChange}
-                                label="Category"
-                                name="categoryId"
-                            >
-                                {
-                                    blogCategories.map(c => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem> )
-                                }
-                            </Select>
-                        </FormControl>
+                            <FormControl fullWidth variant="outlined"  >
+                                <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={blog.categoryId}
+                                    onChange={handleBlogChange}
+                                    label="Category"
+                                    name="categoryId"
+                                >
+                                    {
+                                        blogCategories.map(c => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem>)
+                                    }
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item md={2} sm={6} xs={12}>
-                        <FormControl fullWidth variant="outlined"  >
-                            <InputLabel id="demo-simple-select-outlined-label">Comment Allow</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                value={blog.commentAllow}
-                                onChange={handleBlogChange}
-                                label="Comment Allow"
-                                name="commentAllow"
-                            >
-                                 <MenuItem   value="true">Allow</MenuItem>
-                                 <MenuItem   value="false">Not Allow</MenuItem>
-                            </Select>
-                        </FormControl>
+                            <FormControl fullWidth variant="outlined"  >
+                                <InputLabel id="demo-simple-select-outlined-label">Comment Allow</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={blog.commentAllow}
+                                    onChange={handleBlogChange}
+                                    label="Comment Allow"
+                                    name="commentAllow"
+                                >
+                                    <MenuItem value="true">Allow</MenuItem>
+                                    <MenuItem value="false">Not Allow</MenuItem>
+                                </Select>
+                            </FormControl>
                         </Grid>
                     </Grid>
                 </Box>
-            
+
                 <Box className={classes.photoBlock}>
                     <img className={classes.blogImg} alt="" src={blog.imgPath} />
                     <Button variant="outlined" fullWidth className={classes.blogImgButton} color="primary">Add cover photo</Button>
                 </Box>
                 <Box>
                     <Editor
-                        editorState={editorState}
+                        editorState={blog.content}
                         toolbarClassName="toolbarClassName"
                         wrapperClassName="wrapperClassName"
                         editorClassName="editorClassName"
@@ -356,83 +387,99 @@ export default function BlogAdmin() {
                 </Box>
                 <Box my={2}>
                     <Grid container direction="row" justifyContent='center' spacing={2}>
-                        <Grid item sm={3} md={2} xs={4}>
-                            <Button variant="contained" color="secondary" fullWidth startIcon={<DeleteIcon />} >Delete</Button>
-                        </Grid>
-                        <Grid item sm={3} md={2} xs={4}>
-                            <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} >Save</Button>
-                        </Grid>
+                        {
+                            !blog.id ? (
+                                <Grid item sm={3} md={2} xs={4}>
+                                 <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} onClick={handleSubmitBlog} >Save</Button>
+                                </Grid>
+                            ) : (
+                        <>
+                            <Grid item sm = { 3 } md = { 2 } xs = { 4 }>
+                                <DeleteButton message = "Are you sure to delete this post?" deleteFn={handleDeleteBlog}/>
+                            </Grid>
+                            <Grid item sm={3} md={2} xs={4}>
+                                <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} onClick={handleSubmitBlog}>Save</Button>
+                            </Grid>
+                        </>
+                        )
+                        }
+
                     </Grid>
                 </Box>
-            </TabPanel>
-            <TabPanel value={tab} index={1}>
-                <Grid container spacing={2}>
-                    <Grid item sm={6} xs={12}>
-                        <TableContainer component={Paper}>
-                            <Table aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell  ><strong>No</strong></TableCell>
-                                        <TableCell><strong>Category Name</strong></TableCell>
-                                        <TableCell  ><strong>Detail</strong></TableCell>
+                        
+                        </>
+                    )
+                }
+               
+        </TabPanel >
+        <TabPanel value={tab} index={1}>
+            <Grid container spacing={2}>
+                <Grid item sm={6} xs={12}>
+                    <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell  ><strong>No</strong></TableCell>
+                                    <TableCell><strong>Category Name</strong></TableCell>
+                                    <TableCell  ><strong>Detail</strong></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {blogCategories.map((row, index) => (
+                                    <TableRow key={row.name}>
+                                        <TableCell component="th" scope="row">
+                                            {`${index + 1}`}
+                                        </TableCell>
+                                        <TableCell  >{row.name}</TableCell>
+                                        <TableCell  ><IconButton size="small" onClick={() => handleSelectCategory(row)}><MoreHorizIcon /></IconButton></TableCell>
+
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {blogCategories.map((row, index) => (
-                                        <TableRow key={row.name}>
-                                            <TableCell component="th" scope="row">
-                                                {`${index + 1}`}
-                                            </TableCell>
-                                            <TableCell  >{row.name}</TableCell>
-                                            <TableCell  ><IconButton size="small" onClick={() => handleSelectCategory(row)}><MoreHorizIcon /></IconButton></TableCell>
-
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                        <Box>
-                            <Button color="primary" fullWidth variant="contained" onClick={handleAddNewCategory}>Add new Category</Button>
-                            {
-                                showCategory && (
-                                    <Box my={5}>
-                                        <TextField type="text" fullWidth label="Category name" name="name" variant="outlined" value={category.name} onChange={handleCategoryChange}  />
-                                        <Box my={2}>
-                                            <Grid container spacing={2}>
-                                                {
-                                                    !category.id ? (
-                                                        <>
-                                                            <Grid item xs={12}>
-                                                                <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
-                                                            </Grid>
-                                                        </>
-
-                                                    ) : (
-                                                        <>
-                                                            <Grid item xs={6}>
-                                                                <DeleteButton message="Are your sure to delete this blog category" deleteFn={handleDeleteCategory} status={isDeletingBlogCategory} />
-                                                            </Grid>
-                                                            <Grid item xs={6}>
-                                                                <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
-                                                            </Grid>
-                                                        </>
-                                                    )
-                                                }
-
-                                            </Grid>
-                                        </Box>
-
-                                    </Box>
-                                )
-                            }
-
-
-                        </Box>
-                    </Grid>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </Grid>
-            </TabPanel>
-        </Paper>
+                <Grid item sm={6} xs={12}>
+                    <Box>
+                        <Button color="primary" fullWidth variant="contained" onClick={handleAddNewCategory}>Add new Category</Button>
+                        {
+                            showCategory && (
+                                <Box my={5}>
+                                    <TextField type="text" fullWidth label="Category name" name="name" variant="outlined" value={category.name} onChange={handleCategoryChange} />
+                                    <Box my={2}>
+                                        <Grid container spacing={2}>
+                                            {
+                                                !category.id ? (
+                                                    <>
+                                                        <Grid item xs={12}>
+                                                            <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
+                                                        </Grid>
+                                                    </>
+
+                                                ) : (
+                                                    <>
+                                                        <Grid item xs={6}>
+                                                            <DeleteButton message="Are your sure to delete this blog category" deleteFn={handleDeleteCategory} status={isDeletingBlogCategory} />
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
+                                                        </Grid>
+                                                    </>
+                                                )
+                                            }
+
+                                        </Grid>
+                                    </Box>
+
+                                </Box>
+                            )
+                        }
+
+
+                    </Box>
+                </Grid>
+            </Grid>
+        </TabPanel>
+        </Paper >
     );
 }

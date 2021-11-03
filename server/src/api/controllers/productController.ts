@@ -1,7 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Query, Tags } from "tsoa";
-import { IPagination } from "../repositories";
+import { IProducts } from "../repositories";
 import { IProduct, IProductCreateProps, IProductVariant, IProductVariantCreateProps } from "../models";
-import { ProductService, IProductQuery, Change, SortField, ProductVariantService } from "../services";
+import { ProductService, IProductQuery, Change, ProductField, ProductVariantService } from "../services";
 
 export interface IProductUpdateProps {
     sku?: string;
@@ -39,19 +39,19 @@ export class ProductController {
         @Query() brand?: number,
         @Query() limit?: number,
         @Query() page?: number,
-        @Query() sort?: SortField,
+        @Query() sort?: ProductField,
         @Query() change?: Change,
         @Query() search?: string,
         @Query() min?: number,
         @Query() max?: number,
 
-    ): Promise<IPagination> {
+    ): Promise<IProducts> {
         let query: IProductQuery = {
             category: 0,
             brand: 0,
             limit: 6,
             page: 0,
-            sort: SortField.NAME,
+            sort: ProductField.NAME,
             change: Change.DESC,
             search: "",
             min: 0,

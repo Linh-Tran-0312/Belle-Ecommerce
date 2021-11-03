@@ -146,6 +146,105 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BlogCategory": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Blog": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"category": {
+						"$ref": "#/components/schemas/BlogCategory"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"title",
+					"categoryId",
+					"content",
+					"category",
+					"imgPath",
+					"commentAllow"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogs": {
+				"properties": {
+					"blogs": {
+						"items": {
+							"$ref": "#/components/schemas/Blog"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"blogs",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlogField": {
+				"enum": [
+					"title",
+					"createdAt"
+				],
+				"type": "string"
+			},
+			"Change": {
+				"enum": [
+					"DESC",
+					"ASC"
+				],
+				"type": "string"
+			},
 			"IBlogCategory": {
 				"properties": {
 					"name": {
@@ -1154,7 +1253,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IPagination": {
+			"IProducts": {
 				"properties": {
 					"products": {
 						"items": {
@@ -1174,18 +1273,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SortField": {
+			"ProductField": {
 				"enum": [
 					"price",
 					"name",
 					"overallReview"
-				],
-				"type": "string"
-			},
-			"Change": {
-				"enum": [
-					"DESC",
-					"ASC"
 				],
 				"type": "string"
 			},
@@ -1857,10 +1949,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IBlog"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/IBlogs"
 								}
 							}
 						}
@@ -1892,10 +1981,27 @@
 					},
 					{
 						"in": "query",
-						"name": "date",
+						"name": "sort",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"$ref": "#/components/schemas/BlogField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
 						}
 					},
 					{
@@ -2789,7 +2895,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IPagination"
+									"$ref": "#/components/schemas/IProducts"
 								}
 							}
 						}
@@ -2842,7 +2948,7 @@
 						"name": "sort",
 						"required": false,
 						"schema": {
-							"$ref": "#/components/schemas/SortField"
+							"$ref": "#/components/schemas/ProductField"
 						}
 					},
 					{

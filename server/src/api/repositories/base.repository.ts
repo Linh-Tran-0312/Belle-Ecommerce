@@ -1,4 +1,4 @@
-import { UpdateResult, Repository } from "typeorm";
+import { UpdateResult, Repository, FindManyOptions, FindOneOptions } from "typeorm";
 import { CustomBaseEntity, IBaseEntity } from "../models/base.model";
 
 export interface IBaseRepository<T> {
@@ -48,14 +48,14 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
             throw error;
         }
     }
-    public async find(options :any): Promise<Props[]> {
+    public async find(options :FindManyOptions): Promise<Props[]> {
         try {
             return this.entity.find(options);
         } catch (error) {
             throw error;
         }
     }
-    public async findOne(options: any): Promise<Props | null> {
+    public async findOne(options: FindOneOptions): Promise<Props | null> {
         try {
             const item: Props | any = await this.entity.findOne(options);
             if (!item) return null

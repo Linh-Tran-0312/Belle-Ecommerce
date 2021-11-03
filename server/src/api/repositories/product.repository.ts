@@ -3,7 +3,7 @@ import { getRepository } from "typeorm";
 import { IProduct, IProductCreateProps, Product } from "../models";
 import { BaseRepository } from "./base.repository";
 
-export interface IPagination {
+export interface IProducts {
     products: Product[],
     total: number,
 }
@@ -12,20 +12,20 @@ export class ProductRepository extends BaseRepository<IProduct, Product, IProduc
     constructor() {
         super(getRepository(Product));
     }
-    public async findAndCount(options: any): Promise<IPagination> {
+    public async findAndCount(options: any): Promise<IProducts> {
         try {
-            let products : Product[];
-            let total: number;
-            const [ result, count ] = await this.entity.findAndCount(options);
-            products = result;
-            total = count;
+            let result: IProducts = {
+                products: [],
+                total: 0
+            };
+            const [ products, count ] = await this.entity.findAndCount(options);
+            result.products = products;
+            result.total = count;
             console.log("Pro repo");
-            return { products, total };
+            return result;
         } catch (error) {
-           console.error();
-           
+           console.error();          
             throw error
-        }
-       
+        }  
     }
 } 

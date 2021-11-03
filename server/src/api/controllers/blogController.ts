@@ -1,6 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Tags } from "tsoa";
+import { IBlogs } from "../repositories";
 import { IBlog, IBlogComment, IBlogCommentCreateProps, IBlogCreateProps } from "../models";
-import { BlogCommentService, BlogService, IBlogQuery, IBlogCommentQuery } from "../services";
+import { BlogCommentService, BlogService, IBlogQuery, IBlogCommentQuery, BlogField, Change } from "../services";
 
 export interface IBlogUpdateProps {
     title?: string;
@@ -33,24 +34,37 @@ export class BlogController {
     public async getBlogs(
         @Query() category?: number,
         @Query() limit?: number,
-        @Query() date?: string,
+        @Query() sort?: BlogField,
+        @Query() page?: number,
+        @Query() change?: Change,
         @Query() search?: string
-    ): Promise<IBlog[]> {
+    ): Promise<IBlogs> {
        
         const query: IBlogQuery = {
             category: 0,
-            limit: 0,
-            date: "",
+            limit: 6,
+            page: 0,
+            sort: BlogField.DATE,
+            change: Change.DESC,
             search: ""
         }   
         if(!!category && !isNaN(category)) {
            query.category = category;
+           console.log(query.category);
         }
         if(!!limit  && !isNaN(limit)) {
             query.limit = limit;
-         }
-         if(!!date) {
-            query.date = date;
+        }
+        if(!!page && !isNaN(page))
+        {
+            query.page = page
+        }
+        if(!!sort && sort.trim() !== "")
+        {
+            query.sort = sort
+        }
+         if(!!change && change.trim() !== "") {
+            query.change = change;
          }
          if(!!search && search.trim() !== "") {
             query.search = search;
