@@ -8,25 +8,30 @@ import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Container} from "@material-ui/core";
+import { Container, Box, Paper} from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import clsx from 'clsx';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import blog from "../actions/blog";
-import Dashboard from "../components/Admin/Dashboard";
-import Order from "../components/Admin/Orders";
-import Product from "../components/Admin/Product";
-import Blog from "../components/Admin/Blog";
-import Report from "../components/Admin/Report";
-import Customer from "../components/Admin/Customer";
-import { Menu , secondaryListItems } from '../components/Admin/Menu';
-import { AdminPath } from '../constants';
+import blog from "../../actions/blog";
+import Dashboard from "./dashboard";
+import Order from "./order";
+import Product from "./product";
+import ProductCategory from './product_category';
+import ProductBrand from './product_brand';
+import ProductColor from './product_color';
+import ProductSize from './product_size';
+import Blog from "./blog";
+import BlogCategory from './blog_category';
+import Report from "./report";
+import Customer from "./user";
+import { Menu , secondaryListItems } from '../../components/Admin/Menu';
+import { AdminPath } from '../../constants';
 
 const drawerWidth = 240;
 
@@ -91,8 +96,8 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
+      height: '100vh',
+    overflow: 'auto',  
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -118,12 +123,21 @@ export default function AdminPage() {
   const location = useLocation();
   const classes = useStyles();
   const dispatch = useDispatch();
+  const topPage = useRef()
   const [open, setOpen] = React.useState(true);
   const [ page, setPage ] = React.useState(AdminPath.DASHBOARD);
+  const [ title, setTitle] = useState("DASHBOARD");
 
   console.log("Admin re-render")
   React.useEffect(() => {
-    setPage(location.pathname.substring(7));
+    const pathName = location.pathname.substring(7);
+    if(Object.keys(AdminPath).find(path => AdminPath[path] == pathName))
+    {
+      setPage(pathName);
+      const temp = pathName.replace(/\-/g," ").toUpperCase();
+      setTitle(temp);
+    }
+    topPage.current.scrollIntoView();
   },[location]);
 
   useEffect(() => {
@@ -139,22 +153,38 @@ export default function AdminPage() {
 
  const renderPage = (page) => {
      switch(page) {
-        case AdminPath.DASHBOARD:
-             return <Dashboard/>;
+     /*    case AdminPath.DASHBOARD:
+             return <Dashboard/>; */
         case AdminPath.ORDERS:
             return <Order />;
-        case AdminPath.PRODUCTS:
+/*         case AdminPath.PRODUCTS:
+            return <Product />; */
+        case AdminPath.PRODUCT_LIST:
             return <Product />
-        case AdminPath.BLOGS:
-            return <Blog/>
+        case AdminPath.PRODUCT_CATEGORY:
+            return <ProductCategory />;
+        case AdminPath.PRODUCT_BRAND:
+            return <ProductBrand />;
+        case AdminPath.PRODUCT_COLOR:
+            return <ProductColor />;
+        case AdminPath.PRODUCT_SIZE:
+            return <ProductSize />;
+/*         case AdminPath.BLOGS:
+            return <Blog/>; */
+        case AdminPath.BLOG_LIST:
+            return <Blog/>;
+        case AdminPath.BLOG_CATEGORY:
+            return <BlogCategory />;
         case AdminPath.CUSTOMERS:
-            return <Customer />
+            return <Customer />;
         case AdminPath.REPORTS:
-            return <Report />
+            return <Report />;
+        default:
+          return <Dashboard/>
     }
  }
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
@@ -168,7 +198,7 @@ export default function AdminPage() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {page.toUpperCase()}
+            {title ? title : "DASHBOARD"}
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -201,11 +231,13 @@ export default function AdminPage() {
         <List>{secondaryListItems}</List>
       </Drawer>
       <main className={classes.content}>
-      <div className={classes.appBarSpacer} />
+      <div className={classes.appBarSpacer} ref={topPage}/>
       <Container maxWidth="lg" className={classes.container}>
-     {
-         renderPage(page)
-     }
+        <Box component={Paper} p={2} >
+          {
+          renderPage(page)
+          }
+        </Box>     
      </Container>
      </main>
     </div>

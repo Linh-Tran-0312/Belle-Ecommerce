@@ -2022,7 +2022,12 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IBlog"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}
@@ -2091,7 +2096,12 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IBlog"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}

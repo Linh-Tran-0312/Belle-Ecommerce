@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Modal, Button, Grid, Box, Typography} from '@material-ui/core';
+import { Modal, Button, Grid, Box, Typography, Divider} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress'
 function getModalStyle() {
@@ -19,12 +19,19 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
- 
+    borderRadius: 5, 
     backgroundColor: theme.palette.background.paper,
     border: '2px solid white',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  red: {
+    backgroundColor: "#f44336",
+    color: "white",
+    "&:hover": {
+      backgroundColor:"#f6685e"
+    }
+  }
 }));
 const usePrevious = (data) => {
 
@@ -60,6 +67,10 @@ export default function DeleteModal({ message, deleteFn, status }) {
   
   const body = (
     <div style={modalStyle} className={classes.paper}>
+      <Box my={2} textAlign="left">
+      <Typography variant="h5" >Confirm delete</Typography>
+      </Box>
+         <Divider/>
         <Box my={5}>
             {
                 status ? (
@@ -68,14 +79,16 @@ export default function DeleteModal({ message, deleteFn, status }) {
                           <Typography color="secondary">Deleting...</Typography>
                     </Box>
                 ) : (
-                    <Typography color="secondary">{message}</Typography>
+                    <Typography >{message}</Typography>
                 )
             }
            
         </Box>
+        <Divider/>
+        <Box my={2}>
         <Grid container spacing={2} direction="row" justifyContent="center">
             <Grid item>
-                <Button variant="contained" fullWidth color="secondary" onClick={() => deleteFn()} > 
+                <Button variant="contained" fullWidth className={classes.red} onClick={() => deleteFn()} > 
                     Delete
                 </Button>
             </Grid>
@@ -85,12 +98,14 @@ export default function DeleteModal({ message, deleteFn, status }) {
                 </Button>
             </Grid>
         </Grid>
+        </Box>
+       
     </div>
   );
 
   return (
     <div>
-      <Button variant="contained" fullWidth onClick={handleOpen} color="secondary" startIcon={<DeleteIcon/>}> 
+      <Button variant="contained" fullWidth onClick={handleOpen} className={classes.red}  startIcon={<DeleteIcon/>}> 
       Delete
       </Button>
       <Modal

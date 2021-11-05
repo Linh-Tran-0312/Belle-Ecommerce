@@ -1,22 +1,22 @@
 import produce from "immer";
 import {ACTION} from "../constants";
-import { EditorState } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
 
 const initBlog = {
     id: "",
     title: "",
     categoryId: "",
     imgPath: "",
-    content: EditorState.createEmpty(),
+    content: JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())),
     commentAllow: true
 }
 const initState = {
     isDeletingBlogCategory: false,
+    isDeletingBlog: false,
     categories: [],
     blogs: [],
     pagination: {
-        total: 5,
-        page: 1
+        total: 5
     },
     blog: initBlog,
     error: null,
@@ -48,23 +48,31 @@ export default (state = initState, {type, payload}) => produce(state, (draft) =>
         case ACTION.GET_BLOGS:
             draft.blogs = payload.blogs;
             draft.pagination.total = payload.total;
-            break;
+            return draft;
         case ACTION.GET_BLOG_BY_ID:
             draft.blog = payload
-            break;
+            return draft;
         case ACTION.INIT_BLOG:
             draft.blog = initBlog;
-            break;
+            return draft;
         case ACTION.CREATE_BLOG: 
             draft.blog = payload;
-            draft.blogs = draft.blogs.unshift(payload)
-            break;
+            draft.blogs.unshift(payload);
+            draft.blogs.pop();
+            draft.pagination.total = draft.pagination.total + 1;
+            return draft;
         case ACTION.UPDATE_BLOG:
+            draft.blog = payload;
             draft.blogs = draft.blogs.map(b => b.id === payload.id ? payload : b)
-            break;
+            return draft;
+        case ACTION.IS_DELETING_BLOG:
+            draft.isDeletingBlog = true;
+            return draft;
         case ACTION.DELETE_BLOG:
-            draft.blogs = draft.blogs.filter(b => b !== payload)
-            break;
+            draft.blogs = draft.blogs.filter(b => b !== payload);
+            draft.pagination.total = draft.pagination.total - 1;
+            draft.isDeletingBlog = false;
+            return draft;
         default:
             break;
     }

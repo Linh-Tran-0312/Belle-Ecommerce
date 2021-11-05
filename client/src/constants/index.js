@@ -2,10 +2,17 @@
 
 
 export const AdminPath = {
-    DASHBOARD: "dashboard",
+    DASHBOARD: "",
     ORDERS: "orders",
     PRODUCTS: "products",
+    PRODUCT_LIST:"product-list",
+    PRODUCT_CATEGORY: "product-category",
+    PRODUCT_COLOR: "product-color",
+    PRODUCT_BRAND: "product-brand",
+    PRODUCT_SIZE: "product-size",
     BLOGS: "blogs",
+    BLOG_LIST: 'blog-list',
+    BLOG_CATEGORY: "blog-category",
     REPORTS: "reports",
     CUSTOMERS: "customers"
 }

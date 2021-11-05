@@ -3,7 +3,7 @@ import { CustomBaseEntity, IBaseEntity } from "../models/base.model";
 
 export interface IBaseRepository<T> {
     create(data: T | any): Promise<T>;
-    update( id: number | string,data: T | any): Promise<T | UpdateResult>;
+     update( id: number | string,data: T | any): Promise<T | UpdateResult>;
     delete(id: number | string): void;
 
     find(options: any): Promise<T[]>;

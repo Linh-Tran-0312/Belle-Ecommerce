@@ -44,33 +44,28 @@ const blogActions = {
     // handle blog actions
     getBlogs: (filter) => async(dispatch) => {
         try {
-            const query = {};
-            query.category = filter.category;
-            query.search = filter.search;
-            query.limit = filter.limit;
-            query.page = filter.page;
+            let queryString = "";
+            if(filter.category) queryString += `category=${filter.category}`;
+            if(filter.search) queryString += `&search=${filter.search}`;
+            if(filter.limit) queryString += `&limit=${filter.limit}`;
+            if(filter.page) queryString += `&page=${filter.page}`;
             switch(filter.sortMethod) {
                 case "1":
-                    query.sort = "createdAt";
-                    query.change= Query.ASC;
+                    queryString += `&sort=createdAt&change=${Query.ASC}`;
                     break;
                 case "2":
-                    query.sort = "createdAt";
-                    query.change= Query.DESC;
+                    queryString += `&sort=createdAt&change=${Query.DESC}`;
                     break;
                 case "3":
-                    query.sort = "title";
-                    query.change= Query.ASC;
+                    queryString += `&sort=title&change=${Query.ASC}`;
                     break;
                 case "4":
-                    query.sort = "title";
-                    query.change= Query.DESC;
+                    queryString += `&sort=title&change=${Query.DESC}`;
                     break;
                 default:
-                    query.sort = "";
-                    query.change= "";
+                    break;
             }
-            const res = await api.getBlogs(query);
+            const res = await api.getBlogs(queryString);
             console.log(res.data);
             dispatch({ type: ACTION.GET_BLOGS, payload: res.data});
         } catch (error) {
@@ -88,12 +83,21 @@ const blogActions = {
             dispatch({ type: ACTION.ERROR, payload: error.message})
         }
     },
+    /* addNewBlog: () => async(dispatch) => {
+        dispatch({ type: ACTION.INIT_BLOG})
+    }, */
     createBlog: (formData) => async(dispatch) => {
         try {
-            const copy = {...formData};
-            delete copy.id;
+            const copy = {
+                title: formData.title,
+                imgPath: formData.imgPath,
+                categoryId: formData.categoryId,
+                commentAllow: formData.commentAllow,
+                content: formData.content
+            }; 
+            console.log(copy);
             const res = await api.createBlog(copy);
-            console.log(res.data);
+            
             dispatch({ type: ACTION.CREATE_BLOG, payload: res.data});
         } catch (error) {
             console.log(error);
@@ -102,8 +106,15 @@ const blogActions = {
     },
     updateBlog: (id,formData) => async(dispatch) => {
         try {
-            const copy = {...formData}; 
-            delete copy.id;
+            const copy = {
+                title: formData.title,
+                imgPath: formData.imgPath,
+                categoryId: formData.categoryId,
+                commentAllow: formData.commentAllow,
+                content: formData.content
+            }; 
+           
+            console.log(copy);
             const res = await api.updateBlog(id,copy);
             console.log(res.data);
             dispatch({ type: ACTION.UPDATE_BLOG, payload: res.data});
@@ -114,8 +125,8 @@ const blogActions = {
     },
     deleteBlog: (id) => async(dispatch) => {
         try {
-            await api.deleteBlog(id);
-             
+            dispatch({ type: ACTION.IS_DELETING_BLOG})
+            await api.deleteBlog(id);            
             dispatch({ type: ACTION.DELETE_BLOG, payload: id});
         } catch (error) {
             console.log(error);

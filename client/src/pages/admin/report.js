@@ -93,7 +93,7 @@ export default () => {
 
     }
     return (
-        <Box>
+        <>
             <Box component={Paper} p={3} my={2}>
                 <Box mb={3} >
                     <Grid container justifyContent="space-between">
@@ -288,6 +288,6 @@ export default () => {
                     </Grid>
                 </Grid>
             </Box>
-        </Box>
+        </>
     )
 }

@@ -1,17 +1,14 @@
-import React, { useState} from 'react';
-import Link from '@material-ui/core/Link';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Paper, Grid, TextField, Box, IconButton, MenuItem, Button, FormControl, Select, InputLabel } from "@material-ui/core";
-import Title from './Title';
-import MoreIcon from '@material-ui/icons/More';
-import OrderDetail  from "./OrderDetailModal";
-import { Query } from "../../constants";
-// Generate Order Data
+import React, { useState } from 'react';
+import OrderDetail from "../../components/Admin/OrderDetailModal";
+import Title from '../../components/Admin/Title';
+// Generate Order Data 
 function createData(id, date, name, shipTo, paymentMethod, amount) {
     return { id, date, name, shipTo, paymentMethod, amount };
 }
@@ -84,7 +81,7 @@ export default function Orders() {
         setFilter(initialState);
     }
     return (
-        <React.Fragment>
+        <>
             <Paper className={classes.paper}>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                     <Grid item  md={4} sm={12} xs={12}   >
@@ -221,7 +218,6 @@ export default function Orders() {
                     </TableBody>
                 </Table>
             </Paper>
-
-        </React.Fragment>
+        </>
     );
-}
+} 

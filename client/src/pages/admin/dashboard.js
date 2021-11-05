@@ -6,17 +6,17 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
-import Chart from './Chart';
-import Deposits from './Deposit';
+import Chart from '../../components/Admin/Chart';
+import Deposits from '../../components/Admin/Deposit';
  
 import React from 'react';
 import { Link } from "react-router-dom";
-import Table from '@material-ui/core/Table';
+import Table from '@material-ui/core/Table'; 
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
+import Title from "../../components/Admin/Title";
 
 function Copyright() {
   return (
@@ -137,9 +137,7 @@ export default function Dashboard() {
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
     return(
-       <>
-       
-       
+       <>  
           <Grid container spacing={3}>
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>

@@ -1,9 +1,10 @@
 import { Inject, Service } from "typedi";
-import { Blog, IBlog } from "../models";
+import { Blog, IBlog, IBlogCreateProps } from "../models";
 import { BlogRepository, BaseRepository, IBlogs } from "../repositories";
 import { BaseService, IBaseService} from "./base.service";
 import { Change } from "./index";
 import { ILike, LessThan } from "typeorm";
+import { IBlogUpdateProps } from "../controllers/blogController";
  
 export enum BlogField {
     NAME = "title",
@@ -42,5 +43,20 @@ export class BlogService extends BaseService<IBlog, BlogRepository> implements I
         const result: IBlogs = await this.repository.findAndCount(options);
         if(!result) return { blogs: [], total: 0}
         return result
+    }
+    public async createBlog(data: IBlogCreateProps): Promise<IBlog|null> {
+        const { id } = await this.repository.create(data);
+        const newBlog: IBlog|null = await this.repository.findOne({
+            where: {
+                id: id
+            },
+            relations: ["category"]
+        });
+        return newBlog
+    }
+    public async updateBlog(id: number, data: IBlogUpdateProps ): Promise<IBlog|null> {
+        await this.repository.update(id, data);
+        const updatedBlog: IBlog|null = await this.getOneById(id,["category"]);
+        return updatedBlog;
     }
 }

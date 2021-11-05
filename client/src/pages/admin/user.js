@@ -72,7 +72,7 @@ export default () => {
         setFilter(initialState);
     }
     return (
-        <Box component={Paper} p={3} >
+        <>
             <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                 <Grid item md={6} sm={12} xs={12}   >
                     <TextField fullWidth id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search user's name, address, role" variant="outlined" />
@@ -260,6 +260,6 @@ export default () => {
                     </Grid>
                 </Grid>
             </Box>
-        </Box>
+        </>
     )
 }

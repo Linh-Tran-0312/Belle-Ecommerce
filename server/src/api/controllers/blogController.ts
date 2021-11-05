@@ -50,7 +50,6 @@ export class BlogController {
         }   
         if(!!category && !isNaN(category)) {
            query.category = category;
-           console.log(query.category);
         }
         if(!!limit  && !isNaN(limit)) {
             query.limit = limit;
@@ -75,8 +74,8 @@ export class BlogController {
      * Create a new blog
      */
     @Post("/")
-    public async createBlog(@Body() data: IBlogCreateProps): Promise<IBlog> {
-        return this._blogService.create(data) 
+    public async createBlog(@Body() data: IBlogCreateProps): Promise<IBlog|null> {
+        return this._blogService.createBlog(data) 
     }
     /**
      * Get details for a blog by its id
@@ -89,8 +88,8 @@ export class BlogController {
      * Update a blog partially by its id
      */
     @Patch("/:id")
-    public async updateBlogById(@Path() id: number, @Body() data: IBlogUpdateProps): Promise<IBlog> {
-        return this._blogService.update(id, data);
+    public async updateBlogById(@Path() id: number, @Body() data: IBlogUpdateProps): Promise<IBlog|null> {
+        return this._blogService.updateBlog(id, data);
     }
     /**
      * Delete a blog  by its id

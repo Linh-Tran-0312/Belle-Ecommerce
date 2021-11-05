@@ -9,7 +9,7 @@ const api = {
     deleteBlogCategory: (id) => API.delete(`/blog-categories/${id}`),
 
     //handle blog API
-    getBlogs: (query) => API.get(`/blogs?category=${query.category}&limit=${query.limit}&page=${query.page}&search=${query.search}&sort=${query.sort}&change=${query.change}`),
+    getBlogs: (queryString) => API.get(`/blogs?${queryString}`),
     getBlogById: (id) => API.get(`/blogs/${id}`),
     createBlog: (formData) => API.post("/blogs", formData),
     updateBlog: (id,formData) => API.patch(`/blogs/${id}`, formData),
