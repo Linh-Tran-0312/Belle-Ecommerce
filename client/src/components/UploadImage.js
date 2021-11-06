@@ -24,7 +24,7 @@ const UploadImage = ({getURL}) => {
     },[url])
     return (
        
-            <div style={{width: "100%", display: "flex", justifyContent="center"}}>
+            <div style={{width: "100%", display: "flex", justifyContent:"center"}}>
                 <input type="file" onChange={(e) => setImage(e.target.files[0])} />
                 <button onClick={uploadImage}>Upload</button>
             </div>

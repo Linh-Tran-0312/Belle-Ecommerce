@@ -83,9 +83,6 @@ const blogActions = {
             dispatch({ type: ACTION.ERROR, payload: error.message})
         }
     },
-    /* addNewBlog: () => async(dispatch) => {
-        dispatch({ type: ACTION.INIT_BLOG})
-    }, */
     createBlog: (formData) => async(dispatch) => {
         try {
             const copy = {

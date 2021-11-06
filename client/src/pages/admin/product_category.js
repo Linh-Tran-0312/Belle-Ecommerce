@@ -12,76 +12,48 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteButton from "../../components/DeleteButton";
-import React from 'react';
-const useStyles = makeStyles({
-    root: {
-        flexGrow: 1,
-    },
-    fullWidth: {
-        width: "100%"
-    },
-    img: {
-        maxWidth: 245,
-        width: "100%",
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import productActions from "../../actions/product";
 
-    },
-    formControl: {
-        minWidth: 170,
-        margin: 10
-    },
-    formButton: {
-        margin: 5,
-    },
-    media: {
-        height: 140,
-    },
-});
-
-function createCategories(name, id) {
-    return { name, id };
-}
-function createColor(name, id, code) {
-    return { name, id, code };
-}
-const rowsCategories = [
-    createCategories('Ao khoac nam', 1),
-    createCategories('Ao khoac nu', 2),
-    createCategories('Phu kien', 3),
-    createCategories('Mu', 4),
-    createCategories('Vay', 5),
-];
-const rowsBrands = [
-    createCategories('Zara', 1),
-    createCategories('Routine', 2),
-    createCategories('Uniqulo', 3),
-    createCategories('Channel', 4),
-    createCategories('Leo', 5),
-];
-const rowsSizes = [
-    createCategories('XS', 1),
-    createCategories('L', 2),
-    createCategories('M', 3),
-    createCategories('XL', 4),
-    createCategories('XXL', 5),
-];
-const rowsColors = [
-    createColor("Blue", 1, "#0b5394"),
-    createColor("Red", 2, "#cc0000"),
-    createColor("Yellow", 3, "#f1c232"),
-    createColor("Violet", 4, "#c90076"),
-    createColor("Purple", 5, "#674ea7")
-];
-const initialState = {
-    search: "",
-    category: "",
-    brand: "",
-    min: "",
-    max: "",
-    sortMethod: ""
+const initCategory = {
+    id: "",
+    name: "",
+    imgPath: "",
 }
 export default function ProductCategory() {
-    const classes = useStyles();
+    const dispatch = useDispatch();
+     // Category State
+     const productCategories = useSelector(state => state.product).categories;
+     const isDeletingProductCategory = useSelector(state => state.product).isDeletingProductCategory;
+     const [category, setCategory] = useState(initCategory);
+     const [showCategory, setShowCategory] = useState(false);
   
+  
+    
+     const handleSelectCategory = (value) => {
+         setShowCategory(true);
+         setCategory({ id: value.id, name: value.name })
+     }
+     const handleAddNewCategory = () => {
+         setShowCategory(true);
+         setCategory(initCategory);
+     }
+     const handleCategoryChange = (e) => {
+         setCategory({ ...category, name: e.target.value });
+     }
+     const handleSubmitCategory = (e) => {
+         if (!category.id) {
+             dispatch(productActions.createProductCategory({ name: category.name, imgPath: category.imgPath }))
+         } else {
+             dispatch(productActions.updateProductCategory(category.id, { name: category.name, imgPath: category.imgPath }))
+         }
+     }
+     const handleDeleteCategory = (e) => {
+         dispatch(productActions.deleteProductCategory(category.id));
+         setCategory(initCategory);
+         setShowCategory(false);
+     }
     
     return (
         <>
@@ -97,13 +69,13 @@ export default function ProductCategory() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsCategories.map((row, index) => (
+                                    {productCategories.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><IconButton size="small" onClick={() => handleSelectCategory(row)}><MoreHorizIcon /></IconButton></TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -111,23 +83,38 @@ export default function ProductCategory() {
                         </TableContainer>
                     </Grid>
                     <Grid item sm={6} xs={12}>
-                        <Box>
-                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Category</Button>
-                            <Box my={5}>
-                                <TextField type="text" fullWidth label="Category name" variant="outlined" value="Zara" />
-                                <Box my={2}>
+                    <Box>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> } onClick={handleAddNewCategory}>New Category</Button>
+                            {
+                                showCategory && (
+                                    <Box my={5}>
+                                    <TextField type="text" fullWidth label="Category name" variant="outlined" value={category.name} onChange={handleCategoryChange} />
+                                    <Box my={2}>                                     
                                     <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <DeleteButton/>
+                                        {
+                                            category?.id ? (
+                                                <>
+                                                 <Grid item xs={6}>
+                                                <DeleteButton message="Are you sure you want to delete this category?" status={isDeletingProductCategory} deleteFn={handleDeleteCategory}/>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitCategory}>Save</Button>
+                                            </Grid>
+                                                </>
+                                               
+                                            ):(
+                                                <Grid item xs={12}>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitCategory}>Save</Button>
+                                            </Grid>
+                                            )
+                                        }
+                                          
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
-                                        </Grid>
-                                    </Grid>
+                                    </Box>
                                 </Box>
-
-                            </Box>
-
+                                )
+                            }
+                           
                         </Box>
                     </Grid>
                 </Grid>     

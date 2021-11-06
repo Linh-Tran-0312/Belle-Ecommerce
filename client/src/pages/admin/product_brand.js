@@ -1,6 +1,5 @@
 import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,83 +7,54 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import DeleteButton from "../../components/DeleteButton";
 import SaveIcon from '@material-ui/icons/Save';
-import React from 'react';
-const useStyles = makeStyles({
-    root: {
-        flexGrow: 1,
-    },
-    fullWidth: {
-        width: "100%"
-    },
-    img: {
-        maxWidth: 245,
-        width: "100%",
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import DeleteButton from "../../components/DeleteButton";
+import productActions from "../../actions/product";
 
-    },
-    formControl: {
-        minWidth: 170,
-        margin: 10
-    },
-    formButton: {
-        margin: 5,
-    },
-    media: {
-        height: 140,
-    },
-});
- 
 
- 
-function createCategories(name, id) {
-    return { name, id };
-}
-function createColor(name, id, code) {
-    return { name, id, code };
-}
-const rowsCategories = [
-    createCategories('Ao khoac nam', 1),
-    createCategories('Ao khoac nu', 2),
-    createCategories('Phu kien', 3),
-    createCategories('Mu', 4),
-    createCategories('Vay', 5),
-];
-const rowsBrands = [
-    createCategories('Zara', 1),
-    createCategories('Routine', 2),
-    createCategories('Uniqulo', 3),
-    createCategories('Channel', 4),
-    createCategories('Leo', 5),
-];
-const rowsSizes = [
-    createCategories('XS', 1),
-    createCategories('L', 2),
-    createCategories('M', 3),
-    createCategories('XL', 4),
-    createCategories('XXL', 5),
-];
-const rowsColors = [
-    createColor("Blue", 1, "#0b5394"),
-    createColor("Red", 2, "#cc0000"),
-    createColor("Yellow", 3, "#f1c232"),
-    createColor("Violet", 4, "#c90076"),
-    createColor("Purple", 5, "#674ea7")
-];
-const initialState = {
-    search: "",
-    category: "",
-    brand: "",
-    min: "",
-    max: "",
-    sortMethod: ""
-}
+
+const initBrand = {
+    id: "",
+    name: "",
+    imgPath: "",
+};
+
 export default function ProductBrand() {
-    const classes = useStyles();
- 
+    const dispatch = useDispatch();
+   // Brand State
+   const productBrands = useSelector(state => state.product).brands;
+   const isDeletingProductBrand = useSelector(state => state.product).isDeletingProductBrand;
+   const [brand, setBrand] = useState(initBrand);
+   const [showBrand, setShowBrand] = useState(false);
+
+
   
+   const handleSelectBrand = (value) => {
+       setShowBrand(true);
+       setBrand({ id: value.id, name: value.name })
+   }
+   const handleAddNewBrand = () => {
+       setShowBrand(true);
+       setBrand(initBrand);
+   }
+   const handleBrandChange = (e) => {
+       setBrand({ ...brand, name: e.target.value });
+   }
+   const handleSubmitBrand = (e) => {
+       if (!brand.id) {
+           dispatch(productActions.createProductBrand({ name: brand.name, imgPath: brand.imgPath }))
+       } else {
+           dispatch(productActions.updateProductBrand(brand.id, { name: brand.name, imgPath: brand.imgPath }))
+       }
+   }
+   const handleDeleteBrand = (e) => {
+       dispatch(productActions.deleteProductBrand(brand.id));
+       setBrand(initBrand);
+       setShowBrand(false);
+   }
     return (
         <>
                 <Grid container spacing={2}>
@@ -99,13 +69,13 @@ export default function ProductBrand() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsBrands.map((row, index) => (
+                                    {productBrands.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><IconButton size="small" onClick={() => handleSelectBrand(row)}><MoreHorizIcon /></IconButton></TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -114,22 +84,37 @@ export default function ProductBrand() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Brand</Button>
-                            <Box my={5}>
-                                <TextField type="text" fullWidth label="Brand name" variant="outlined" value="Zara" />
-                                <Box my={2}>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> } onClick={handleAddNewBrand}>New Brand</Button>
+                            {
+                                showBrand && (
+                                    <Box my={5}>
+                                    <TextField type="text" fullWidth label="Brand name" variant="outlined" value={brand.name} onChange={handleBrandChange} />
+                                    <Box my={2}>                                     
                                     <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <DeleteButton />
+                                        {
+                                            brand?.id ? (
+                                                <>
+                                                 <Grid item xs={6}>
+                                                <DeleteButton message="Are you sure you want to delete this brand?" status={isDeletingProductBrand} deleteFn={handleDeleteBrand}/>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitBrand}>Save</Button>
+                                            </Grid>
+                                                </>
+                                               
+                                            ):(
+                                                <Grid item xs={12}>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitBrand}>Save</Button>
+                                            </Grid>
+                                            )
+                                        }
+                                          
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
-                                        </Grid>
-                                    </Grid>
+                                    </Box>
                                 </Box>
-
-                            </Box>
-
+                                )
+                            }
+                           
                         </Box>
                     </Grid>
                 </Grid>

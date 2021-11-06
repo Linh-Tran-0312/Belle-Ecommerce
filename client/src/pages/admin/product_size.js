@@ -1,6 +1,5 @@
 import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,80 +7,54 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import productActions from "../../actions/product";
 import DeleteButton from "../../components/DeleteButton";
-import React from 'react';
-const useStyles = makeStyles({
-    root: {
-        flexGrow: 1,
-    },
-    fullWidth: {
-        width: "100%"
-    },
-    img: {
-        maxWidth: 245,
-        width: "100%",
 
-    },
-    formControl: {
-        minWidth: 170,
-        margin: 10
-    },
-    formButton: {
-        margin: 5,
-    },
-    media: {
-        height: 140,
-    },
-});
- 
-function createCategories(name, id) {
-    return { name, id };
-}
-function createColor(name, id, code) {
-    return { name, id, code };
-}
-const rowsCategories = [
-    createCategories('Ao khoac nam', 1),
-    createCategories('Ao khoac nu', 2),
-    createCategories('Phu kien', 3),
-    createCategories('Mu', 4),
-    createCategories('Vay', 5),
-];
-const rowsBrands = [
-    createCategories('Zara', 1),
-    createCategories('Routine', 2),
-    createCategories('Uniqulo', 3),
-    createCategories('Channel', 4),
-    createCategories('Leo', 5),
-];
-const rowsSizes = [
-    createCategories('XS', 1),
-    createCategories('L', 2),
-    createCategories('M', 3),
-    createCategories('XL', 4),
-    createCategories('XXL', 5),
-];
-const rowsColors = [
-    createColor("Blue", 1, "#0b5394"),
-    createColor("Red", 2, "#cc0000"),
-    createColor("Yellow", 3, "#f1c232"),
-    createColor("Violet", 4, "#c90076"),
-    createColor("Purple", 5, "#674ea7")
-];
-const initialState = {
-    search: "",
-    category: "",
-    brand: "",
-    min: "",
-    max: "",
-    sortMethod: ""
+
+
+const initSize = {
+    id: "",
+    name:"",
 }
 export default function ProductSize() {
-    const classes = useStyles();
+    const dispatch = useDispatch();
    
+    // Size State
+    const productSizes = useSelector(state => state.product).sizes;
+    const isDeletingProductSize = useSelector(state => state.product).isDeletingProductSize;
+    const [size, setSize] = useState(initSize);
+    const [showSize, setShowSize] = useState(false);
+
+
+    // Handle events in Size Tab
+    const handleSelectSize = (value) => {
+        setShowSize(true);
+        setSize({ id: value.id, name: value.name })
+    }
+    const handleAddNewSize = () => {
+        setShowSize(true);
+        setSize(initSize);
+    }
+    const handleSizeChange = (e) => {
+        setSize({ ...size, name: e.target.value });
+    }
+    const handleSubmitSize = (e) => {
+        if (!size.id) {
+            dispatch(productActions.createProductSize({ name: size.name }))
+        } else {
+            dispatch(productActions.updateProductSize(size.id, { name: size.name }))
+        }
+    }
+    const handleDeleteSize = (e) => {
+        dispatch(productActions.deleteProductSize(size.id));
+        setSize(initSize);
+        setShowSize(false);
+    }
+
     return (
         <> 
                 <Grid container spacing={2}>
@@ -96,13 +69,13 @@ export default function ProductSize() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsSizes.map((row, index) => (
+                                    {productSizes.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><IconButton size="small" onClick={() => handleSelectSize(row)}><MoreHorizIcon /></IconButton></TableCell>
 
                                         </TableRow>
                                     ))}
@@ -112,20 +85,37 @@ export default function ProductSize() {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <Box>
-                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> }>New Size</Button>
-                            <Box my={5}>
-                                <TextField type="text" fullWidth label="Size name" variant="outlined" value="XXL" />
-                                <Box my={2}>
-                                <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <DeleteButton/>
+                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> } onClick={handleAddNewSize}>New Size</Button>
+                            {
+                                showSize && (
+                                    <Box my={5}>
+                                    <TextField type="text" fullWidth label="Size name" variant="outlined" value={size.name} onChange={handleSizeChange} />
+                                    <Box my={2}>                                     
+                                    <Grid container spacing={2}>
+                                        {
+                                            size?.id ? (
+                                                <>
+                                                 <Grid item xs={6}>
+                                                <DeleteButton message="Are you sure you want to delete this size?" status={isDeletingProductSize} deleteFn={handleDeleteSize}/>
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitSize}>Save</Button>
+                                            </Grid>
+                                                </>
+                                               
+                                            ):(
+                                                <Grid item xs={12}>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitSize}>Save</Button>
+                                            </Grid>
+                                            )
+                                        }
+                                          
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
-                                        </Grid>
-                                    </Grid>
+                                    </Box>
                                 </Box>
-                            </Box>
+                                )
+                            }
+                           
                         </Box>
                     </Grid>
                 </Grid>          

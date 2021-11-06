@@ -18,7 +18,8 @@ import clsx from 'clsx';
 import React, { useState, useEffect, useRef} from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import blog from "../../actions/blog";
+import blogActions from "../../actions/blog";
+import productActions from '../../actions/product';
 import Dashboard from "./dashboard";
 import Order from "./order";
 import Product from "./product";
@@ -141,7 +142,11 @@ export default function AdminPage() {
   },[location]);
 
   useEffect(() => {
-    dispatch(blog.getBlogCategories());
+    dispatch(blogActions.getBlogCategories());
+    dispatch(productActions.getProductBrands());
+    dispatch(productActions.getProductCategories());
+    dispatch(productActions.getProductColors());
+    dispatch(productActions.getProductSizes());
   },[])
 
   const handleDrawerOpen = () => {
