@@ -34,9 +34,10 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
         try {
             let options: any = {
                 select: ["id","name","sku","price","overallReview"],
+                relations: ["category","brand"],
                 where: {},
-                order: {},
-                relations: ["category","brand"]
+                order: {}
+                
             };
 
             if(query.category > 0 ) options.where.categoryId = query.category;
