@@ -43,6 +43,7 @@ export default function ProductSize() {
         setSize({ ...size, name: e.target.value });
     }
     const handleSubmitSize = (e) => {
+        e.preventDefault();
         if (!size.id) {
             dispatch(productActions.createProductSize({ name: size.name }))
         } else {
@@ -88,8 +89,9 @@ export default function ProductSize() {
                             <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> } onClick={handleAddNewSize}>New Size</Button>
                             {
                                 showSize && (
+                                    <form onSubmit={handleSubmitSize}>
                                     <Box my={5}>
-                                    <TextField type="text" fullWidth label="Size name" variant="outlined" value={size.name} onChange={handleSizeChange} />
+                                    <TextField type="text" fullWidth label="Size name" variant="outlined" value={size.name} onChange={handleSizeChange}  required/>
                                     <Box my={2}>                                     
                                     <Grid container spacing={2}>
                                         {
@@ -99,13 +101,13 @@ export default function ProductSize() {
                                                 <DeleteButton message="Are you sure you want to delete this size?" status={isDeletingProductSize} deleteFn={handleDeleteSize}/>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitSize}>Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
                                             </Grid>
                                                 </>
                                                
                                             ):(
                                                 <Grid item xs={12}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitSize}>Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
                                             </Grid>
                                             )
                                         }
@@ -113,6 +115,7 @@ export default function ProductSize() {
                                         </Grid>
                                     </Box>
                                 </Box>
+                                </form>
                                 )
                             }
                            

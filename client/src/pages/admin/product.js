@@ -14,7 +14,9 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
 import Pagination from '@material-ui/lab/Pagination';
-import React from 'react';
+import React, { useState, useEffect} from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import productActions from "../../actions/product";
 import Rating from "../../components/Rating";
 import DeleteButton from "../../components/DeleteButton";
 const useStyles = makeStyles({
@@ -40,89 +42,158 @@ const useStyles = makeStyles({
         height: 140,
     },
 });
- 
-function createCategories(name, id) {
-    return { name, id };
-}
-function createColor(name, id, code) {
-    return { name, id, code };
-}
-const rowsCategories = [
-    createCategories('Ao khoac nam', 1),
-    createCategories('Ao khoac nu', 2),
-    createCategories('Phu kien', 3),
-    createCategories('Mu', 4),
-    createCategories('Vay', 5),
-];
-const rowsBrands = [
-    createCategories('Zara', 1),
-    createCategories('Routine', 2),
-    createCategories('Uniqulo', 3),
-    createCategories('Channel', 4),
-    createCategories('Leo', 5),
-];
-const rowsSizes = [
-    createCategories('XS', 1),
-    createCategories('L', 2),
-    createCategories('M', 3),
-    createCategories('XL', 4),
-    createCategories('XXL', 5),
-];
-const rowsColors = [
-    createColor("Blue", 1, "#0b5394"),
-    createColor("Red", 2, "#cc0000"),
-    createColor("Yellow", 3, "#f1c232"),
-    createColor("Violet", 4, "#c90076"),
-    createColor("Purple", 5, "#674ea7")
-];
-const initialState = {
+  
+const initFilter = {
     search: "",
     category: "",
     brand: "",
     min: "",
     max: "",
-    sortMethod: ""
+    sortMethod: "",
+    page: 1,
+    limit: 3
+};
+const initProduct = {
+    id: "",
+    name: "",
+    sku: "",
+    categoryId: "",
+    brandId: "",
+    price: 0,
+    summary: "",
+    description: "",
+    imgPaths: [],
+};
+const initVariant = {
+    id: "",
+    productId: "",
+    colorId: "",
+    sizeId: "",
+    quantity: 0
 }
 export default function ProductAdmin() {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
-    const [price, setPrice] = React.useState([0, 10000]);
-    const [page, setPage] = React.useState(1);
+    const dispatch = useDispatch();
 
-  
-    const handleChangePage = (event, value) => {
-        setPage(value);
-    };
+    const categories = useSelector(state => state.product).categories;
+    const brands = useSelector(state => state.product).brands;
+    const colors = useSelector(state => state.product).colors;
+    const sizes = useSelector(state => state.product).sizes;
+
+    const products = useSelector(state => state.product).products;
+    const productDetail = useSelector(state => state.product).product;
+    const productTotal = useSelector(state => state.product).total;
+
+    const isDeletingProduct = useSelector(state => state.product).isDeletingProduct;
+    const isDeletingProductVariant = useSelector(state => state.product).isDeletingProductVariant;
+
+    const [ filter, setFilter ] = useState(initFilter);
+    const [ product, setProduct ] = useState(initProduct);
+    const [ variant, setVariant ] = useState(initVariant);
+
+    const [price, setPrice] = React.useState([0, 5000]);
  
-    const [filter, setFilter] = React.useState(initialState)
-    console.log(filter)
-    const handleChange = (e) => {
-        /*    if(e.target.name == "sort") {
-               switch(e.target.value) {
-                   case "1":
-                       setFilter({...filter, sortField: "orderAt", sortValue: Query.ASC});
-                   case "2":
-                       setFilter({...filter, sortField: "orderAt", sortValue: Query.DESC});
-                   case "3":
-                       setFilter({...filter, sortField: "total", sortValue: Query.ASC});
-                   case "4":
-                       setFilter({...filter, sortField: "total", sortValue: Query.DESC})
-               }
-           } else { */
+    const [showProduct, setShowProduct] = useState(false);
+    const [ showVariant, setShowVariant ] = useState(false);
+
+    const [ pageCount, setPageCount] = useState(0)
+
+    useEffect(() => {
+        dispatch(productActions.getProducts(filter));
+    },[]);
+
+    useEffect(() => {
+       if(productDetail.id !== "")
+       {
+        setProduct({...productDetail})
+       }
+   },[productDetail]);
+
+    useEffect(() => {
+        const mod = productTotal%filter.limit;
+        let pageNumber = productTotal/filter.limit;
+         pageNumber = mod === 0 ? pageNumber : Math.floor(pageNumber) + 1;
+        setPageCount(pageNumber)
+    },[productTotal]);
+
+    //Handle filter state
+    const handleChangePage = (event, value) => {
+        dispatch(productActions.getProducts({...filter, page: value})) 
+        setFilter({...filter, page : value});
+    };
+    const handleFilterChange = (e) => {
         setFilter({ ...filter, [e.target.name]: e.target.value })
     }
     const handleChangePrice = (event, newValue) => {
         setPrice(newValue);
     };
-    const handleReset = (e) => {
-        setFilter(initialState);
+    const handleResetFilter = (e) => {
+        setFilter(initFilter);
+    }
+    const handleSubmitFilter = (e) => {
+        dispatch(productActions.getProducts({...filter, min: price[0], max: price[1]}));
+        setProduct(initProduct);
+        setShowProduct(false);
+
+    };
+
+    //Handle product state
+    const handleAddNewProduct = (e) => {
+        setProduct(initProduct);
+        setShowProduct(true);
+    }
+    const handleGetProductById = (id) => {
+        dispatch(productActions.getProductById(id));
+        setShowProduct(true);
+        setShowVariant(false);
+        setVariant(initVariant);
+    }
+    const handleProductChange = (e) => {
+        setProduct({...product, [e.target.name]: e.target.value})
+    }
+    const handleSubmitProduct = e => {
+        e.preventDefault();
+        if(product.id === "")
+        {
+            dispatch(productActions.createProduct(product));
+        } else {
+            dispatch(productActions.updateProduct(product.id, product));
+        }
+    }
+    const handleDeleteProduct = (e) => {
+        dispatch(productActions.deleteProduct(product.id));
+    }
+    //Handle variant
+    const handleAddNewVariant = (e) => {
+        setShowVariant(true);
+        setVariant(initVariant);
+    }
+    const handleSelectVariant = (variant) => {
+        setVariant({...variant});
+        setShowVariant(true);
+    }
+    const handleVariantChange = e => {
+        setVariant({...variant, [e.target.name] : e.target.value})
+    }
+    const handleSubmitVariant = (e) => {
+        e.preventDefault();
+        if(variant.id === "")
+        {
+            dispatch(productActions.createProductVariant({...variant, productId: product.id}));
+        } else {
+            dispatch(productActions.updateProductVariant(variant.id, variant));
+        }
+    }
+    const handleDeleteVariant = (e) => {
+        dispatch(productActions.deleteProductVariant(variant.id));
+        setVariant(initVariant);
     }
  
     return (
         <>
             <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                 <Grid item md={4} sm={12} xs={12}   >
-                    <TextField fullWidth id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
+                    <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} value={filter.search} name="search" label="Search" placeholder="Search product..." variant="outlined" />
                 </Grid>
                 <Grid item md={3} sm={4} xs={6}  >
                     <FormControl fullWidth variant="outlined"  >
@@ -131,17 +202,16 @@ export default function ProductAdmin() {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={filter.category}
-                            onChange={handleChange}
+                            onChange={handleFilterChange}
                             label="Category"
                             name="category"
                         >
                             <MenuItem value="">
                                 <em>All</em>
                             </MenuItem>
-                            <MenuItem value="1">Ao khoac nam</MenuItem>
-                            <MenuItem value="2">Ao khoac nu</MenuItem>
-                            <MenuItem value="3">Phu kien</MenuItem>
-                            <MenuItem value="4">Vay</MenuItem>
+                            {
+                                categories.map(c => <MenuItem key={c.id} value={c.id}>{c.name}</MenuItem> )
+                            }
                         </Select>
                     </FormControl>
                 </Grid>
@@ -152,17 +222,16 @@ export default function ProductAdmin() {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={filter.brand}
-                            onChange={handleChange}
+                            onChange={handleFilterChange}
                             label="Brand"
                             name="brand"
                         >
                             <MenuItem value="">
                                 <em>All</em>
-                            </MenuItem>
-                            <MenuItem value="1">Zara</MenuItem>
-                            <MenuItem value="2">channel</MenuItem>
-                            <MenuItem value="3">Gucci</MenuItem>
-                            <MenuItem value="4">Hermet</MenuItem>
+                            </MenuItem>                          
+                            {
+                                brands.map(b => <MenuItem key={b.id} value={b.id}>{b.name}</MenuItem> )
+                            }
                         </Select>
                     </FormControl>
                 </Grid>
@@ -173,7 +242,7 @@ export default function ProductAdmin() {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={filter.sortMethod}
-                            onChange={handleChange}
+                            onChange={handleFilterChange}
                             label="Sort"
                             name="sortMethod"
                         >
@@ -194,7 +263,7 @@ export default function ProductAdmin() {
                         </Typography>
                         <Slider
                             min={0}
-                            max={10000}
+                            max={5000}
                             value={price}
                             onChange={handleChangePrice}
                             valueLabelDisplay="auto"
@@ -205,20 +274,20 @@ export default function ProductAdmin() {
                 </Grid>
                 <Grid item xs={12} container direction="row" justifyContent="space-between">
                     <Grid item>
-                        <Button variant="contained" color="primary" size="large" className={classes.formButton}>
+                        <Button variant="contained" color="primary" size="large" className={classes.formButton} onClick={handleSubmitFilter}>
                             Apply
                         </Button>
-                        <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
+                        <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleResetFilter}>
                             Reset
                         </Button>
                     </Grid>
                     <Grid item md={3} xs={12}>
-                        <Button variant="contained" color="primary" size="large" fullWidth startIcon={<AddBoxIcon />} className={classes.formButton} >
+                        <Button variant="contained" color="primary" size="large" fullWidth startIcon={<AddBoxIcon />} className={classes.formButton} onClick={handleAddNewProduct} >
                             New Product
                         </Button>
                     </Grid>
                 </Grid>
-            </Grid>
+            </Grid>       
             <Box my={2}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -237,18 +306,18 @@ export default function ProductAdmin() {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsCategories.map((row, index) => (
+                                    {products.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
-                                            <TableCell  >{row.name}</TableCell>
-                                            <TableCell  >{row.id}</TableCell>
-                                            <TableCell  >Category</TableCell>
-                                            <TableCell  >Brand</TableCell>
-                                            <TableCell  >Price</TableCell>
+                                            <TableCell  >{row?.name}</TableCell>
+                                            <TableCell  >{row?.sku}</TableCell>
+                                            <TableCell  >{row?.category?.name}</TableCell>
+                                            <TableCell  >{row?.brand?.name}</TableCell>
+                                            <TableCell  >{row?.price}</TableCell>
                                             <TableCell  > <Rating size={15} rating={4} /></TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><IconButton size="small" onClick={() => handleGetProductById(row?.id)}><MoreHorizIcon /></IconButton></TableCell>
 
                                         </TableRow>
                                     ))}
@@ -258,84 +327,85 @@ export default function ProductAdmin() {
                     </Grid>
                 </Grid>
                 <Box my={5} textAlign="center">
-                    <Pagination count={10} page={page} onChange={handleChangePage} />
+                    <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
                 </Box>
             </Box>
             <Divider />
-            <Box my={5}>
+            {
+                showProduct && (
+            <Box my={5}>  
+                <Box my={3} textAlign="center">
+                <Typography color="primary" variant="h5">Product Details</Typography>    
+                </Box>                
                 <Grid container spacing={2}>
                     <Grid item sm={6} xs={12}>
-                        <Box >
+                        <form onSubmit={handleSubmitProduct}>      
                             <Box >
-                                <TextField type="text" fullWidth label="Product name" variant="outlined" value="Zara" />
-                            </Box>
-                            <Box my={2}>
-                                <TextField type="text" fullWidth label="SKU code" variant="outlined" value="IKS-2339" />
-                            </Box>
-                            <Box my={2}>
-                                <Grid container spacing={1}>
-                                    <Grid item xs={6}>
-                                        <FormControl variant="outlined" className={classes.fullWidth}>
-                                            <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-outlined-label"
-                                                id="demo-simple-select-outlined"
-                                                value="Zara"
-
-                                                label="Category"
-                                                name="paymentStatus"
-                                            >
-                                                <MenuItem value="Zara">
-                                                    Ao khoac nam
-                                                </MenuItem>
-                                                {
-                                                    rowsCategories.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
-                                                }
-                                            </Select>
-                                        </FormControl>
+                                <Box >
+                                    <TextField type="text" fullWidth label="Product name" name="name" variant="outlined" value={product.name} required onChange={handleProductChange} />
+                                </Box>
+                                <Box my={2}>
+                                    <TextField type="text" fullWidth label="SKU code" variant="outlined" name="sku" value={product.sku} onChange={handleProductChange}/>
+                                </Box>
+                                <Box my={2}>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={6}>
+                                            <FormControl variant="outlined" className={classes.fullWidth} required>
+                                                <InputLabel id="demo-simple-select-outlined-label">Category</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-outlined-label"
+                                                    id="demo-simple-select-outlined"
+                                                    value={product.categoryId}
+                                                    onChange={handleProductChange}
+                                                    label="Category"
+                                                    name="categoryId"
+                                                >
+                                                    
+                                                    {
+                                                        categories.map(row => <MenuItem key={row.id} value={row.id}>{row.name}</MenuItem>)
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <FormControl variant="outlined" className={classes.fullWidth}  required>
+                                                <InputLabel id="demo-simple-select-outlined-label">Brand</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-outlined-label"
+                                                    id="demo-simple-select-outlined"
+                                                    value={product.brandId}
+                                                    onChange={handleProductChange}
+                                                    label="Brand"
+                                                    name="brandId"
+                                                >
+                                                    {
+                                                        brands.map(row => <MenuItem key={row.id} value={row.id}>{row.name}</MenuItem>)
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={6}>
-                                        <FormControl variant="outlined" className={classes.fullWidth}>
-                                            <InputLabel id="demo-simple-select-outlined-label">Brand</InputLabel>
-                                            <Select
-                                                labelId="demo-simple-select-outlined-label"
-                                                id="demo-simple-select-outlined"
-                                                value="Zara"
 
-                                                label="Brand"
-                                                name="paymentStatus"
-                                            >
-                                                <MenuItem value="Zara">
-                                                    Zara
-                                                </MenuItem>
-                                                {
-                                                    rowsBrands.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
-                                                }
-                                            </Select>
-                                        </FormControl>
+                                </Box>
+                                <Box my={2}>
+                                    <TextField type="text" multiline rows={6} fullWidth label="Summary" variant="outlined" name="summary" value={product.summary}  onChange={handleProductChange}/>
+                                </Box>
+                                <Box my={2}>
+                                    <TextField type="number" fullWidth label="Price" variant="outlined" name="price" value={product.price}  onChange={handleProductChange} required/>
+                                </Box>
+                                <Box my={2}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}>
+                                            <DeleteButton message="Are you sure you want to delete this product. Its variants will be deleted too." deleteFn={handleDeleteProduct} status={isDeletingProduct}/>
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-
+                                </Box>
                             </Box>
-                            <Box my={2}>
-                                <TextField type="text" multiline rows={6} fullWidth label="Summary" variant="outlined" />
-                            </Box>
-                            <Box my={2}>
-                                <TextField type="text" fullWidth label="Price" variant="outlined" value="200000" />
-                            </Box>
-                            <Box my={2}>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={6}>
-                                        <DeleteButton />
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        </Box>
-
-                    </Grid>
+                        </form>
+                    </Grid>             
                     <Grid item sm={6} xs={12}>
                         <Box p={1} border={1} sx={{ borderColor: "grey" }}>
                             <Box sx={{ height: '100%', height: 435, overflow: "auto" }}>
@@ -371,108 +441,133 @@ export default function ProductAdmin() {
                         </Box>
                     </Grid>
                 </Grid>
-                <Box my={4}>
-                    <Grid container spacing={4}>
-                        <Grid item sm={8} xs={12}>
-                            <Box my={2}>
-                                <Grid container direction="row" justifyContent="space-between">
-                                    <Grid item>
-                                        <Typography variant="h5" color="primary">Variant List</Typography>
+                {
+                    product.id !== "" && (
+                        <Box my={4}>
+                         <Grid container spacing={4}>
+                            <Grid item sm={8} xs={12}>
+                                <Box my={2}>
+                                    <Grid container direction="row" justifyContent="space-between">
+                                        <Grid item>
+                                            <Typography variant="h5" color="primary">Variant List</Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />} onClick={handleAddNewVariant}>New Variant</Button>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item>
-                                        <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Variant</Button>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <TableContainer component={Paper}>
-                                <Table aria-label="simple table">
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell  ><strong>No</strong></TableCell>
-                                            <TableCell  ><strong>Color</strong></TableCell>
-                                            <TableCell  ><strong>Size</strong></TableCell>
-                                            <TableCell  ><strong>Quantity</strong></TableCell>
-                                            <TableCell  ><strong></strong></TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {rowsCategories.map((row, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell component="th" scope="row">
-                                                    {`${index + 1}`}
-                                                </TableCell>
-                                                <TableCell  >Blue</TableCell>
-                                                <TableCell  >XS</TableCell>
-                                                <TableCell  >29</TableCell>
-                                                <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                </Box>
+                                <TableContainer component={Paper}>
+                                    <Table aria-label="simple table">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell  ><strong>No</strong></TableCell>
+                                                <TableCell  ><strong>Name</strong></TableCell>
+                                                <TableCell  ><strong>Color</strong></TableCell>
+                                                <TableCell  ><strong>Size</strong></TableCell>
+                                                <TableCell  ><strong>Quantity</strong></TableCell>
+                                                <TableCell  ><strong>Details</strong></TableCell>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                        </TableHead>
+                                        <TableBody>
+                                            {product?.variants?.map((row, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell component="th" scope="row">
+                                                        {`${index + 1}`}
+                                                    </TableCell>
+                                                    <TableCell  >{row?.color?.name}</TableCell>
+                                                    <TableCell  ><div style={{ marginLeft: 10,border: "1px solid #999999", width: 15, height: 15, backgroundColor: row.color?.code}}/></TableCell>
+                                                    <TableCell  >{row?.size?.name}</TableCell>
+                                                    <TableCell  >{row?.quantity}</TableCell>
+                                                    <TableCell  ><IconButton size="small" onClick={() => handleSelectVariant(row)}><MoreHorizIcon /></IconButton></TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Grid>
+                            <Grid item sm={4} xs={12}>
+                                {
+                                    showVariant && (
+                                        <>
+                                         <Box my={2} textAlign="center">
+                                    <Typography variant="h6">Variant Details</Typography>
+                                </Box>
+                                <Box my={5}>
+                                <form onSubmit={handleSubmitVariant}>                                      
+                                    <Box my={2}>
+                                        <FormControl variant="outlined" className={classes.fullWidth} required>
+                                            <InputLabel id="demo-simple-select-outlined-label">Color</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-outlined-label"
+                                                id="demo-simple-select-outlined"
+                                                value={variant.colorId}
+                                                label="Color"
+                                                name="colorId"
+                                                onChange={handleVariantChange}
+                                            >
+                                                {
+                                                    colors.map(row => <MenuItem key={row.id} value={row.id}>{row.name}<div style={{ marginLeft: 10,border: "1px solid #999999", width: 15, height: 15, backgroundColor: row.code}}/></MenuItem>)
+                                                }
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                    <Box my={2}>
+                                        <FormControl variant="outlined" className={classes.fullWidth} required>
+                                            <InputLabel id="demo-simple-select-outlined-label">Size</InputLabel>
+                                            <Select
+                                                labelId="demo-simple-select-outlined-label"
+                                                id="demo-simple-select-outlined"
+                                                value={variant.sizeId}
+                                                label="Size"
+                                                name="sizeId"
+                                                onChange={handleVariantChange}
+                                            >
+                                                {
+                                                    sizes.map(row => <MenuItem key={row.id} value={row.id}>{row.name}</MenuItem>)
+                                                }
+                                            </Select>
+                                        </FormControl>
+                                    </Box>
+                                    <TextField type="text" fullWidth label="Quantity" name="quantity" variant="outlined" value={variant.quantity}   onChange={handleVariantChange}/>
+                                    <Box my={2}>                                              
+                                        <Grid container spacing={2}>
+                                        {
+                                                    !variant.id ? (
+                                                        <>
+                                                            <Grid item xs={12}>
+                                                                <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit">Save</Button>
+                                                            </Grid>
+                                                        </>
+    
+                                                    ) : (
+                                                        <>
+                                                            <Grid item xs={6}>
+                                                                <DeleteButton message="Are your sure to delete this variant" deleteFn={handleDeleteVariant} status={isDeletingProductVariant} />
+                                                            </Grid>
+                                                            <Grid item xs={6}>
+                                                                <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit">Save</Button>
+                                                            </Grid>
+                                                        </>
+                                                    )
+                                                }
+                                        </Grid>                                       
+                                    </Box>
+                                </form>  
+                                </Box> 
+                                        </>
+                                    )
+                                }
+                                                         
+                            </Grid>
                         </Grid>
-                        <Grid item sm={4} xs={12}>
-                            <Box my={2} textAlign="center">
-                                <Typography variant="h6">Variant Details</Typography>
-                            </Box>
-                            <Box my={5}>
-                                <Box my={2}>
-                                    <FormControl variant="outlined" className={classes.fullWidth}>
-                                        <InputLabel id="demo-simple-select-outlined-label">Color</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-outlined-label"
-                                            id="demo-simple-select-outlined"
-                                            value="Zara"
+                    </Box>
+                    )
+                }
+              
 
-                                            label="Color"
-                                            name="color"
-                                        >
-                                            <MenuItem value="Zara">
-                                                Violet
-                                            </MenuItem>
-                                            {
-                                                rowsBrands.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
-                                            }
-                                        </Select>
-                                    </FormControl>
-                                </Box>
-                                <Box my={2}>
-                                    <FormControl variant="outlined" className={classes.fullWidth}>
-                                        <InputLabel id="demo-simple-select-outlined-label">Size</InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-outlined-label"
-                                            id="demo-simple-select-outlined"
-                                            value="Zara"
-
-                                            label="Size"
-                                            name="size"
-                                        >
-                                            <MenuItem value="Zara">
-                                                XXLl
-                                            </MenuItem>
-                                            {
-                                                rowsBrands.map(row => <MenuItem value={row.id}>{row.name}</MenuItem>)
-                                            }
-                                        </Select>
-                                    </FormControl>
-                                </Box>
-                                <TextField type="text" fullWidth label="Quantity" variant="outlined" value="20" />
-                                <Box my={2}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <Button fullWidth color="secondary" variant="contained" startIcon={<DeleteIcon />}>Delete</Button>
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            </Box>
-
-                        </Grid>
-                    </Grid>
-                </Box>
             </Box>
+                )
+            }             
         </>
     );
 }

@@ -10,7 +10,8 @@ const initProduct = {
     sku: "",
     summary: "",
     description: "",
-    price: ""
+    price: 0,
+    variants: []
 }
 const initState = {
     isDeletingProductCategory: false,
@@ -18,14 +19,13 @@ const initState = {
     isDeletingProductBrand: false,
     isDeletingProductSize: false,
     isDeletingProduct: false,
+    isDeletingProductVariant: false,
     categories: [],
     sizes: [],
     colors: [],
     brands: [],
     products: [],
-    pagination: {
-        total: 5
-    },
+    total: 0,
     product: initProduct,
     error: null,
 }
@@ -53,7 +53,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.categories = draft.categories.filter(c => c.id !== payload )   
             break;
 
-    //Handle product color
+        //Handle product color
         case ACTION.GET_PRODUCT_COLORS:
             draft.colors = payload;
             break;
@@ -106,6 +106,55 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.isDeletingProductSize = false;   
             draft.sizes = draft.sizes.filter(s => s.id !== payload )   
             break;     
+        
+        //Handle product and product variant
+        
+        case ACTION.GET_PRODUCTS:
+            draft.products = payload.products;
+            draft.total = payload.total;
+            break;
+        case ACTION.GET_PRODUCT_BY_ID:
+           
+            draft.product = payload;
+            break;
+        case ACTION.CREATE_PRODUCT:
+            draft.product = payload;
+            draft.products.unshift(payload);
+            draft.products.pop();
+            draft.total = draft.total + 1;
+            break;
+        case ACTION.UPDATE_PRODUCT:
+            draft.product = payload;
+            draft.products = draft.products.map(p => p.id === payload.id ? payload : p);
+            break;
+        case ACTION.DELETE_PRODUCT:
+            draft.product = initProduct;
+            draft.products = draft.products.filter(p => p.id !== payload);
+            draft.total = draft.total - 1;
+            draft.isDeletingProduct = false;
+            break;
+        case ACTION.IS_DELETING_PRODUCT:
+            draft.isDeletingProduct = true;
+            break;
+        case ACTION.CREATE_PRODUCT_VARIANT:
+            if(draft.product.id === payload.productId)
+            {
+                draft.product.variants.unshift(payload)
+            }
+            break;
+        case ACTION.UPDATE_PRODUCT_VARIANT:
+            if(draft.product.id === payload.productId)
+            {
+                draft.product.variants = draft.product.variants.map(v => v.id === payload.id ? payload: v)
+            }
+            break;
+        case ACTION.DELETE_PRODUCT_VARIANT:
+            draft.product.variants = draft.product.variants.filter(v => v.id !== payload);
+            draft.isDeletingProductVariant = false;
+            break;
+        case ACTION.IS_DELETING_PRODUCT_VARIANT:
+            draft.isDeletingProductVariant = true;
+            break;
         default:
         break;
 

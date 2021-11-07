@@ -44,13 +44,13 @@ const api = {
 
     //handle product and product variant API
     getProducts: (queryString) => API.get(`/products?${queryString}`),
-    getProductById: (id) =>  API.get(`/products?${id}`),
+    getProductById: (id) =>  API.get(`/products/${id}`),
     createProduct: (formData) => API.post("/products", formData),
     updateProduct: (id,formData) => API.patch(`/products/${id}`, formData),
     deleteProduct: (id) => API.delete(`/products/${id}`),
     createProductVariant: (formData) => API.post("/products/variant", formData),
-    updateProductVariant: (id, formData) => API.patch(`/products/variant/${id}`, formData),
-    deleteProductVariant: (id) => API.delete(`/products/variant/${id}`)
+    updateProductVariant: (variantId, formData) => API.patch(`/products/variant/${variantId}`, formData),
+    deleteProductVariant: (variantId) => API.delete(`/products/variant/${variantId}`)
 
 }
 

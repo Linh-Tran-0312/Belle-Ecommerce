@@ -6,403 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"BlogCategory": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Blog": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					},
-					"category": {
-						"$ref": "#/components/schemas/BlogCategory"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"title",
-					"categoryId",
-					"content",
-					"category",
-					"imgPath",
-					"commentAllow"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogs": {
-				"properties": {
-					"blogs": {
-						"items": {
-							"$ref": "#/components/schemas/Blog"
-						},
-						"type": "array"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"blogs",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"BlogField": {
-				"enum": [
-					"title",
-					"createdAt"
-				],
-				"type": "string"
-			},
-			"Change": {
-				"enum": [
-					"DESC",
-					"ASC"
-				],
-				"type": "string"
-			},
-			"IBlogCategory": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"name",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlog": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"category": {
-						"$ref": "#/components/schemas/IBlogCategory"
-					}
-				},
-				"required": [
-					"title",
-					"categoryId",
-					"content",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCreateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"title",
-					"categoryId",
-					"content"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogUpdateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCommentCreateProps": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UserRole": {
-				"enum": [
-					"admin",
-					"editor",
-					"customer"
-				],
-				"type": "string"
-			},
-			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-				"properties": {
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"googleId": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"fname",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IUser": {
-				"properties": {
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"googleId": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"fname",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogComment": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"childComments": {
-						"items": {
-							"$ref": "#/components/schemas/IBlogCommentCreateProps"
-						},
-						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/IUser"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCommentUpdateProps": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"IOrderDetail": {
 				"properties": {
 					"orderId": {
@@ -543,215 +146,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PingMessage": {
-				"properties": {
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCategoryCreateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IUserCreateProps": {
-				"properties": {
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					}
-				},
-				"required": [
-					"fname",
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ILogin": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ISize": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ISizeCreateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ISizeUpdateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBrand": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"name",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBrandCreateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBrandUpdateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IProductCategory": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"name",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IProductCategoryCreateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IProductCategoryUpdateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ProductCategory": {
 				"properties": {
 					"id": {
@@ -803,6 +197,14 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"UserRole": {
+				"enum": [
+					"admin",
+					"editor",
+					"customer"
+				],
+				"type": "string"
 			},
 			"Product": {
 				"properties": {
@@ -1281,6 +683,84 @@
 				],
 				"type": "string"
 			},
+			"Change": {
+				"enum": [
+					"DESC",
+					"ASC"
+				],
+				"type": "string"
+			},
+			"IProductCategory": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"name",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBrand": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"name",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ISize": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IColor": {
 				"properties": {
 					"code": {
@@ -1520,6 +1000,526 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BlogCategory": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Blog": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"category": {
+						"$ref": "#/components/schemas/BlogCategory"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"title",
+					"categoryId",
+					"content",
+					"category",
+					"imgPath",
+					"commentAllow"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogs": {
+				"properties": {
+					"blogs": {
+						"items": {
+							"$ref": "#/components/schemas/Blog"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"blogs",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlogField": {
+				"enum": [
+					"title",
+					"createdAt"
+				],
+				"type": "string"
+			},
+			"IBlogCategory": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"name",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlog": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"category": {
+						"$ref": "#/components/schemas/IBlogCategory"
+					}
+				},
+				"required": [
+					"title",
+					"categoryId",
+					"content",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCreateProps": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"title",
+					"categoryId",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogUpdateProps": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCommentCreateProps": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"googleId": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IUser": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"googleId": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogComment": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"childComments": {
+						"items": {
+							"$ref": "#/components/schemas/IBlogCommentCreateProps"
+						},
+						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/IUser"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCommentUpdateProps": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PingMessage": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCategoryCreateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IUserCreateProps": {
+				"properties": {
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					}
+				},
+				"required": [
+					"fname",
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ILogin": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ISizeCreateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ISizeUpdateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBrandCreateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBrandUpdateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IProductCategoryCreateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IProductCategoryUpdateProps": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IColorCreateProps": {
 				"properties": {
 					"code": {
@@ -1563,378 +1563,6 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/blogs": {
-			"get": {
-				"operationId": "GetBlogs",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogs"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BlogField"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "change",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/Change"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "CreateBlog",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Create a new blog",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/blogs/{id}": {
-			"get": {
-				"operationId": "GetBlogById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Get details for a blog by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"patch": {
-				"operationId": "UpdateBlogById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Update a blog partially by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteBlogById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete a blog  by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/blogs/{blogId}/comments": {
-			"get": {
-				"operationId": "GetCommentsOfBlog",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IBlogComment"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get blog comments by blogId, default number of comments is 2",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "blogId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "date",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/blogs/comments": {
-			"post": {
-				"operationId": "CreateComment",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogComment"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create new blog comment",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCommentCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/blogs/comments/{commentId}": {
-			"patch": {
-				"operationId": "UpdateCommentById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogComment"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update a blog comment by its Id,",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "commentId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCommentUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteCommentById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete a blog comment by its Id,",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "commentId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
 		"/orders": {
 			"get": {
 				"operationId": "GetOrders",
@@ -2303,6 +1931,734 @@
 					{
 						"in": "path",
 						"name": "itemId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/products": {
+			"get": {
+				"operationId": "GetProducts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProducts"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all products",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "brand",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ProductField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateProduct",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IProduct"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new product",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IProductCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/{id}": {
+			"get": {
+				"operationId": "GetProductById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IProduct"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Get product details by its id",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateProductById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IProduct"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Update product info",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IProductUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteProductById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete product",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/products/variant": {
+			"post": {
+				"operationId": "CreateProductVariant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IProductVariant"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Create product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IProductVariantCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/variant/{variantId}": {
+			"patch": {
+				"operationId": "UpdateProductVariant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IProductVariant"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Update product variant partially",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "variantId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IProductVariantUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteProductVariant",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "variantId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/blogs": {
+			"get": {
+				"operationId": "GetBlogs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlogs"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BlogField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateBlog",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new blog",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blogs/{id}": {
+			"get": {
+				"operationId": "GetBlogById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Get details for a blog by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateBlogById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a blog partially by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteBlogById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete a blog  by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/blogs/{blogId}/comments": {
+			"get": {
+				"operationId": "GetCommentsOfBlog",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IBlogComment"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blog comments by blogId, default number of comments is 2",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "blogId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/blogs/comments": {
+			"post": {
+				"operationId": "CreateComment",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlogComment"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new blog comment",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogCommentCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blogs/comments/{commentId}": {
+			"patch": {
+				"operationId": "UpdateCommentById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlogComment"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a blog comment by its Id,",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "commentId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogCommentUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteCommentById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete a blog comment by its Id,",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "commentId",
 						"required": true,
 						"schema": {
 							"format": "double",
@@ -2887,342 +3243,6 @@
 					{
 						"in": "path",
 						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/products": {
-			"get": {
-				"operationId": "GetProducts",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProducts"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get all products",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "brand",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/ProductField"
-						}
-					},
-					{
-						"in": "query",
-						"name": "change",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/Change"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "min",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "max",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "CreateProduct",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProduct"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create new product",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/{id}": {
-			"get": {
-				"operationId": "GetProductById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IProduct"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Get product details by its id",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"patch": {
-				"operationId": "UpdateProductById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProduct"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update product info",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteProductById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete product",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/products/variant": {
-			"post": {
-				"operationId": "CreateProductVariant",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProductVariant"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create product variant",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductVariantCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/variant/{variantId}": {
-			"patch": {
-				"operationId": "UpdateProductVariant",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProductVariant"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update product variant partially",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "variantId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductVariantUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteProductVariant",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete product variant",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "variantId",
 						"required": true,
 						"schema": {
 							"format": "double",

@@ -1,7 +1,8 @@
-import { IProduct } from "../models";
+import { IProduct, IProductCreateProps } from "../models";
 import { ProductRepository, IProducts } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { ILike, LessThanOrEqual, MoreThanOrEqual, } from "typeorm";
+import { IProductUpdateProps } from "../controllers/productController";
 
 export enum Change {
     DESC = "DESC",
@@ -32,8 +33,10 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
     public async getProducts(query: IProductQuery): Promise<IProducts> {
         try {
             let options: any = {
+                select: ["id","name","sku","price","overallReview"],
                 where: {},
-                order: {}
+                order: {},
+                relations: ["category","brand"]
             };
 
             if(query.category > 0 ) options.where.categoryId = query.category;
@@ -56,6 +59,26 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
         }
 
         
+    }
+    public async createProduct(data: IProductCreateProps): Promise<IProduct|null> {
+        const { id } = await this.repository.create(data);
+        const newProduct: IProduct |null = await this.repository.findOne({
+            where: {
+                id: id
+            },
+            relations: ["category","brand","variants","variants.color","variants.size"]
+        });
+        return newProduct;
+    }
+    public async updateProduct(id: number, data: IProductUpdateProps ): Promise<IProduct|null> {
+        await this.repository.update(id, data);
+        const updatedProduct: IProduct|null = await this.repository.findOne({
+            where: {
+                id: id
+            },
+            relations: ["category","brand","variants","variants.color","variants.size"]
+        });
+        return updatedProduct;
     }
 
 }

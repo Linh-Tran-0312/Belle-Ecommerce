@@ -44,6 +44,7 @@ export default function ProductBrand() {
        setBrand({ ...brand, name: e.target.value });
    }
    const handleSubmitBrand = (e) => {
+    e.preventDefault();
        if (!brand.id) {
            dispatch(productActions.createProductBrand({ name: brand.name, imgPath: brand.imgPath }))
        } else {
@@ -87,8 +88,9 @@ export default function ProductBrand() {
                             <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> } onClick={handleAddNewBrand}>New Brand</Button>
                             {
                                 showBrand && (
+                                    <form onSubmit={handleSubmitBrand}>
                                     <Box my={5}>
-                                    <TextField type="text" fullWidth label="Brand name" variant="outlined" value={brand.name} onChange={handleBrandChange} />
+                                    <TextField type="text" fullWidth label="Brand name" variant="outlined" value={brand.name} onChange={handleBrandChange} required/>
                                     <Box my={2}>                                     
                                     <Grid container spacing={2}>
                                         {
@@ -98,13 +100,13 @@ export default function ProductBrand() {
                                                 <DeleteButton message="Are you sure you want to delete this brand?" status={isDeletingProductBrand} deleteFn={handleDeleteBrand}/>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitBrand}>Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
                                             </Grid>
                                                 </>
                                                
                                             ):(
                                                 <Grid item xs={12}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitBrand}>Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}  type="submit">Save</Button>
                                             </Grid>
                                             )
                                         }
@@ -112,6 +114,7 @@ export default function ProductBrand() {
                                         </Grid>
                                     </Box>
                                 </Box>
+                                </form>
                                 )
                             }
                            

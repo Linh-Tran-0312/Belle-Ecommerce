@@ -43,6 +43,7 @@ export default function ProductCategory() {
          setCategory({ ...category, name: e.target.value });
      }
      const handleSubmitCategory = (e) => {
+         e.preventDefault();
          if (!category.id) {
              dispatch(productActions.createProductCategory({ name: category.name, imgPath: category.imgPath }))
          } else {
@@ -87,31 +88,34 @@ export default function ProductCategory() {
                             <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon/> } onClick={handleAddNewCategory}>New Category</Button>
                             {
                                 showCategory && (
+                                    <form onSubmit={handleSubmitCategory}>
                                     <Box my={5}>
-                                    <TextField type="text" fullWidth label="Category name" variant="outlined" value={category.name} onChange={handleCategoryChange} />
-                                    <Box my={2}>                                     
-                                    <Grid container spacing={2}>
-                                        {
-                                            category?.id ? (
-                                                <>
-                                                 <Grid item xs={6}>
-                                                <DeleteButton message="Are you sure you want to delete this category?" status={isDeletingProductCategory} deleteFn={handleDeleteCategory}/>
+                                        <TextField type="text" fullWidth label="Category name" variant="outlined" value={category.name} onChange={handleCategoryChange} required />
+                                        <Box my={2}>                                     
+                                        <Grid container spacing={2}>
+                                            {
+                                                category?.id ? (
+                                                    <>
+                                                    <Grid item xs={6}>
+                                                    <DeleteButton message="Are you sure you want to delete this category?" status={isDeletingProductCategory} deleteFn={handleDeleteCategory}/>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                </Grid>
+                                                    </>
+                                                
+                                                ):(
+                                                    <Grid item xs={12}>
+                                                    <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                </Grid>
+                                                )
+                                            }
+                                            
                                             </Grid>
-                                            <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitCategory}>Save</Button>
-                                            </Grid>
-                                                </>
-                                               
-                                            ):(
-                                                <Grid item xs={12}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} onClick={handleSubmitCategory}>Save</Button>
-                                            </Grid>
-                                            )
-                                        }
-                                          
-                                        </Grid>
-                                    </Box>
-                                </Box>
+                                            </Box>
+                                        </Box>
+                                    </form>
+                                
                                 )
                             }
                            

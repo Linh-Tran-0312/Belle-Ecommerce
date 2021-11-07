@@ -80,15 +80,15 @@ export class ProductController {
      * Create new product
      */
     @Post("/")
-    public async createProduct(@Body() data: IProductCreateProps): Promise<IProduct> {
-        return this._productService.create(data)
+    public async createProduct(@Body() data: IProductCreateProps): Promise<IProduct|null> {
+        return this._productService.createProduct(data)
     }
     /**
     * Update product info
     */
     @Patch("/:id")
-    public async updateProductById(@Path() id: number, @Body() data: IProductUpdateProps): Promise<IProduct> {
-        return this._productService.update(id, data);
+    public async updateProductById(@Path() id: number, @Body() data: IProductUpdateProps): Promise<IProduct|null> {
+        return this._productService.updateProduct(id, data);
     }
     /**
      * Delete product
@@ -101,15 +101,15 @@ export class ProductController {
      * Create product variant
      */
     @Post("/variant")
-    public async createProductVariant(@Body() data: IProductVariantCreateProps): Promise<IProductVariant> {
-        return this._productVariantService.create(data);
+    public async createProductVariant(@Body() data: IProductVariantCreateProps): Promise<IProductVariant|null> {
+        return this._productVariantService.createProductVariant(data);
     }
     /**
      * Update product variant partially
      */
     @Patch("/variant/:variantId")
-    public async updateProductVariant(@Path() variantId: number, @Body() data: IProductVariantUpdateProps): Promise<IProductVariant> {
-         return this._productVariantService.update(variantId, data)
+    public async updateProductVariant(@Path() variantId: number, @Body() data: IProductVariantUpdateProps): Promise<IProductVariant|null> {
+         return this._productVariantService.updateProductVariant(variantId, data)
     }
     /**
      * Delete product variant

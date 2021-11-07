@@ -25,7 +25,7 @@ export class OrderDetail extends CustomBaseEntity implements IOrderDetailCreateP
     @Column()
     productVariantId!: number;
 
-    @ManyToOne(()=> ProductVariant)
+    @ManyToOne(()=> ProductVariant, { onDelete: "CASCADE"})
     @JoinColumn()
     productVariant!: ProductVariant;
    

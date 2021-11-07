@@ -233,7 +233,7 @@ export default function AdminPage() {
         <Menu page={page}/>    
         </List>
         <Divider />
-        <List>{secondaryListItems}</List>
+       
       </Drawer>
       <main className={classes.content}>
       <div className={classes.appBarSpacer} ref={topPage}/>

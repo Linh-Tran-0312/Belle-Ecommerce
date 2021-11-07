@@ -14,7 +14,9 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import OpacityIcon from '@material-ui/icons/Opacity';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteButton from "../../components/DeleteButton";
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import productActions from "../../actions/product";
 import { ChromePicker } from "react-color";
 const useStyles = makeStyles({
     root: {
@@ -40,53 +42,55 @@ const useStyles = makeStyles({
     },
 });
  
-function createCategories(name, id) {
-    return { name, id };
+const initColor = {
+    id: "",
+    code: "",
+    name: "",
 }
-function createColor(name, id, code) {
-    return { name, id, code };
-}
-const rowsCategories = [
-    createCategories('Ao khoac nam', 1),
-    createCategories('Ao khoac nu', 2),
-    createCategories('Phu kien', 3),
-    createCategories('Mu', 4),
-    createCategories('Vay', 5),
-];
-const rowsBrands = [
-    createCategories('Zara', 1),
-    createCategories('Routine', 2),
-    createCategories('Uniqulo', 3),
-    createCategories('Channel', 4),
-    createCategories('Leo', 5),
-];
-const rowsSizes = [
-    createCategories('XS', 1),
-    createCategories('L', 2),
-    createCategories('M', 3),
-    createCategories('XL', 4),
-    createCategories('XXL', 5),
-];
-const rowsColors = [
-    createColor("Blue", 1, "#0b5394"),
-    createColor("Red", 2, "#cc0000"),
-    createColor("Yellow", 3, "#f1c232"),
-    createColor("Violet", 4, "#c90076"),
-    createColor("Purple", 5, "#674ea7")
-];
  
 export default function ProductColor() {
-    const classes = useStyles();
-   
 
-    const [colorPicker, setColorPicker] = React.useState("");
-    const [showColorPicker, setShowColorPicker] = React.useState(false)
-     
+    const dispatch = useDispatch();
+    
+    const [showColorPicker, setShowColorPicker] = React.useState(false);
+
+    const productColors = useSelector(state => state.product).colors;
+    const isDeletingProductColor = useSelector(state => state.product).isDeletingProductColor;
+    const [color, setColor] = useState(initColor);
+    const [showColor, setShowColor] = useState(false);
+ 
+ 
+   
+    const handleSelectColor = (value) => {
+        setShowColor(true);
+        setColor({ id: value.id, name: value.name, code: value.code })
+    }
+    const handleAddNewColor = () => {
+        setShowColor(true);
+        setColor(initColor);
+    }
+    const handleColorChange = (e) => {
+        setColor({ ...color, name: e.target.value });
+    }
+    const handleSubmitColor = (e) => {
+        e.preventDefault();
+        setShowColorPicker(false);
+        if (!color.id) {
+            dispatch(productActions.createProductColor({ name: color.name, code: color.code }))
+        } else {
+            dispatch(productActions.updateProductColor(color.id, { name: color.name, code: color.code }))
+        }
+    }
+    const handleDeleteColor = (e) => {
+        dispatch(productActions.deleteProductColor(color.id));
+        setColor(initColor);
+        setShowColor(false);
+    }
     const handleShowColorPicker = (e) => {
         setShowColorPicker(preState => !preState)
     }
-    const handleChangePicker = (color) => {
-        setColorPicker(color.hex)
+    const handleChangePicker = (value) => {
+        setColor({...color, code: value.hex})
     }
     return (
         <>
@@ -98,19 +102,21 @@ export default function ProductColor() {
                                     <TableRow>
                                         <TableCell  ><strong>No</strong></TableCell>
                                         <TableCell><strong>Color Name</strong></TableCell>
+                                        <TableCell><strong>Display</strong></TableCell>
                                         <TableCell  ><strong>Code</strong></TableCell>
                                         <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsColors.map((row, index) => (
+                                    {productColors.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
-                                            <TableCell  >{row.name} <OpacityIcon style={{ color: row.code, position: "relative", top: 5 }} /></TableCell>
+                                            <TableCell  >{row.name}</TableCell>
+                                            <TableCell  ><div style={{ border: "1px solid #999999", width: 30, height: 30, backgroundColor: row.code}}/></TableCell>
                                             <TableCell  >{row.code}</TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><IconButton size="small" onClick={() => handleSelectColor(row)}><MoreHorizIcon /></IconButton></TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -118,49 +124,65 @@ export default function ProductColor() {
                         </TableContainer>
                     </Grid>
                     <Grid item sm={6} xs={12}>
-                        <Box>
-                            <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />}>New Color</Button>
-                            <Box my={5}>
-                                <Box my={1}>
-                                    <TextField type="text" fullWidth label="Color name" variant="outlined" value="Blue" />
-
-                                </Box>
-                                <Box my={2}>
-                                    <Grid container>
-                                        <Grid item xs={10}>
-                                            <TextField type="text" fullWidth label="Color code" variant="outlined" disabled value={colorPicker} />
-                                        </Grid>
-                                        <Grid item xs={2} style={{ position: 'relative' }}>
-                                            <Box style={{ display: showColorPicker ? "block" : "none", position: "absolute", right: 50, top: -250 }}>
-                                                <ChromePicker
-                                                    color={colorPicker}
-                                                    onChangeComplete={handleChangePicker}
-                                                />
+                       
+                                <Box>
+                                    <Button color="primary" fullWidth variant="contained" startIcon={<AddBoxIcon />} onClick={handleAddNewColor}>New Color</Button>
+                                    {
+                                        showColor && (
+                                            <form onSubmit={handleSubmitColor}>
+                                            
+                                            <Box my={5}>
+                                            <Box my={1}>
+                                                <TextField type="text" fullWidth label="Color name" variant="outlined" value={color.name} onChange={handleColorChange} required/>
                                             </Box>
-                                            <Box textAlign="center">
-                                            <IconButton onClick={handleShowColorPicker}>
-                                                <ColorLens style={{ color: colorPicker, fontSize: 35 }} />
-                                            </IconButton>
+                                            <Box my={2}>
+                                                <Grid container>
+                                                    <Grid item xs={10}>
+                                                        <TextField type="text" fullWidth label="Color code" variant="outlined" required disabled value={color.code} />
+                                                    </Grid>
+                                                    <Grid item xs={2} style={{ position: 'relative' }}>
+                                                        <Box style={{ display: showColorPicker ? "block" : "none", position: "absolute", zIndex: 10,right: 80, top: -150 }}>
+                                                            <ChromePicker
+                                                                color={color.code}
+                                                                onChangeComplete={handleChangePicker}
+                                                            />
+                                                        </Box>
+                                                        <Box textAlign="center">
+                                                        <IconButton onClick={handleShowColorPicker}>
+                                                            <ColorLens style={{ color: color.code, fontSize: 35 }} />
+                                                        </IconButton>
+                                                        </Box>
+                                                      
+                                                    </Grid>
+                                                </Grid>
                                             </Box>
-                                          
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-
-                                <Box my={2}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6}>
-                                            <DeleteButton />
-                                        </Grid>
-                                        <Grid item xs={6}>
-                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}>Save</Button>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-
-                            </Box>
-
-                        </Box>
+            
+                                            <Box my={2}>
+                                                <Grid container spacing={2}>
+                                                {
+                                                        color?.id ? (
+                                                            <>
+                                                             <Grid item xs={6}>
+                                                            <DeleteButton message="Are you sure you want to delete this color?" status={isDeletingProductColor} deleteFn={handleDeleteColor}/>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                        </Grid>
+                                                            </>
+                                                           
+                                                        ):(
+                                                            <Grid item xs={12}>
+                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                        </Grid>
+                                                        )
+                                                    }
+                                                </Grid>
+                                            </Box>
+                                            </Box>  
+                                            </form>
+                                        ) 
+                                    }                                                                                                     
+                              </Box>                                          
                     </Grid>
                 </Grid>  
         </>

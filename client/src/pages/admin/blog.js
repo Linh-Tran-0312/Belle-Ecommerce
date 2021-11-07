@@ -96,10 +96,6 @@ export default function BlogAdmin() {
     const [editorState, setEditorState] = React.useState(EditorState.createEmpty());
   
     
-    //const [page, setPage] = React.useState(1);
-
-   
-
     // Handle events in Blog Tab
     useEffect(() => {
         dispatch(blogAction.getBlogs(filter));
@@ -107,9 +103,9 @@ export default function BlogAdmin() {
     useEffect(() => {
         const contentSate = convertFromRaw(JSON.parse(blogDetail.content));
         setEditorState(EditorState.createWithContent(contentSate)); 
-        setBlog(blogDetail);  
+        setBlog({...blogDetail});  
                 
-    },[blogDetail])
+    },[blogDetail]);
     useEffect(() => {
         const mod = blogTotal%filter.limit;
         let pageNumber = blogTotal/filter.limit;
@@ -135,7 +131,6 @@ export default function BlogAdmin() {
         dispatch(blogAction.getBlogById(id));
         setShowBlog(true);
     }
-
     const handleAddNewBlog = (e) => {
         setShowBlog(true);
         setEditorState(EditorState.createEmpty());
@@ -166,10 +161,6 @@ export default function BlogAdmin() {
         setShowBlog(false);
     }
 
-
-    
-    
-    
     return (
         <>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
