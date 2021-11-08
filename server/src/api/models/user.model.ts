@@ -4,7 +4,8 @@ import { Product } from ".";
 import { CustomBaseEntity, IBaseEntity } from "./base.model";
 import { Order } from "./order.model";
 
-enum UserRole {
+export enum UserRole {
+    ALL = "all",
     ADMIN = 'admin',
     EDITOR = 'editor',
     CUSTOMER = 'customer'
@@ -25,6 +26,7 @@ export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBa
     googleId?: string;
     phone?: string;
     address?: string;
+    orders?: Order[]
 }; 
 
 @Entity()

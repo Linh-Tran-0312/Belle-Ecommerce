@@ -200,6 +200,7 @@
 			},
 			"UserRole": {
 				"enum": [
+					"all",
 					"admin",
 					"editor",
 					"customer"
@@ -679,7 +680,8 @@
 				"enum": [
 					"price",
 					"name",
-					"overallReview"
+					"overallReview",
+					"createdAt"
 				],
 				"type": "string"
 			},
@@ -1246,6 +1248,12 @@
 					"address": {
 						"type": "string"
 					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
+					},
 					"fname": {
 						"type": "string"
 					},
@@ -1288,6 +1296,12 @@
 					},
 					"address": {
 						"type": "string"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
 					},
 					"fname": {
 						"type": "string"
@@ -1519,6 +1533,34 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"IUsers": {
+				"properties": {
+					"users": {
+						"items": {
+							"$ref": "#/components/schemas/User"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"users",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserField": {
+				"enum": [
+					"fname",
+					"sale",
+					"createdAt"
+				],
+				"type": "string"
 			},
 			"IColorCreateProps": {
 				"properties": {
@@ -3261,10 +3303,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IUser"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/IUsers"
 								}
 							}
 						}
@@ -3275,7 +3314,95 @@
 					"User"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/UserRole"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/UserField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					}
+				]
+			}
+		},
+		"/users/{id}": {
+			"get": {
+				"operationId": "GetUserById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IUser"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/colors": {

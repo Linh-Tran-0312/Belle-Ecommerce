@@ -19,6 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import productActions from "../../actions/product";
 import Rating from "../../components/Rating";
 import DeleteButton from "../../components/DeleteButton";
+import UploadImage from "../../components/UploadImage";
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
@@ -150,6 +151,17 @@ export default function ProductAdmin() {
     }
     const handleProductChange = (e) => {
         setProduct({...product, [e.target.name]: e.target.value})
+    }
+    const handleGetUrlImage = (url) => {
+        if(url !== "")
+        {
+            const updatedPaths = product.imgPaths.concat(url);
+            setProduct({...product, imgPaths: updatedPaths})
+        }
+    }
+    const handleDeleteProductImage = (img) => {
+        const updatedPaths = product.imgPaths.filter(i => i !== img)
+        setProduct({...product, imgPaths: updatedPaths})
     }
     const handleSubmitProduct = e => {
         e.preventDefault();
@@ -414,20 +426,20 @@ export default function ProductAdmin() {
                                     width: '100%',
                                 }}>
                                     {
-                                        [0, 1, 3, 4, 5].map(item => (
+                                        product.imgPaths.map(item => (
                                             <Grid key={item} item md={4} xs={6}>
                                                 <Card className={classes.img}>
                                                     <CardActionArea>
                                                         <CardMedia
                                                             className={classes.media}
-                                                            image="https://image.vietnamnews.vn/uploadvnnews/Article/2021/3/18/142705_hoa.jpg"
-                                                            title="Contemplative Reptile"
+                                                            image={item}
+                                                            title="Product Image"
                                                         />
                                                     </CardActionArea>
                                                     <CardActions >
-                                                        <Button fullWidth size="small" color="secondary">
-                                                            <DeleteOutlineIcon />
-                                                        </Button>
+                                                        <Box width={1} >
+                                                            <DeleteButton message="Are you sure you want to delete this image" deleteFn={() => handleDeleteProductImage(item)} />
+                                                        </Box>
                                                     </CardActions>
                                                 </Card>
                                             </Grid>
@@ -436,7 +448,9 @@ export default function ProductAdmin() {
                                 </Grid>
                             </Box>
                             <Box my={1}>
-                                <Button variant="outlined" color="primary" fullWidth startIcon={<AddPhotoAlternateIcon />}>Add Image</Button>
+                                <Box>
+                                    <UploadImage getURL={handleGetUrlImage}/>
+                                </Box>
                             </Box>
                         </Box>
                     </Grid>

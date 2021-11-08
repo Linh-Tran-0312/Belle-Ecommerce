@@ -11,7 +11,8 @@ export enum Change {
 export enum ProductField {
     PRICE = "price",
     NAME = "name",
-    REVIEW = "overallReview"
+    REVIEW = "overallReview",
+    CREATEDAT = "createdAt"
 
 }
 export interface IProductQuery  {
@@ -46,7 +47,7 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
             if(query.min > 0) options.where.price = MoreThanOrEqual(query.min);
             if(query.max > 0) options.where.price = LessThanOrEqual(query.max);
             if(!!query.sort) options.order[`${query.sort}`] = Change.DESC;
-            if(!!query.change) options.order[`${ProductField.NAME}`] = query.change;
+            if(!!query.change) options.order[`${ProductField.CREATEDAT}`] = query.change;
             if(!!query.sort && !!query.change ) options.order[`${query.sort}`] = query.change;
             if(query.limit > 0) options.take = query.limit;
             if(query.page > 0) options.skip = query.limit * (query.page - 1);   

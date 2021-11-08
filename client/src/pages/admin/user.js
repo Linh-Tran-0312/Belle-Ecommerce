@@ -56,8 +56,23 @@ const rowsOrders = [
     createOrders(4, "22-03-2021", "NEW ORDER", 13000),
     createOrders(3, "25-07-2019", "COMPLETE", 236000),
 ]
+const initUser = {
+    fname: "",
+    lname: "",
+    role: "",
+    phone: "",
+    address: ""
+};
+const initFilter = {
+    search: "",
+    role: "",
+    sortMethod: "",
+    limit: 3,
+    page: 1
+
+}
 export default () => {
-    const [filter, setFilter] = React.useState(initialState);
+    const [filter, setFilter] = React.useState(initialFilter);
     const classes = useStyles();
     const [page, setPage] = React.useState(1);
 
@@ -203,7 +218,14 @@ export default () => {
                     </FormControl>
                         </Box>
                         <Box my={2}>
-                            <TextField fullWidth type="text" value="Henry Ngueyn" label="Name" variant="outlined" />
+                            <Grid container>
+                                <Grid item xs={6}>
+                                <TextField fullWidth type="text" value="Henry Ngueyn" label="Name" variant="outlined" />
+                                </Grid>
+                                <Grid item xs={6}>
+                                <TextField fullWidth type="text" value="Henry Ngueyn" label="Name" variant="outlined" />
+                                </Grid>
+                            </Grid>                   
                         </Box>
                         <Box my={2}>
                             <TextField fullWidth type="text" value="henrynguyen@gmail.com" disabled label="Email" variant="outlined" />

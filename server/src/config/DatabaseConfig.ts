@@ -3,6 +3,7 @@ import * as Entity from '../api/models';
 import  dotenv  from "dotenv";
 dotenv.config();
 
+
 const config: ConnectionOptions= {
     type: 'postgres',
     host: process.env.POSTGRES_HOST,
@@ -25,6 +26,7 @@ const config: ConnectionOptions= {
                 Entity.ProductReview,
                 Entity.User
             ],
+ 
     synchronize: true,
 };
 

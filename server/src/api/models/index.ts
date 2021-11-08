@@ -11,6 +11,6 @@ export { ProductComment, IProductComment, IProductCommentCreateProps } from "./p
 export { ProductReview, IProductReview, IProductReviewCreateProps } from "./productReview.model";
 export { ProductVariant, IProductVariant, IProductVariantCreateProps } from "./productVariant.model";
 export { Size, ISizeCreateProps, ISize } from "./size.model";
-export { IUser, User, IUserCreateProps } from "./user.model";
+export { IUser, User, IUserCreateProps, UserRole } from "./user.model";
 
  

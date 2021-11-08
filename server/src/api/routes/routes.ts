@@ -135,7 +135,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserRole": {
         "dataType": "refEnum",
-        "enums": ["admin","editor","customer"],
+        "enums": ["all","admin","editor","customer"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
@@ -385,7 +385,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ProductField": {
         "dataType": "refEnum",
-        "enums": ["price","name","overallReview"],
+        "enums": ["price","name","overallReview","createdAt"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IProductCategory": {
@@ -633,6 +633,20 @@ const models: TsoaRoute.Models = {
             "imgPath": {"dataType":"string"},
         },
         "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IUsers": {
+        "dataType": "refObject",
+        "properties": {
+            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"User"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserField": {
+        "dataType": "refEnum",
+        "enums": ["fname","sale","createdAt"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IColorCreateProps": {
@@ -1768,6 +1782,12 @@ export function RegisterRoutes(app: express.Router) {
 
             function UserController_getUsers(request: any, response: any, next: any) {
             const args = {
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    role: {"in":"query","name":"role","ref":"UserRole"},
+                    limit: {"in":"query","name":"limit","dataType":"double"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+                    sort: {"in":"query","name":"sort","ref":"UserField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1783,6 +1803,29 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.getUsers.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/users/:id',
+
+            function UserController_getUserById(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UserController();
+
+
+            const promise = controller.getUserById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

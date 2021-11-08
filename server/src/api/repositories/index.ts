@@ -11,7 +11,7 @@ export { ProductCommentRepository } from "./productComment.repository";
 export { ProductReviewRepository } from "./productReview.repository";
 export { ProductVariantRepository } from "./productVariant.repository";
 export { SizeRepository } from "./size.repository";
-export { UserRepository } from "./user.repository";
+export { UserRepository, IUsers } from "./user.repository";
 export {   BaseRepository } from "./base.repository";
 
 

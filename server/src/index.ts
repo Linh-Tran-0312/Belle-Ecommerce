@@ -19,7 +19,11 @@ import "./api/controllers/colorController";
 import "./api/controllers/productCategoryController";
 import "./api/controllers/productController";
 import "./api/controllers/orderController";
+import { types } from 'pg';
 
+types.setTypeParser(20, function(val) {
+  return parseInt(val)
+})
 dotenv.config();
 const PORT = process.env.PORT || 8000;
 

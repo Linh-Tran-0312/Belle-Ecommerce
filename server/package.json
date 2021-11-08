@@ -42,5 +42,8 @@
     "tsoa": "^3.9.0",
     "typedi": "^0.10.0",
     "typeorm": "^0.2.37"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.6.1"
   }
 }

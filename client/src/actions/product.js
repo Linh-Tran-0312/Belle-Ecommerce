@@ -220,6 +220,7 @@ const productActions = {
   updateProduct: (id,formData) => async(dispatch) => {
     try {
       const body = formProduct(formData);
+      console.log(body);
       const { data } = await api.updateProduct(id,body);
       dispatch({ type: ACTION.UPDATE_PRODUCT, payload: data})
     } catch (error) {
