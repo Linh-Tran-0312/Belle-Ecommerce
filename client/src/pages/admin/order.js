@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import React, { useState } from 'react';
 import OrderDetail from "../../components/Admin/OrderDetailModal";
 import Title from '../../components/Admin/Title';
+import OrderStatus from "../../components/OrderStatus";
 // Generate Order Data 
 function createData(id, date, name, shipTo, paymentMethod, amount) {
     return { id, date, name, shipTo, paymentMethod, amount };
@@ -209,7 +210,7 @@ export default function Orders() {
                                 <TableCell  align="center">{row.paymentMethod}</TableCell>
                                 <TableCell>COD</TableCell>
                                 <TableCell align="right">{row.amount}</TableCell>
-                                <TableCell>COMPETED</TableCell>
+                                <TableCell><OrderStatus status="ordered"/></TableCell>
                                 <TableCell>
                                      <OrderDetail/>
                                     </TableCell>

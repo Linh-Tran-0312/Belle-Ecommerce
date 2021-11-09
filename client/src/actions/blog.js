@@ -1,5 +1,6 @@
 import api from "../api";
 import { ACTION, Query } from "../constants";
+import handleFilter from "../helper/handleFilter";
 const blogActions = {
 
     // handle blog category actions
@@ -45,10 +46,7 @@ const blogActions = {
     getBlogs: (filter) => async(dispatch) => {
         try {
             let queryString = "";
-            if(filter.category) queryString += `category=${filter.category}`;
-            if(filter.search) queryString += `&search=${filter.search}`;
-            if(filter.limit) queryString += `&limit=${filter.limit}`;
-            if(filter.page) queryString += `&page=${filter.page}`;
+            queryString = handleFilter(filter);
             switch(filter.sortMethod) {
                 case "1":
                     queryString += `&sort=createdAt&change=${Query.ASC}`;

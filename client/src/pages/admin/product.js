@@ -52,7 +52,7 @@ const initFilter = {
     max: "",
     sortMethod: "",
     page: 1,
-    limit: 3
+    limit: 5
 };
 const initProduct = {
     id: "",
@@ -141,7 +141,9 @@ export default function ProductAdmin() {
     //Handle product state
     const handleAddNewProduct = (e) => {
         setProduct(initProduct);
+        setVariant(initVariant);
         setShowProduct(true);
+        setShowVariant(false);
     }
     const handleGetProductById = (id) => {
         dispatch(productActions.getProductById(id));
@@ -312,7 +314,7 @@ export default function ProductAdmin() {
                                         <TableCell  ><strong>SKU code</strong></TableCell>
                                         <TableCell  ><strong>Category</strong></TableCell>
                                         <TableCell  ><strong>Brand</strong></TableCell>
-                                        <TableCell  ><strong>Price</strong></TableCell>
+                                        <TableCell  ><strong>Price (VND)</strong></TableCell>
                                         <TableCell  ><strong>Review</strong></TableCell>
                                         <TableCell  ><strong></strong></TableCell>
                                     </TableRow>
@@ -321,13 +323,13 @@ export default function ProductAdmin() {
                                     {products.map((row, index) => (
                                         <TableRow key={index}>
                                             <TableCell component="th" scope="row">
-                                                {`${index + 1}`}
+                                                {`${(filter.page - 1)*filter.limit + index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row?.name}</TableCell>
                                             <TableCell  >{row?.sku}</TableCell>
                                             <TableCell  >{row?.category?.name}</TableCell>
                                             <TableCell  >{row?.brand?.name}</TableCell>
-                                            <TableCell  >{row?.price}</TableCell>
+                                            <TableCell  >{row?.price.toLocaleString()}</TableCell>
                                             <TableCell  > <Rating size={15} rating={4} /></TableCell>
                                             <TableCell  ><IconButton size="small" onClick={() => handleGetProductById(row?.id)}><MoreHorizIcon /></IconButton></TableCell>
 

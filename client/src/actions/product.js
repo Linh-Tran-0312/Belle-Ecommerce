@@ -1,6 +1,6 @@
 import api from "../api";
 import { ACTION, Query } from "../constants";
-
+import handleFilter from "../helper/handleFilter";
 const formProduct = (formData) => {
    const body = {
     name: formData.name,
@@ -170,11 +170,7 @@ const productActions = {
   getProducts: (filter) => async(dispatch) => {
     try {
       let queryString = "";
-      if(filter.category) queryString += `category=${filter.category}`;
-      if(filter.brand) queryString += `brand=${filter.brand}`;
-      if(filter.search) queryString += `&search=${filter.search}`;
-      if(filter.limit) queryString += `&limit=${filter.limit}`;
-      if(filter.page) queryString += `&page=${filter.page}`;
+      queryString = handleFilter(filter);
       if(filter.min !== 0 && filter.min !== "") queryString += `&min=${filter.min}`;
       if(filter.max !== 5000 && filter.max !== "") queryString += `&max=${filter.max}`;
       switch(filter.sortMethod) {

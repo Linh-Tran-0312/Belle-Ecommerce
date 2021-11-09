@@ -50,8 +50,21 @@ const api = {
     deleteProduct: (id) => API.delete(`/products/${id}`),
     createProductVariant: (formData) => API.post("/products/variant", formData),
     updateProductVariant: (variantId, formData) => API.patch(`/products/variant/${variantId}`, formData),
-    deleteProductVariant: (variantId) => API.delete(`/products/variant/${variantId}`)
+    deleteProductVariant: (variantId) => API.delete(`/products/variant/${variantId}`),
 
+    //------------------------USER API----------------------------
+    //For Admin permission
+    getUsers: (queryString) => API.get(`/users?${queryString}`),
+    getUserById: (id) => API.get(`/users/${id}`),
+    createUser: (formData) => API.post("/users", formData),
+    updateUser: (id, formData) => API.patch(`/users/${id}`, formData),
+
+    //------------------------AUTHORIZATION API----------------------------
+    register: (formData) => API.post("/auth/register", formData)
+
+    //------------------------ORDER API----------------------------
+
+   // getOrdersByUserId: (userId) => API.get()
 }
 
 export default api;

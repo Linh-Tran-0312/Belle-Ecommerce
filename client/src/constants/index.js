@@ -26,6 +26,13 @@ export const Status = {
     SUCCEEDED: "succeed",
     FAILED: "failed"
 }
+export const ORDER_STATUS = {
+    ORDERING: "ordering",
+    ORDERED: "ordered",
+    DELIVERY: "delivery",
+    COMPLETED: "completed",
+    CANCELED: "cancel"
+}
 export const ACTION = {
     //------------------BLOG ACTION----------------------------
     //Error Action
@@ -98,6 +105,23 @@ export const ACTION = {
     IS_DELETING_PRODUCT_VARIANT: "IS_DELETING_PRODUCT_VARIANT",
     PRODUCT_VARIANT_STATUS: "PRODUCT_VARIANT_STATUS",
 
+    //User Action
+    GET_USERS: "GET_USER",
+    GET_USER_BY_ID: "GET_USER_BY_ID",
+    CREATE_USER: "CREATE_USER",
+    UPDATE_USER: "UPDATE_USER",
+    USER_STATUS: "USER_STATUS",
+    USER_MESSAGE: "USEr_MESSAGE",
+
+    //Auth Action
+    REGISTER: "REGISTER",
+    LOGIN: "LOGIN",
+    LOGOUT: "LOGOUT",
+    AUTH_STATUS: "AUTH_STATUS",
+
+    //Order Action
+    GET_ORDERS: "GET_ORDERS",
+    GET_ORDER_BY_ID: "GET_ORDER_BY_ID"
    
 
 
