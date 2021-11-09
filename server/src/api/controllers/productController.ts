@@ -51,7 +51,7 @@ export class ProductController {
             brand: 0,
             limit: 6,
             page: 0,
-            sort: ProductField.NAME,
+            sort: ProductField.CREATEDAT,
             change: Change.DESC,
             search: "",
             min: 0,

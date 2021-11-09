@@ -13,10 +13,12 @@ export enum UserRole {
 
 export interface IUserCreateProps {
     fname: string;
-    lname?: string;
+    lname: string;
     email: string;
     password: string;
     role?: UserRole;
+    phone?: string,
+    address?: string
 
 }
 
@@ -44,13 +46,13 @@ export class User extends CustomBaseEntity implements IUserCreateProps {
     @Column({nullable: true})
     googleId!: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: "" })
     phone!: string;
 
     @Column()
     password!: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: "" })
     address!: string;
 
     @Column({

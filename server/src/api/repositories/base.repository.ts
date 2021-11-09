@@ -23,6 +23,7 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
         try {
             return this.entity.save({...data});
         } catch (error) {
+            console.log(error)
             throw error;
         }
     }
@@ -36,8 +37,10 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
                 .returning("*")
                 .updateEntity(true)
                 .execute();
+              
             return updatedItem.raw[0];
         } catch (error) {
+            console.log(error)
             throw error;
         }
     }

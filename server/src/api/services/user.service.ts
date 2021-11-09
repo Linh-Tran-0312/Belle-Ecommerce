@@ -8,7 +8,7 @@ import { ServiceResponse } from "../helpers/ServiceResponse";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { ILike } from "typeorm";
-
+import { IUserUpdateProps } from "../controllers/userController";
  
 export enum UserField {
     NAME = "fname",
@@ -29,9 +29,15 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         super(new UserRepository())
     }
 
+    private async  isEmailExist(email: any): Promise<boolean> {
+        const existingEmail = await this.repository.findOne({ where: { email }});
+        if(!existingEmail) return false;
+        return true;
+    }
     public async register(data: IUserCreateProps): Promise<IUser> {       
-        const existingUsers: IUser| any =  await this.repository.findOne({ where: { email: data.email}});
-        if(existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);          
+        //const existingUsers: IUser| any =  await this.repository.findOne({ where: { email: data.email}});
+        const existingEmail = await this.isEmailExist(data.email);
+        if(!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);          
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
         const result = await this.repository.create(data);
@@ -40,8 +46,8 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
     }
 
     public async login(email: string, password: string): Promise<IUser> {
-        const existingUsers: IUser| any =  await this.repository.findOne({ where: { email}});
-        if(!existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.UNAUTHORIZED);
+        const existingUsers: IUser|any = await this.isEmailExist(email);
+        if(!existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
         console.log(existingUsers);
         const match = await bcrypt.compare(password, existingUsers.password);
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
@@ -51,6 +57,32 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
 
     public async getUsers(query: IUserQuery): Promise<IUsers> {
         return this.repository.getUsers(query);
+    }
+
+    public async createUser(data: IUserCreateProps): Promise<IUser> {
+        const existingUsers: IUser|any = await this.isEmailExist(data.email);
+        if(!!existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
+        const hashPassword = await bcrypt.hash(data.password, 10);
+        data.password = hashPassword;
+        const result: IUser = await this.repository.create(data);
+        const user: IUser|any = await this.repository.findOne({ where: {id: result.id}, relations: ["orders"]});
+        return user
+    }
+    public async updateUser(id: number,data: IUserUpdateProps): Promise<IUser> {
+        if(!!data.email) {
+            const existingUser: IUser|any =  await this.repository.findOne({ where: { email: data.email }});
+            if(!!existingUser && existingUser.id !== id) {
+                console.log(existingUser);
+                console.log(id, typeof id);
+                console.log(existingUser.id, typeof existingUser.id);
+                throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
+            } 
+        }
+        console.log("user service");
+        const result: IUser = await this.repository.update(id,data);
+        const user: IUser|any = await this.repository.findOne({ where: {id: result.id}, relations: ["orders"]});
+        
+        return user;
     }
 
 

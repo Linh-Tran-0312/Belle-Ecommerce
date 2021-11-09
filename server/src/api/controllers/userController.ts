@@ -11,8 +11,9 @@ export interface IUserUpdateProps {
     email?: string;
     phone?: string;
     address?: string;
+    role?: UserRole
 }
-
+ 
 @Route("users")
 @Tags('User')
 export class UserController {
@@ -24,7 +25,7 @@ export class UserController {
     /**
      * Get all users
      */
-    @Get()
+    @Get("/")
     public async getUsers(
         @Query() search?: string,
         @Query() role?: UserRole,
@@ -64,10 +65,27 @@ export class UserController {
          }
         return this._userService.getUsers(query);
     }
+    /**
+     * Get user and user's order list by user id
+     */
     @Get("/:id")
     public async getUserById(@Path() id: number): Promise<IUser|null> {
         const user: any = await this._userService.getOneById(id,["orders"]);
-        console.log(user);
         return user;
     }
+     /**
+     * Create new user with admin permission
+     */
+    @Post("/")
+    public async createUser(@Body() data: IUserCreateProps): Promise<IUser|null> {
+        return this._userService.createUser(data);
+    }
+    /**
+     * Update user with admin permission
+     */
+     @Patch("/:id")
+     public async updateUser(@Path() id: number,@Body() data: IUserUpdateProps): Promise<IUser|null> {
+         
+         return this._userService.updateUser(id,data);
+     }
 }

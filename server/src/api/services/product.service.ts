@@ -34,7 +34,7 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
     public async getProducts(query: IProductQuery): Promise<IProducts> {
         try {
             let options: any = {
-                select: ["id","name","sku","price","overallReview"],
+                select: ["id","name","sku","price","overallReview","createdAt"],
                 relations: ["category","brand"],
                 where: {},
                 order: {}
@@ -46,8 +46,8 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
             if (!!query.search) options.where.name = ILike(`%${query.search}%`);
             if(query.min > 0) options.where.price = MoreThanOrEqual(query.min);
             if(query.max > 0) options.where.price = LessThanOrEqual(query.max);
-            if(!!query.sort) options.order[`${query.sort}`] = Change.DESC;
-            if(!!query.change) options.order[`${ProductField.CREATEDAT}`] = query.change;
+         /*    if(!!query.sort) options.order[`${query.sort}`] = Change.DESC;
+            if(!!query.change) options.order[`${ProductField.CREATEDAT}`] = query.change; */
             if(!!query.sort && !!query.change ) options.order[`${query.sort}`] = query.change;
             if(query.limit > 0) options.take = query.limit;
             if(query.page > 0) options.skip = query.limit * (query.page - 1);   
