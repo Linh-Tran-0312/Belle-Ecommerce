@@ -1,14 +1,12 @@
  
-import { User, IUser, IUserCreateProps, UserRole} from "../models";
-import { UserRepository, IUsers } from "../repositories";
-import { Change } from "./index";
-import { BaseService, IBaseService } from "./base.service";
 import bcrypt from "bcrypt";
-import { ServiceResponse } from "../helpers/ServiceResponse";
+import { IUserUpdateProps } from "../controllers/userController";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
-import { ILike } from "typeorm";
-import { IUserUpdateProps } from "../controllers/userController";
+import { IUser, IUserCreateProps, UserRole } from "../models";
+import { IUsers, UserRepository } from "../repositories";
+import { BaseService, IBaseService } from "./base.service";
+import { Change } from "./index";
  
 export enum UserField {
     NAME = "fname",

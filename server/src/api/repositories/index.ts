@@ -4,7 +4,7 @@ export { BlogCommentRepository } from "./blogComment.repository";
 export { BrandRepository } from "./brand.repository";
 export { ProductCategoryRepository } from "./category.repository";
 export { ColorRepository } from "./color.repository";
-export { OrderRepository } from "./order.repository";
+export { OrderRepository, IOrders } from "./order.repository";
 export { OrderDetailRepository } from "./orderDetail.repository";
 export { ProductRepository, IProducts } from "./product.repository";
 export { ProductCommentRepository } from "./productComment.repository";

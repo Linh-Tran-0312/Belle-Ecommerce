@@ -6,145 +6,14 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"IOrderDetail": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice",
-					"id",
-					"createdAt"
+			"UserRole": {
+				"enum": [
+					"all",
+					"admin",
+					"editor",
+					"customer"
 				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"userId"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IOrder": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"userId",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderDetailCreateProps": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderCreateProps": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetailCreateProps"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderUpdateItems": {
-				"properties": {
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetailCreateProps"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
+				"type": "string"
 			},
 			"ProductCategory": {
 				"properties": {
@@ -198,14 +67,69 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UserRole": {
-				"enum": [
-					"all",
-					"admin",
-					"editor",
-					"customer"
+			"User": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"googleId": {
+						"type": "string"
+					},
+					"wishList": {
+						"items": {
+							"$ref": "#/components/schemas/Product"
+						},
+						"type": "array"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"fname",
+					"lname",
+					"email",
+					"password",
+					"googleId",
+					"phone",
+					"address",
+					"role",
+					"wishList",
+					"orders"
 				],
-				"type": "string"
+				"type": "object",
+				"additionalProperties": false
 			},
 			"Product": {
 				"properties": {
@@ -298,158 +222,6 @@
 					"comments",
 					"variants",
 					"reviews"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"User": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"googleId": {
-						"type": "string"
-					},
-					"wishList": {
-						"items": {
-							"$ref": "#/components/schemas/Product"
-						},
-						"type": "array"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/Order"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"fname",
-					"lname",
-					"email",
-					"password",
-					"googleId",
-					"phone",
-					"address",
-					"role",
-					"wishList",
-					"orders"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Status": {
-				"enum": [
-					"ordering",
-					"ordered",
-					"delivery",
-					"canceled",
-					"completed"
-				],
-				"type": "string"
-			},
-			"PaymentMethod": {
-				"enum": [
-					"cod",
-					"banktransfer",
-					"e-wallet",
-					"gateway"
-				],
-				"type": "string"
-			},
-			"Order": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
-						},
-						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/User"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"paymentCheck": {
-						"type": "boolean"
-					},
-					"note": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"shipping": {
-						"type": "number",
-						"format": "double"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"orderAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"userId",
-					"user",
-					"status",
-					"paymentMethod",
-					"paymentCheck",
-					"note",
-					"address",
-					"shipping",
-					"total",
-					"orderAt",
-					"details"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -656,6 +428,295 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Order": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"note": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"orderAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"userId",
+					"user",
+					"status",
+					"paymentMethod",
+					"paymentCheck",
+					"note",
+					"address",
+					"shipping",
+					"total",
+					"orderAt",
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Status": {
+				"enum": [
+					"ordering",
+					"ordered",
+					"delivery",
+					"canceled",
+					"completed"
+				],
+				"type": "string"
+			},
+			"PaymentMethod": {
+				"enum": [
+					"cod",
+					"banktransfer",
+					"e-wallet",
+					"gateway"
+				],
+				"type": "string"
+			},
+			"IOrderDetail": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderDetailCreateProps": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrders": {
+				"properties": {
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"orders",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderField": {
+				"enum": [
+					"orderAt",
+					"total"
+				],
+				"type": "string"
+			},
+			"Change": {
+				"enum": [
+					"DESC",
+					"ASC"
+				],
+				"type": "string"
+			},
+			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IOrder": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderCreateProps": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetailCreateProps"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderUpdateItems": {
+				"properties": {
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetailCreateProps"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IPlaceOrder": {
+				"properties": {
+					"address": {
+						"type": "string"
+					},
+					"note": {
+						"type": "string"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"address",
+					"paymentMethod"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IProducts": {
 				"properties": {
 					"products": {
@@ -682,13 +743,6 @@
 					"name",
 					"overallReview",
 					"createdAt"
-				],
-				"type": "string"
-			},
-			"Change": {
-				"enum": [
-					"DESC",
-					"ASC"
 				],
 				"type": "string"
 			},
@@ -1625,10 +1679,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IOrder"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/IOrders"
 								}
 							}
 						}
@@ -1639,7 +1690,74 @@
 					"Order"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "time",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "paymentCheck",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/OrderField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					}
+				]
 			},
 			"post": {
 				"operationId": "CreateOrder",
@@ -1784,6 +1902,32 @@
 					}
 				]
 			},
+			"delete": {
+				"operationId": "DeleteOrderById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete order of user",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}/addItems": {
 			"patch": {
 				"operationId": "UpdateOrderById",
 				"responses": {
@@ -1824,15 +1968,24 @@
 						}
 					}
 				}
-			},
-			"delete": {
-				"operationId": "DeleteOrderById",
+			}
+		},
+		"/orders/{orderId}/updateStatus": {
+			"patch": {
+				"operationId": "UpdateOrderStatus",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrder"
+								}
+							}
+						}
 					}
 				},
-				"description": "Delete order of user",
+				"description": "Update order status",
 				"tags": [
 					"Order"
 				],
@@ -1847,7 +2000,17 @@
 							"type": "number"
 						}
 					}
-				]
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderUpdateItems"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/orders/{orderId}/place": {
@@ -1886,7 +2049,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderCreateProps"
+								"$ref": "#/components/schemas/IPlaceOrder"
 							}
 						}
 					}

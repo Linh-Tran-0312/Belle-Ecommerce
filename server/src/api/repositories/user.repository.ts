@@ -16,8 +16,7 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
         super(getRepository(User));
     }
     public async getUsers(query: IUserQuery): Promise<IUsers> {
-        try {
-      
+        try {      
             const userQuery  = this.entity.createQueryBuilder("user")
             .leftJoinAndSelect("user.orders","order","order.status = :status",{ status: Status.ORDERING})
             
@@ -53,8 +52,6 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
 
             const count = await userQuery.getCount();
             const result = await userQuery.getRawMany();
-            console.log(count);
-            console.log(result);
             return { users : result, total: count}
         } catch (error) {
             console.log(error);

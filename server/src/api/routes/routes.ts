@@ -556,6 +556,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrders": {
+        "dataType": "refObject",
+        "properties": {
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderField": {
+        "dataType": "refEnum",
+        "enums": ["orderAt","total"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
@@ -585,6 +599,18 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IPlaceOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "address": {"dataType":"string","required":true},
+            "note": {"dataType":"string"},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "shipping": {"dataType":"double"},
+            "total": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -1206,6 +1232,14 @@ export function RegisterRoutes(app: express.Router) {
 
             function OrderController_getOrders(request: any, response: any, next: any) {
             const args = {
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    limit: {"in":"query","name":"limit","dataType":"double"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+                    time: {"in":"query","name":"time","dataType":"string"},
+                    status: {"in":"query","name":"status","dataType":"string"},
+                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"string"},
+                    sort: {"in":"query","name":"sort","ref":"OrderField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1345,7 +1379,7 @@ export function RegisterRoutes(app: express.Router) {
             function OrderController_placeOrder(request: any, response: any, next: any) {
             const args = {
                     orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IPlaceOrder"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

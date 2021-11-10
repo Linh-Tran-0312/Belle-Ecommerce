@@ -1,12 +1,13 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags } from "tsoa";
-import { IOrder, IOrderCreateProps, IOrderDetail, IOrderDetailCreateProps, Status, PaymentMethod, OrderDetail } from "../models";
-import { OrderService, OrderDetailService } from "../services";
-
+import { Body, Delete, Get, Patch, Path, Post, Query, Route, Tags } from "tsoa";
+import { IOrder, IOrderCreateProps, IOrderDetail, IOrderDetailCreateProps, Status, PaymentMethod, OrderDetail, Order } from "../models";
+import { OrderService, OrderDetailService , IPlaceOrder, IOrderQuery, OrderField, Change} from "../services";
+import { IOrders } from "../repositories";
 export interface IOrderUpdateProps {
     status?: Status;
     paymentCheck?: boolean;
     paymentMethod: PaymentMethod;
     address?: string,
+
 
 }
 
@@ -35,8 +36,27 @@ export class OrderController {
      * Not done
      */
     @Get("/")
-    public async getOrders(): Promise<IOrder[]> {
-        return this._orderService.getAll({});
+    public async getOrders(
+        @Query() search?: string,
+        @Query() limit?: number,
+        @Query() page?: number,
+        @Query() time?: string,
+        @Query() status?: string,
+        @Query() paymentCheck?: string,
+        @Query() sort?: OrderField,
+        @Query() change?: Change,
+    ): Promise<IOrders> {
+        const query: IOrderQuery = {
+            search,
+            paymentCheck,
+            status,
+            limit,
+            page,
+            time,
+            sort,
+            change
+        }
+        return this._orderService.getOrders(query);
     }
     /**
      * Create new order when user add items to order that is not already existed.
@@ -67,21 +87,28 @@ export class OrderController {
     */
     @Get("/:orderId")
     public async getOrderById(@Path() orderId: number): Promise<IOrder | null> {
-        return this._orderService.getOneById(orderId, ["details"])
+        return this._orderService.getOrderById(orderId)
     }
     /**
     * Update order (add items when use login if there are cart items saved in local storage)
     */
-    @Patch("/:orderId")
+    @Patch("/:orderId/addItems")
     public async updateOrderById(@Path() orderId: number, @Body() data: IOrderUpdateItems): Promise<IOrder> {
         return this._orderService.updateOrder(orderId,data)
     }
     /**
+    * Update order status
+    */
+       @Patch("/:orderId/updateStatus")
+       public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateItems): Promise<IOrder> {
+           return this._orderService.updateOrder(orderId,data)
+       }
+    /**
     * Submit current order 
     */
      @Patch("/:orderId/place")
-     public async placeOrder(@Path() orderId: number, @Body() data: IOrderCreateProps): Promise<IOrder> {
-         return this._orderService.update(orderId,data)
+     public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrder> {
+         return this._orderService.placeOrder(orderId,data)
      }
     /**
      * Delete order of user

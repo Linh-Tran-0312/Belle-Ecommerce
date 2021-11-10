@@ -1,13 +1,63 @@
-import { IOrder, IOrderCreateProps, Order, OrderDetail, IOrderDetail, Status } from "../models";
-import { OrderRepository } from "../repositories";
-import { BaseService, IBaseService } from "./base.service";
-
+import { IOrder, IOrderCreateProps, Order, OrderDetail, IOrderDetail, Status, PaymentMethod  } from "../models";
+import { OrderRepository, IOrders } from "../repositories";
+import { BaseService, IBaseService  } from "./base.service";
+import { Change } from "./index";
 import { IOrderUpdateItems } from "../controllers/orderController";
+import  periodCal from "../helpers/periodCalculator";
+export interface IPlaceOrder {
+    address: string;
+    note?: string;
+    paymentMethod: PaymentMethod;
+    shipping?: number;
+    total?: number;
 
+}
+
+export enum OrderField {
+    ORDERAT = "orderAt",
+    TOTAL = "total",
+}
+export interface IOrderQuery {
+    search?: string,
+    paymentCheck?: string,
+    status?: string,
+    limit?: number,
+    page?: number,
+    time?: string,
+    sort?: OrderField,
+    change?: Change
+
+}
 //@Service({ id: "OrderRepository-service"})
 export class OrderService extends BaseService<IOrder, OrderRepository> implements IBaseService<IOrder>  {
     constructor() {
         super(new OrderRepository())
+    }
+    public async getOrders(query: IOrderQuery): Promise<IOrders> {
+        const options: any = {
+            search: "",
+            paymentCheck: "",
+            status: "",
+            limit: 5,
+            page: 1,
+            time: "" ,
+            sort: OrderField.ORDERAT,
+            change: Change.DESC
+        }
+        if(!!query.search && query.search.trim() !== "") options.search = query.search;
+        if(!!query.paymentCheck && query.paymentCheck.trim() !== "") options.paymentCheck = query.paymentCheck === "true";
+        if(!!query.status && Object.values(Status).some((v) => v === query.status)) options.status = query.status;
+        if(!!query.limit && !isNaN(query.limit)) options.limit = query.limit; 
+        if(!!query.page && !isNaN(query.page)) options.page = query.page;
+        if(!!query.time && query.time.trim() !== "") options.time = periodCal(query.time);
+        if(!!query.sort && Object.values(OrderField).some((v) => v === query.sort)) options.sort = query.sort;
+        if(!!query.sort && Object.values(Change).some((v) => v === query.change)) options.change = query.change;
+
+        return this.repository.getOrders(options)
+        
+    }
+    public async getOrderById(id: number): Promise<IOrder|null> {
+        return this.repository.getOrderById(id);
     }
     public async createOrder(data: IOrderCreateProps): Promise<IOrder> {
         try {
@@ -54,6 +104,16 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
             throw error;
         }
     
+    }
+    public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
+        try {
+            const order: IOrder| any = this.repository.update(id, {...data, status: Status.ORDERED, orderAt:  new Date(Date.now()).toISOString()});
+            return order
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+          
     }
     public async getCurrentOrderByUserId(userId: number): Promise<IOrder | null> {
             const options = {
