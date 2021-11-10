@@ -60,11 +60,11 @@ const api = {
     updateUser: (id, formData) => API.patch(`/users/${id}`, formData),
 
     //------------------------AUTHORIZATION API----------------------------
-    register: (formData) => API.post("/auth/register", formData)
+    register: (formData) => API.post("/auth/register", formData),
 
     //------------------------ORDER API----------------------------
-
-   // getOrdersByUserId: (userId) => API.get()
+    getOrders: (queryString) => API.get(`/orders?${queryString}`),
+    getOrderById: (id) => API.get(`/orders/${id}`)
 }
 
 export default api;

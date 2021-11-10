@@ -6,6 +6,9 @@ const handleFilter = (filter) => {
     if(filter.search) queryString += `&search=${filter.search}`;
     if(filter.brand) queryString += `&brand=${filter.brand}`;
     if(filter.role) queryString += `&role=${filter.role}`;
+    if(filter.paymentCheck) queryString += `&paymentCheck=${filter.paymentCheck}`;
+    if(filter.status) queryString += `&status=${filter.status}`;
+    if(filter.period) queryString += `&period=${filter.period}`;
     return queryString;
 }
 

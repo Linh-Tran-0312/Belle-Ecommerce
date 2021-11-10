@@ -31,7 +31,7 @@ export const ORDER_STATUS = {
     ORDERED: "ordered",
     DELIVERY: "delivery",
     COMPLETED: "completed",
-    CANCELED: "cancel"
+    CANCELED: "canceled"
 }
 export const ACTION = {
     //------------------BLOG ACTION----------------------------
@@ -121,7 +121,8 @@ export const ACTION = {
 
     //Order Action
     GET_ORDERS: "GET_ORDERS",
-    GET_ORDER_BY_ID: "GET_ORDER_BY_ID"
+    GET_ORDER_BY_ID: "GET_ORDER_BY_ID",
+    ORDER_STATUS
    
 
 

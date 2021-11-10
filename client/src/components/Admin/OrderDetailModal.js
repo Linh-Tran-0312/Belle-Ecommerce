@@ -1,13 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import MoreIcon from '@material-ui/icons/More';
+import SettingsIcon from '@material-ui/icons/Settings';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import Stepper from "./OrderStepper";
+import orderActions from '../../actions/order';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import OrderStatus from '../OrderStatus';
+import { ORDER_STATUS } from '../../constants';
 import { TableRow, Grid, Typography, Box, Button, Divider, IconButton, MenuItem, FormControl, InputLabel, Select } from '@material-ui/core';
 function rand() {
     return Math.round(Math.random() * 20) - 10;
@@ -64,16 +70,19 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function SimpleModal() {
+export default function SimpleModal({ id }) {
     const classes = useStyles();
-    // getModalStyle is not a pure function, we roll the style only on the first render
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
-    const [detail, setDetail] = React.useState({})
+    const detail = useSelector(state => state.order).order;
+    const dispatch = useDispatch();
+    /*    const [detail, setDetail] = React.useState({}) */
     const handleOpen = () => {
         setOpen(true);
     };
-
+    useEffect(() => {
+        dispatch(orderActions.getOrderById(id))
+    }, [id])
     const handleClose = () => {
         setOpen(false);
     };
@@ -81,50 +90,54 @@ export default function SimpleModal() {
     const handleChange = (e) => {
 
     }
-    const body = (
-        <div style={modalStyle} className={classes.paper}>
-            <Typography variant="subtitle2">Ma don hang: 22</Typography>
-            <Typography variant="subtitle2">Ngay dat hang: 12/09/2021</Typography>
+    const body = () => {
+        if (!detail.id) return <CircularProgress />
+        return (<div style={modalStyle} className={classes.paper}>
+            <Typography variant="subtitle2">Mã đơn hàng: {detail?.id}</Typography>
+            <Typography variant="subtitle2">Ngày đặt hàng: {new Date(detail?.orderAt).toLocaleDateString()}</Typography>
 
             <Box my={2}>
-                <Typography variant="h6">Thong tin Khach Hang</Typography>
-                <Typography variant="body2">Ho Ten: Nguyen Van A</Typography>
-                <Typography variant="body2">So dien thoai: 098324627</Typography>
-                <Typography variant="body2">Email: test2@gmail.com</Typography>
+                <Typography variant="h6">Thông tin khách hàng</Typography>
+                <Typography variant="body2">Tên: {`${detail?.user?.lname} ${detail?.user?.fname}`}</Typography>
+                <Typography variant="body2">Số điện thoại: {detail?.user?.phone}</Typography>
+                <Typography variant="body2">Email:  {detail?.user?.email}</Typography>
             </Box> <Grid container>
                 <Grid item xs={12}>
                     <Box textAlign="center" my={1}>
-                        <Typography variant="h6">Danh sach san pham</Typography>
+                        <Typography variant="h5">HÓA ĐƠN</Typography>
                     </Box>
                     <TableContainer >
                         <Table className={classes.table} aria-label="customized table">
                             <TableHead>
                                 <TableRow>
-                                    <StyledTableCell component="th" scope="row">Product Name</StyledTableCell>
-                                    <StyledTableCell align="center"  >Price</StyledTableCell>
+                                    <StyledTableCell component="th" scope="row">Sản phẩm</StyledTableCell>
+                                    <StyledTableCell align="center"  >Đơn giá(VNĐ)</StyledTableCell>
                                     <StyledTableCell align="center"  >Size</StyledTableCell>
-                                    <StyledTableCell align="center" >Qty</StyledTableCell>
-                                    <StyledTableCell align="center" >Subtotal</StyledTableCell>
+                                    <StyledTableCell align="center" >Số lượng</StyledTableCell>
+                                    <StyledTableCell align="center" >Thành tiền (VNĐ)</StyledTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {[1, 2, 3].map((item) => (
-                                    <TableRow key={item}>
-                                        <StyledTableCell component="th" scope="row">Spike Jacket</StyledTableCell>
-                                        <StyledTableCell align="center" >$99</StyledTableCell>
-                                        <StyledTableCell align="center">XL</StyledTableCell>
-                                        <StyledTableCell align="center">1</StyledTableCell>
-                                        <StyledTableCell align="center">$943491</StyledTableCell>
+                                {detail?.details?.map((item, index) => ( 
+                                    <TableRow key={index}>
+                                        <StyledTableCell component="th" scope="row">
+                                            <Typography variant="subtitle2">  {`${item?.productVariant?.product?.name} (${item?.productVariant?.product?.brand?.name}) `} </Typography>
+                                            <Typography variant="caption">{item?.productVariant?.color?.name}</Typography>
+                                        </StyledTableCell>
+                                        <StyledTableCell align="center" >{item?.unitPrice?.toLocaleString()}</StyledTableCell>
+                                        <StyledTableCell align="center">{item?.productVariant?.size?.name}</StyledTableCell>
+                                        <StyledTableCell align="center">{item?.quantity}</StyledTableCell>
+                                        <StyledTableCell align="center">{(item?.unitPrice * item?.quantity).toLocaleString()}</StyledTableCell>
                                     </TableRow>
                                 ))}
                                 <TableRow  >
-                                    <StyledTableCell colSpan={4} component="th" align="right" scope="row">Shipping</StyledTableCell>
-                                    <StyledTableCell align="center">$33</StyledTableCell>
+                                    <StyledTableCell colSpan={4} component="th" align="right" scope="row">Phí vận chuẩn</StyledTableCell>
+                                    <StyledTableCell align="center">{detail?.shipping?.toLocaleString()}</StyledTableCell>
 
                                 </TableRow>
                                 <TableRow  >
-                                    <StyledTableCell colSpan={4} component="th" align="right" scope="row">Total</StyledTableCell>
-                                    <StyledTableCell align="center">$330</StyledTableCell>
+                                    <StyledTableCell colSpan={4} component="th" align="right" scope="row">Tổng cộng</StyledTableCell>
+                                    <StyledTableCell align="center">{detail?.total?.toLocaleString()}</StyledTableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -132,38 +145,85 @@ export default function SimpleModal() {
                 </Grid>
             </Grid>
             <Box my={2}>
-                <Typography variant="subtitle2">Tinh trang thanh toan: Chua Thanh toan</Typography>
-                <Typography variant="caption">Luu y: There are two ways to programmatically access the current selection data: using ... Retrieve custom attribute value of the first selected element ...
+                <Typography variant="subtitle2">Tình trạng thanh toán: <strong>{detail?.paymentCheck ? "Đã thanh toán" : "Chưa thanh toán"}</strong></Typography>
+                <Typography variant="subtitle2">Lưu ý giao hàng: {detail?.note}
                 </Typography>
 
             </Box>
             <Divider />
-            <Box my={2}>
-                <Typography variant="subtitle2"><strong>Tinh trang don hang</strong></Typography>
-                <Stepper />
-            </Box>
-            <Box my={2}>
-                <Typography variant="subtitle2"><strong>Hinh thuc thanh toan: COD</strong></Typography>
+            <Box my={3}>
+                <Box textAlign="center" my={2}>
+                                    <Typography variant="h6" gutterBottom color="primary">CẬP NHẬT TÌNH TRẠNG ĐƠN HÀNG </Typography>
+                </Box>
+                <Grid container justifyContent="space-between" spacing={2}>
+                    <Grid item sm={4} xs={10}>
+                        <Box my={2}>
+                            <Box my={2}>
+                                <Typography variant="subtitle2"><strong>Hình thức thanh toán</strong></Typography>
+                            </Box>
+                            <FormControl variant="outlined" fullWidth>
+                                <InputLabel id="demo-simple-select-outlined-label">Payment Methoad</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={detail.paymentMethod}
+                                    onChange={handleChange}
+                                    label="Payment Method"
+                                    name="paymentMethod"
+                                >
 
-            </Box>
-            <Box my={2}>
-                <Typography variant="subtitle2"><strong>Tinh trang thanh toan</strong></Typography>
-                <FormControl variant="outlined" className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value="false"
-                        onChange={handleChange}
-                        label="Payment Status"
-                        name="paymentStatus"
-                    >
+                                    <MenuItem value="cod">Cash On Delivery</MenuItem>
+                                    <MenuItem value="banktransfer" selected>Bank Transfer</MenuItem>
 
-                        <MenuItem value={true}>This order's already been paid</MenuItem>
-                        <MenuItem value={false} selected>This order's not yet been paid</MenuItem>
-
-                    </Select>
-                </FormControl>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </Grid>
+                    <Grid item sm={4} xs={10}>
+                        <Box my={2}>
+                            <Box my={2}>
+                                <Typography variant="subtitle2"><strong>Tình trạng thanh toán</strong></Typography>
+                            </Box>
+                            <FormControl variant="outlined" fullWidth>
+                                <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={detail.paymentCheck}
+                                    onChange={handleChange}
+                                    label="Payment Status"
+                                    name="paymentStatus"
+                                >
+                                    <MenuItem value={true}>Done</MenuItem>
+                                    <MenuItem value={false}>Not yet</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </Grid>
+                    <Grid item sm={4} xs={10}>
+                        <Box my={2}>
+                            <Box my={2}>
+                                <Typography variant="subtitle2"><strong>Tình trạng đơn hàng</strong></Typography>
+                            </Box>
+                            <FormControl variant="outlined" fullWidth>
+                                <InputLabel id="demo-simple-select-outlined-label">Order Status</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={detail.status}
+                                    onChange={handleChange}
+                                    label="Order Status"
+                                    name="status"
+                                >
+                                    <MenuItem value={ORDER_STATUS.ORDERED}><OrderStatus status={ORDER_STATUS.ORDERED}/></MenuItem>
+                                    <MenuItem value={ORDER_STATUS.DELIVERY}  ><OrderStatus status={ORDER_STATUS.DELIVERY}/></MenuItem>
+                                    <MenuItem value={ORDER_STATUS.COMPLETED}><OrderStatus status={ORDER_STATUS.COMPLETED}/></MenuItem>
+                                    <MenuItem value={ORDER_STATUS.CANCELED}  ><OrderStatus status={ORDER_STATUS.CANCELED}/></MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </Grid>
+                </Grid>
             </Box>
             <Divider />
             <Box my={2}>
@@ -173,18 +233,15 @@ export default function SimpleModal() {
                     </Grid>
                     <Grid item md={2} sm={2} xs={3}>
                         <Button variant="contained" fullWidth color="default">Cancel</Button>
-
                     </Grid>
                     <Grid item md={2} sm={2} xs={3}>
                         <Button variant="contained" fullWidth color="primary">SAVE</Button>
                     </Grid>
                 </Grid>
-
-
             </Box>
+        </div >)
 
-        </div>
-    );
+    };
 
     return (
         <div>
@@ -197,7 +254,10 @@ export default function SimpleModal() {
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
             >
-                {body}
+                {
+                    body()
+                }
+
             </Modal>
         </div>
     );

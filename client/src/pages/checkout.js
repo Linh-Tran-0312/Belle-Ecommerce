@@ -144,27 +144,10 @@ export default () => {
                                     </Grid>
                                 </Grid>
                             </Box>
-                            <Box my={2}>
-                                <Grid container spacing={2}>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="City" variant="outlined" fullWidth required />
-                                    </Grid>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="District" variant="outlined" fullWidth required />
-                                    </Grid>
-                                </Grid>
+                            <Box my={2}>                              
+                                    <StyledTextField label="Address" variant="outlined" fullWidth required />                                
                             </Box>
-                            <Box my={2}>
-                                <Grid container spacing={2}>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Ward" variant="outlined" fullWidth required />
-                                    </Grid>
-                                    <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Street" variant="outlined" fullWidth required />
-                                    </Grid>
-                                </Grid>
-
-                            </Box>
+                        
                             <Typography variant="caption">Your note:</Typography>
                             <StyledTextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root: classes.noteTextField }} />
                         </Box>
@@ -232,8 +215,7 @@ export default () => {
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Typography color="textSecondary">
-                                            The click event of the nested action will propagate up and expand the accordion unless
-                                            you explicitly stop it.
+                                        Khi chọn phương thức thanh toán này, quý khách hàng sẽ trả tiền mặt cho nhân viên giao hàng ngay khi nhận được đơn hàng của mình.
                                         </Typography>
                                     </AccordionDetails>
                                 </Accordion>
@@ -255,13 +237,26 @@ export default () => {
                                             />
                                     </AccordionSummary>
                                     <AccordionDetails>
+                                    <Box>
                                         <Typography color="textSecondary">
-                                            The focus event of the nested action will propagate up and also focus the accordion
-                                            unless you explicitly stop it.
+                                            Quý khách vui lòng thanh toán chuyển khoản qua thông tin số tài khoản sau:
                                         </Typography>
+                                        <Typography color="textSecondary">
+                                         Tên tài khoản: TRẦN CHÍ LINH
+                                        </Typography>
+                                        <Typography color="textSecondary">
+                                         Số tài khoản: 567393724XXXXX
+                                        </Typography>
+                                        <Typography color="textSecondary">
+                                          Tại ngân hàng Agribank chi nhánh Bình thạnh
+                                        </Typography>
+                                        <Typography color="textSecondary">
+                                          Nội dung chuyển khoản: BELLE-TT-[mã đơn hàng] (sau khi đặt hàng quý khác sẽ được cung cấp mã đơn hàng)
+                                        </Typography>
+                                        </Box>
                                     </AccordionDetails>
                                 </Accordion>
-                                <Accordion>
+                              {/*   <Accordion>
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
                                         aria-label="Expand"
@@ -310,7 +305,7 @@ export default () => {
                                             expansion.
                                         </Typography>
                                     </AccordionDetails>
-                                </Accordion>
+                                </Accordion> */}
                                 </RadioGroup>
                             </div>
                             <Box my={2} textAlign="center">

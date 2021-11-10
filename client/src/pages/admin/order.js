@@ -5,32 +5,14 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import OrderDetail from "../../components/Admin/OrderDetailModal";
 import Title from '../../components/Admin/Title';
 import OrderStatus from "../../components/OrderStatus";
-// Generate Order Data 
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'Done', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'Not yet', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'Done', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'Done', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'Not yet', 212.79),
-    createData(10, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'Done', 312.44),
-    createData(11, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'Not yet', 866.99),
-    createData(12, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'Not yet', 100.81),
-    createData(13, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'Not yet', 654.39),
-    createData(14, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'Not yet', 212.79),
-];
-
-function preventDefault(event) {
-    event.preventDefault();
-}
-
+import orderActions from "../../actions/order";
+import Pagination from '@material-ui/lab/Pagination';
+import { CompositeDecorator } from "draft-js";
 const useStyles = makeStyles((theme) => ({
     seeMore: {
         marginTop: theme.spacing(3),
@@ -50,43 +32,76 @@ const useStyles = makeStyles((theme) => ({
         margin: 5,
     },
 }));
-const initialState = {
+const initFilter = {
     search: "",
+    limit: 5,
+    page: 1,
     paymentMethod: "",
-    paymentStatus: "",
+    paymentCheck: "",
     status: "",
     period: "",
     sortMethod: ""
 }
+const paymentMethodToString = (string) => {
+    if(string === "cod") return "COD";
+    if(string === "banktransfer") return "BANK TRANSFER"
+};
+const paymentStatusToString = (status) => {
+    if(status) return "Done";
+    else {
+        return "Not yet"
+    }
+}
 export default function Orders() {
+     const classes = useStyles();
+     const dispatch = useDispatch();
+      // Orders
+      const orders = useSelector(state => state.order).orders;
+      const orderTotal = useSelector(state => state.order).total;
+      const orderDetail = useSelector(state => state.order).order;
+       
+      const [filter, setFilter] = useState(initFilter);
+      const [ order, setOrder] = useState({})
+      const [ pageCount, setPageCount] = useState(0)
+    
+    
+      useEffect(() => {
+          dispatch(orderActions.getOrders(filter));
+      },[])
+      useEffect(() => {
+          setOrder({...orderDetail});                 
+      },[orderDetail]);
 
-    const classes = useStyles();
-    const [ filter, setFilter ] = useState(initialState) 
-    console.log(filter)
-    const handleChange = (e) => {
-     /*    if(e.target.name == "sort") {
-            switch(e.target.value) {
-                case "1":
-                    setFilter({...filter, sortField: "orderAt", sortValue: Query.ASC});
-                case "2":
-                    setFilter({...filter, sortField: "orderAt", sortValue: Query.DESC});
-                case "3":
-                    setFilter({...filter, sortField: "total", sortValue: Query.ASC});
-                case "4":
-                    setFilter({...filter, sortField: "total", sortValue: Query.DESC})
-            }
-        } else { */
-            setFilter({...filter, [e.target.name] : e.target.value})
-    }
-    const handleReset  = (e) => {
-        setFilter(initialState);
-    }
+      useEffect(() => {
+          const mod = orderTotal%filter.limit;
+          let pageNumber = orderTotal/filter.limit;
+           pageNumber = mod === 0 ? pageNumber : Math.floor(pageNumber) + 1;
+          setPageCount(pageNumber)
+      },[orderTotal])
+
+      const handleFilterChange = (e) => {
+          setFilter({...filter, [e.target.name]: e.target.value, page: 1 });
+      };
+      const handleReset = (e) => {
+          setFilter(initFilter);
+      };
+      const handleSubmitFilter = (e) => {
+          dispatch(orderActions.getOrders(filter)) 
+      }
+      const handleChangePage = (event, value) => {
+          dispatch(orderActions.getOrders({...filter, page: value})) 
+          setFilter({...filter, page : value});   
+      };
+
+      const handleGetOrderById = (id) => {
+          dispatch(orderActions.getOrderById(id));
+      }
     return (
         <>
             <Paper className={classes.paper}>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                     <Grid item  md={4} sm={12} xs={12}   >
-                    <TextField fullWidth id="outlined-basic" onChange={handleChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
+                    <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} name="search" label="Search" placeholder="Search order's information..." variant="outlined" />
                     </Grid>
                     <Grid item  md={2} sm={3} xs={6}  >
                     <FormControl  fullWidth variant="outlined"  >
@@ -94,16 +109,16 @@ export default function Orders() {
                         <Select
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
-                            value={filter.paymentStatus}
-                            onChange={handleChange}
+                            value={filter.paymentCheck}
+                            onChange={handleFilterChange}
                             label="Payment Status"
-                            name="paymentStatus"
+                            name="paymentCheck"
                         >
                             <MenuItem value="">
                                 <em>All</em>
                             </MenuItem>
-                            <MenuItem value={true}>Done</MenuItem>
-                            <MenuItem value={false}>Not yet</MenuItem>
+                            <MenuItem value="true">Done</MenuItem>
+                            <MenuItem value="false">Not yet</MenuItem>
 
                         </Select>
                     </FormControl>
@@ -115,15 +130,15 @@ export default function Orders() {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={filter.status}
-                            onChange={handleChange}
+                            onChange={handleFilterChange}
                             label="Status"
                             name="status"
                         >
                             <MenuItem value="">
                                 <em>All</em>
                             </MenuItem>
-                            <MenuItem value="ordered">ORDERED</MenuItem>
-                            <MenuItem value="delivery">DELIVERY</MenuItem>
+                            <MenuItem value="ordered">NEW ORDER</MenuItem>
+                            <MenuItem value="delivery">IN DELIVERY</MenuItem>
                             <MenuItem value="completed">COMPLETED</MenuItem>
                             <MenuItem value="canceled">CANCELED</MenuItem>
                         </Select>
@@ -136,7 +151,7 @@ export default function Orders() {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={filter.period}
-                            onChange={handleChange}
+                            onChange={handleFilterChange}
                             label="Period"
                             name="period"
                         >
@@ -158,7 +173,7 @@ export default function Orders() {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={filter.sortMethod}
-                            onChange={handleChange}
+                            onChange={handleFilterChange}
                             label="Sort"
                             name="sortMethod"
                         >
@@ -166,14 +181,14 @@ export default function Orders() {
                                 <em>None</em>
                             </MenuItem>
                             <MenuItem value="1">Ascending date</MenuItem>
-                            <MenuItem value="2" selected>Descending date</MenuItem>
+                            <MenuItem value="2">Descending date</MenuItem>
                             <MenuItem value="3">Ascending sale</MenuItem>
                             <MenuItem value="4">Descending sale</MenuItem>
                         </Select>
                     </FormControl>
                     </Grid>
                     <Grid item  md={12} sm={12} xs={12}   >
-                        <Button variant="contained" color="primary" size="large" className={classes.formButton}>
+                        <Button variant="contained" color="primary" size="large" className={classes.formButton} onClick={handleSubmitFilter}>
                             Apply
                         </Button>
                         <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
@@ -195,29 +210,32 @@ export default function Orders() {
                             <TableCell><strong>Ship To</strong></TableCell>
                             <TableCell><strong>Payment Status</strong></TableCell>
                             <TableCell><strong>Payment Method</strong></TableCell>
-                            <TableCell align="right"><strong>Sale Amount</strong></TableCell>
+                            <TableCell align="right"><strong>Sale (VND)</strong></TableCell>
                             <TableCell><strong>Status</strong></TableCell>
                             <TableCell><strong>Details</strong></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell>{row.id}</TableCell>
-                                <TableCell>{row.date}</TableCell>
-                                <TableCell>{row.name}</TableCell>
-                                <TableCell>{row.shipTo}</TableCell>
-                                <TableCell  align="center">{row.paymentMethod}</TableCell>
-                                <TableCell>COD</TableCell>
-                                <TableCell align="right">{row.amount}</TableCell>
-                                <TableCell><OrderStatus status="ordered"/></TableCell>
+                        {orders.map((row) => (
+                            <TableRow key={row?.id}>
+                                <TableCell>{row?.id}</TableCell>
+                                <TableCell>{new Date(row?.orderAt).toLocaleDateString()}</TableCell>
+                                <TableCell>{`${row?.user?.lname} ${row?.user?.fname}`}</TableCell>
+                                <TableCell>{row?.address}</TableCell>
+                                <TableCell  align="center">{paymentMethodToString(row?.paymentMethod)}</TableCell>
+                                <TableCell>{paymentStatusToString(row?.paymentCheck)}</TableCell>
+                                <TableCell align="right">{row?.total.toLocaleString()}</TableCell>
+                                <TableCell><OrderStatus status={row?.status}/></TableCell>
                                 <TableCell>
-                                     <OrderDetail/>
+                                     <OrderDetail  id={row?.id} />
                                     </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+                <Box my={5}  >
+                        <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
+                    </Box>
             </Paper>
         </>
     );
