@@ -603,6 +603,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrderUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"Status"},
+            "paymentCheck": {"dataType":"boolean"},
+            "paymentMethod": {"ref":"PaymentMethod"},
+            "address": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IPlaceOrder": {
         "dataType": "refObject",
         "properties": {
@@ -1350,7 +1361,7 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/orders/:orderId',
+        app.patch('/orders/:orderId/addItems',
 
             function OrderController_updateOrderById(request: any, response: any, next: any) {
             const args = {
@@ -1371,6 +1382,30 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.updateOrderById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/orders/:orderId/updateStatus',
+
+            function OrderController_updateOrderStatus(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateProps"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateOrderStatus.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

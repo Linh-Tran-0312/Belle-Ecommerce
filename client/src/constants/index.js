@@ -34,6 +34,7 @@ export const ORDER_STATUS = {
     CANCELED: "canceled"
 }
 export const ACTION = {
+    /****************** ADMIN ACTION*********************/
     //------------------BLOG ACTION----------------------------
     //Error Action
     ERROR: "ERROR",
@@ -105,6 +106,7 @@ export const ACTION = {
     IS_DELETING_PRODUCT_VARIANT: "IS_DELETING_PRODUCT_VARIANT",
     PRODUCT_VARIANT_STATUS: "PRODUCT_VARIANT_STATUS",
 
+    //------------------USER ACTION----------------------------
     //User Action
     GET_USERS: "GET_USER",
     GET_USER_BY_ID: "GET_USER_BY_ID",
@@ -119,10 +121,25 @@ export const ACTION = {
     LOGOUT: "LOGOUT",
     AUTH_STATUS: "AUTH_STATUS",
 
+    //------------------ORDER ACTION----------------------------
     //Order Action
     GET_ORDERS: "GET_ORDERS",
     GET_ORDER_BY_ID: "GET_ORDER_BY_ID",
-    ORDER_STATUS
+    UPDATE_ORDER_STATUS: "UPDATE_ORDER_STATUS",
+    DELETE_ORDER: "DELETE_ORDER",
+    ORDER_STATUS: "ORDER_STATUS",
+    /****************** GUEST ACTION*********************/
+    //Home Action:
+    BLOG_CATEGORIES: "BLOG_CATEGORIES",
+    BLOG: "BLOG",
+    BLOG_LIST: "BLOG_LIST",
+    PRODUCT_CATEGORIES: "PRODUCT_CATEGORIES",
+    PRODUCT_BRANDS: "PRODUCT_BRANDS",
+    PRODUCT_LIST:"PRODUCT_LIST",
+    NEW_ARRIVALS: "GET_NEW_ARRIVALS",
+    LATEST_BLOGS: "GET_LATEST_BLOGS",
+
+
    
 
 

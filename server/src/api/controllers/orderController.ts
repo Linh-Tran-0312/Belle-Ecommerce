@@ -5,7 +5,7 @@ import { IOrders } from "../repositories";
 export interface IOrderUpdateProps {
     status?: Status;
     paymentCheck?: boolean;
-    paymentMethod: PaymentMethod;
+    paymentMethod?: PaymentMethod;
     address?: string,
 
 
@@ -100,11 +100,11 @@ export class OrderController {
     * Update order status
     */
        @Patch("/:orderId/updateStatus")
-       public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateItems): Promise<IOrder> {
-           return this._orderService.updateOrder(orderId,data)
+       public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateProps): Promise<IOrder> {
+           return this._orderService.updateOrderStatus(orderId,data)
        }
     /**
-    * Submit current order 
+    * Submit current order  
     */
      @Patch("/:orderId/place")
      public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrder> {

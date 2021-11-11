@@ -12,7 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import DeleteButton from "../../components/DeleteButton";
-import productActions from "../../actions/product";
+import productActions from "../../actions/adminProduct";
 
 
 

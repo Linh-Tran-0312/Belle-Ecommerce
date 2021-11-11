@@ -1,22 +1,25 @@
-import { Grid, Typography, makeStyles, Box, Breadcrumbs, CardActionArea, CardActions } from "@material-ui/core"
-import Layout from "../components/Layout"
-import '../App.css';
-import { Link } from 'react-router-dom';
+import { Box, Breadcrumbs, CardActionArea, CardActions, Grid, makeStyles, Typography } from "@material-ui/core";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
+import Paper from '@material-ui/core/Paper';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import SearchIcon from '@material-ui/icons/Search';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import Pagination from '@material-ui/lab/Pagination';
+import '../App.css';
 import BlackButton from "../components/BlackButton";
 import BlogThumb from '../components/BlogThumb';
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import DirectionsIcon from '@material-ui/icons/Directions';
-import CloseIcon from '@material-ui/icons/Close';
+import Layout from "../components/Layout";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { convertToHtml, convertFromRaw } from "draft-js"
+import { displayMonDDYYYY } from '../helper/handleTime';
+import { useQuery } from "../helper/customHook";
+import blogActions from "../actions/blog";
 const useStyle = makeStyles((theme) => ({
     link: {
         textDecoration: 'none',
@@ -67,9 +70,58 @@ const useStyle = makeStyles((theme) => ({
     iconButton: {
         padding: 10,
     },
+    center : {
+        display: 'flex',
+        justifyContent: "center",
+    }
 }))
+const initFilter = {
+    search: "",
+    category: "",
+    page: 1,
+    limit: 6
+}
 const BlogsPage = () => {
+    const query = useQuery();
+    const dispatch = useDispatch();
     const classes = useStyle();
+    const location = useLocation();
+
+    const categories = useSelector(state => state.home).blogCategories;
+    const blogs = useSelector(state => state.blog).blogs;
+    const latestBlogs = useSelector(state => state.home).latestBlogs;
+    const [ filter, setFilter ] = useState(initFilter);
+    const [pageCount, setPageCount] = useState(1);
+    
+    useEffect(() => {
+        dispatch(blogActions.getBlogs(filter))
+    },[])
+
+    useEffect(() => {
+        setFilter({...filter, category: query.get("category")});
+        dispatch(blogActions.getBlogs({...filter, category: query.get("category")}))
+    },[location]);
+
+    const handleFilterChange = e => {
+        setFilter({ ...filter, [e.target.name]: e.target.value })
+    }
+    const handleSubmitFilter = e => {
+        dispatch(blogActions.getBlogs(filter))
+    }
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            dispatch(blogActions.getBlogs(filter))
+        }
+    }
+    const handleReset = () => {
+        setFilter(initFilter);
+        
+    }
+    const handleChangePage = (event, value) => {
+        dispatch(blogActions.getBlogs({...filter, page: value}));
+        setFilter({...filter, page: value});
+        setPageCount(value);
+    };
     return (
         <Layout>
             <div className="breadCrumbs">
@@ -93,16 +145,16 @@ const BlogsPage = () => {
                     <Grid item lg={3} md={3} sm={12} xs={12}>
                         <Box px={4} mt={1}>
                             <h5 className="fontRoSlab" >CATEGORY</h5>
-                            <Typography variant="subtitle2"><Link to="/" className={classes.link}>Policy</Link></Typography>
-                            <Typography variant="subtitle2"><Link to="/" className={classes.link}>Special Events</Link></Typography>
-                            <Typography variant="subtitle2"><Link to="/" className={classes.link}>Trend</Link></Typography>
-                            <Typography variant="subtitle2"><Link to="/" className={classes.link}>Beauty</Link></Typography>
+                            {
+                                categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} className={classes.link}>{item.name}</Link></Typography> )
+                            }
+                        
                         </Box>
                         <Box px={4} mt={4}>
                             <h5 className="fontRoSlab">RECENT POSTS</h5>
                             {
-                                [1, 2, 3, 4].map(item =>
-                                    <BlogThumb key={item} />
+                                latestBlogs.map(item =>
+                                    <BlogThumb key={item.id}  blog={item}/>
                                 )
                             }
                         </Box>
@@ -110,33 +162,36 @@ const BlogsPage = () => {
                     <Grid item lg={9} md={9} sm={12} xs={12} >
                         <Box mb={4} px={4} mt={1}>
                             <Box mb={3} >
-                                <Paper component="form" className={classes.root}>
+                                <Paper  className={classes.root}>
                                     <InputBase
                                         className={classes.input}
-                                        placeholder="Search"
-                                        inputProps={{ 'aria-label': 'search google maps' }}
+                                        placeholder="What are you looking for..."
+                                        onKeyDown={handleKeyDown}
+                                        value={filter.search}
+                                        name="search"
+                                        onChange={handleFilterChange}
                                     />
-                                    <IconButton className={classes.iconButton} aria-label="search">
+                                    <IconButton className={classes.iconButton} aria-label="search" onClick={handleSubmitFilter}>
                                         <SearchIcon />
                                     </IconButton>
                                 </Paper>
                             </Box>
                             <Grid container spacing={3}>
                                 {
-                                    [1, 2, 3, 4, 5, 6].map(item =>
-                                        <Grid item key={item} lg={4} md={4} sm={6} xs={12}>
+                                    blogs.map(item =>
+                                        <Grid item key={item.id} lg={4} md={4} sm={6} xs={12}>
                                             <Card className={classes.cardItem}>
                                                 <CardActionArea>
                                                     <CardMedia
                                                         className={classes.mediaItem}
-                                                        image="/post-img1.jpg"
+                                                        image={item.imgPath}
                                                         title="Contemplative Reptile"
                                                     />
                                                     <CardContent>
                                                         <Typography gutterBottom >
                                                             <Link to="/blogs/blog" className="link">
                                                                 <span className="fontRoSlab fontSize20" >
-                                                                    Lizards are a widespread group of squamat
+                                                                    {item.title}
                                                                 </span>
                                                             </Link>
                                                         </Typography>
@@ -146,19 +201,18 @@ const BlogsPage = () => {
                                                                     <AccessTimeIcon fontSize="small" />
                                                                 </Grid>
                                                                 <Grid item>
-                                                                    <Typography variant="subtitle2" gutterBottom> &nbsp;May 02, 2017 </Typography>
+                                                                    <Typography variant="subtitle2" gutterBottom> &nbsp;{displayMonDDYYYY(item.createdAt)}</Typography>
                                                                 </Grid>
                                                             </Grid>
                                                         </Typography>
                                                         <Typography variant="body2" color="textSecondary" >
-                                                            Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                                            across all continents except Antarctica
+                                                        {convertFromRaw(JSON.parse(item?.content))?.getPlainText().substr(0,140).concat("...")}
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
                                                 <CardActions>
                                                     <Box textAlign="center">
-                                                        <Link to="/blogs/blog" className={classes.link}>
+                                                        <Link to={`/blogs/blog/${item.id}`} className={classes.link}>
                                                             <BlackButton>Read More <ArrowRightIcon /></BlackButton>
                                                         </Link>
                                                     </Box>
@@ -169,9 +223,9 @@ const BlogsPage = () => {
                                 }
                             </Grid>
                         </Box>
-                        <Box textAlign="center" my={5}>
-                            <BlackButton>Load More</BlackButton>
-                        </Box>
+                        <Box my={5} className={classes.center} py={5}>
+                                    <Pagination count={pageCount} variant="outlined" shape="rounded" page={filter.page} onChange={handleChangePage} />
+                                </Box>
                     </Grid>
                 </Grid>
             </Box>

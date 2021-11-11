@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react';
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useDispatch, useSelector } from "react-redux";
-import blogAction from "../../actions/blog";
+import blogActions from "../../actions/adminBlog";
 import DeleteButton from "../../components/DeleteButton";
 import UploadImage from "../../components/UploadImage";
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 const initFilter = {
     search: "",
     category: "",
@@ -98,7 +97,7 @@ export default function BlogAdmin() {
     
     // Handle events in Blog Tab
     useEffect(() => {
-        dispatch(blogAction.getBlogs(filter));
+        dispatch(blogActions.getBlogs(filter));
     },[])
     useEffect(() => {
         const contentSate = convertFromRaw(JSON.parse(blogDetail.content));
@@ -119,16 +118,16 @@ export default function BlogAdmin() {
         setFilter(initFilter);
     };
     const handleSubmitFilter = (e) => {
-        dispatch(blogAction.getBlogs(filter)) 
+        dispatch(blogActions.getBlogs(filter)) 
     }
     const handleChangePage = (event, value) => {
-        dispatch(blogAction.getBlogs({...filter, page: value})) 
+        dispatch(blogActions.getBlogs({...filter, page: value})) 
         setFilter({...filter, page : value});
        
     };
 
     const handleGetBlogDetail = (id) => {
-        dispatch(blogAction.getBlogById(id));
+        dispatch(blogActions.getBlogById(id));
         setShowBlog(true);
     }
     const handleAddNewBlog = (e) => {
@@ -149,14 +148,14 @@ export default function BlogAdmin() {
         e.preventDefault();
         if(!blog.id)
         {
-            dispatch(blogAction.createBlog({...blog, content:  JSON.stringify(convertToRaw(editorState.getCurrentContent()))}))
+            dispatch(blogActions.createBlog({...blog, content:  JSON.stringify(convertToRaw(editorState.getCurrentContent()))}))
         } else {
 
-            dispatch(blogAction.updateBlog(blog.id,{...blog, content:  JSON.stringify(convertToRaw(editorState.getCurrentContent()))}));
+            dispatch(blogActions.updateBlog(blog.id,{...blog, content:  JSON.stringify(convertToRaw(editorState.getCurrentContent()))}));
         }
     }
     const handleDeleteBlog = (e) => {
-        dispatch(blogAction.deleteBlog(blog.id));
+        dispatch(blogActions.deleteBlog(blog.id));
         setBlog(initBlog);
         setShowBlog(false);
     }
@@ -311,9 +310,7 @@ export default function BlogAdmin() {
                    {/*  <Button variant="outlined" fullWidth className={classes.blogImgButton} color="primary"> */}
                    <div className={classes.blogImgButton} > 
                    <UploadImage getURL={handleGetUrlImage}/>
-                   </div>
-                      
-                    
+                   </div>                           
                 </Box>
                 <Box>
                     <Editor

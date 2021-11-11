@@ -16,31 +16,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteButton from "../../components/DeleteButton";
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import productActions from "../../actions/product";
+import productActions from "../../actions/adminProduct";
 import { ChromePicker } from "react-color";
-const useStyles = makeStyles({
-    root: {
-        flexGrow: 1,
-    },
-    fullWidth: {
-        width: "100%"
-    },
-    img: {
-        maxWidth: 245,
-        width: "100%",
-
-    },
-    formControl: {
-        minWidth: 170,
-        margin: 10
-    },
-    formButton: {
-        margin: 5,
-    },
-    media: {
-        height: 140,
-    },
-});
  
 const initColor = {
     id: "",

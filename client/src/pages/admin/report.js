@@ -13,7 +13,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { useState } from "react";
-import { getMonth } from "../../helper/TimeCalculator";
+import { getMonth } from "../../helper/handleTime";
 const useStyles = makeStyles({
 
 })

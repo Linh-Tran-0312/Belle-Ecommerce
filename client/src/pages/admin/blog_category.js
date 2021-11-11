@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteButton from "../../components/DeleteButton";
-import blogAction from "../../actions/blog";
+import blogActions from "../../actions/adminBlog";
 const useStyles = makeStyles((theme) => ({
  
 }));
@@ -49,13 +49,13 @@ export default function BlogCategory() {
     }
     const handleSubmitCategory = (e) => {
         if (!category.id) {
-            dispatch(blogAction.createBlogCategory({ name: category.name }))
+            dispatch(blogActions.createBlogCategory({ name: category.name }))
         } else {
-            dispatch(blogAction.updateBlogCategory(category.id, { name: category.name }))
+            dispatch(blogActions.updateBlogCategory(category.id, { name: category.name }))
         }
     }
     const handleDeleteCategory = (e) => {
-        dispatch(blogAction.deleteBlogCategory(category.id));
+        dispatch(blogActions.deleteBlogCategory(category.id));
         setCategory(initCategory);
         setShowCategory(false);
     }

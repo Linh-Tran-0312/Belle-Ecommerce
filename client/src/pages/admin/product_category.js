@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
+import { Box, Button, Grid, IconButton, TextField, Typography } from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -14,8 +14,51 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteButton from "../../components/DeleteButton";
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import productActions from "../../actions/product";
+import productActions from "../../actions/adminProduct";
+import UploadImage from "../../components/UploadImage";
+const useStyles = makeStyles((theme) => ({
+    root: {
+        padding: theme.spacing(3)
+    },
+    imgWrapper: {
+        width: "250px",
+        height: "100%",
+        position: "absolute",
+        top: 0,  
+        zIndex: 4,
+        backgroundImage: "url('../img-upload.png')",
+        borderRadius: 5
+    },
 
+    blogImg: {
+        width: "250px",
+        height: "100%",
+        position: "absolute",
+        top: 0,  
+        objectFit: "cover",
+        zIndex: 5,
+        borderRadius: 5
+    },
+    photoBlock: {
+        border: "1px solid #bcbcbc",
+        height: 200,
+        position: "relative",
+        borderRadius: 5,
+        backgroundSize: "cover"
+    },
+    blogImgButton: {
+        position: "absolute",
+        bottom: 0,
+        zIndex: 10,
+        color: "black",
+        backgroundColor: "rgba(255,255,255,0.3)",
+        "&:hover": {
+            backgroundColor: "rgba(255,255,255,0.9)",
+            borderColor: "transparent"
+        },
+        borderColor: "transparent"
+    }
+}));
 const initCategory = {
     id: "",
     name: "",
@@ -23,6 +66,7 @@ const initCategory = {
 }
 export default function ProductCategory() {
     const dispatch = useDispatch();
+    const classes = useStyles();
      // Category State
      const productCategories = useSelector(state => state.product).categories;
      const isDeletingProductCategory = useSelector(state => state.product).isDeletingProductCategory;
@@ -33,7 +77,7 @@ export default function ProductCategory() {
     
      const handleSelectCategory = (value) => {
          setShowCategory(true);
-         setCategory({ id: value.id, name: value.name })
+         setCategory({ id: value.id, name: value.name, imgPath: value.imgPath })
      }
      const handleAddNewCategory = () => {
          setShowCategory(true);
@@ -42,6 +86,8 @@ export default function ProductCategory() {
      const handleCategoryChange = (e) => {
          setCategory({ ...category, name: e.target.value });
      }
+     const handleGetUrlImage = (url) => {
+        setCategory({...category, imgPath: url}) }
      const handleSubmitCategory = (e) => {
          e.preventDefault();
          if (!category.id) {
@@ -91,6 +137,20 @@ export default function ProductCategory() {
                                     <form onSubmit={handleSubmitCategory}>
                                     <Box my={5}>
                                         <TextField type="text" fullWidth label="Category name" variant="outlined" value={category.name} onChange={handleCategoryChange} required />
+                                        <Box my={2}>
+                                            <Typography>Category Image</Typography>
+                                        </Box>
+                                         
+                                        <Box className={classes.photoBlock}>
+                                            <div className={classes.imgWrapper}>
+                                            <img className={classes.blogImg} alt="" src={category.imgPath} />
+                                            </div>
+                                        
+                                            <div className={classes.blogImgButton} > 
+                                            <UploadImage getURL={handleGetUrlImage}/>
+                                            </div>                           
+                                        </Box>
+                                      
                                         <Box my={2}>                                     
                                         <Grid container spacing={2}>
                                             {

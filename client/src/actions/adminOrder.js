@@ -39,6 +39,14 @@ const orderActions = {
         } catch (error) {
             console.log(error)
         }
+    },
+    updateOrderStatus: (id, formData) => async(dispatch) =>  {
+        try {
+            const { data } = await api.updateOrderStatus(id, formData);
+            dispatch({ type: ACTION.UPDATE_ORDER_STATUS, payload: data})
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }

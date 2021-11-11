@@ -690,6 +690,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"IOrderUpdateProps": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"address": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IPlaceOrder": {
 				"properties": {
 					"address": {
@@ -2006,7 +2024,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderUpdateItems"
+								"$ref": "#/components/schemas/IOrderUpdateProps"
 							}
 						}
 					}

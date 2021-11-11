@@ -37,12 +37,12 @@ const useStyles = makeStyles((theme) => ({
             animation: "$fadeIn .3s ease-in-out"
         },
         "&:hover" : {
-            backgroundColor: 'rgba(0,0,0,0.5)'
+            backgroundColor: "rgba(0,0,0,0.5)"
         },
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center' 
     },
     "@keyframes fadeIn": {
         "0%": {
@@ -57,13 +57,13 @@ const useStyles = makeStyles((theme) => ({
     img : {
         width: '100%',
         height: '100%',
-        objectFit: 'cover'
+        objectFit: 'cover' 
     },
     button: {
-       
+        width: "100%",
         bottom: '20px',
         textDecoration: 'none',
-        fontFamily: "Helvetica",
+        fontFamily: "Roboto slab",
         padding: 10,
         color: 'black',
         backgroundColor: 'white',
@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('sm')] : {
            fontSize: 14
           },
+        zIndex: 1
           
     },
     myswiper : {
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export default function App() {
+export default function CategorySwiper({list}) {
 
     const classes = useStyles();
 
@@ -102,40 +103,20 @@ export default function App() {
                 },
                 "1024": {
                     "slidesPerView": 4,
-                    "spaceBetween": 50
+                    "spaceBetween": 20
                 }
             }} className={classes.myswiper}>
 
-                <SwiperSlide>
-                    <div className={classes.itemContainer}>
-                    <img alt="category" src="./category (1).jpg" className={classes.img} />
-                    <Link className={classes.button}>Men</Link>
-                    </div>           
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className={classes.itemContainer}>
-                    <img alt="category" src="./category (2).jpg" className={classes.img} />
-                    <Link className={classes.button}>Women</Link>
-                    </div>           
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className={classes.itemContainer}>
-                    <img alt="category" src="./category (3).jpg" className={classes.img} />
-                    <Link className={classes.button}>Kids</Link>
-                    </div>           
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className={classes.itemContainer}>
-                    <img alt="category" src="./category (4).jpg" className={classes.img} />
-                    <Link className={classes.button}>Accessories</Link>
-                    </div>           
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className={classes.itemContainer}>
-                    <img alt="category" src="./category (5).jpg" className={classes.img} />
-                    <Link className={classes.button}>Watch</Link>
-                    </div>           
-                </SwiperSlide>
+                    {
+                        list?.map(c => ( <SwiperSlide key={c.id}>
+                                            <div className={classes.itemContainer}>
+                                            <img alt="category" src={c.imgPath} className={classes.img} />
+                                            <Link className={classes.button}>{c.name}</Link>
+                                            </div>           
+                                        </SwiperSlide>
+                        ))
+                    }
+          
           </Swiper>
         </div>
     )

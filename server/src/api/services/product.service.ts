@@ -1,7 +1,7 @@
 import { IProduct, IProductCreateProps } from "../models";
 import { ProductRepository, IProducts } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-import { ILike, LessThanOrEqual, MoreThanOrEqual, } from "typeorm";
+import { ILike, LessThanOrEqual, MoreThanOrEqual, Between } from "typeorm";
 import { IProductUpdateProps } from "../controllers/productController";
 
 export enum Change {
@@ -34,7 +34,7 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
     public async getProducts(query: IProductQuery): Promise<IProducts> {
         try {
             let options: any = {
-                select: ["id","name","sku","price","overallReview","createdAt"],
+                select: ["id","name","sku","price","overallReview","createdAt", "imgPaths"],
                 relations: ["category","brand"],
                 where: {},
                 order: {}
@@ -46,6 +46,7 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
             if (!!query.search) options.where.name = ILike(`%${query.search}%`);
             if(query.min > 0) options.where.price = MoreThanOrEqual(query.min);
             if(query.max > 0) options.where.price = LessThanOrEqual(query.max);
+            if(query.min > 0 && query.max > 0 )  options.where.price = Between(query.min,query.max);
          /*    if(!!query.sort) options.order[`${query.sort}`] = Change.DESC;
             if(!!query.change) options.order[`${ProductField.CREATEDAT}`] = query.change; */
             if(!!query.sort && !!query.change ) options.order[`${query.sort}`] = query.change;

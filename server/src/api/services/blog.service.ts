@@ -27,7 +27,7 @@ export class BlogService extends BaseService<IBlog, BlogRepository> implements I
 
     public async getBlogs(query: IBlogQuery): Promise<IBlogs> {
         let options: any = {
-            select:["id","title","createdAt","category"],
+            select:["id","title","createdAt","category","imgPath","content"],
             relations:["category"],
             where: {},
             order: {}

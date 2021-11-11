@@ -1,4 +1,6 @@
-import React from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import Layout from '../components/Layout';
 import Banner from '../components/Banner/Banner';
 import { Link } from 'react-router-dom';
@@ -6,6 +8,8 @@ import CollectionSwiper from '../components/CategorySwiper';
 import { Parallax, Background } from "react-parallax";
 import { Box, Typography, Grid, Container} from '@material-ui/core';
 import ProductItem from '../components/ProductItem';
+import { convertToHtml, convertFromRaw } from "draft-js"
+import { displayMonDDYYYY } from '../helper/handleTime';
 import '../App.css';
 const insideStyles = {
     height: '100%',
@@ -14,6 +18,12 @@ const insideStyles = {
     alignItems: 'center'
   };
 const HomePage = () =>  {
+   
+    const productCategories =  useSelector(state => state.home).productCategories;
+    const newArrivals =   useSelector(state => state.home).newArrivals;
+    const latestBlogs =   useSelector(state => state.home).latestBlogs;
+     
+ 
     return(
         <>
         <Layout>
@@ -25,7 +35,7 @@ const HomePage = () =>  {
                 <span className="fontRoSlab">A wide range of product lines for your choice  </span>
                 </Box>
                 <Box  flexDirection="column" justifyContent="center" alignItems="center">
-                    <CollectionSwiper />
+                    <CollectionSwiper list={productCategories}/>
                 </Box>
             </Box>
             <Box  my={5} style={{marginTop: 80}}>
@@ -50,9 +60,9 @@ const HomePage = () =>  {
                 </Box>
                 <Grid container>
                     {
-                        [0,1,2,3,4,5,6,7].map(item =>
-                            <Grid key={item} item  container lg={3} md={4} sm={6} xs={6} direction="row" justifyContent="center">
-                                <ProductItem />
+                        newArrivals.map(product =>
+                            <Grid key={product.id} item  container lg={3} md={4} sm={6} xs={6} direction="row" justifyContent="center">
+                                <ProductItem product={product}/>
                             </Grid>
                             )
                     }
@@ -70,19 +80,21 @@ const HomePage = () =>  {
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                    {
+                        latestBlogs?.map(b =>(
+                    <Grid key={b.id} item xs={12} sm={12} md={6} lg={6}>
                         <div className="wrapBlog">
                             <Link to="blog-left-sidebar.html" className="article__gridImage">
-                                    <img src="./post-img1.jpg" alt="It's all about how you wear" title="It's all about how you wear"/>
+                                    <img src={b?.imgPath} alt="It's all about how you wear" title="It's all about how you wear" className="blogThumb"/>
                             </Link>
                             <div className="article__gridMeta article__grid-metaHasImage">
                                 <div className="wrapBlogInner">
                                    <Box>
-                                   <Link to="blog-left-sidebar.html" className="blogTitle">It's all about how you wear</Link>
+                                   <Link to="blog-left-sidebar.html" className="blogTitle">{b?.title}</Link>
                                    </Box>                            
-                                    <Typography variant="caption" color="action">May 02, 2017</Typography>
+                                    <Typography variant="caption"  >{displayMonDDYYYY(b.createdAt)}</Typography>
                                     <div className="rte article__gridExcerpt">
-                                        I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account...
+                                        {convertFromRaw(JSON.parse(b?.content))?.getPlainText().substr(0,140).concat("...")}
                                     </div>
                                     <ul >
                                         <li><Link to="blog-article.html" className="blogLink">READ MORE</Link></li>
@@ -91,28 +103,10 @@ const HomePage = () =>  {
                             </div>
                         </div>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
-                        <div className="wrapBlog">
-                            <Link to="blog-left-sidebar.html" className="article__gridImage">
-                                    <img src="./post-img2.jpg" alt="It's all about how you wear" title="It's all about how you wear" />
-                            </Link>
-                            <div className="article__gridMeta article__grid-metaHasImage">
-                                <div className="wrapBlogInner">
-                                   <Box>
-                                   <Link to="blog-left-sidebar.html" className="blogTitle">It's all about how you wear</Link>
-                                   </Box>                            
-                                    <Typography variant="caption" color="action">May 02, 2017</Typography>
-                                    <div className="rte article__gridExcerpt">
-                                        I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account...
-                                    </div>
-                                    <ul >
-                                        <li><Link to="blog-article.html" className="blogLink">READ MORE</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </Grid>
-                </Grid>
+                        ))
+                    }
+                 
+                </Grid> 
             </Container>
         </Box>
         </Layout>   

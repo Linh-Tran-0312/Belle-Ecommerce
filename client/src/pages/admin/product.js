@@ -16,7 +16,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Pagination from '@material-ui/lab/Pagination';
 import React, { useState, useEffect} from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import productActions from "../../actions/product";
+import productActions from "../../actions/adminProduct";
 import Rating from "../../components/Rating";
 import DeleteButton from "../../components/DeleteButton";
 import UploadImage from "../../components/UploadImage";

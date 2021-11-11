@@ -2,7 +2,7 @@ import { IOrder, IOrderCreateProps, Order, OrderDetail, IOrderDetail, Status, Pa
 import { OrderRepository, IOrders } from "../repositories";
 import { BaseService, IBaseService  } from "./base.service";
 import { Change } from "./index";
-import { IOrderUpdateItems } from "../controllers/orderController";
+import { IOrderUpdateItems, IOrderUpdateProps } from "../controllers/orderController";
 import  periodCal from "../helpers/periodCalculator";
 export interface IPlaceOrder {
     address: string;
@@ -104,6 +104,10 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
             throw error;
         }
     
+    }
+    public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrder> {
+        return this.repository.update(id, data);
+         
     }
     public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
         try {

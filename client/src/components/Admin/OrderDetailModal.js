@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import Stepper from "./OrderStepper";
-import orderActions from '../../actions/order';
+import orderActions from '../../actions/adminOrder';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import OrderStatus from '../OrderStatus';
 import { ORDER_STATUS } from '../../constants';
@@ -70,25 +70,39 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+const initState = {
+    status: "",
+    paymentCheck: "",
+    paymentMethod: ""
+}
 export default function SimpleModal({ id }) {
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
     const detail = useSelector(state => state.order).order;
     const dispatch = useDispatch();
-    /*    const [detail, setDetail] = React.useState({}) */
+    const [ state, setState] = React.useState(initState);
+
     const handleOpen = () => {
         setOpen(true);
     };
-    useEffect(() => {
-        dispatch(orderActions.getOrderById(id))
-    }, [id])
     const handleClose = () => {
         setOpen(false);
     };
 
-    const handleChange = (e) => {
+    useEffect(() => {
+        dispatch(orderActions.getOrderById(id))
+    }, [id])
 
+    useEffect(() => {
+        setState({status: detail.status, paymentCheck: detail.paymentCheck, paymentMethod: detail.paymentMethod})
+    },[detail])    
+
+    const handleChange = (e) => {
+        setState({...state, [e.target.name] : e.target.value});
+    }
+    const handleSubmitOrder = (e) => {
+        dispatch(orderActions.updateOrderStatus(detail.id, state));
     }
     const body = () => {
         if (!detail.id) return <CircularProgress />
@@ -232,10 +246,10 @@ export default function SimpleModal({ id }) {
                         <Button variant="contained" fullWidth color="secondary">Delete</Button>
                     </Grid>
                     <Grid item md={2} sm={2} xs={3}>
-                        <Button variant="contained" fullWidth color="default">Cancel</Button>
+                        <Button variant="contained" fullWidth color="default" onClick={handleClose}>Cancel</Button>
                     </Grid>
                     <Grid item md={2} sm={2} xs={3}>
-                        <Button variant="contained" fullWidth color="primary">SAVE</Button>
+                        <Button variant="contained" fullWidth color="primary" onClick={handleSubmitOrder}>SAVE</Button>
                     </Grid>
                 </Grid>
             </Box>

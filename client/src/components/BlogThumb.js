@@ -1,4 +1,5 @@
 import { Card, CardMedia, CardContent, Typography, makeStyles } from '@material-ui/core';
+import { displayMonDDYYYY } from '../helper/handleTime';
 const useStyle = makeStyles({
     link: {
         textDecoration: 'none',
@@ -19,22 +20,22 @@ const useStyle = makeStyles({
         height: '100%'
     }
 })
-export default () => {
+export default ({blog}) => {
     const classes = useStyle();
     return(
              <Card  className={classes.cardThumb}>
 
                     <CardMedia
                         className={classes.mediaThumb}
-                        image="/post-img1.jpg"
+                        image={blog.imgPath}
                         title="Contemplative Reptile"
                     />
                     <CardContent className={classes.contentThumb}>
                         <Typography gutterBottom variant="body2" component="h2">
-                            across all continents except Antarctica
+                           {blog.title}
                         </Typography>
                         <Typography variant="subtitle1" color="textSecondary" component="p">
-                            May 02, 2017
+                           {displayMonDDYYYY(blog.createdAt)}
                         </Typography>
                     </CardContent>
 

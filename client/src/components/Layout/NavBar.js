@@ -150,9 +150,9 @@ export default function NarBar() {
                 {Logo}
                 <div>{getMenuButtons()}</div>
                 <div className={icons}>
-                    <IconButton color="inherit" onClick={handleOpenSearch}>
+              {/*       <IconButton color="inherit" onClick={handleOpenSearch}>
                         <SearchIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <CartPopover />
                     <IconButton color="inherit">
                     <AccountCircleOutlinedIcon/>
@@ -196,9 +196,9 @@ export default function NarBar() {
 
                 <div>{Logo}</div>
                 <div className={icons}>
-                    <IconButton color="inherit" onClick={handleOpenSearch}>
+                    {/* <IconButton color="inherit" onClick={handleOpenSearch}>
                         <SearchIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <CartPopover />              
                     <IconButton color="inherit">                       
                         <AccountCircleOutlinedIcon/>                      

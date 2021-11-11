@@ -6,9 +6,27 @@ import BlogThumb from "../components/BlogThumb";
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CommentForm from "../components/CommentForm";
 import Comment from "../components/Comment";
-
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { displayMonDDYYYY } from "../helper/handleTime";
+import { convertFromRaw } from "draft-js";
+import { PageLoading } from "../components/PageLoading";
+import draftToHtml from 'draftjs-to-html';
+import blogActions from "../actions/blog";
 export default () => {
-
+    
+    let { id } = useParams();
+    const dispatch = useDispatch();
+    const blog = useSelector(state => state.blog).blog;
+    const latestBlogs = useSelector(state => state.home).latestBlogs;
+    const categories = useSelector(state => state.home).blogCategories;
+    useEffect(() => {
+        if(!isNaN(id) && id !== undefined)
+        {
+            dispatch(blogActions.getBlogById(id));
+        }
+        },[id])   
     return (
         <Layout>
            <div className="breadCrumbs">
@@ -19,11 +37,11 @@ export default () => {
                 </div>
                 <Box ml={5} py={1}>
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
-                        <Link className="link" to="" >
+                        <Link className="link" to="/" >
                             <Typography variant="subtitle2">Home</Typography>
 
                         </Link>
-                        <Link className="link" to="" >
+                        <Link className="link" to="/blogs" >
                             <Typography variant="subtitle2">Blogs</Typography>
 
                         </Link>
@@ -31,24 +49,28 @@ export default () => {
                     </Breadcrumbs>
                 </Box>
             </div>
-            <Box px={3}>
+            <PageLoading message="Blog content is loading..." size="50px"/>
+           {/*  {
+                !blog?.id ? (
+        <Box px={5} mx={5}>
                 <Grid container spacing={2}>
                     <Grid item lg={9} md={9} sm={12} xs={12}>
-                        <img src="../blog-post-1.jpg" className="articleImg"/>
-                        <Box>
-                            <Typography variant="h6">It's all about how you wear</Typography>
+                        <img src={blog.imgPath} className="articleImg"/>
+                        <Box my={2}>
+                            <Typography variant="h6">{blog?.title}</Typography>
                             <Grid container direction="row" alignItems="center">
                                 <Grid item>
                                     <AccessTimeIcon fontSize="small" />
                                 </Grid>
                                 <Grid item>
-                                    <Typography variant="subtitle2"> &nbsp;May 02, 2017 </Typography>
+                                    <Typography variant="subtitle2"> &nbsp;{displayMonDDYYYY(blog?.createdAt) || ""}</Typography>
                                 </Grid>
                             </Grid>
-                            <p>
-                                On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de.
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                            </p>
+                           {
+                               <div dangerouslySetInnerHTML={{__html:  draftToHtml(JSON.parse(blog?.content))}} />
+                              
+                           }
+                           
                         </Box>
                         <Box>
                             <hr/>
@@ -64,21 +86,25 @@ export default () => {
                     <Grid item lg={3} md={3} sm={12} xs={12}>
                         <Box px={4} mt={5}>
                             <Typography variant="body1" gutterBottom>CATEGORY</Typography>
-                            <Typography variant="subtitle2"><Link to="/" className="link">Policy</Link></Typography>
-                            <Typography variant="subtitle2"><Link to="/" className="link">Special Events</Link></Typography>
-                            <Typography variant="subtitle2"><Link to="/" className="link">Trend</Link></Typography>
-                            <Typography variant="subtitle2"><Link to="/" className="link">Beauty</Link></Typography>
+                            {
+                                categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} style={{ textDecoration: 'none',
+                                marginLeft: 14,
+                                color: 'black'}}>{item.name}</Link></Typography> )
+                            }
                         </Box>
                         <Box px={4} mt={4}>
                             <Typography variant="body1" gutterBottom>RECENT POSTS</Typography>
                             {
-                                [1, 2, 3, 4].map(item => <BlogThumb key={item} />)
+                                latestBlogs.map(item => <BlogThumb key={item.id} blog={item}/>)
                             }
                         </Box>
 
                     </Grid>
                 </Grid>
             </Box>
+                ) : (<PageLoading message="Blog content is being loading........" />)
+            } */}
+            
         </Layout>
     )
 }

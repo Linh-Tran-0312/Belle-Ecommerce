@@ -64,7 +64,9 @@ const api = {
 
     //------------------------ORDER API----------------------------
     getOrders: (queryString) => API.get(`/orders?${queryString}`),
-    getOrderById: (id) => API.get(`/orders/${id}`)
+    getOrderById: (id) => API.get(`/orders/${id}`),
+    updateOrderStatus: (id, formData) => API.patch(`/orders/${id}/updateStatus`, formData),
+    deleteOrder: (id) => API.delete(`/orders/${id}`)
 }
 
 export default api;

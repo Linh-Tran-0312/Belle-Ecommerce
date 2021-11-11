@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import OrderDetail from "../../components/Admin/OrderDetailModal";
 import Title from '../../components/Admin/Title';
 import OrderStatus from "../../components/OrderStatus";
-import orderActions from "../../actions/order";
+import orderActions from "../../actions/adminOrder";
 import Pagination from '@material-ui/lab/Pagination';
 import { CompositeDecorator } from "draft-js";
 const useStyles = makeStyles((theme) => ({

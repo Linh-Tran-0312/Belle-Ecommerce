@@ -16,7 +16,7 @@ import OrderStatus from "../../components/OrderStatus";
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import OrderDetail from "../../components/Admin/OrderDetailModal";
-import userActions from "../../actions/user";
+import userActions from "../../actions/adminUser";
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,

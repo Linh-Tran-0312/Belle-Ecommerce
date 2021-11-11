@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
 },
 }));
 
-export default function ProductItem() {
+export default function ProductItem({product}) {
     const classes = useStyles();
 
     return (
@@ -111,29 +111,29 @@ export default function ProductItem() {
                     component="img"
                     alt="Contemplative Reptile"
                     height="140"
-                    image="./product-item (1).jpg"
+                    image={product?.imgPaths[0]}
                     title="Contemplative Reptile"
                     className={classes.media1}
                     classes={{img: classes.img}}
                 />
                  <CardMedia
-          component="img"
-          alt="Contemplative Reptile"
-          height="140"
-          image="./product-item (2).jpg"      
-          title="Contemplative Reptile"
-          className={classes.media2}
-          classes={{img: classes.img}}
-        />
+                    component="img"
+                    alt="Contemplative Reptile"
+                    height="140"
+                    image={product?.imgPaths[1]}
+                    title="Contemplative Reptile"
+                    className={classes.media2}
+                    classes={{img: classes.img}}
+                 />
                 <CardContent className={classes.content} >
              
-                    <Typography variant="body2" component="h4">
+                    <Typography variant="body2" component="h4" noWrap>
                     <Link to='/product' className={classes.link}>
-                        Lizard
+                     {product?.name}
                         </Link>
                     </Typography>
                     <Typography variant="subtitle2" component="h2" style={{fontWeight: 'bold'}}>
-                        $ 240
+                    {product?.price?.toLocaleString()} VND
                     </Typography>
                     <Typography component="h5" gutterBottom>
                        <Rating rating={3.4} size={20}/>
