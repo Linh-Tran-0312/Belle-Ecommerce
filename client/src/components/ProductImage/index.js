@@ -20,7 +20,7 @@ import SwiperCore, {
 SwiperCore.use([Navigation, Thumbs]);
 
 
-export default function ProductImage() {
+export default function ProductImage({list}) {
 
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
@@ -30,28 +30,20 @@ export default function ProductImage() {
 
             <Swiper style={{ '--swiper-navigation-color': '#fff', '--swiper-pagination-color': '#fff' }} 
             spaceBetween={10} navigation={true} thumbs={{ swiper: thumbsSwiper }} className="myProductSwiper2">
-                <SwiperSlide>
-                    <img src="./variant1- (1).jpg" />
-                </SwiperSlide><SwiperSlide>
-                    <img src="./variant1- (2).jpg" />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src="./variant1- (3).jpg" />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src="./variant1- (5).jpg" />
-                </SwiperSlide>
-                <SwiperSlide>
-                    <img src="./variant1- (6).jpg" />
-                </SwiperSlide>
+            {
+                list.map(i =>  <SwiperSlide key={i}>
+                                    <img src={i} alt="img" />
+                                </SwiperSlide>)
+            }
+                
                
             </Swiper>
             <Swiper onSwiper={setThumbsSwiper} spaceBetween={10} slidesPerView={4} freeMode={true} watchSlidesVisibility={true} watchSlidesProgress={true} className="myProductSwiper">
-                <SwiperSlide><img src="./variant1- (1).jpg" /></SwiperSlide>
-                <SwiperSlide><img src="./variant1- (2).jpg" /></SwiperSlide>
-                <SwiperSlide><img src="./variant1- (3).jpg" /></SwiperSlide>
-                <SwiperSlide><img src="./variant1- (5).jpg" /></SwiperSlide>
-                <SwiperSlide><img src="./variant1- (6).jpg" /></SwiperSlide>
+                 {
+                list.map(i =>  <SwiperSlide key={i}>
+                                    <img src={i} alt="img" />
+                                </SwiperSlide>)
+            }
      
             </Swiper>
         </div>

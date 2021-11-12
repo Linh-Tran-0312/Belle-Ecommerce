@@ -1,26 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation, useParams, Link } from "react-router-dom";
+import { useSelector, useDispatch} from "react-redux";
 import ProductImage from "../components/ProductImage";
 import Layout from "../components/Layout";
-import { Container, Grid, Breadcrumbs, Box, Typography, Tabs, Tab, Paper, Button, makeStyles } from '@material-ui/core';
+import { Container, Grid, Breadcrumbs, Box, Typography, Tabs, Tab, Paper, Button, MenuItem, InputLabel, Select,FormControl, makeStyles } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import InfoIcon from '@material-ui/icons/Info';
 import StarIcon from '@material-ui/icons/Star';
+import FiberManualRecordIcon  from '@material-ui/icons/FiberManualRecord';
 import CommentIcon from '@material-ui/icons/Comment';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ReviewForm from '../components/ReviewForm'
 import '../App.css';
 import Review from '../components/Review';
+import {PageLoading} from "../components/PageLoading";
 import BlackButton from '../components/BlackButton';
 import Rating from '../components/Rating';
 import Comment from '../components/Comment';
 import SizeChart from '../components/SizeChart';
 import CommentForm from '../components/CommentForm';
 import QtyButton from '../components/QtyButton';
-import { Link } from 'react-router-dom';
-const useStyle = makeStyles({
+ 
+import shopActions from "../actions/shop";
+import orderActions from "../actions/order";
+const useStyle = makeStyles((theme) => ({
     tabPaper : {
         boxShadow: 'none',
         color: 'black',
@@ -31,8 +37,17 @@ const useStyle = makeStyles({
     },
     tabLabel : {
         fontWeight: 'bold',
-    }
-})
+    },
+    formControl: {
+    margin: theme.spacing(1),
+    minWidth: 220,
+  },
+  selectMenu : {
+      display: 'flex',
+      alignItems: "center"
+  }
+  
+}))
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -46,7 +61,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    {children} 
                 </Box>
             )}
         </div>
@@ -61,12 +76,48 @@ function a11yProps(index) {
 }
 
 const ProductPage = () => {
+    const { productId } = useParams();
+    const location = useLocation();
+    const dispatch = useDispatch();
     const matchXS = useMediaQuery('(max-width:600px)');
     const [tab, setTab] = useState(0);
     const classes = useStyle();
+    const [ message, setMessage ] = useState("");
+    const [ item, setItem ] = useState(0);
+    const [ qty, setQty ] = useState(1);
+
+     const product = useSelector(state => state.shop).product;
+    useEffect(() => {
+        if(!isNaN(productId) && productId !== undefined)
+        {
+           dispatch(shopActions.getProductById(productId))
+        }
+        setItem(0);
+        setQty(1);
+          setMessage("");
+        },[productId, location]); 
+
     const handleChangeTab = (event, newValue) => {
         setTab(newValue);
     };
+    console.log({ item, qty})
+    const handleChangeItem = e => {
+        setItem(e.target.value)
+    }
+    const handleChangeQty = (value) => {
+        setQty(value);
+    }
+    const handleAddToCart = (e) => {
+        e.preventDefault();
+        if(qty > 0 && item > 0) 
+        {
+            console.log("add to cart")
+        dispatch(orderActions.addItemToCart(product, {productVariantId: item, quantity: qty}));
+          setMessage("");
+        } else {
+            setMessage("Vui lòng chọn một phiên bản bên dưới")
+        }
+    }
     return (
         <Layout>
            {/*  Breadcrumbs section */}
@@ -79,41 +130,69 @@ const ProductPage = () => {
                     <Link className="link" to="/shop" >
                     <Typography variant="subtitle2">Shop</Typography>
                     </Link>
-                    <Link className="link" to="/shop/accessory" >
+                   {/*  <Link className="link" to="/shop/accessory" >
                     <Typography variant="subtitle2">Accessory</Typography>
-                    </Link>
+                    </Link> */}
                     <Typography color="textPrimary">Product</Typography>
                 </Breadcrumbs>
                 </Box>
               
             </div>
              {/*  Product summary section */}
+             {
+                 product?.id ? (
             <Container maxWidth="md"  >
                 <Grid container>
                     <Grid item md={6} sm={6} xs={12}>
                         <Box px={4}>
-                            <ProductImage />
+                            <ProductImage list={product.imgPaths}/>
                         </Box>
 
                     </Grid>
                     <Grid item md={6} sm={6} xs={12}>
-                        <span className="productSingle__title">Product With Bottom Thumbs</span>
+                        <span className="productSingle__title">{product.name}</span>
                         <div className="prInfoRow">
                             <div className="productStock"> <span className="instock">In Stock</span></div>
-                            <div className="productSku">SKU: <span className="variantSku">19115-rdxs</span></div>
+                            <div className="productSku">SKU: <span className="variantSku">{product.sku}</span></div>
                         </div>
                         <p className="productSingle__price">
-                            $788.00
+                           {product.price.toLocaleString()} VND
                         </p>
                         <div className="rte">
-                            <ul>
-                                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
-                                <li>Sed ut perspiciatis unde omnis iste natus error sit</li>
-                                <li>Neque porro quisquam est qui dolorem ipsum quia dolor</li>
-                                <li>Lorem Ipsum is not simply random text.</li>
-                            </ul>
+                            {product.summary}
                         </div>
-                        <p className="featureTitle">COLOR: RED</p>
+                        <Box mx={1} my={1}>
+                            <Typography variant="body1">Loại hàng: {product.category.name}</Typography>
+                        </Box>
+                       <Box mx={1} my={1}>
+                              <Typography variant="body1">Thương hiệu: {product.brand.name.toUpperCase()}</Typography>
+                        </Box>
+                         <Box mx={1} mt={3}>
+                                <Typography variant="body2">Phiên bản: <span style={{color: "red"}}>{message}</span> </Typography>
+                        </Box>
+                       
+                         <FormControl className={classes.formControl} required>
+                           
+                            <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={item}
+                            classes={{ selectMenu: classes.selectMenu}}
+                            onChange={handleChangeItem}
+                            >
+                             <MenuItem value="" disabled>
+                                Size  | Màu sắc
+                                </MenuItem>
+                            {
+                                product.variants.map(v => 
+                                 <MenuItem key={v.id} value={v.id}>
+                                Size {v.size.name} | Màu {v.color.name}<FiberManualRecordIcon style={{color: v.color.code}}/>
+                                </MenuItem>
+                                )
+                            }
+                            </Select>
+                        </FormControl>
+                      {/*   <p className="featureTitle">COLOR: RED</p>
                         <div className="color">
                             <span className="spanColor" style={{ backgroundColor: 'yellow' }}></span>
                             <span className="spanColor" style={{ backgroundColor: 'red' }}></span>
@@ -127,37 +206,41 @@ const ProductPage = () => {
                             <span className="spanSize">M</span>
                             <span className="spanSize">L</span>
                             <span className="spanSize">XL</span>
-                        </div>
+                        </div> */}
                         <div className="featureButtonBox">
                             <Box mr={2}>
-                            <QtyButton width={105} height={45} quantity={2}/>
+                            <QtyButton width={105} height={45}  getQuantity={handleChangeQty} updateCart={false}/>
                             </Box>
                           
-                            <button className="addToCartButton">ADD TO CART</button>
+                            <button className="addToCartButton" onClick={handleAddToCart}>ADD TO CART</button>
                         </div>
+                        
                         <div className="wishListBox">
                             <FavoriteBorderIcon fontSize="small" />&nbsp;&nbsp;<Typography variant="subtitle2">Add to your wishlist</Typography>
                         </div>
                     </Grid>
                 </Grid>
             </Container>
+                 ) : (<PageLoading message="Product details are loading..." />)
+             }
+          
              {/*  Product feature section */}
             <Container maxWidth="md" className="featuresBox">
                 <Grid container spacing={3}>
                     <Grid item lg={3} md={6} sm={6} className="productFeatures">
-                        <img src="./credit-card.png" alt="Safe Payment" title="Safe Payment" />
+                        <img src="../../credit-card.png" alt="Safe Payment" title="Safe Payment" />
                         <div className="productFeatureDetails"><span>Safe Payment</span>Pay with the world's most payment methods.</div>
                     </Grid>
                     <Grid item lg={3} md={6} sm={6} className="productFeatures">
-                        <img src="./shield.png" alt="Confidence" title="Confidence" />
+                        <img src="../../shield.png" alt="Confidence" title="Confidence" />
                         <div className="productFeatureDetails"><span>Confidence</span>Protection covers your purchase and personal data.</div>
                     </Grid>
                     <Grid item lg={3} md={6} sm={6} className="productFeatures">
-                        <img src="./worldwide.png" alt="Worldwide Delivery" title="Worldwide Delivery" />
+                        <img src="../../worldwide.png" alt="Worldwide Delivery" title="Worldwide Delivery" />
                         <div className="productFeatureDetails"><span>Worldwide Delivery</span>FREE &amp; fast shipping to over 200+ countries &amp; regions.</div>
                     </Grid>
                     <Grid item lg={3} md={6} sm={6} className="productFeatures">
-                        <img src="./phone-call.png" alt="Hotline" title="Hotline" />
+                        <img src="../../phone-call.png" alt="Hotline" title="Hotline" />
                         <div className="productFeatureDetails"><span>Hotline</span>Talk to help line for your question on 4141 456 789, 4125 666 888</div>
                     </Grid>
                 </Grid>
@@ -169,8 +252,8 @@ const ProductPage = () => {
                    
                         value={tab}
                         onChange={handleChangeTab}
-                        indicatorColor="inherit"
-                        textColor="inherit"
+                      /*   indicatorColor="inherit"
+                        textColor="inherit" */
                         centered
                     >
                         <Tab label={ matchXS ? <InfoIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>DETAILS</span>} {...a11yProps(0)} />

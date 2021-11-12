@@ -16,7 +16,7 @@ import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useState, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink , useLocation} from "react-router-dom";
 import SearchBar from './SearchBar';
 import CartPopover from "../CartPopup";
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
@@ -94,6 +94,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 12,
         fontFamily: 'Arial'
     },
+    logoLink : {
+        color: 'black'
+    },
     authBar : {
         textAlign: 'right',
         backgroundColor: 'black',
@@ -108,12 +111,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NarBar() {
-    const { root, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo, authBar, link } = useStyles();
-
+    const { root, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo, authBar, link, logoLink } = useStyles();
+    const location = useLocation();
+    const [ page, setPage ] = useState(false)
     const [state, setState] = useState({
         mobileView: false,
         drawerOpen: false,
     });
+    useEffect(() => {
+        const path = location?.pathname?.substring(1);
+        if(path === "cart" || path === "checkout") {
+            setPage(true);
+        } else {
+            setPage(false)
+        }
+    },[location])
     const [search, setSearch] = useState(false);
     const { mobileView, drawerOpen } = state;
 
@@ -150,12 +162,12 @@ export default function NarBar() {
                 {Logo}
                 <div>{getMenuButtons()}</div>
                 <div className={icons}>
-              {/*       <IconButton color="inherit" onClick={handleOpenSearch}>
-                        <SearchIcon />
-                    </IconButton> */}
-                    <CartPopover />
+                   {
+                    !page &&  <CartPopover />    
+                    }  
                     <IconButton color="inherit">
-                    <AccountCircleOutlinedIcon/>
+                    <RouterLink to="/user" className={logoLink} ><AccountCircleOutlinedIcon/></RouterLink>
+                
                     </IconButton>     
                 </div>
             </Toolbar>
@@ -196,10 +208,9 @@ export default function NarBar() {
 
                 <div>{Logo}</div>
                 <div className={icons}>
-                    {/* <IconButton color="inherit" onClick={handleOpenSearch}>
-                        <SearchIcon />
-                    </IconButton> */}
-                    <CartPopover />              
+                {
+                    !page &&  <CartPopover />   
+                }                             
                     <IconButton color="inherit">                       
                         <AccountCircleOutlinedIcon/>                      
                     </IconButton> 

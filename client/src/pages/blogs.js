@@ -82,6 +82,7 @@ const initFilter = {
     limit: 6
 }
 const BlogsPage = () => {
+    console.log("Blogs Page render")
     const query = useQuery();
     const dispatch = useDispatch();
     const classes = useStyle();

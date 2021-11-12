@@ -13,7 +13,8 @@ import QtyButton from "../components/QtyButton";
 import { Link } from 'react-router-dom';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import BlackButton from "../components/BlackButton";
-
+import { useSelector, useDispatch } from "react-redux";
+import orderActions from "../actions/order";
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.common.black,
@@ -59,6 +60,14 @@ const useStyle = makeStyles((theme) =>({
 }))
 export default () => {
     const classes = useStyle();
+    const dispatch = useDispatch();
+    const subTotal = useSelector(state => state.order).subTotal;
+    const items = useSelector(state => state.order).items;
+
+    const handleDeleteItem = (id) => {
+        dispatch(orderActions.deleteItemFromCart(id))
+    }
+    
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
@@ -69,8 +78,9 @@ export default () => {
                 </div>
             </div>
             <Box mx={2} my={4}>
+             { items.length > 0 ? (
                 <Grid container spacing={3}   direction="row" justifyContent="center">
-                    <Grid item lg={8} md={8} sm={12}>
+                    <Grid item lg={8} md={8} sm={12}>                      
                         <TableContainer >
                             <Table className={classes.table}  aria-label="customized table">
                                 <TableHead>
@@ -83,32 +93,32 @@ export default () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {[1,2,3].map((item) => (
-                                        <TableRow key={item}>
+                                    {items.map((item, index) => (
+                                        <TableRow key={index}>
                                             <StyledTableCell component="th" scope="row">
                                                 <Grid container spacing={1}>
                                                     <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                        <img src={window.location.origin + "/variant1- (1).jpg"} className={classes.itemImg} alt="" />
+                                                        <img src={item.productVariant.product.imgPaths[0]} className={classes.itemImg} alt="" />
                                                     </Grid>
                                                     <Grid item sm={8} xs={12}>
-                                                        <Link to="/product" className="link"><Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>Sleeve Kimono Dress</Typography></Link>
-                                                        <Typography variant="caption" display="block" gutterBottom>Color: Black</Typography>
-                                                        <Typography variant="caption" display="block"   gutterBottom>Size: XL</Typography>
+                                                        <Link to="/product" className="link"><Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>{item.productVariant.product.name}</Typography></Link>
+                                                        <Typography variant="caption" display="block" gutterBottom>Color: {item.productVariant.color.name}</Typography>
+                                                        <Typography variant="caption" display="block"   gutterBottom>Size: {item.productVariant.size.name}</Typography>
                                                     </Grid>   
                                                 </Grid>
                                             </StyledTableCell>
-                                            <StyledTableCell align="right"  classes={{ body: classes.priceCol}} >$735.00</StyledTableCell>
+                                            <StyledTableCell align="right"  classes={{ body: classes.priceCol}} >{item.unitPrice.toLocaleString()} VND</StyledTableCell>
                                             <StyledTableCell align="right">
-                                                <QtyButton width={80} height={27} quantity={1}  />
+                                                <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity}   item={item.productVariant.id} />
                                             </StyledTableCell>
                                             <StyledTableCell align="right">
                                                 <Grid container>
                                                     <Grid item sm={8} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                    <Typography variant="subtitle2">$735.00</Typography>
+                                                    <Typography variant="subtitle2">{(item.unitPrice*item.quantity).toLocaleString()} VND</Typography>
                                                
                                                     </Grid>
                                                     <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                        <IconButton size="small"><DeleteForeverIcon/></IconButton>
+                                                        <IconButton size="small" onClick={() => handleDeleteItem(item.productVariant.id)}><DeleteForeverIcon/></IconButton>
                                                     </Grid>
                                                 </Grid>
                                             </StyledTableCell>
@@ -118,8 +128,8 @@ export default () => {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                    </Grid>
-                    <Grid item lg={4} md={4} sm={12}>
+                        </Grid>
+                         <Grid item lg={4} md={4} sm={12}>
                            {/* <Box p={3} border={1} borderColor="grey.500"> 
                                <Typography variant="body2" gutterBottom>ADD A NOTE TO YOUR ORDER</Typography>
                                <TextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root : classes.noteTextField}}/>
@@ -127,7 +137,7 @@ export default () => {
                              */}<Box  p={3} border={1} borderColor="grey.500">
                                 <Grid container direction="row" justifyContent="space-between">
                                         <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>SUBTOTAL</Typography>
-                                        <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>$735.00</Typography>
+                                        <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>{subTotal.toLocaleString()}</Typography>
                                 </Grid>
                                 <Typography variant="caption" gutterBottom>Shipping &amp; taxes calculated at checkout</Typography>
                                 <Box>
@@ -140,8 +150,18 @@ export default () => {
                             </Box> 
                             </Box> 
                                      
-                    </Grid>
-                </Grid>
+                      </Grid>
+                     </Grid>
+                        ) : (<Box textAlign="center" >
+                        <Typography variant="h5">Your cart is empty</Typography>
+                        <img alt="empty-cart" style={{width: "50vw"}} src="../empty-cart.png"/>
+                        </Box>
+                        )
+                    }
+                       
+                    
+                   
+               
             </Box>
         </Layout>
     )

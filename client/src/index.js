@@ -6,6 +6,6 @@ import thunk from "redux-thunk";
 import { Provider } from "react-redux";
 import { appReducer } from './reducers';
 
-const store = createStore(appReducer, compose(applyMiddleware(thunk)));
+export const store = createStore(appReducer, compose(applyMiddleware(thunk)));
 
 ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById("root"))

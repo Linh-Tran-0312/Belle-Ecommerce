@@ -128,7 +128,7 @@ export default function ProductItem({product}) {
                 <CardContent className={classes.content} >
              
                     <Typography variant="body2" component="h4" noWrap>
-                    <Link to='/product' className={classes.link}>
+                    <Link to={`/shop/product/${product.id}`} className={classes.link}>
                      {product?.name}
                         </Link>
                     </Typography>

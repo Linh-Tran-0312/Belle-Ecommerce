@@ -1,32 +1,9 @@
 import { makeStyles } from "@material-ui/core"
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
-/**
- .quantityButtonBox {
-	margin-right: 20px;
-    display: flex;
-    justify-content: center;
-    width: 105px;
-    box-shadow: none;
-    border: 1px solid rgba(31, 31, 31, 0.5);
-    border-radius: 0
-  }
-  .quantityInput {
-   
-  }
-  .quantityInput:focus {
-      outline: none 
-  }
-  .quantityButton {
-     width: 35px !important;
-     height: 45px;
-     cursor: pointer;
-     background-color: rgb(180, 180, 180);
-     border-radius: 0;
-     box-shadow: none;
-     border: 1px
-  }
- */
+ import { useState, useEffect } from "react";
+ import { useDispatch } from "react-redux";
+import orderActions from "../actions/order";
 const useStyle = makeStyles({
     container: {
         display: 'flex',
@@ -52,17 +29,45 @@ const useStyle = makeStyles({
         height: '90%'
     }
 })
-const QtyButton = ({onIncrement, onDecrement, quantity, onChangeQty, width, height}) => {
+const QtyButton = ({ getQuantity, updateCart, item, quantity, width, height}) => {
     const classes = useStyle();
     const iconSize = Math.round(0.5*height)
+    const [state, setState ] = useState(1);
+    const dispatch = useDispatch()
+    useEffect(() => {
+        if(!updateCart) {
+                handleChangeFn(state);
+        }   
+    },[state])  
+    useEffect(() => {
+        if(updateCart)
+        {
+            setState(quantity);
+        }
+       
+    },[quantity])
+
     const handleIncrement = (e) => {
-        onIncrement();
+       setState(state + 1);
+       if(updateCart === true){
+           console.log("update quantity")
+           dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(item), quantity: state + 1})) // item { variantId, quant}
+       }  
     }
     const handleDecrement = (e) => {
-        onDecrement();
+        if(state > 1 ) 
+        {
+            setState(state - 1);
+             if(updateCart === true){
+           dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(item), quantity: state - 1})) // item { variantId, quant}
+       }
+        }
     }
     const handleChange = (e) => {
-        onChangeQty(e.target.value)
+        setState(e.target.value)
+    }
+    const handleChangeFn = (value) => {
+        return getQuantity(value)
     }
     return(
         <div className={classes.container}  style={{height, width}}  >
@@ -71,9 +76,10 @@ const QtyButton = ({onIncrement, onDecrement, quantity, onChangeQty, width, heig
         </button>
         <input
             className={classes.input}
-            value={quantity}
+            value={state}
             onChange={handleChange}
-            
+            type="number"
+            disabled={updateCart}
         />
         <button className={classes.button} onClick={handleIncrement}   >
             <AddIcon style={{fontSize: iconSize}}/>

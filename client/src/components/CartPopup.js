@@ -1,11 +1,13 @@
 import { makeStyles, Box, Grid, Typography, Popover, Badge, IconButton } from "@material-ui/core"
 import { Link } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch} from "react-redux";
 import QtyButton from './QtyButton';
 import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 import "../App.css";
 import CloseIcon from '@material-ui/icons/Close';
 import BlackButton from "./BlackButton";
+import orderActions from "../actions/order";
 const useStyle = makeStyles(() => ({
     link: {
         textDecoration: 'none',
@@ -27,31 +29,37 @@ const useStyle = makeStyles(() => ({
         overScroll: 'scroll'
     }
 }))
-const Item = () => {
+const Item = ({item}) => {
+    const dispatch = useDispatch();
+
+    const handleDeleteItem = (e) => {
+        dispatch(orderActions.deleteItemFromCart(item.productVariant.id))
+    }
+
     const classes = useStyle()
     return (
         <Box mb={2}>
             <Grid container>
                 <Grid item xs={4}>
-                    <img src={window.location.origin + "/variant1- (1).jpg"} className={classes.img} alt="" />
+                    <img src={item.productVariant.product.imgPaths[0]} className={classes.img} alt="" />
                 </Grid>
                 <Grid item xs={6}>
-                    <Link to="/product" className="link"><Typography variant="body2" noWrap>Sleeve Kimono Dress Sleeve Kimono Dress</Typography></Link>
-                    <Typography variant="caption" gutterBottom>Black | XL</Typography>
+                    <Link to="/product" className="link"><Typography variant="body2" noWrap>{item.productVariant.product.name}</Typography></Link>
+                    <Typography variant="caption" gutterBottom>{item.productVariant.color.name} | {item.productVariant.size.name}</Typography>
                     <Box>
                         <Grid container direction="row" alignItems="center">
                             <Grid item xs={3}>
                                 <Typography variant="subtitle2">Qty</Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <QtyButton width={80} height={27} quantity={1} />
+                                <QtyButton width={80} height={27}  updateCart={true} quantity={item.quantity} item={item.productVariant.id}/>
                             </Grid>
                         </Grid>
                     </Box>
-                    <Typography variant="subtitle2">$59.00</Typography>
+                    <Typography variant="subtitle2">{item.unitPrice.toLocaleString()}</Typography>
                 </Grid>
                 <Grid item xs={2} container direction="row" alignItems="flex-start" justifyContent="center" >
-                    <IconButton size="small">
+                    <IconButton size="small" onClick={handleDeleteItem}>
                         <CloseIcon fontSize="small" />
                     </IconButton>
                 </Grid>
@@ -61,6 +69,10 @@ const Item = () => {
 }
 
 export default function CartPopover() {
+
+    const subTotal = useSelector(state => state.order).subTotal;
+    const items = useSelector(state => state.order).items;
+    console.log(items);
     const classes = useStyle();
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -79,7 +91,7 @@ export default function CartPopover() {
         <div >
             <IconButton color="inherit" onClick={handleClick}>
                 <Badge
-                    badgeContent={3}
+                    badgeContent={items.length}
                     color="error"
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -106,8 +118,13 @@ export default function CartPopover() {
             >
                 <Box>
                     <Box>
-                        <Item />
-                        <Item />
+                        {
+                            items.length > 0 ? (
+                                items.map((item, index) => <Item key={index} item={item}/>)
+                            ) : (
+                                <Typography variant="body2">Your cart is empty now</Typography>
+                            )
+                        }
                     </Box>
                     <hr />
                     <Grid container direction="row" justifyContent="space-between">
@@ -116,7 +133,7 @@ export default function CartPopover() {
                         </Grid>
                         <Grid item xs={6}>
                             <Box textAlign="right">
-                                <Typography variant="body1">$748.00</Typography>
+                                <Typography variant="body1">{subTotal.toLocaleString()} VND</Typography>
                             </Box>
                         </Grid>
                     </Grid>
@@ -129,7 +146,7 @@ export default function CartPopover() {
 
                         </Grid>
                         <Grid item xs={6} container direction="row" justifyContent="center">
-                            <BlackButton width={'100%'}><Typography variant="caption" color="inherit">check out</Typography></BlackButton>
+                            <BlackButton width={'100%'}><Link to="/checkout"className={classes.link}><Typography variant="caption" color="inherit">check out</Typography></Link></BlackButton>
                         </Grid>
                     </Grid>
                 </Box>

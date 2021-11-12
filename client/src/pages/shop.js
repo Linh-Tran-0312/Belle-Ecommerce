@@ -120,7 +120,8 @@ const ShopPage = () => {
     const categories = useSelector(state => state.home).productCategories;
     const brands = useSelector(state => state.home).productBrands;
     const products = useSelector(state => state.shop).products;
-    const total = useSelector(state => state.shop).total;
+    const total = useSelector(state => state.shop).total;  
+  
 
 
     const [pageCount, setPageCount] = React.useState(1);

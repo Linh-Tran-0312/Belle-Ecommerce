@@ -8,25 +8,34 @@ import CommentForm from "../components/CommentForm";
 import Comment from "../components/Comment";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { displayMonDDYYYY } from "../helper/handleTime";
 import { convertFromRaw } from "draft-js";
 import { PageLoading } from "../components/PageLoading";
 import draftToHtml from 'draftjs-to-html';
 import blogActions from "../actions/blog";
+import api from "../api";
+
 export default () => {
-    
+     console.log("Blog Detail Page render")
     let { id } = useParams();
     const dispatch = useDispatch();
-    const blog = useSelector(state => state.blog).blog;
+     const location = useLocation();
+    //const [ blog, setBlog ] = useState({});
     const latestBlogs = useSelector(state => state.home).latestBlogs;
     const categories = useSelector(state => state.home).blogCategories;
+    const blog = useSelector(state => state.blog).blog;
     useEffect(() => {
         if(!isNaN(id) && id !== undefined)
         {
-            dispatch(blogActions.getBlogById(id));
+           dispatch(blogActions.getBlogById(id))
         }
-        },[id])   
+        },[id, location]); 
+
+const renderContent = (content) => {
+    if(!!content) 
+    return <div dangerouslySetInnerHTML={{__html:  draftToHtml(JSON.parse(content))}} />
+}
     return (
         <Layout>
            <div className="breadCrumbs">
@@ -49,9 +58,9 @@ export default () => {
                     </Breadcrumbs>
                 </Box>
             </div>
-            <PageLoading message="Blog content is loading..." size="50px"/>
-           {/*  {
-                !blog?.id ? (
+         
+           { 
+                blog?.id ? (
         <Box px={5} mx={5}>
                 <Grid container spacing={2}>
                     <Grid item lg={9} md={9} sm={12} xs={12}>
@@ -67,12 +76,12 @@ export default () => {
                                 </Grid>
                             </Grid>
                            {
-                               <div dangerouslySetInnerHTML={{__html:  draftToHtml(JSON.parse(blog?.content))}} />
+                               renderContent(blog?.content)
                               
                            }
                            
                         </Box>
-                        <Box>
+                     {/*    <Box>
                             <hr/>
                             <CommentForm />
                         </Box>
@@ -80,7 +89,7 @@ export default () => {
                         {
                             [1,2].map(item => <Comment key={item} />)
                         }
-                        </Container>
+                        </Container> */}
   
                     </Grid>
                     <Grid item lg={3} md={3} sm={12} xs={12}>
@@ -102,8 +111,8 @@ export default () => {
                     </Grid>
                 </Grid>
             </Box>
-                ) : (<PageLoading message="Blog content is being loading........" />)
-            } */}
+                ) : (<PageLoading message="Blog content is loading..." size="50px"/>)
+            }  
             
         </Layout>
     )

@@ -32,10 +32,15 @@ export default () => {
     const query = useQuery();
     const classes = useStyle();
     const location = useLocation();
-    const [mode, setMode] = useState(query.get('page'));
-
+    const [ isSignIn, setIsSignIn] = useState(true);
+ 
     useEffect(() => {
-        setMode(query.get('page'))
+        if(query.get('page') === "signin" || query.get('page') === null) {
+       setIsSignIn(true)
+        } else {
+       setIsSignIn(false)
+        }
+       
     },[location])
    
     return (
@@ -43,19 +48,25 @@ export default () => {
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
-                        <Typography variant="inherit">{mode === 'signin' ? "LOGIN" : "CREATE NEW ACCOUNT"}</Typography>
+                        <Typography variant="inherit">{ isSignIn ? "LOGIN" : "CREATE NEW ACCOUNT"}</Typography>
                     </Box>
                 </div>
             </div>
             <Container maxWidth="sm">
                 <Box mx={2} my={4}>
                     {
-                        mode === 'signup' && <>
+                        !isSignIn && <>
                             <Box my={2}>
                                 <StyledTextField label="First Name" variant="outlined" fullWidth/>
                             </Box>
                             <Box my={2}>
                                 <StyledTextField label="Last Name" variant="outlined" fullWidth/>
+                            </Box>
+                            <Box my={2}>
+                                <StyledTextField label="Phone Number" variant="outlined" fullWidth/>
+                            </Box>
+                            <Box my={2}>
+                                <StyledTextField label="Address" variant="outlined" fullWidth/>
                             </Box>
                         </>
                     }
@@ -66,11 +77,24 @@ export default () => {
                     <Box my={2}>
                         <StyledTextField label="Password" variant="outlined" fullWidth/>
                     </Box>
+                    {
+                        !isSignIn && <Box my={2}>
+                                        <StyledTextField label="Confirm Password" variant="outlined" fullWidth/>
+                                    </Box>
+                    }
+                     
                     <Box my={3} sx={{ display: 'flex', justifyContent: 'center'}}>
-                        <BlackButton>{mode === 'signin' ? "SIGN IN" : "REGISTER"}</BlackButton>
+                        <BlackButton>{ isSignIn ? "SIGN IN" : "REGISTER"}</BlackButton>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-                        <Typography variant="caption"><Link to="/" className="link">Forgot your password? &nbsp;|&nbsp;</Link><Link to="/auth?page=signup" className="link">Create account</Link></Typography>
+                        <Typography variant="caption">
+                        <Link to="/" className="link">Forgot your password? &nbsp;|&nbsp;</Link>
+                        {
+                            !isSignIn ?  <Link to="/auth?page=signin" className="link">Already have an account</Link>
+                            :  <Link to="/auth?page=signup" className="link">Create account</Link>
+                        }
+                       
+                        </Typography>
                     </Box>
                 </Box>
 

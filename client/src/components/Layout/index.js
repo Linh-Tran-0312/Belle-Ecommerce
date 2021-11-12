@@ -5,16 +5,17 @@ import { useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 const Layout = ({children}) => {
+     console.log("Layout render")
     const location = useLocation();
     const dispatch = useDispatch();
     const ref = useRef()
-    useEffect(() => {
+   /*  useEffect(() => {
         dispatch(homeActions.getProductCategories());
         dispatch(homeActions.getProductBrands());
         dispatch(homeActions.getNewArrivals());
         dispatch(homeActions.getLatestBlogs());
         dispatch(homeActions.getBlogCategories());
-    },[])
+    },[]) */
     useEffect(() => {
        ref.current.scrollIntoView();
     },[location])

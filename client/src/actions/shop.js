@@ -29,6 +29,14 @@ const shopActions = {
         } catch (error) {
             console.log(error)
         }
+    },
+    getProductById: (id) => async(dispatch) => {
+        try {
+                const { data } = await api.getProductById(id);
+                dispatch({ type: ACTION.PRODUCT, payload: data})
+        } catch (error) {
+                console.log(error)
+        }
     }
 }
 
