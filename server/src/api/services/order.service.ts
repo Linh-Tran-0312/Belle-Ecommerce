@@ -1,4 +1,4 @@
-import { IOrder, IOrderCreateProps, Order, OrderDetail, IOrderDetail, Status, PaymentMethod  } from "../models";
+import { IOrder, IOrderCreateProps, Order, OrderDetail, IOrderDetail, IOrderDetailCreateProps, Status, PaymentMethod  } from "../models";
 import { OrderRepository, IOrders } from "../repositories";
 import { BaseService, IBaseService  } from "./base.service";
 import { Change } from "./index";
@@ -59,10 +59,9 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
     public async getOrderById(id: number): Promise<IOrder|null> {
         return this.repository.getOrderById(id);
     }
-    public async createOrder(data: IOrderCreateProps): Promise<IOrder> {
+    public async createOrder(data: IOrderCreateProps): Promise<IOrder|null> {
         try {
             let order = new Order();
-            console.log(order);
             order.userId = data.userId;
             order.details = [];
             data.details?.forEach(detail => {
@@ -72,7 +71,8 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                 item.unitPrice = detail.unitPrice;
                 order.details = [...order.details, item];
             })
-            return this.repository.create(order);
+            const newOrder = await this.repository.create(order);
+            return this.repository.getOrderById(newOrder.id)
           
         } catch (error) {
             console.log(error);
@@ -80,10 +80,10 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
         }
        
     }
-    public async updateOrder(id: number, data: IOrderUpdateItems ): Promise<IOrder> {
+    public async updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder|null> {
         try {
             const currentOrder: IOrder | any = await super.getOneById(id, ["details"]);
-            console.log(currentOrder);
+
             data.details.forEach(detail => {
                const index = currentOrder.details.findIndex((item: { productVariantId: number; }) => item.productVariantId === detail.productVariantId);
                if(index === -1) {
@@ -97,7 +97,8 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                }
                
             })
-            return this.repository.create(currentOrder);
+            const temp = await this.repository.create(currentOrder);
+            return this.repository.getOrderById(id);
     
         } catch (error) {
             console.log(error);
@@ -106,8 +107,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
     
     }
     public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrder> {
-        return this.repository.update(id, data);
-         
+        return this.repository.update(id, data);       
     }
     public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
         try {
@@ -121,34 +121,51 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
     }
     public async getCurrentOrderByUserId(userId: number): Promise<IOrder | null> {
             const options = {
+                select: ["id"],
                 where: {
                     userId,
                     status: Status.ORDERING
-                },
-                relations: ["details",
-                            "details.productVariant",
-                            "details.productVariant.product",
-                            "details.productVariant.size",
-                            "details.productVariant.color"
-                        ]
+                }
             }
         const order = await this.repository.findOne(options);
-       if(!order) return null;
-       return order;
+        if(!order) return null
+        return this.repository.getOrderById(order?.id);
     
     }
     public async getAllOrdersByUserId(userId: number): Promise<IOrder[]> {
        const options = {
            where: {
                userId
-           },
-           relations: ["details",
-           "details.productVariant",
-           "details.productVariant.product",
-           "details.productVariant.size",
-           "details.productVariant.color"
-       ]
+           }
        }
         return this.repository.find(options)
     }
+
+    public async addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrder | null> {
+            const order: IOrder|null = await this.repository.findOne({ where : { id: id}, relations: ["details"]});
+
+            if(order !== null) 
+            {
+                if(order.details) {
+                    let index: number =  -1;
+                 index = order.details.findIndex(x => x.productVariantId === data.productVariantId);
+                 if(index !== -1) {
+                      order.details[index].quantity += data.quantity;               
+                } else {
+                    const item = new OrderDetail();
+                    item.orderId = id;
+                    item.productVariantId = data.productVariantId;
+                    item.unitPrice = data.unitPrice;
+                    item.quantity = data.quantity;
+                    order.details.push(item);
+
+                }
+                const temp = await this.repository.create(order);
+                }
+               
+            }
+            return this.repository.getOrderById(id);
+            
+    }
+    
 }

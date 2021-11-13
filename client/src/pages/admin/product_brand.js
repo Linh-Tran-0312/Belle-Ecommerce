@@ -25,8 +25,8 @@ const initBrand = {
 export default function ProductBrand() {
     const dispatch = useDispatch();
    // Brand State
-   const productBrands = useSelector(state => state.product).brands;
-   const isDeletingProductBrand = useSelector(state => state.product).isDeletingProductBrand;
+   const productBrands = useSelector(state => state.adminProduct).brands;
+   const isDeletingProductBrand = useSelector(state => state.adminProduct).isDeletingProductBrand;
    const [brand, setBrand] = useState(initBrand);
    const [showBrand, setShowBrand] = useState(false);
 

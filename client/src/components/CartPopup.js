@@ -33,7 +33,13 @@ const Item = ({item}) => {
     const dispatch = useDispatch();
 
     const handleDeleteItem = (e) => {
-        dispatch(orderActions.deleteItemFromCart(item.productVariant.id))
+        if(item.orderId) 
+        {   
+            dispatch(orderActions.deleteItem(item.orderId, item.id))
+        } else {
+            dispatch(orderActions.deleteItemFromCart(item.productVariant.id))
+
+        }
     }
 
     const classes = useStyle()
@@ -52,7 +58,7 @@ const Item = ({item}) => {
                                 <Typography variant="subtitle2">Qty</Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <QtyButton width={80} height={27}  updateCart={true} quantity={item.quantity} item={item.productVariant.id}/>
+                                <QtyButton width={80} height={27}  updateCart={true} quantity={item.quantity} itemId={item?.id} variantId={item.productVariant.id}/>
                             </Grid>
                         </Grid>
                     </Box>
@@ -72,7 +78,8 @@ export default function CartPopover() {
 
     const subTotal = useSelector(state => state.order).subTotal;
     const items = useSelector(state => state.order).items;
-    console.log(items);
+    
+ 
     const classes = useStyle();
     const [anchorEl, setAnchorEl] = useState(null);
 

@@ -735,6 +735,19 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"IOrderDetailQtyUpdate": {
+				"properties": {
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IProducts": {
 				"properties": {
 					"products": {
@@ -1785,7 +1798,12 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IOrder"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}
@@ -1947,14 +1965,19 @@
 		},
 		"/orders/{orderId}/addItems": {
 			"patch": {
-				"operationId": "UpdateOrderById",
+				"operationId": "UpdateOrderItems",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IOrder"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}
@@ -2074,7 +2097,7 @@
 				}
 			}
 		},
-		"/orders/items": {
+		"/orders/{orderId}/items": {
 			"post": {
 				"operationId": "AddItemToOrder",
 				"responses": {
@@ -2083,7 +2106,12 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IOrderDetail"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}
@@ -2094,7 +2122,17 @@
 					"Order"
 				],
 				"security": [],
-				"parameters": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -2109,7 +2147,7 @@
 		},
 		"/orders/items/{itemId}": {
 			"patch": {
-				"operationId": "UpdateItem",
+				"operationId": "UpdateItemQuantity",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -2122,7 +2160,7 @@
 						}
 					}
 				},
-				"description": "Update order item",
+				"description": "Update order item (quantity)",
 				"tags": [
 					"Order"
 				],
@@ -2143,7 +2181,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderDetailCreateProps"
+								"$ref": "#/components/schemas/IOrderDetailQtyUpdate"
 							}
 						}
 					}

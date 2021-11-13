@@ -626,6 +626,14 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrderDetailQtyUpdate": {
+        "dataType": "refObject",
+        "properties": {
+            "quantity": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PingMessage": {
         "dataType": "refObject",
         "properties": {
@@ -1363,7 +1371,7 @@ export function RegisterRoutes(app: express.Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.patch('/orders/:orderId/addItems',
 
-            function OrderController_updateOrderById(request: any, response: any, next: any) {
+            function OrderController_updateOrderItems(request: any, response: any, next: any) {
             const args = {
                     orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
                     data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateItems"},
@@ -1381,7 +1389,7 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new OrderController();
 
 
-            const promise = controller.updateOrderById.apply(controller, validatedArgs as any);
+            const promise = controller.updateOrderItems.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1456,10 +1464,11 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/orders/items',
+        app.post('/orders/:orderId/items',
 
             function OrderController_addItemToOrder(request: any, response: any, next: any) {
             const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
                     data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailCreateProps"},
             };
 
@@ -1481,10 +1490,10 @@ export function RegisterRoutes(app: express.Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.patch('/orders/items/:itemId',
 
-            function OrderController_updateItem(request: any, response: any, next: any) {
+            function OrderController_updateItemQuantity(request: any, response: any, next: any) {
             const args = {
                     itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailQtyUpdate"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1499,7 +1508,7 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new OrderController();
 
 
-            const promise = controller.updateItem.apply(controller, validatedArgs as any);
+            const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

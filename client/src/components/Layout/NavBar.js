@@ -155,8 +155,7 @@ export default function NarBar() {
         return (
             <>
               <div className={authBar}>
-                            <RouterLink to="/auth?page=signin" className={link}>LOGIN &nbsp;|</RouterLink>
-                            <RouterLink to="/auth?page=signup" className={link}>&nbsp;CREATE ACCOUNT</RouterLink>
+                            <Typography variant="button" className={link}>Hotline: 02385338234</Typography>
                         </div>
                         <Toolbar className={toolbar}>
                 {Logo}

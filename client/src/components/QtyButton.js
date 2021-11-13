@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core"
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
  import { useState, useEffect } from "react";
- import { useDispatch } from "react-redux";
+ import { useDispatch, useSelector } from "react-redux";
 import orderActions from "../actions/order";
 const useStyle = makeStyles({
     container: {
@@ -29,10 +29,11 @@ const useStyle = makeStyles({
         height: '90%'
     }
 })
-const QtyButton = ({ getQuantity, updateCart, item, quantity, width, height}) => {
+const QtyButton = ({ getQuantity, updateCart, variantId, itemId, quantity, width, height}) => {
     const classes = useStyle();
     const iconSize = Math.round(0.5*height)
     const [state, setState ] = useState(1);
+    const orderId = useSelector(state => state.order).orderId;
     const dispatch = useDispatch()
     useEffect(() => {
         if(!updateCart) {
@@ -50,8 +51,11 @@ const QtyButton = ({ getQuantity, updateCart, item, quantity, width, height}) =>
     const handleIncrement = (e) => {
        setState(state + 1);
        if(updateCart === true){
-           console.log("update quantity")
-           dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(item), quantity: state + 1})) // item { variantId, quant}
+            if(orderId) {
+                dispatch(orderActions.updateItemQuantity(orderId, itemId, { quantity: 1 } ))
+            } else {
+                dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(variantId), quantity: state + 1})) // item { variantId, quant}
+            }
        }  
     }
     const handleDecrement = (e) => {
@@ -59,7 +63,11 @@ const QtyButton = ({ getQuantity, updateCart, item, quantity, width, height}) =>
         {
             setState(state - 1);
              if(updateCart === true){
-           dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(item), quantity: state - 1})) // item { variantId, quant}
+                if(orderId) {
+                    dispatch(orderActions.updateItemQuantity(orderId, itemId, { quantity: -1 } ))
+                } else {
+                    dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(variantId), quantity: state - 1})) // item { variantId, quant}
+                }
        }
         }
     }

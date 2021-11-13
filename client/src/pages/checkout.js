@@ -20,6 +20,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useSelector } from "react-redux";
 
 const StyledRadio = withStyles({
     root: {
@@ -105,7 +106,7 @@ const useStyle = makeStyles((theme) => ({
 export default () => {
     const classes = useStyle();
     const [ method, setMethod ] = useState(null);
-
+    const user = useSelector(state => state.auth).user;
     const handleChangeMethod = (e) => {
         setMethod(e.target.value);
     }
@@ -126,10 +127,10 @@ export default () => {
                             <Box my={2} >
                                 <Grid container spacing={2}>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="First Name" variant="outlined" fullWidth required />
+                                        <StyledTextField label="First Name" value={user.fname}  disabled variant="outlined" fullWidth required />
                                     </Grid>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Last Name" variant="outlined" fullWidth required />
+                                        <StyledTextField label="Last Name" value={user.lname}  disabled  variant="outlined" fullWidth required />
                                     </Grid>
                                 </Grid>
 
@@ -137,10 +138,10 @@ export default () => {
                             <Box my={2}>
                                 <Grid container spacing={2}>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Email" variant="outlined" fullWidth required />
+                                        <StyledTextField label="Email" variant="outlined" value={user.email}  disabled  fullWidth required />
                                     </Grid>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Telephone" variant="outlined" fullWidth required />
+                                        <StyledTextField label="Telephone" variant="outlined" value={user.phone} disabled  fullWidth required />
                                     </Grid>
                                 </Grid>
                             </Box>

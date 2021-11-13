@@ -86,6 +86,8 @@ const ProductPage = () => {
     const [ item, setItem ] = useState(0);
     const [ qty, setQty ] = useState(1);
 
+    const user = useSelector(state => state.auth).user;
+    const orderId = useSelector(state => state.order).orderId;
      const product = useSelector(state => state.shop).product;
     useEffect(() => {
         if(!isNaN(productId) && productId !== undefined)
@@ -111,8 +113,17 @@ const ProductPage = () => {
         e.preventDefault();
         if(qty > 0 && item > 0) 
         {
-            console.log("add to cart")
-        dispatch(orderActions.addItemToCart(product, {productVariantId: item, quantity: qty}));
+            if(!user?.id) 
+            {
+                dispatch(orderActions.addItemToCart(product, {productVariantId: item, quantity: qty}));              
+            } else {
+                if(orderId === "") {
+   
+                    dispatch(orderActions.createOrder({userId: user.id, details: [{ productVariantId: item, quantity: qty, unitPrice: product.price}]}))
+                } else {
+                    dispatch(orderActions.updateOrderItem(orderId, {orderId: orderId, productVariantId: item, quantity: qty, unitPrice: product.price }))
+                }
+            } 
           setMessage("");
         } else {
             setMessage("Vui lòng chọn một phiên bản bên dưới")

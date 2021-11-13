@@ -7,4 +7,5 @@ import home from "./home";
 import shop from "./shop";
 import blog from "./blog";
 import order from "./order";
-export const appReducer = combineReducers({ adminBlog, adminProduct, adminUser, adminOrder, home, shop, blog, order })
+import auth from "./auth";
+export const appReducer = combineReducers({ adminBlog, adminProduct, adminUser, adminOrder, home, shop, blog, order, auth })

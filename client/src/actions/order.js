@@ -28,7 +28,50 @@ const orderActions = {
         else {
             dispatch({ type: ACTION.UPDATE_ITEM_QUANTITY, payload: item})
         }
+    },
+
+    createOrder: (formData) => async(dispatch) => {
+        try {
+            const { data } = await api.createOrder(formData);
+            dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    updateOrderItem: (id, formData) => async(dispatch) => {
+        try {
+            const { data } = await api.addItemToOrder(id, formData);
+            dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    deleteItem: (orderId, itemId) =>  async(dispatch) => {
+        try {
+             await api.deleteItem(itemId);
+             const { data } = await api.getOrderById(orderId);
+            dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    updateItemQuantity: (orderId, itemId, formData) => async(dispatch) => {
+        try {
+            const res = await api.updateItemQuantity(itemId, formData);
+            const { data } = await api.getOrderById(orderId);
+            dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getCurrentOrder: (userId) => async(dispatch) => {
+        try {
+            const { data } = await api.getCurrentOrderByUserId(userId)
+        } catch (error) {
+            
+        }
     }
+
 
 }
 

@@ -24,8 +24,8 @@ export default function ProductSize() {
     const dispatch = useDispatch();
    
     // Size State
-    const productSizes = useSelector(state => state.product).sizes;
-    const isDeletingProductSize = useSelector(state => state.product).isDeletingProductSize;
+    const productSizes = useSelector(state => state.adminProduct).sizes;
+    const isDeletingProductSize = useSelector(state => state.adminProduct).isDeletingProductSize;
     const [size, setSize] = useState(initSize);
     const [showSize, setShowSize] = useState(false);
 

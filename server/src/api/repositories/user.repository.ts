@@ -18,7 +18,7 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
     public async getUsers(query: IUserQuery): Promise<IUsers> {
         try {      
             const userQuery  = this.entity.createQueryBuilder("user")
-            .leftJoinAndSelect("user.orders","order","order.status = :status",{ status: Status.ORDERING})
+            .leftJoinAndSelect("user.orders","order","order.status != :status",{ status: Status.ORDERING})
             
             if(query.role !== UserRole.ALL && query.search !== "")
             {

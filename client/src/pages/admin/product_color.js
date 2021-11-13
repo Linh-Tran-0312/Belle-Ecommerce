@@ -31,8 +31,8 @@ export default function ProductColor() {
     
     const [showColorPicker, setShowColorPicker] = React.useState(false);
 
-    const productColors = useSelector(state => state.product).colors;
-    const isDeletingProductColor = useSelector(state => state.product).isDeletingProductColor;
+    const productColors = useSelector(state => state.adminProduct).colors;
+    const isDeletingProductColor = useSelector(state => state.adminProduct).isDeletingProductColor;
     const [color, setColor] = useState(initColor);
     const [showColor, setShowColor] = useState(false);
  

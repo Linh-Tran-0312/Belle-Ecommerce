@@ -56,9 +56,9 @@ export default function Orders() {
      const classes = useStyles();
      const dispatch = useDispatch();
       // Orders
-      const orders = useSelector(state => state.order).orders;
-      const orderTotal = useSelector(state => state.order).total;
-      const orderDetail = useSelector(state => state.order).order;
+      const orders = useSelector(state => state.adminOrder).orders;
+      const orderTotal = useSelector(state => state.adminOrder).total;
+      const orderDetail = useSelector(state => state.adminOrder).order;
        
       const [filter, setFilter] = useState(initFilter);
       const [ order, setOrder] = useState({})
@@ -227,7 +227,7 @@ export default function Orders() {
                                 <TableCell align="right">{row?.total.toLocaleString()}</TableCell>
                                 <TableCell><OrderStatus status={row?.status}/></TableCell>
                                 <TableCell>
-                                     <OrderDetail  id={row?.id} />
+                                     <OrderDetail  id={row?.id} admin={true}/>
                                     </TableCell>
                             </TableRow>
                         ))}

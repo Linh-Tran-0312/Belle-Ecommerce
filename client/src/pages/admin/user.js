@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import OrderDetail from "../../components/Admin/OrderDetailModal";
 import userActions from "../../actions/adminUser";
+import { displayMonDDYYYY } from "../../helper/handleTime";
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
@@ -53,10 +54,10 @@ export default () => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const users = useSelector(state => state.user).users;
-    const userDetail = useSelector(state => state.user).user;
-    const userTotal = useSelector(state => state.user).total;
-    const userMessage = useSelector(state => state.user).user_message;
+    const users = useSelector(state => state.adminUser).users;
+    const userDetail = useSelector(state => state.adminUser).user;
+    const userTotal = useSelector(state => state.adminUser).total;
+    const userMessage = useSelector(state => state.adminUser).user_message; 
 
     const [filter, setFilter] = useState(initFilter);
     const [ user, setUser ] = useState(initUser);
@@ -195,7 +196,7 @@ export default () => {
                                         <TableCell  ><strong>Phone</strong></TableCell>
                                        
                                         <TableCell  ><strong>Role</strong></TableCell>
-                                        <TableCell  ><strong>Sales</strong></TableCell>
+                                        <TableCell  ><strong>Sales (VND)</strong></TableCell>
                                         <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
@@ -209,7 +210,7 @@ export default () => {
                                             <TableCell  >{row.email}</TableCell>
                                             <TableCell  >{row.phone}</TableCell>                                         
                                             <TableCell  >{row.role.toUpperCase()}</TableCell>
-                                            <TableCell  >{row.sale}</TableCell>
+                                            <TableCell  >{row.sale.toLocaleString()}</TableCell>
                                             <TableCell  ><IconButton size="small" onClick={() => handleGetUserById(row.id)}><MoreHorizIcon /></IconButton></TableCell>
                                         </TableRow>
                                     ))}
@@ -309,7 +310,7 @@ export default () => {
                                             <TableCell  ><strong>Date</strong></TableCell>
                                             <TableCell><strong>OrderId</strong></TableCell>
                                             <TableCell  ><strong>Status</strong></TableCell>
-                                            <TableCell  ><strong>Total</strong></TableCell>
+                                            <TableCell  ><strong>Total (VND)</strong></TableCell>
                                             <TableCell  ><strong>Detail</strong></TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -319,11 +320,11 @@ export default () => {
                                                 <TableCell component="th" scope="row">
                                                     {`${index + 1}`}
                                                 </TableCell>
-                                                <TableCell  >{row.orderAt}</TableCell>
+                                                <TableCell  >{displayMonDDYYYY(row.orderAt)}</TableCell>
                                                 <TableCell  >{row.id}</TableCell>
                                                 <TableCell  ><OrderStatus status={row.status}/></TableCell>
-                                                <TableCell  >{row.total}</TableCell>
-                                                <TableCell  ><OrderDetail/></TableCell>
+                                                <TableCell  >{row.total.toLocaleString()}</TableCell>
+                                                <TableCell  ><OrderDetail id={row.id} admin={true}/></TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

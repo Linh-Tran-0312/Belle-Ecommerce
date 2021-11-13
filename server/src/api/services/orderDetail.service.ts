@@ -8,4 +8,11 @@ export class OrderDetailService extends BaseService<IOrderDetail, OrderDetailRep
     constructor() {
         super(new OrderDetailRepository())
     }
+    public async updateItemQuantity(id: number, quantity: number): Promise<IOrderDetail> {
+        const item = await this.getOneById(id);
+        if(item) {
+            item.quantity += quantity;
+        }
+        return this.repository.create(item);
+    }
 }

@@ -18,9 +18,7 @@
         item.productVariant.product.imgPaths = product.imgPaths;
         item.productVariant.product.brand.name = product.brand.name;
         const variant = product.variants.find(x => x.id === productVariantId);
-        console.log(variant);
-        console.log(item);
-     item.productVariant.size = variant.size;
+        item.productVariant.size = variant.size;
         item.productVariant.color = variant.color;  
 
     return item;

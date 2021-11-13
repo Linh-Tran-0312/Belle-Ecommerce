@@ -29,8 +29,8 @@ export default function BlogCategory() {
 
 
     // Category State
-    const blogCategories = useSelector(state => state.blog).categories;
-    const isDeletingBlogCategory = useSelector(state => state.blog).isDeletingBlogCategory;
+    const blogCategories = useSelector(state => state.adminBlog).categories;
+    const isDeletingBlogCategory = useSelector(state => state.adminBlog).isDeletingBlogCategory;
     const [category, setCategory] = useState(initCategory);
     const [showCategory, setShowCategory] = useState(false);
 

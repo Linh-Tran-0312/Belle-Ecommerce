@@ -1,84 +1,80 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
- 
+import { ORDER_STATUS } from '../../constants';
+import OrderStatus from '../OrderStatus';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
-  backButton: {
+  button: {
     marginRight: theme.spacing(1),
   },
   instructions: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
-  button : {
-    display: "flex",
-    justifyContent: "center"
-  }
 }));
 
 function getSteps() {
-  return ['New Order', 'In Delivery', 'Completed'];
+  return ['Placed Order', 'In Delivery', 'Completed'];
 }
 
 
-
-export default function HorizontalLabelPositionBelowStepper() {
+export default function HorizontalLinearStepper({status}) {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(1);
+  const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(1);
-  };
-
-  return (
-    <div className={classes.root}>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel >{label}</StepLabel>
-          </Step>
-        ))}
+ 
+  useEffect(() => {
+    switch(status) {
+      case ORDER_STATUS.ORDERING:
+        setActiveStep(0);
+        break;
+      case ORDER_STATUS.ORDERED:
+        setActiveStep(1);
+        break;
+      case ORDER_STATUS.DELIVERY:
+        setActiveStep(2);
+        break;
+      case ORDER_STATUS.COMPLETED:
+        setActiveStep(3);
+        break;
+      default:
+        setActiveStep(4);
+        break;
+    }
+  },[status])
+ 
+  
+  
+return (
+  <>
+  {
+    activeStep !== 4 ? (
+      <div className={classes.root}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
       </Stepper>
-      <div>
-        {activeStep === steps.length ? (
-          <div  className={classes.button}>
-            <Typography className={classes.instructions}>All steps completed</Typography>
-            <Button onClick={handleReset}>Reset</Button>
-          </div>
-        ) : (
-          <div>
-            <div className={classes.button}>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.backButton}
-                size="small"
-              >
-                Back
-              </Button>
-              <Button size="small"  variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      
     </div>
-  );
+    ) : (
+      <OrderStatus status={ORDER_STATUS.CANCELED}/>
+    )
+  }
+  </>
+ )   
 }

@@ -63,9 +63,17 @@ export default () => {
     const dispatch = useDispatch();
     const subTotal = useSelector(state => state.order).subTotal;
     const items = useSelector(state => state.order).items;
+    const orderId = useSelector(state => state.order).orderId;
 
-    const handleDeleteItem = (id) => {
-        dispatch(orderActions.deleteItemFromCart(id))
+    const handleDeleteItem = (id, itemId) => {
+        if(orderId) 
+        {   
+            dispatch(orderActions.deleteItem(orderId, itemId))
+        } else {
+            dispatch(orderActions.deleteItemFromCart(id))
+
+        }
+      
     }
     
     return (
@@ -109,7 +117,7 @@ export default () => {
                                             </StyledTableCell>
                                             <StyledTableCell align="right"  classes={{ body: classes.priceCol}} >{item.unitPrice.toLocaleString()} VND</StyledTableCell>
                                             <StyledTableCell align="right">
-                                                <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity}   item={item.productVariant.id} />
+                                                <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity}  itemId={item?.id} variantId={item.productVariant.id} />
                                             </StyledTableCell>
                                             <StyledTableCell align="right">
                                                 <Grid container>
@@ -118,7 +126,7 @@ export default () => {
                                                
                                                     </Grid>
                                                     <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                        <IconButton size="small" onClick={() => handleDeleteItem(item.productVariant.id)}><DeleteForeverIcon/></IconButton>
+                                                        <IconButton size="small" onClick={() => handleDeleteItem(item.productVariant.id, item.id)}><DeleteForeverIcon/></IconButton>
                                                     </Grid>
                                                 </Grid>
                                             </StyledTableCell>

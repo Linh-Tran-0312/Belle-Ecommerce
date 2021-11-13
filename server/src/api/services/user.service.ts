@@ -40,17 +40,19 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         data.password = hashPassword;
         const result = await this.repository.create(data);
         delete result.password;
+        delete result.googleId;
         return result;
     }
 
     public async login(email: string, password: string): Promise<IUser> {
-        const existingUsers: IUser|any = await this.isEmailExist(email);
-        if(!existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
-        console.log(existingUsers);
-        const match = await bcrypt.compare(password, existingUsers.password);
+        const existingUser: IUser|any =  await this.repository.findOne({ where: { email }});
+        if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
+       
+        const match = await bcrypt.compare(password, existingUser.password);
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-        delete existingUsers.password;
-        return existingUsers
+        delete existingUser.password;
+        delete existingUser.googleId;
+        return existingUser
     }
 
     public async getUsers(query: IUserQuery): Promise<IUsers> {
@@ -70,13 +72,9 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         if(!!data.email) {
             const existingUser: IUser|any =  await this.repository.findOne({ where: { email: data.email }});
             if(!!existingUser && existingUser.id !== id) {
-                console.log(existingUser);
-                console.log(id, typeof id);
-                console.log(existingUser.id, typeof existingUser.id);
                 throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
             } 
         }
-        console.log("user service");
         const result: IUser = await this.repository.update(id,data);
         const user: IUser|any = await this.repository.findOne({ where: {id: result.id}, relations: ["orders"]});
         

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: process.env.REACT_APP_BASE_URL})
 const api = {
+     
     //------------------------BLOG API----------------------------
     // handle blog category API
     getBlogCategories : () =>  API.get("/blog-categories"),
@@ -61,12 +62,21 @@ const api = {
 
     //------------------------AUTHORIZATION API----------------------------
     register: (formData) => API.post("/auth/register", formData),
+    login: (formData) => API.post("/auth/login", formData),
 
     //------------------------ORDER API----------------------------
     getOrders: (queryString) => API.get(`/orders?${queryString}`),
     getOrderById: (id) => API.get(`/orders/${id}`),
+    getOrdersByUserId: (userId) => API.get(`/orders/${userId}/all`),
     updateOrderStatus: (id, formData) => API.patch(`/orders/${id}/updateStatus`, formData),
-    deleteOrder: (id) => API.delete(`/orders/${id}`)
+    deleteOrder: (id) => API.delete(`/orders/${id}`),
+
+    getCurrentOrderByUserId: (userId) =>  API.get(`/orders/${userId}/current`),
+    addItemToOrder: (id, formData) => API.post(`/orders/${id}/items`, formData),
+    createOrder: (formData) => API.post("/orders", formData),
+    deleteItem: (itemId) => API.delete(`/orders/items/${itemId}`),
+    updateItemQuantity: (itemId, formData) => API.patch(`/orders/items/${itemId}`, formData),
+   
 }
 
 export default api;

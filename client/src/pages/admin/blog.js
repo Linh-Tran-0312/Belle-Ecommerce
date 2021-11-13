@@ -81,13 +81,13 @@ export default function BlogAdmin() {
     const dispatch = useDispatch();
  
     // Blog 
-    const blogCategories = useSelector(state => state.blog).categories;
-    const blogTotal = useSelector(state => state.blog).pagination.total;
+    const blogCategories = useSelector(state => state.adminBlog).categories;
+    const blogTotal = useSelector(state => state.adminBlog).pagination.total;
    
     //const page = useSelector(state => state.blog).pagination.page;
-    const blogs = useSelector(state => state.blog).blogs;
-    const blogDetail = useSelector(state => state.blog).blog;
-    const isDeletingBlog = useSelector(state => state.blog).isDeletingBlog;
+    const blogs = useSelector(state => state.adminBlog).blogs;
+    const blogDetail = useSelector(state => state.adminBlog).blog;
+    const isDeletingBlog = useSelector(state => state.adminBlog).isDeletingBlog;
     const [blog, setBlog] = useState(initBlog);
     const [showBlog, setShowBlog] = useState(false);
     const [filter, setFilter] = useState(initFilter);

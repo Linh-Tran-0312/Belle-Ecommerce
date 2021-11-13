@@ -75,13 +75,13 @@ const initState = {
     paymentCheck: "",
     paymentMethod: ""
 }
-export default function SimpleModal({ id }) {
+export default function SimpleModal({ id, admin }) {
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
-    const detail = useSelector(state => state.order).order;
+    const detail = useSelector(state => state.adminOrder).order;
     const dispatch = useDispatch();
-    const [ state, setState] = React.useState(initState);
+    const [state, setState] = React.useState(initState);
 
     const handleOpen = () => {
         setOpen(true);
@@ -95,14 +95,15 @@ export default function SimpleModal({ id }) {
     }, [id])
 
     useEffect(() => {
-        setState({status: detail.status, paymentCheck: detail.paymentCheck, paymentMethod: detail.paymentMethod})
-    },[detail])    
+        setState({ status: detail.status, paymentCheck: detail.paymentCheck, paymentMethod: detail.paymentMethod })
+    }, [detail])
 
     const handleChange = (e) => {
-        setState({...state, [e.target.name] : e.target.value});
+        setState({ ...state, [e.target.name]: e.target.value });
     }
     const handleSubmitOrder = (e) => {
         dispatch(orderActions.updateOrderStatus(detail.id, state));
+        console.log(state);
     }
     const body = () => {
         if (!detail.id) return <CircularProgress />
@@ -132,7 +133,7 @@ export default function SimpleModal({ id }) {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {detail?.details?.map((item, index) => ( 
+                                {detail?.details?.map((item, index) => (
                                     <TableRow key={index}>
                                         <StyledTableCell component="th" scope="row">
                                             <Typography variant="subtitle2">  {`${item?.productVariant?.product?.name} (${item?.productVariant?.product?.brand?.name}) `} </Typography>
@@ -166,91 +167,119 @@ export default function SimpleModal({ id }) {
             </Box>
             <Divider />
             <Box my={3}>
-                <Box textAlign="center" my={2}>
-                                    <Typography variant="h6" gutterBottom color="primary">CẬP NHẬT TÌNH TRẠNG ĐƠN HÀNG </Typography>
-                </Box>
-                <Grid container justifyContent="space-between" spacing={2}>
-                    <Grid item sm={4} xs={10}>
-                        <Box my={2}>
-                            <Box my={2}>
-                                <Typography variant="subtitle2"><strong>Hình thức thanh toán</strong></Typography>
-                            </Box>
-                            <FormControl variant="outlined" fullWidth>
-                                <InputLabel id="demo-simple-select-outlined-label">Payment Methoad</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={detail.paymentMethod}
-                                    onChange={handleChange}
-                                    label="Payment Method"
-                                    name="paymentMethod"
-                                >
+               
+                {
+                    admin ? (
+                        <> 
+                        <Box textAlign="center" my={2}>
+                            <Typography variant="h6" gutterBottom color="primary">CẬP NHẬT TÌNH TRẠNG ĐƠN HÀNG </Typography>
+                        </Box>
+                        <Grid container justifyContent="space-between" spacing={2}>
+                            <Grid item sm={4} xs={10}>
+                                <Box my={2}>
+                                    <Box my={2}>
+                                        <Typography variant="subtitle2"><strong>Hình thức thanh toán</strong></Typography>
+                                    </Box>
+                                    <FormControl variant="outlined" fullWidth>
+                                        <InputLabel id="demo-simple-select-outlined-label">Payment Methoad</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-outlined-label"
+                                            id="demo-simple-select-outlined"
+                                            value={state.paymentMethod}
+                                            onChange={handleChange}
+                                            label="Payment Method"
+                                            name="paymentMethod"
+                                        >
 
-                                    <MenuItem value="cod">Cash On Delivery</MenuItem>
-                                    <MenuItem value="banktransfer" selected>Bank Transfer</MenuItem>
+                                            <MenuItem value="cod">Cash On Delivery</MenuItem>
+                                            <MenuItem value="banktransfer" selected>Bank Transfer</MenuItem>
 
-                                </Select>
-                            </FormControl>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                            <Grid item sm={4} xs={10}>
+                                <Box my={2}>
+                                    <Box my={2}>
+                                        <Typography variant="subtitle2"><strong>Tình trạng thanh toán</strong></Typography>
+                                    </Box>
+                                    <FormControl variant="outlined" fullWidth>
+                                        <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-outlined-label"
+                                            id="demo-simple-select-outlined"
+                                            value={state.paymentCheck}
+                                            onChange={handleChange}
+                                            label="Payment Status"
+                                            name="paymentCheck"
+                                        >
+                                            <MenuItem value={true}>Done</MenuItem>
+                                            <MenuItem value={false}>Not yet</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                            <Grid item sm={4} xs={10}>
+                                <Box my={2}>
+                                    <Box my={2}>
+                                        <Typography variant="subtitle2"><strong>Tình trạng đơn hàng</strong></Typography>
+                                    </Box>
+                                    <FormControl variant="outlined" fullWidth>
+                                        <InputLabel id="demo-simple-select-outlined-label">Order Status</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-outlined-label"
+                                            id="demo-simple-select-outlined"
+                                            value={state.status}
+                                            onChange={handleChange}
+                                            label="Order Status"
+                                            name="status"
+                                        >
+                                            <MenuItem value={ORDER_STATUS.ORDERED}><OrderStatus status={ORDER_STATUS.ORDERED} /></MenuItem>
+                                            <MenuItem value={ORDER_STATUS.DELIVERY}  ><OrderStatus status={ORDER_STATUS.DELIVERY} /></MenuItem>
+                                            <MenuItem value={ORDER_STATUS.COMPLETED}><OrderStatus status={ORDER_STATUS.COMPLETED} /></MenuItem>
+                                            <MenuItem value={ORDER_STATUS.CANCELED}  ><OrderStatus status={ORDER_STATUS.CANCELED} /></MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                        </>
+
+                    ) : (
+                        <>
+                         <Box textAlign="center" my={2}>
+                            <Typography variant="h6" gutterBottom color="primary">TÌNH TRẠNG ĐƠN HÀNG </Typography>
                         </Box>
-                    </Grid>
-                    <Grid item sm={4} xs={10}>
-                        <Box my={2}>
-                            <Box my={2}>
-                                <Typography variant="subtitle2"><strong>Tình trạng thanh toán</strong></Typography>
-                            </Box>
-                            <FormControl variant="outlined" fullWidth>
-                                <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={detail.paymentCheck}
-                                    onChange={handleChange}
-                                    label="Payment Status"
-                                    name="paymentStatus"
-                                >
-                                    <MenuItem value={true}>Done</MenuItem>
-                                    <MenuItem value={false}>Not yet</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </Grid>
-                    <Grid item sm={4} xs={10}>
-                        <Box my={2}>
-                            <Box my={2}>
-                                <Typography variant="subtitle2"><strong>Tình trạng đơn hàng</strong></Typography>
-                            </Box>
-                            <FormControl variant="outlined" fullWidth>
-                                <InputLabel id="demo-simple-select-outlined-label">Order Status</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-outlined-label"
-                                    id="demo-simple-select-outlined"
-                                    value={detail.status}
-                                    onChange={handleChange}
-                                    label="Order Status"
-                                    name="status"
-                                >
-                                    <MenuItem value={ORDER_STATUS.ORDERED}><OrderStatus status={ORDER_STATUS.ORDERED}/></MenuItem>
-                                    <MenuItem value={ORDER_STATUS.DELIVERY}  ><OrderStatus status={ORDER_STATUS.DELIVERY}/></MenuItem>
-                                    <MenuItem value={ORDER_STATUS.COMPLETED}><OrderStatus status={ORDER_STATUS.COMPLETED}/></MenuItem>
-                                    <MenuItem value={ORDER_STATUS.CANCELED}  ><OrderStatus status={ORDER_STATUS.CANCELED}/></MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    </Grid>
-                </Grid>
+                        <Stepper status={detail?.status} />
+                        </>
+                        
+                    )
+                }
+
             </Box>
             <Divider />
             <Box my={2}>
                 <Grid container direction="row" justifyContent='center' spacing={2}>
-                    <Grid item md={2} sm={2} xs={3}>
-                        <Button variant="contained" fullWidth color="secondary">Delete</Button>
-                    </Grid>
-                    <Grid item md={2} sm={2} xs={3}>
-                        <Button variant="contained" fullWidth color="default" onClick={handleClose}>Cancel</Button>
-                    </Grid>
-                    <Grid item md={2} sm={2} xs={3}>
-                        <Button variant="contained" fullWidth color="primary" onClick={handleSubmitOrder}>SAVE</Button>
-                    </Grid>
+                    {
+                        admin ? (
+                            <>
+                                <Grid item md={2} sm={2} xs={3}>
+                                    <Button variant="contained" fullWidth color="secondary">Delete</Button>
+                                </Grid>
+                                <Grid item md={2} sm={2} xs={3}>
+                                    <Button variant="contained" fullWidth color="default" onClick={handleClose}>Cancel</Button>
+                                </Grid>
+                                <Grid item md={2} sm={2} xs={3}>
+                                    <Button variant="contained" fullWidth color="primary" onClick={handleSubmitOrder}>SAVE</Button>
+                                </Grid>
+                            </>
+                        ) : (
+                            <Grid item md={2} sm={2} xs={3}>
+                                <Button variant="contained" fullWidth color="default" onClick={handleClose}>Cancel</Button>
+                            </Grid>
+                        )
+                    }
+
                 </Grid>
             </Box>
         </div >)

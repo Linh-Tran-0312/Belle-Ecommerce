@@ -68,8 +68,8 @@ export default function ProductCategory() {
     const dispatch = useDispatch();
     const classes = useStyles();
      // Category State
-     const productCategories = useSelector(state => state.product).categories;
-     const isDeletingProductCategory = useSelector(state => state.product).isDeletingProductCategory;
+     const productCategories = useSelector(state => state.adminProduct).categories;
+     const isDeletingProductCategory = useSelector(state => state.adminProduct).isDeletingProductCategory;
      const [category, setCategory] = useState(initCategory);
      const [showCategory, setShowCategory] = useState(false);
   

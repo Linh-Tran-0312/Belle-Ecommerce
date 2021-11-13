@@ -3,6 +3,7 @@ import { ACTION } from "../constants";
 
 const initState = {
     isLoggined: false,
+    orderId: "",
     items: [],
     subTotal: 0,
 }
@@ -49,6 +50,20 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
                 })
             }
             draft.subTotal = draft.items.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
+        case ACTION.GET_ORDER_AFTER_LOGIN:
+            if(payload) {
+                draft.orderId = payload.id;
+                draft.items = payload.details;
+                draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
+            }
+            break;
+            case ACTION.UPDATE_ORDER:
+                if(payload) {
+                    draft.orderId = payload.id;
+                    draft.items = payload.details;
+                    draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
+                }
+                break;
         default:
             break;
     }

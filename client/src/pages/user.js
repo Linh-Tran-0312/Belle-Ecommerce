@@ -1,42 +1,53 @@
-import { Box, Grid,Typography, Button, FormControl, MenuItem, TextField, InputLabel, Paper, Select, IconButton } from '@material-ui/core';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import { Link } from 'react-router-dom';
-import "../App.css";
-import BlackButton from "../components/BlackButton";
-import Layout from "../components/Layout";
+import { Box, Button, Grid, IconButton, Paper, TextField, Typography } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer';
-import OpacityIcon from '@material-ui/icons/Opacity';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import Pagination from '@material-ui/lab/Pagination';
-import DeleteIcon from '@material-ui/icons/Delete';
-import SaveIcon from '@material-ui/icons/Save';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
+import SaveIcon from '@material-ui/icons/Save';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
+import authActions from '../actions/auth';
+import "../App.css";
+import Layout from "../components/Layout";
+import OrderStatus from '../components/OrderStatus';
+import { displayMonDDYYYY } from "../helper/handleTime";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import OrderDetail from "../components/Admin/OrderDetailModal";
+const initUser = {
+    id: "",
+    fname: "",
+    lname: "",
+    email: "",
+    phone: "",
+    address: ""
 }
-
-const rows = [
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'Done', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'Not yet', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'Done', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'Done', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'Not yet', 212.79),
-    createData(10, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'Done', 312.44),
-    createData(11, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'Not yet', 866.99),
-    createData(12, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'Not yet', 100.81),
-    createData(13, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'Not yet', 654.39),
-    createData(14, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'Not yet', 212.79),
-];
 export default () => {
-
-
+    const userDetail = useSelector(state => state.auth).user;
+    const orders = useSelector(state => state.auth).orders;
+    const history = useHistory();
+    const [user, setUser] = useState(initUser);
+    const dispatch = useDispatch();
+    useEffect(() => {
+        setUser(userDetail);
+        if(userDetail.id) {
+            dispatch(authActions.getOrdersByUserId(userDetail.id))
+        }
+     
+    },[userDetail])
     const handleChange = (e) => {
-
+        setUser({...user,[e.target.name] : e.target.value})
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(user.id) {           
+    }
+    }
+    const handleLogout = (e) => {
+        dispatch(authActions.logout(history));
     }
     return (
         <Layout>
@@ -51,29 +62,40 @@ export default () => {
                 <Grid container spacing={3} >
                     <Grid item xs={12} sm={4} md={4}>
                     <Box mb={4}>
-                        <Typography variant="h5" color="primary">Your Profile</Typography>
+                        <Grid container direction="row" justifyContent="flex-start" alignItems="center" >
+                            <Grid item>
+                            <Typography variant="h5" color="primary">Your Profile | &nbsp;</Typography> 
+                            </Grid>                        
+                            <Grid item>
+                                <Typography variant="h5" color="primary" > Logout </Typography> 
+                            </Grid>
+                            <Grid item>                                                    
+                                <IconButton onClick={handleLogout} >
+                                    <ExitToAppIcon  />
+                                </IconButton>
+                            </Grid>                         
+                        </Grid>
                     </Box>
+                    <form onSubmit={handleSubmit}>
                         <Box my={2}>
-                            <TextField fullWidth type="text" value="Henry" label="First Name" variant="outlined" />
-                        </Box>
-                        <Box my={2}>
-                            <TextField fullWidth type="text" value="Nguyen" label="Last Name" variant="outlined" />
+                            <TextField fullWidth name="fname"  required value={user.fname} onChange={handleChange} label="First Name" variant="outlined" />
                         </Box>
                         <Box my={2}>
-                            <TextField fullWidth type="text" value="henrynguyen@gmail.com" disabled label="Email" variant="outlined" />
+                            <TextField fullWidth name="lname"  required value={user.lname} onChange={handleChange}  label="Last Name" variant="outlined" />
                         </Box>
                         <Box my={2}>
-                            <TextField fullWidth type="text" value="0987665225" label="Phone Number" variant="outlined" />
+                            <TextField fullWidth name="email"  required value={user.email} disabled onChange={handleChange}  label="Email" variant="outlined" />
                         </Box>
                         <Box my={2}>
-                            <TextField fullWidth type="text" value="227 Nguyen Van Cu, district 5, HCM city" label="Address" variant="outlined" />
+                            <TextField fullWidth name="phone"  required value={user.phone} onChange={handleChange}  label="Phone Number" variant="outlined" />
                         </Box>
-                        <Box my={2} textAlign="center">
-                            
-                                    <Button variant="contained" color="primary"  startIcon={<SaveIcon />} >Save</Button>
-                                
-                             
+                        <Box my={2}>
+                            <TextField fullWidth name="address"  required value={user.address} onChange={handleChange}  label="Address" variant="outlined" />
                         </Box>
+                        <Box my={2} textAlign="center">                      
+                                <Button variant="contained" color="primary" type="submit"  startIcon={<SaveIcon />} >Save</Button>                          
+                        </Box>
+                        </form>
                     </Grid>
                     <Grid item xs={12} sm={8} md={8}>
                     <Box mb={4}>
@@ -93,16 +115,16 @@ export default () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows.map((row, index) => (
-                                        <TableRow key={row.name}>
+                                    {orders.map((row, index) => (
+                                        <TableRow key={row.id}>
                                             <TableCell component="th" scope="row">
                                                 {`${index + 1}`}
                                             </TableCell>
-                                            <TableCell  >{row.date}</TableCell>
+                                            <TableCell  >{!row.orderAt ? displayMonDDYYYY(row.orderAt) :  displayMonDDYYYY(row.createdAt)}</TableCell>
                                             <TableCell  >{row.id}</TableCell>
-                                            <TableCell  >{row.status}</TableCell>
-                                            <TableCell  >{row.sale}</TableCell>
-                                            <TableCell  ><IconButton size="small"><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  ><OrderStatus status={row.status}/></TableCell>
+                                            <TableCell  >{row.total.toLocaleString()}</TableCell>
+                                            <TableCell  ><OrderDetail id={row.id} admin={false}/></TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

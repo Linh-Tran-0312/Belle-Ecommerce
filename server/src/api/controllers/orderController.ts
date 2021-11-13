@@ -10,7 +10,9 @@ export interface IOrderUpdateProps {
 
 
 }
-
+export interface IOrderDetailQtyUpdate {
+    quantity: number
+}
 export interface IOrderUpdateItems {
     details: IOrderDetailCreateProps[];
 }
@@ -63,7 +65,7 @@ export class OrderController {
      * Done
      */
     @Post("/")
-    public async createOrder(@Body() data: IOrderCreateProps): Promise<IOrder> {
+    public async createOrder(@Body() data: IOrderCreateProps): Promise<IOrder|null> {
         return this._orderService.createOrder(data);
     }
      /**
@@ -93,8 +95,8 @@ export class OrderController {
     * Update order (add items when use login if there are cart items saved in local storage)
     */
     @Patch("/:orderId/addItems")
-    public async updateOrderById(@Path() orderId: number, @Body() data: IOrderUpdateItems): Promise<IOrder> {
-        return this._orderService.updateOrder(orderId,data)
+    public async updateOrderItems(@Path() orderId: number, @Body() data: IOrderUpdateItems): Promise<IOrder|null> {
+        return this._orderService.updateOrderItems(orderId,data)
     }
     /**
     * Update order status
@@ -124,16 +126,16 @@ export class OrderController {
     /**
      * Add (create) item to order
      */
-    @Post("/items")
-    public async addItemToOrder(@Body() data: IOrderDetailCreateProps): Promise<IOrderDetail> {
-       return this._orderDetailService.create(data)
+    @Post("/:orderId/items")
+    public async addItemToOrder(@Path() orderId: number,@Body() data: IOrderDetailCreateProps): Promise<IOrder|null> {
+       return this._orderService.addItemToOrder(orderId, data)
     } 
     /**
-    * Update order item
+    * Update order item (quantity)
     */
     @Patch("/items/:itemId")
-    public async updateItem(@Path() itemId: number, @Body() data: IOrderDetailCreateProps): Promise<IOrderDetail> {
-        return this._orderDetailService.update(itemId,data)
+    public async updateItemQuantity(@Path() itemId: number, @Body() data: IOrderDetailQtyUpdate): Promise<IOrderDetail> {
+        return this._orderDetailService.updateItemQuantity(itemId,data.quantity)
     } 
     /**
      * Delete order items

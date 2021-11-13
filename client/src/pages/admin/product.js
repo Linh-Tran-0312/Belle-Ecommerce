@@ -76,17 +76,17 @@ export default function ProductAdmin() {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const categories = useSelector(state => state.product).categories;
-    const brands = useSelector(state => state.product).brands;
-    const colors = useSelector(state => state.product).colors;
-    const sizes = useSelector(state => state.product).sizes;
+    const categories = useSelector(state => state.adminProduct).categories;
+    const brands = useSelector(state => state.adminProduct).brands;
+    const colors = useSelector(state => state.adminProduct).colors;
+    const sizes = useSelector(state => state.adminProduct).sizes;
 
-    const products = useSelector(state => state.product).products;
-    const productDetail = useSelector(state => state.product).product;
-    const productTotal = useSelector(state => state.product).total;
+    const products = useSelector(state => state.adminProduct).products;
+    const productDetail = useSelector(state => state.adminProduct).product;
+    const productTotal = useSelector(state => state.adminProduct).total;
 
-    const isDeletingProduct = useSelector(state => state.product).isDeletingProduct;
-    const isDeletingProductVariant = useSelector(state => state.product).isDeletingProductVariant;
+    const isDeletingProduct = useSelector(state => state.adminProduct).isDeletingProduct;
+    const isDeletingProductVariant = useSelector(state => state.adminProduct).isDeletingProductVariant;
 
     const [ filter, setFilter ] = useState(initFilter);
     const [ product, setProduct ] = useState(initProduct);

@@ -1,5 +1,5 @@
 import React, { useEffect} from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
  
 import homeActions from "./actions/home";
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
@@ -16,9 +16,11 @@ import Auth from './pages/auth';
 import ErrorPage from './pages/404page';
 import Admin from "./pages/admin";
 import User from "./pages/user";
+ 
+
 const App =  () => {
         console.log("Layout render")
-    const isLogin = false;
+    const isLogin = useSelector(state => state.auth).isLogin
     const dispatch = useDispatch();
     
     useEffect(() => {
