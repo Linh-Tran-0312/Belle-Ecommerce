@@ -6,6 +6,242 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"BlogCategory": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Blog": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"category": {
+						"$ref": "#/components/schemas/BlogCategory"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"title",
+					"categoryId",
+					"content",
+					"category",
+					"imgPath",
+					"commentAllow"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogs": {
+				"properties": {
+					"blogs": {
+						"items": {
+							"$ref": "#/components/schemas/Blog"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"blogs",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlogField": {
+				"enum": [
+					"title",
+					"createdAt"
+				],
+				"type": "string"
+			},
+			"Change": {
+				"enum": [
+					"DESC",
+					"ASC"
+				],
+				"type": "string"
+			},
+			"IBlogCategory": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"name",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlog": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"category": {
+						"$ref": "#/components/schemas/IBlogCategory"
+					}
+				},
+				"required": [
+					"title",
+					"categoryId",
+					"content",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCreateProps": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"title",
+					"categoryId",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogUpdateProps": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCommentCreateProps": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserRole": {
 				"enum": [
 					"all",
@@ -580,55 +816,119 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IOrders": {
+			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
 				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"googleId": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
 					"orders": {
 						"items": {
 							"$ref": "#/components/schemas/Order"
 						},
 						"type": "array"
 					},
-					"total": {
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
 						"type": "number",
 						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
 					}
 				},
 				"required": [
-					"orders",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OrderField": {
-				"enum": [
-					"orderAt",
-					"total"
-				],
-				"type": "string"
-			},
-			"Change": {
-				"enum": [
-					"DESC",
-					"ASC"
-				],
-				"type": "string"
-			},
-			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"userId"
+					"fname",
+					"lname",
+					"id",
+					"createdAt"
 				],
 				"type": "object",
 				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
-			"IOrder": {
+			"IUser": {
 				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"googleId": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogComment": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
 					"userId": {
 						"type": "number",
 						"format": "double"
@@ -641,14 +941,19 @@
 						"type": "string",
 						"format": "date-time"
 					},
-					"details": {
+					"childComments": {
 						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
+							"$ref": "#/components/schemas/IBlogCommentCreateProps"
 						},
 						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/IUser"
 					}
 				},
 				"required": [
+					"text",
+					"blogId",
 					"userId",
 					"id",
 					"createdAt"
@@ -656,94 +961,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IOrderCreateProps": {
+			"IBlogCommentUpdateProps": {
 				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
 					"userId": {
 						"type": "number",
 						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetailCreateProps"
-						},
-						"type": "array"
 					}
 				},
 				"required": [
+					"text",
+					"blogId",
 					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderUpdateItems": {
-				"properties": {
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetailCreateProps"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderUpdateProps": {
-				"properties": {
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"paymentCheck": {
-						"type": "boolean"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"address": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IPlaceOrder": {
-				"properties": {
-					"address": {
-						"type": "string"
-					},
-					"note": {
-						"type": "string"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"shipping": {
-						"type": "number",
-						"format": "double"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"address",
-					"paymentMethod"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderDetailQtyUpdate": {
-				"properties": {
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"quantity"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1115,81 +1350,6 @@
 				],
 				"type": "string"
 			},
-			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-				"properties": {
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"fname",
-					"lname"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IUser": {
-				"properties": {
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"googleId": {
-						"type": "string"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/Order"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"fname",
-					"lname",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"IUserCreateProps": {
 				"properties": {
 					"fname": {
@@ -1250,76 +1410,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BlogCategory": {
+			"IOrders": {
 				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Blog": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					},
-					"category": {
-						"$ref": "#/components/schemas/BlogCategory"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"title",
-					"categoryId",
-					"content",
-					"category",
-					"imgPath",
-					"commentAllow"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogs": {
-				"properties": {
-					"blogs": {
+					"orders": {
 						"items": {
-							"$ref": "#/components/schemas/Blog"
+							"$ref": "#/components/schemas/Order"
 						},
 						"type": "array"
 					},
@@ -1329,169 +1424,34 @@
 					}
 				},
 				"required": [
-					"blogs",
+					"orders",
 					"total"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BlogField": {
+			"OrderField": {
 				"enum": [
-					"title",
-					"createdAt"
+					"orderAt",
+					"total"
 				],
 				"type": "string"
 			},
-			"IBlogCategory": {
+			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
 				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"name",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlog": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"category": {
-						"$ref": "#/components/schemas/IBlogCategory"
-					}
-				},
-				"required": [
-					"title",
-					"categoryId",
-					"content",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCreateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"title",
-					"categoryId",
-					"content"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogUpdateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCommentCreateProps": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
 					"userId": {
 						"type": "number",
 						"format": "double"
 					}
 				},
 				"required": [
-					"text",
-					"blogId",
 					"userId"
 				],
 				"type": "object",
-				"additionalProperties": false
+				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
-			"IBlogComment": {
+			"IOrder": {
 				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
 					"userId": {
 						"type": "number",
 						"format": "double"
@@ -1504,19 +1464,14 @@
 						"type": "string",
 						"format": "date-time"
 					},
-					"childComments": {
+					"details": {
 						"items": {
-							"$ref": "#/components/schemas/IBlogCommentCreateProps"
+							"$ref": "#/components/schemas/IOrderDetail"
 						},
 						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/IUser"
 					}
 				},
 				"required": [
-					"text",
-					"blogId",
 					"userId",
 					"id",
 					"createdAt"
@@ -1524,24 +1479,94 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IBlogCommentUpdateProps": {
+			"IOrderCreateProps": {
 				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
+					"userId": {
 						"type": "number",
 						"format": "double"
 					},
-					"userId": {
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetailCreateProps"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderUpdateItems": {
+				"properties": {
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetailCreateProps"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderUpdateProps": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"address": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IPlaceOrder": {
+				"properties": {
+					"address": {
+						"type": "string"
+					},
+					"note": {
+						"type": "string"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
 						"type": "number",
 						"format": "double"
 					}
 				},
 				"required": [
-					"text",
-					"blogId",
-					"userId"
+					"address",
+					"paymentMethod"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderDetailQtyUpdate": {
+				"properties": {
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"quantity"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1701,33 +1726,34 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/orders": {
+		"/blogs": {
 			"get": {
-				"operationId": "GetOrders",
+				"operationId": "GetBlogs",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IOrders"
+									"$ref": "#/components/schemas/IBlogs"
 								}
 							}
 						}
 					}
 				},
-				"description": "For Admin permission\r\nGet all Orders, be able to sort by price, time, user and to filter by price, time, user...\r\nNot done",
+				"description": "Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order",
 				"tags": [
-					"Order"
+					"Blog"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "query",
-						"name": "search",
+						"name": "category",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"format": "double",
+							"type": "number"
 						}
 					},
 					{
@@ -1741,6 +1767,14 @@
 					},
 					{
 						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BlogField"
+						}
+					},
+					{
+						"in": "query",
 						"name": "page",
 						"required": false,
 						"schema": {
@@ -1750,48 +1784,24 @@
 					},
 					{
 						"in": "query",
-						"name": "time",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "paymentCheck",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/OrderField"
-						}
-					},
-					{
-						"in": "query",
 						"name": "change",
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/Change"
 						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			},
 			"post": {
-				"operationId": "CreateOrder",
+				"operationId": "CreateBlog",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -1800,7 +1810,7 @@
 								"schema": {
 									"allOf": [
 										{
-											"$ref": "#/components/schemas/IOrder"
+											"$ref": "#/components/schemas/IBlog"
 										}
 									],
 									"nullable": true
@@ -1809,9 +1819,9 @@
 						}
 					}
 				},
-				"description": "Create new order when user add items to order that is not already existed.\r\nDone",
+				"description": "Create a new blog",
 				"tags": [
-					"Order"
+					"Blog"
 				],
 				"security": [],
 				"parameters": [],
@@ -1820,16 +1830,124 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderCreateProps"
+								"$ref": "#/components/schemas/IBlogCreateProps"
 							}
 						}
 					}
 				}
 			}
 		},
-		"/orders/{userId}/all": {
+		"/blogs/{id}": {
 			"get": {
-				"operationId": "GetOrdersOfUser",
+				"operationId": "GetBlogById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Get details for a blog by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateBlogById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IBlog"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a blog partially by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteBlogById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete a blog  by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/blogs/{blogId}/comments": {
+			"get": {
+				"operationId": "GetCommentsOfBlog",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -1837,7 +1955,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/IOrder"
+										"$ref": "#/components/schemas/IBlogComment"
 									},
 									"type": "array"
 								}
@@ -1845,16 +1963,33 @@
 						}
 					}
 				},
-				"description": "Get all orders of user by userId\r\nDone",
+				"description": "Get blog comments by blogId, default number of comments is 2",
 				"tags": [
-					"Order"
+					"Blog"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "userId",
+						"name": "blogId",
 						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
 						"schema": {
 							"format": "double",
 							"type": "number"
@@ -1863,312 +1998,63 @@
 				]
 			}
 		},
-		"/orders/{userId}/current": {
-			"get": {
-				"operationId": "GetCurrentOrderOfUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Current order is incomplete order (status: ORDERING)\r\nGet current order of user",
-				"tags": [
-					"Order"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/orders/{orderId}": {
-			"get": {
-				"operationId": "GetOrderById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Get order details",
-				"tags": [
-					"Order"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"delete": {
-				"operationId": "DeleteOrderById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete order of user",
-				"tags": [
-					"Order"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/orders/{orderId}/addItems": {
-			"patch": {
-				"operationId": "UpdateOrderItems",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Update order (add items when use login if there are cart items saved in local storage)",
-				"tags": [
-					"Order"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IOrderUpdateItems"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/orders/{orderId}/updateStatus": {
-			"patch": {
-				"operationId": "UpdateOrderStatus",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IOrder"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update order status",
-				"tags": [
-					"Order"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IOrderUpdateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/orders/{orderId}/place": {
-			"patch": {
-				"operationId": "PlaceOrder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IOrder"
-								}
-							}
-						}
-					}
-				},
-				"description": "Submit current order",
-				"tags": [
-					"Order"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IPlaceOrder"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/orders/{orderId}/items": {
+		"/blogs/comments": {
 			"post": {
-				"operationId": "AddItemToOrder",
+				"operationId": "CreateComment",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IBlogComment"
 								}
 							}
 						}
 					}
 				},
-				"description": "Add (create) item to order",
+				"description": "Create new blog comment",
 				"tags": [
-					"Order"
+					"Blog"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "orderId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
+				"parameters": [],
 				"requestBody": {
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderDetailCreateProps"
+								"$ref": "#/components/schemas/IBlogCommentCreateProps"
 							}
 						}
 					}
 				}
 			}
 		},
-		"/orders/items/{itemId}": {
+		"/blogs/comments/{commentId}": {
 			"patch": {
-				"operationId": "UpdateItemQuantity",
+				"operationId": "UpdateCommentById",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IOrderDetail"
+									"$ref": "#/components/schemas/IBlogComment"
 								}
 							}
 						}
 					}
 				},
-				"description": "Update order item (quantity)",
+				"description": "Update a blog comment by its Id,",
 				"tags": [
-					"Order"
+					"Blog"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "itemId",
+						"name": "commentId",
 						"required": true,
 						"schema": {
 							"format": "double",
@@ -2181,28 +2067,28 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderDetailQtyUpdate"
+								"$ref": "#/components/schemas/IBlogCommentUpdateProps"
 							}
 						}
 					}
 				}
 			},
 			"delete": {
-				"operationId": "DeleteItem",
+				"operationId": "DeleteCommentById",
 				"responses": {
 					"204": {
 						"description": "No content"
 					}
 				},
-				"description": "Delete order items",
+				"description": "Delete a blog comment by its Id,",
 				"tags": [
-					"Order"
+					"Blog"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "itemId",
+						"name": "commentId",
 						"required": true,
 						"schema": {
 							"format": "double",
@@ -2762,34 +2648,33 @@
 				}
 			}
 		},
-		"/blogs": {
+		"/orders": {
 			"get": {
-				"operationId": "GetBlogs",
+				"operationId": "GetOrders",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IBlogs"
+									"$ref": "#/components/schemas/IOrders"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order",
+				"description": "For Admin permission\r\nGet all Orders, be able to sort by price, time, user and to filter by price, time, user...\r\nNot done",
 				"tags": [
-					"Blog"
+					"Order"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "query",
-						"name": "category",
+						"name": "search",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					},
 					{
@@ -2799,14 +2684,6 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BlogField"
 						}
 					},
 					{
@@ -2820,24 +2697,48 @@
 					},
 					{
 						"in": "query",
+						"name": "time",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "paymentCheck",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/OrderField"
+						}
+					},
+					{
+						"in": "query",
 						"name": "change",
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/Change"
 						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
 					}
 				]
 			},
 			"post": {
-				"operationId": "CreateBlog",
+				"operationId": "CreateOrder",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -2846,7 +2747,7 @@
 								"schema": {
 									"allOf": [
 										{
-											"$ref": "#/components/schemas/IBlog"
+											"$ref": "#/components/schemas/IOrder"
 										}
 									],
 									"nullable": true
@@ -2855,9 +2756,9 @@
 						}
 					}
 				},
-				"description": "Create a new blog",
+				"description": "Create new order when user add items to order that is not already existed.\r\nDone",
 				"tags": [
-					"Blog"
+					"Order"
 				],
 				"security": [],
 				"parameters": [],
@@ -2866,124 +2767,16 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IBlogCreateProps"
+								"$ref": "#/components/schemas/IOrderCreateProps"
 							}
 						}
 					}
 				}
 			}
 		},
-		"/blogs/{id}": {
+		"/orders/{userId}/all": {
 			"get": {
-				"operationId": "GetBlogById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Get details for a blog by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"patch": {
-				"operationId": "UpdateBlogById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
-								}
-							}
-						}
-					}
-				},
-				"description": "Update a blog partially by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteBlogById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete a blog  by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/blogs/{blogId}/comments": {
-			"get": {
-				"operationId": "GetCommentsOfBlog",
+				"operationId": "GetOrdersOfUser",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -2991,7 +2784,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/IBlogComment"
+										"$ref": "#/components/schemas/IOrder"
 									},
 									"type": "array"
 								}
@@ -2999,33 +2792,16 @@
 						}
 					}
 				},
-				"description": "Get blog comments by blogId, default number of comments is 2",
+				"description": "Get all orders of user by userId\r\nDone",
 				"tags": [
-					"Blog"
+					"Order"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "blogId",
+						"name": "userId",
 						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "date",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
 						"schema": {
 							"format": "double",
 							"type": "number"
@@ -3034,63 +2810,135 @@
 				]
 			}
 		},
-		"/blogs/comments": {
-			"post": {
-				"operationId": "CreateComment",
+		"/orders/{userId}/current": {
+			"get": {
+				"operationId": "GetCurrentOrderOfUser",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IBlogComment"
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
 								}
 							}
 						}
 					}
 				},
-				"description": "Create new blog comment",
+				"description": "Current order is incomplete order (status: ORDERING)\r\nGet current order of user",
 				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCommentCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/blogs/comments/{commentId}": {
-			"patch": {
-				"operationId": "UpdateCommentById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogComment"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update a blog comment by its Id,",
-				"tags": [
-					"Blog"
+					"Order"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "commentId",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}": {
+			"get": {
+				"operationId": "GetOrderById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Get order details",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteOrderById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete order of user",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/orders/{orderId}/addItems": {
+			"patch": {
+				"operationId": "UpdateOrderItems",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Update order (add items when use login if there are cart items saved in local storage)",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
 						"required": true,
 						"schema": {
 							"format": "double",
@@ -3103,28 +2951,205 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IBlogCommentUpdateProps"
+								"$ref": "#/components/schemas/IOrderUpdateItems"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/{orderId}/updateStatus": {
+			"patch": {
+				"operationId": "UpdateOrderStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update order status",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderUpdateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/{orderId}/place": {
+			"patch": {
+				"operationId": "PlaceOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Submit current order",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IPlaceOrder"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/{orderId}/items": {
+			"post": {
+				"operationId": "AddItemToOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IOrder"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Add (create) item to order",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderDetailCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders/items/{itemId}": {
+			"patch": {
+				"operationId": "UpdateItemQuantity",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrderDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update order item (quantity)",
+				"tags": [
+					"Order"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "itemId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IOrderDetailQtyUpdate"
 							}
 						}
 					}
 				}
 			},
 			"delete": {
-				"operationId": "DeleteCommentById",
+				"operationId": "DeleteItem",
 				"responses": {
 					"204": {
 						"description": "No content"
 					}
 				},
-				"description": "Delete a blog comment by its Id,",
+				"description": "Delete order items",
 				"tags": [
-					"Blog"
+					"Order"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
-						"name": "commentId",
+						"name": "itemId",
 						"required": true,
 						"schema": {
 							"format": "double",
@@ -3329,6 +3354,39 @@
 					}
 				},
 				"description": "Allow users login with their email and password",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ILogin"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/admin/login": {
+			"post": {
+				"operationId": "AdminLogin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow admin and editer login with their email and password",
 				"tags": [
 					"Authorization"
 				],

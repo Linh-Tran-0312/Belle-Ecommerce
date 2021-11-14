@@ -3,13 +3,13 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { BlogController } from './../controllers/blogController';
+import { OrderController } from './../controllers/orderController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProductController } from './../controllers/productController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../controllers/userController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { OrderController } from './../controllers/orderController';
+import { BlogController } from './../controllers/blogController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { PingController } from './../controllers/pingController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -29,110 +29,6 @@ import * as express from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "BlogCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Blog": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "title": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "imgPath": {"dataType":"string","required":true},
-            "content": {"dataType":"string","required":true},
-            "commentAllow": {"dataType":"boolean","required":true},
-            "category": {"ref":"BlogCategory","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogs": {
-        "dataType": "refObject",
-        "properties": {
-            "blogs": {"dataType":"array","array":{"dataType":"refObject","ref":"Blog"},"required":true},
-            "total": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BlogField": {
-        "dataType": "refEnum",
-        "enums": ["title","createdAt"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Change": {
-        "dataType": "refEnum",
-        "enums": ["DESC","ASC"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlog": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "imgPath": {"dataType":"string"},
-            "content": {"dataType":"string","required":true},
-            "commentAllow": {"dataType":"boolean"},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "category": {"ref":"IBlogCategory"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "imgPath": {"dataType":"string"},
-            "content": {"dataType":"string","required":true},
-            "commentAllow": {"dataType":"boolean"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string"},
-            "categoryId": {"dataType":"double"},
-            "imgPath": {"dataType":"string"},
-            "content": {"dataType":"string"},
-            "commentAllow": {"dataType":"boolean"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogCommentCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserRole": {
         "dataType": "refEnum",
         "enums": ["all","admin","editor","customer"],
@@ -327,50 +223,85 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+    "IOrders": {
+        "dataType": "refObject",
+        "properties": {
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderField": {
+        "dataType": "refEnum",
+        "enums": ["orderAt","total"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Change": {
+        "dataType": "refEnum",
+        "enums": ["DESC","ASC"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"googleId":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IUser": {
+    "IOrder": {
         "dataType": "refObject",
         "properties": {
-            "password": {"dataType":"string"},
-            "email": {"dataType":"string"},
-            "googleId": {"dataType":"string"},
-            "phone": {"dataType":"string"},
+            "userId": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrderCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrderUpdateItems": {
+        "dataType": "refObject",
+        "properties": {
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IOrderUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"Status"},
+            "paymentCheck": {"dataType":"boolean"},
+            "paymentMethod": {"ref":"PaymentMethod"},
             "address": {"dataType":"string"},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole"},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogComment": {
+    "IPlaceOrder": {
         "dataType": "refObject",
         "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
-            "user": {"ref":"IUser"},
+            "address": {"dataType":"string","required":true},
+            "note": {"dataType":"string"},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "shipping": {"dataType":"double"},
+            "total": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IBlogCommentUpdateProps": {
+    "IOrderDetailQtyUpdate": {
         "dataType": "refObject",
         "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -528,6 +459,29 @@ const models: TsoaRoute.Models = {
         "enums": ["fname","sale","createdAt"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"phone":{"dataType":"string"},"address":{"dataType":"string"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IUser": {
+        "dataType": "refObject",
+        "properties": {
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole"},
+            "phone": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "password": {"dataType":"string"},
+            "email": {"dataType":"string"},
+            "googleId": {"dataType":"string"},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IUserCreateProps": {
         "dataType": "refObject",
         "properties": {
@@ -556,80 +510,126 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IOrders": {
+    "BlogCategory": {
         "dataType": "refObject",
         "properties": {
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Blog": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string","required":true},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean","required":true},
+            "category": {"ref":"BlogCategory","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogs": {
+        "dataType": "refObject",
+        "properties": {
+            "blogs": {"dataType":"array","array":{"dataType":"refObject","ref":"Blog"},"required":true},
             "total": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OrderField": {
+    "BlogField": {
         "dataType": "refEnum",
-        "enums": ["orderAt","total"],
+        "enums": ["title","createdAt"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IOrder": {
+    "IBlogCategory": {
         "dataType": "refObject",
         "properties": {
+            "name": {"dataType":"string","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlog": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean"},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "category": {"ref":"IBlogCategory"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string"},
+            "categoryId": {"dataType":"double"},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string"},
+            "commentAllow": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogCommentCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double"},
+            "userId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IBlogComment": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double"},
             "userId": {"dataType":"double","required":true},
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
+            "user": {"ref":"IUser"},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IOrderCreateProps": {
+    "IBlogCommentUpdateProps": {
         "dataType": "refObject",
         "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
             "userId": {"dataType":"double","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IOrderUpdateItems": {
-        "dataType": "refObject",
-        "properties": {
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IOrderUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "status": {"ref":"Status"},
-            "paymentCheck": {"dataType":"boolean"},
-            "paymentMethod": {"ref":"PaymentMethod"},
-            "address": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IPlaceOrder": {
-        "dataType": "refObject",
-        "properties": {
-            "address": {"dataType":"string","required":true},
-            "note": {"dataType":"string"},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "shipping": {"dataType":"double"},
-            "total": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IOrderDetailQtyUpdate": {
-        "dataType": "refObject",
-        "properties": {
-            "quantity": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -739,134 +739,18 @@ export function RegisterRoutes(app: express.Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.get('/blogs',
+        app.get('/orders',
 
-            function BlogController_getBlogs(request: any, response: any, next: any) {
+            function OrderController_getOrders(request: any, response: any, next: any) {
             const args = {
-                    category: {"in":"query","name":"category","dataType":"double"},
-                    limit: {"in":"query","name":"limit","dataType":"double"},
-                    sort: {"in":"query","name":"sort","ref":"BlogField"},
-                    page: {"in":"query","name":"page","dataType":"double"},
-                    change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.getBlogs.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/blogs',
-
-            function BlogController_createBlog(request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCreateProps"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.createBlog.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/blogs/:id',
-
-            function BlogController_getBlogById(request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.getBlogById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/blogs/:id',
-
-            function BlogController_updateBlogById(request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogUpdateProps"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.updateBlogById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/blogs/:id',
-
-            function BlogController_deleteBlogById(request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new BlogController();
-
-
-            const promise = controller.deleteBlogById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/blogs/:blogId/comments',
-
-            function BlogController_getCommentsOfBlog(request: any, response: any, next: any) {
-            const args = {
-                    blogId: {"in":"path","name":"blogId","required":true,"dataType":"double"},
-                    date: {"in":"query","name":"date","dataType":"string"},
                     limit: {"in":"query","name":"limit","dataType":"double"},
+                    page: {"in":"query","name":"page","dataType":"double"},
+                    time: {"in":"query","name":"time","dataType":"string"},
+                    status: {"in":"query","name":"status","dataType":"string"},
+                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"string"},
+                    sort: {"in":"query","name":"sort","ref":"OrderField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -878,18 +762,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = new OrderController();
 
 
-            const promise = controller.getCommentsOfBlog.apply(controller, validatedArgs as any);
+            const promise = controller.getOrders.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/blogs/comments',
+        app.post('/orders',
 
-            function BlogController_createComment(request: any, response: any, next: any) {
+            function OrderController_createOrder(request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderCreateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -901,19 +785,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = new OrderController();
 
 
-            const promise = controller.createComment.apply(controller, validatedArgs as any);
+            const promise = controller.createOrder.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/blogs/comments/:commentId',
+        app.get('/orders/:userId/all',
 
-            function BlogController_updateCommentById(request: any, response: any, next: any) {
+            function OrderController_getOrdersOfUser(request: any, response: any, next: any) {
             const args = {
-                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentUpdateProps"},
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -925,18 +808,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = new OrderController();
 
 
-            const promise = controller.updateCommentById.apply(controller, validatedArgs as any);
+            const promise = controller.getOrdersOfUser.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/blogs/comments/:commentId',
+        app.get('/orders/:userId/current',
 
-            function BlogController_deleteCommentById(request: any, response: any, next: any) {
+            function OrderController_getCurrentOrderOfUser(request: any, response: any, next: any) {
             const args = {
-                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"double"},
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -948,10 +831,199 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = new OrderController();
 
 
-            const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
+            const promise = controller.getCurrentOrderOfUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/orders/:orderId',
+
+            function OrderController_getOrderById(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.getOrderById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/orders/:orderId/addItems',
+
+            function OrderController_updateOrderItems(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateItems"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateOrderItems.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/orders/:orderId/updateStatus',
+
+            function OrderController_updateOrderStatus(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateProps"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateOrderStatus.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/orders/:orderId/place',
+
+            function OrderController_placeOrder(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IPlaceOrder"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.placeOrder.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/orders/:orderId',
+
+            function OrderController_deleteOrderById(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.deleteOrderById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/orders/:orderId/items',
+
+            function OrderController_addItemToOrder(request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailCreateProps"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.addItemToOrder.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.patch('/orders/items/:itemId',
+
+            function OrderController_updateItemQuantity(request: any, response: any, next: any) {
+            const args = {
+                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailQtyUpdate"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/orders/items/:itemId',
+
+            function OrderController_deleteItem(request: any, response: any, next: any) {
+            const args = {
+                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.deleteItem.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1247,18 +1319,16 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/orders',
+        app.get('/blogs',
 
-            function OrderController_getOrders(request: any, response: any, next: any) {
+            function BlogController_getBlogs(request: any, response: any, next: any) {
             const args = {
-                    search: {"in":"query","name":"search","dataType":"string"},
+                    category: {"in":"query","name":"category","dataType":"double"},
                     limit: {"in":"query","name":"limit","dataType":"double"},
+                    sort: {"in":"query","name":"sort","ref":"BlogField"},
                     page: {"in":"query","name":"page","dataType":"double"},
-                    time: {"in":"query","name":"time","dataType":"string"},
-                    status: {"in":"query","name":"status","dataType":"string"},
-                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"string"},
-                    sort: {"in":"query","name":"sort","ref":"OrderField"},
                     change: {"in":"query","name":"change","ref":"Change"},
+                    search: {"in":"query","name":"search","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1270,18 +1340,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.getOrders.apply(controller, validatedArgs as any);
+            const promise = controller.getBlogs.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/orders',
+        app.post('/blogs',
 
-            function OrderController_createOrder(request: any, response: any, next: any) {
+            function BlogController_createBlog(request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCreateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1293,18 +1363,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.createOrder.apply(controller, validatedArgs as any);
+            const promise = controller.createBlog.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/orders/:userId/all',
+        app.get('/blogs/:id',
 
-            function OrderController_getOrdersOfUser(request: any, response: any, next: any) {
+            function BlogController_getBlogById(request: any, response: any, next: any) {
             const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1316,18 +1386,19 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.getOrdersOfUser.apply(controller, validatedArgs as any);
+            const promise = controller.getBlogById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/orders/:userId/current',
+        app.patch('/blogs/:id',
 
-            function OrderController_getCurrentOrderOfUser(request: any, response: any, next: any) {
+            function BlogController_updateBlogById(request: any, response: any, next: any) {
             const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogUpdateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1339,18 +1410,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.getCurrentOrderOfUser.apply(controller, validatedArgs as any);
+            const promise = controller.updateBlogById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/orders/:orderId',
+        app.delete('/blogs/:id',
 
-            function OrderController_getOrderById(request: any, response: any, next: any) {
+            function BlogController_deleteBlogById(request: any, response: any, next: any) {
             const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1362,19 +1433,20 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.getOrderById.apply(controller, validatedArgs as any);
+            const promise = controller.deleteBlogById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/orders/:orderId/addItems',
+        app.get('/blogs/:blogId/comments',
 
-            function OrderController_updateOrderItems(request: any, response: any, next: any) {
+            function BlogController_getCommentsOfBlog(request: any, response: any, next: any) {
             const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateItems"},
+                    blogId: {"in":"path","name":"blogId","required":true,"dataType":"double"},
+                    date: {"in":"query","name":"date","dataType":"string"},
+                    limit: {"in":"query","name":"limit","dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1386,19 +1458,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.updateOrderItems.apply(controller, validatedArgs as any);
+            const promise = controller.getCommentsOfBlog.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/orders/:orderId/updateStatus',
+        app.post('/blogs/comments',
 
-            function OrderController_updateOrderStatus(request: any, response: any, next: any) {
+            function BlogController_createComment(request: any, response: any, next: any) {
             const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentCreateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1410,19 +1481,19 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.updateOrderStatus.apply(controller, validatedArgs as any);
+            const promise = controller.createComment.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/orders/:orderId/place',
+        app.patch('/blogs/comments/:commentId',
 
-            function OrderController_placeOrder(request: any, response: any, next: any) {
+            function BlogController_updateCommentById(request: any, response: any, next: any) {
             const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IPlaceOrder"},
+                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"double"},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentUpdateProps"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1434,18 +1505,18 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.placeOrder.apply(controller, validatedArgs as any);
+            const promise = controller.updateCommentById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/orders/:orderId',
+        app.delete('/blogs/comments/:commentId',
 
-            function OrderController_deleteOrderById(request: any, response: any, next: any) {
+            function BlogController_deleteCommentById(request: any, response: any, next: any) {
             const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1457,81 +1528,10 @@ export function RegisterRoutes(app: express.Router) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = new BlogController();
 
 
-            const promise = controller.deleteOrderById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/orders/:orderId/items',
-
-            function OrderController_addItemToOrder(request: any, response: any, next: any) {
-            const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailCreateProps"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.addItemToOrder.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.patch('/orders/items/:itemId',
-
-            function OrderController_updateItemQuantity(request: any, response: any, next: any) {
-            const args = {
-                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailQtyUpdate"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, undefined, next);
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/orders/items/:itemId',
-
-            function OrderController_deleteItem(request: any, response: any, next: any) {
-            const args = {
-                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.deleteItem.apply(controller, validatedArgs as any);
+            const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1692,6 +1692,29 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.login.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/auth/admin/login',
+
+            function AuthController_adminLogin(request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ILogin"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AuthController();
+
+
+            const promise = controller.adminLogin.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

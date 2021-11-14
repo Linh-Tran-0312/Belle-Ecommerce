@@ -31,6 +31,13 @@ export class AuthController {
     public async login(@Body() data: ILogin): Promise<IUser> {
         return this._userService.login(data.email, data.password);
     }
+      /**
+     * Allow admin and editer login with their email and password
+     */
+    @Post("/admin/login")
+    public async adminLogin(@Body() data: ILogin): Promise<IUser> {
+        return this._userService.adminLogin(data.email, data.password);
+    }
 
 
 }

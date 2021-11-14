@@ -7,6 +7,7 @@ import { IUser, IUserCreateProps, UserRole } from "../models";
 import { IUsers, UserRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
+import { Not } from "typeorm";
  
 export enum UserField {
     NAME = "fname",
@@ -54,7 +55,16 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         delete existingUser.googleId;
         return existingUser
     }
-
+    public async adminLogin(email: string, password: string): Promise<IUser> {
+        const existingUser: IUser|any =  await this.repository.findOne({ where: { email, role: Not("customer") }});
+        if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
+       
+        const match = await bcrypt.compare(password, existingUser.password);
+        if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
+        delete existingUser.password;
+        delete existingUser.googleId;
+        return existingUser
+    }
     public async getUsers(query: IUserQuery): Promise<IUsers> {
         return this.repository.getUsers(query);
     }
