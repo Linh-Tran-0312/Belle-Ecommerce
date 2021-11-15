@@ -17,28 +17,27 @@ import blogActions from "../actions/blog";
 import api from "../api";
 
 export default () => {
-     console.log("Blog Detail Page render")
+    console.log("Blog Detail Page render")
     let { id } = useParams();
     const dispatch = useDispatch();
-     const location = useLocation();
+    const location = useLocation();
     //const [ blog, setBlog ] = useState({});
     const latestBlogs = useSelector(state => state.home).latestBlogs;
     const categories = useSelector(state => state.home).blogCategories;
     const blog = useSelector(state => state.blog).blog;
     useEffect(() => {
-        if(!isNaN(id) && id !== undefined)
-        {
-           dispatch(blogActions.getBlogById(id))
+        if (!isNaN(id) && id !== undefined) {
+            dispatch(blogActions.getBlogById(id))
         }
-        },[id, location]); 
+    }, [id, location]);
 
-const renderContent = (content) => {
-    if(!!content) 
-    return <div dangerouslySetInnerHTML={{__html:  draftToHtml(JSON.parse(content))}} />
-}
+    const renderContent = (content) => {
+        if (!!content)
+            return <div dangerouslySetInnerHTML={{ __html: draftToHtml(JSON.parse(content)) }} />
+    }
     return (
         <Layout>
-           <div className="breadCrumbs">
+            <div className="breadCrumbs">
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
                         <Typography variant="inherit">BLOG ARTICLE</Typography>
@@ -58,62 +57,70 @@ const renderContent = (content) => {
                     </Breadcrumbs>
                 </Box>
             </div>
-         
-           { 
-                blog?.id ? (
-        <Box px={5} mx={5}>
-                <Grid container spacing={2}>
-                    <Grid item lg={9} md={9} sm={12} xs={12}>
-                        <img src={blog.imgPath} className="articleImg"/>
-                        <Box my={2}>
-                            <Typography variant="h6">{blog?.title}</Typography>
-                            <Grid container direction="row" alignItems="center">
-                                <Grid item>
-                                    <AccessTimeIcon fontSize="small" />
-                                </Grid>
-                                <Grid item>
-                                    <Typography variant="subtitle2"> &nbsp;{displayMonDDYYYY(blog?.createdAt) || ""}</Typography>
-                                </Grid>
-                            </Grid>
-                           {
-                               renderContent(blog?.content)
-                              
-                           }
-                           
-                        </Box>
-                     {/*    <Box>
-                            <hr/>
-                            <CommentForm />
-                        </Box>
-                        <Container maxWidth="md">
-                        {
-                            [1,2].map(item => <Comment key={item} />)
-                        }
-                        </Container> */}
-  
-                    </Grid>
-                    <Grid item lg={3} md={3} sm={12} xs={12}>
-                        <Box px={4} mt={5}>
-                            <Typography variant="body1" gutterBottom>CATEGORY</Typography>
-                            {
-                                categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} style={{ textDecoration: 'none',
-                                marginLeft: 14,
-                                color: 'black'}}>{item.name}</Link></Typography> )
-                            }
-                        </Box>
-                        <Box px={4} mt={4}>
-                            <Typography variant="body1" gutterBottom>RECENT POSTS</Typography>
-                            {
-                                latestBlogs.map(item => <BlogThumb key={item.id} blog={item}/>)
-                            }
-                        </Box>
 
-                    </Grid>
-                </Grid>
-            </Box>
-                ) : (<PageLoading message="Blog content is loading..." size="50px"/>)
-            }  
-            
+            {
+                blog?.id ? (
+                    <Box px={5} mx={5}>
+                        <Grid container spacing={2}>
+                            <Grid item lg={9} md={9} sm={12} xs={12}>
+                                <img src={blog.imgPath} className="articleImg" />
+                                <Box my={2}>
+                                    <Typography variant="h6">{blog?.title}</Typography>
+                                    <Grid container direction="row" alignItems="center">
+                                        <Grid item>
+                                            <AccessTimeIcon fontSize="small" />
+                                        </Grid>
+                                        <Grid item>
+                                            <Typography variant="subtitle2"> &nbsp;{displayMonDDYYYY(blog?.createdAt) || ""}</Typography>
+                                        </Grid>
+                                    </Grid>
+                                    {
+                                        renderContent(blog?.content)
+
+                                    }
+
+                                </Box>
+                                {
+                                    blog?.commentAllow && (<>
+                                        <Box>
+                                            <hr />
+                                            <CommentForm />
+                                        </Box>
+                                        <Container maxWidth="md">
+                                            {
+                                                [1, 2].map(item => <Comment key={item} />)
+                                            }
+
+
+                                        </Container>
+                                    </>)
+
+                                }
+                            </Grid>
+                            <Grid item lg={3} md={3} sm={12} xs={12}>
+                                <Box px={4} mt={5}>
+                                    <Typography variant="body1" gutterBottom>CATEGORY</Typography>
+                                    {
+                                        categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} style={{
+                                            textDecoration: 'none',
+                                            marginLeft: 14,
+                                            color: 'black'
+                                        }}>{item.name}</Link></Typography>)
+                                    }
+                                </Box>
+                                <Box px={4} mt={4}>
+                                    <Typography variant="body1" gutterBottom>RECENT POSTS</Typography>
+                                    {
+                                        latestBlogs.map(item => <BlogThumb key={item.id} blog={item} />)
+                                    }
+                                </Box>
+
+                            </Grid>
+                        </Grid>
+                    </Box>
+                ) : (<PageLoading message="Blog content is loading..." size="50px" />)
+            }
+
         </Layout>
     )
 }

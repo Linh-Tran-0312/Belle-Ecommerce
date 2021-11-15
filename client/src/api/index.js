@@ -55,6 +55,7 @@ const api = {
 
     //------------------------USER API----------------------------
     //For Admin permission
+
     getUsers: (queryString) => API.get(`/users?${queryString}`),
     getUserById: (id) => API.get(`/users/${id}`),
     createUser: (formData) => API.post("/users", formData),
@@ -63,6 +64,7 @@ const api = {
     //------------------------AUTHORIZATION API----------------------------
     register: (formData) => API.post("/auth/register", formData),
     login: (formData) => API.post("/auth/login", formData),
+    adminLogin: (formData) => API.post("/auth/admin/login", formData),
 
     //------------------------ORDER API----------------------------
     getOrders: (queryString) => API.get(`/orders?${queryString}`),
@@ -76,6 +78,7 @@ const api = {
     createOrder: (formData) => API.post("/orders", formData),
     deleteItem: (itemId) => API.delete(`/orders/items/${itemId}`),
     updateItemQuantity: (itemId, formData) => API.patch(`/orders/items/${itemId}`, formData),
+    placeOrder: (orderId, formData) => API.patch(`/orders/${orderId}/place`, formData),
    
 }
 

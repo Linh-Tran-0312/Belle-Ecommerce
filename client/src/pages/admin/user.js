@@ -324,7 +324,7 @@ export default () => {
                                                 <TableCell  >{row.id}</TableCell>
                                                 <TableCell  ><OrderStatus status={row.status}/></TableCell>
                                                 <TableCell  >{row.total.toLocaleString()}</TableCell>
-                                                <TableCell  ><OrderDetail id={row.id} admin={true}/></TableCell>
+                                                <TableCell  ><OrderDetail id={row.id} role="admin"/></TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

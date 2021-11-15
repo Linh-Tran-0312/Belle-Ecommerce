@@ -111,7 +111,7 @@ export default function CategorySwiper({list}) {
                         list?.map(c => ( <SwiperSlide key={c.id}>
                                             <div className={classes.itemContainer}>
                                             <img alt="category" src={c.imgPath} className={classes.img} />
-                                            <Link className={classes.button}>{c.name}</Link>
+                                            <Link className={classes.button} to={`/shop?category=${c.id}`} >{c.name}</Link>
                                             </div>           
                                         </SwiperSlide>
                         ))

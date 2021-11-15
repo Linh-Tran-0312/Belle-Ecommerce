@@ -44,6 +44,7 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
             if(query.category > 0 ) options.where.categoryId = query.category;
             if(query.brand > 0 ) options.where.brandId = query.brand;
             if (!!query.search) options.where.name = ILike(`%${query.search}%`);
+           /*  if (!!query.search) options.where.sku = ILike(`%${query.search}%`); */
             if(query.min > 0) options.where.price = MoreThanOrEqual(query.min);
             if(query.max > 0) options.where.price = LessThanOrEqual(query.max);
             if(query.min > 0 && query.max > 0 )  options.where.price = Between(query.min,query.max);

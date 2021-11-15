@@ -35,7 +35,7 @@ const orderActions = {
         try {
             const { data } = await api.getOrderById(id);
             dispatch({ type: ACTION.GET_ORDER_BY_ID, payload: data});
-            console.log(data);
+            
         } catch (error) {
             console.log(error)
         }

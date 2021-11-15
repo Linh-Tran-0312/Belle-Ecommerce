@@ -97,7 +97,7 @@ const HomePage = () =>  {
                                         {convertFromRaw(JSON.parse(b?.content))?.getPlainText().substr(0,140).concat("...")}
                                     </div>
                                     <ul >
-                                        <li><Link to="blog-article.html" className="blogLink">READ MORE</Link></li>
+                                        <li><Link to={`/blogs/blog/${b.id}`}  className="blogLink">READ MORE</Link></li>
                                     </ul>
                                 </div>
                             </div>

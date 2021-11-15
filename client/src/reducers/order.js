@@ -6,6 +6,7 @@ const initState = {
     orderId: "",
     items: [],
     subTotal: 0,
+    order: {}
 }
 export default (state = initState, { type, payload}) => produce(state, (draft) => {
     switch(type) {
@@ -57,13 +58,21 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
                 draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
             }
             break;
-            case ACTION.UPDATE_ORDER:
-                if(payload) {
-                    draft.orderId = payload.id;
-                    draft.items = payload.details;
-                    draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
-                }
-                break;
+        case ACTION.UPDATE_ORDER:
+            if(payload) {
+                draft.orderId = payload.id;
+                draft.items = payload.details;
+                draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
+            }
+            break;
+        case ACTION.CLEAR_ORDER: 
+            draft.orderId = "";
+            draft.items = [];
+            draft.subTotal = 0;
+            break;
+        case ACTION.USER_GET_ORDER_BY_ID:
+            draft.order = payload;
+            break;
         default:
             break;
     }

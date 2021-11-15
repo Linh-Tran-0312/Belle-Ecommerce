@@ -1,8 +1,8 @@
-import React, { useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
  
 import homeActions from "./actions/home";
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, useLocation  } from 'react-router-dom';
 import Home from './pages/home.js';
 import Shop from './pages/shop.js';
 import Contact from './pages/contact.js';
@@ -16,13 +16,14 @@ import Auth from './pages/auth';
 import ErrorPage from './pages/404page';
 import Admin from "./pages/admin";
 import User from "./pages/user";
+import AdminAuth from "./pages/admin/login";
+import { ACTION } from './constants';
+
  
 
 const App =  () => {
-        console.log("Layout render")
-    const isLogin = useSelector(state => state.auth).isLogin
+ 
     const dispatch = useDispatch();
-    
     useEffect(() => {
         dispatch(homeActions.getProductCategories());
         dispatch(homeActions.getProductBrands());
@@ -33,14 +34,11 @@ const App =  () => {
     return(
         <Router>
             <Switch>
-            <Route exact path="/user"  >
-             { isLogin ? (<User />) : (<Redirect to="/auth" component={Auth}/>)}
-            </Route>
-            <Route  path="/admin" component={Admin}/>
+            <Route exact path="/user" component={User} />           
+            <Route exact path="/admin/login" component={AdminAuth}/>
+            <Route  path="/admin" component={Admin} />        
             <Route exact path="/auth" component={Auth}/>
-            <Route exact path="/checkout"  >
-                { isLogin ? (<Checkout />) :(<Redirect to="/auth" component={Auth}/>)}
-            </Route>
+            <Route exact path="/checkout"  component={Checkout}/>     
             <Route exact exact path="/cart" component={Cart}/>
             <Route exact path="/shop" component={Shop}/>
             <Route exact path="/contact" component={Contact}/>

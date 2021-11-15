@@ -1,6 +1,6 @@
 import Layout from "../components/Layout"
 import "../App.css";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Typography, Grid, IconButton, RadioGroup, TextField } from '@material-ui/core';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,7 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import QtyButton from "../components/QtyButton";
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import BlackButton from "../components/BlackButton";
 import Accordion from '@material-ui/core/Accordion';
@@ -20,8 +20,10 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import orderActions from "../actions/order";
+import shipCal from "../helper/shipCalculator";
+import { useHistory, useLocation } from "react-router-dom";
 const StyledRadio = withStyles({
     root: {
         color: 'black',
@@ -103,13 +105,41 @@ const useStyle = makeStyles((theme) => ({
         width: '100%',
     },
 }))
+const initState = {
+    address: "",
+    paymentMethod: "cod",
+    note: "",
+    shipping: 0,
+    total: 0,
+}
 export default () => {
     const classes = useStyle();
-    const [ method, setMethod ] = useState(null);
-    const user = useSelector(state => state.auth).user;
-    const handleChangeMethod = (e) => {
-        setMethod(e.target.value);
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const location = useLocation();
+    //const user = useSelector(state => state.auth).user;
+    const items = useSelector(state => state.order).items;
+    const orderId = useSelector(state => state.order).orderId;
+    const subTotal = useSelector(state => state.order).subTotal;
+    const shipping = shipCal(subTotal);
+    const [ state, setState ] = useState({...initState, shipping: shipping, total: subTotal + shipping});
+  
+    const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
+    useEffect(() => {
+        setState({...state, address: user.address})
+    },[user])
+    useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem('user')))
+    },[location])
+    const handleChange = (e) => {
+        setState({...state, [e.target.name] : e.target.value});
     }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(orderActions.placeOrder(orderId, state, history))
+
+    }
+    if(!user?.id ) return <Redirect to="/auth" />
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
@@ -120,8 +150,9 @@ export default () => {
                 </div>
             </div>
             <Box mx={2} my={4}>
+                <form onSubmit={handleSubmit}>
                 <Grid container spacing={3} direction="row" justifyContent="center">
-                <Grid item lg={6} md={6} sm={12}>
+                    <Grid item lg={6} md={6} sm={12}>
                         <Box sx={{ padding: { xs: 2, sm : 3 }}}  border={1} borderColor="grey.500">
                             <h3 variant="h6" className="fontRoSlab">BILLING DETAILS</h3>
                             <Box my={2} >
@@ -132,8 +163,7 @@ export default () => {
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
                                         <StyledTextField label="Last Name" value={user.lname}  disabled  variant="outlined" fullWidth required />
                                     </Grid>
-                                </Grid>
-
+                              </Grid>
                             </Box>
                             <Box my={2}>
                                 <Grid container spacing={2}>
@@ -146,11 +176,11 @@ export default () => {
                                 </Grid>
                             </Box>
                             <Box my={2}>                              
-                                    <StyledTextField label="Address" variant="outlined" fullWidth required />                                
+                                    <StyledTextField label="Address" variant="outlined" onChange={handleChange} value={state.address} name="address" fullWidth required />                                
                             </Box>
                         
                             <Typography variant="caption">Your note:</Typography>
-                            <StyledTextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root: classes.noteTextField }} />
+                            <StyledTextField multiline fullWidth rows={7} variant="outlined" onChange={handleChange}  value={state.note} name="note" classes={{ root: classes.noteTextField }} />
                         </Box>
                     </Grid>
                
@@ -170,23 +200,26 @@ export default () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {[1, 2, 3].map((item) => (
-                                            <TableRow key={item}>
-                                                <StyledTableCell component="th" scope="row">Spike Jacket</StyledTableCell>
-                                                <StyledTableCell align="center" >$99</StyledTableCell>
-                                                <StyledTableCell align="center">XL</StyledTableCell>
-                                                <StyledTableCell align="center">1</StyledTableCell>
-                                                <StyledTableCell align="center">$943491</StyledTableCell>
+                                        {items.map((item) => (
+                                            <TableRow key={item.id}>
+                                        <StyledTableCell component="th" scope="row">
+                                            <Typography variant="subtitle2">  {`${item?.productVariant?.product?.name} (${item?.productVariant?.product?.brand?.name}) `} </Typography>
+                                            <Typography variant="caption">{item?.productVariant?.color?.name}</Typography>
+                                        </StyledTableCell>
+                                        <StyledTableCell align="center" >{item?.unitPrice?.toLocaleString()}</StyledTableCell>
+                                        <StyledTableCell align="center">{item?.productVariant?.size?.name}</StyledTableCell>
+                                        <StyledTableCell align="center">{item?.quantity}</StyledTableCell>
+                                        <StyledTableCell align="center">{(item?.unitPrice * item?.quantity).toLocaleString()}</StyledTableCell>
                                             </TableRow>
                                         ))}
                                         <TableRow  >
                                             <StyledTableCell colSpan={4} component="th" align="right" scope="row">Shipping</StyledTableCell>
-                                            <StyledTableCell align="center">$33</StyledTableCell>
+                                            <StyledTableCell align="center">{state.shipping.toLocaleString()}</StyledTableCell>
 
                                         </TableRow>
-                                        <TableRow  >
+                                        <TableRow>
                                             <StyledTableCell colSpan={4} component="th" align="right" scope="row">Total</StyledTableCell>
-                                            <StyledTableCell align="center">$330</StyledTableCell>
+                                            <StyledTableCell align="center">{state.total.toLocaleString()}</StyledTableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -194,7 +227,7 @@ export default () => {
                             <hr />
                             <h3 variant="h6" className="fontRoSlab">PAYMENT METHOD</h3>
                             <div className={classes.root}>
-                            <RadioGroup aria-label="payment" name="method" value={method} onChange={handleChangeMethod}>
+                            <RadioGroup aria-label="payment" name="paymentMethod" value={state.paymentMethod} onChange={handleChange} required >
 
                                 <Accordion>
                                     <AccordionSummary
@@ -210,7 +243,7 @@ export default () => {
                                                 onFocus={(event) => event.stopPropagation()}
                                                 control={<StyledRadio />}
                                                 label="CASH ON DELIVERY"
-                                                value="CASH"
+                                                value="cod"
                                             />
                                   
                                     </AccordionSummary>
@@ -234,7 +267,7 @@ export default () => {
                                                 onFocus={(event) => event.stopPropagation()}
                                                 control={<StyledRadio />}
                                                 label="DIRECT BANK TRANSFER"
-                                                value="TRANSFER"
+                                                value="banktransfer"
                                             />
                                     </AccordionSummary>
                                     <AccordionDetails>
@@ -310,11 +343,12 @@ export default () => {
                                 </RadioGroup>
                             </div>
                             <Box my={2} textAlign="center">
-                                    <BlackButton height={'50px'}><strong>place order</strong></BlackButton>
+                                    <BlackButton height={'50px'} type="submit"><strong>place order</strong></BlackButton>
                             </Box>
                         </Box>
                     </Grid>
                   </Grid>
+                  </form>
             </Box>
         </Layout>
     )

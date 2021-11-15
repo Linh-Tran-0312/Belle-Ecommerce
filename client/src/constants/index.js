@@ -35,6 +35,10 @@ export const ORDER_STATUS = {
 }
 export const ACTION = {
     /****************** ADMIN ACTION*********************/
+    ADMIN_INIT: "ADMIN_INIT",
+    ADMIN_AUTH: "ADMIN_AUTH",
+    ADMIN_LOGOUT: "ADMIN_LOGOUT",
+    ADMIN_MESSAGE: "ADMIN_MESSAGE",
     //------------------BLOG ACTION----------------------------
     //Error Action
     ERROR: "ERROR",
@@ -146,14 +150,17 @@ export const ACTION = {
     UPDATE_ITEM_QUANTITY: "UPDATE_ITEM_QUANTY",
 
     //Authorization Action 
+    USER_INIT: "USER_INIT",
     AUTH: "AUTH",
     LOGOUT: "LOGOUT",
     AUTH_LOADING: "AUTH_LOADING",
     AUTH_ERROR: "AUTH_ERROR",
     UPDATE_PROFILE: "UPDATE_PROFILE",
     USER_ORDERS: "USER_ORDERS",
+    USER_GET_ORDER_BY_ID: "USER_ORDER",
     GET_ORDER_AFTER_LOGIN: "GET_ORDER_AFTER_LOGIN",
     UPDATE_ORDER: "UPDATE_ORDER",
+    CLEAR_ORDER: "CLEAR_ORDER"
 
 
 

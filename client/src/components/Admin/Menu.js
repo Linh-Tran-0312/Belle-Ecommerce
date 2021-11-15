@@ -31,35 +31,119 @@ const useStyles = makeStyles((theme) => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
-  subMenu : {
+  subMenu: {
     fontSize: "15px"
   }
 }));
-export const Menu = ({page}) => {
+export const Menu = ({ page, role }) => {
   const [openBlog, setOpenBlog] = React.useState(false);
   const classes = useStyles();
   const handleClickBlog = () => {
     setOpenBlog(!openBlog);
   };
   const [openProduct, setOpenProduct] = React.useState(false);
- 
+
   const handleClickProduct = () => {
     setOpenProduct(!openProduct);
   };
-  return(
-  <div>
-    <ListItem button selected={AdminPath.DASHBOARD === page ? true : false} component={Link} to="/admin">
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button selected={AdminPath.ORDERS === page ? true : false} component={Link} to="/admin/orders">
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
+  return (
+    <div>
+      {
+        role === "admin" ? (
+          <>
+            <ListItem button selected={AdminPath.DASHBOARD === page ? true : false} component={Link} to="/admin">
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
+            <ListItem button selected={AdminPath.ORDERS === page ? true : false} component={Link} to="/admin/orders">
+              <ListItemIcon>
+                <ShoppingCartIcon />
+              </ListItemIcon>
+              <ListItemText primary="Orders" />
+            </ListItem>
+            <ListItem button onClick={handleClickProduct}>
+              <ListItemIcon>
+                <LayersIcon />
+              </ListItemIcon>
+              <ListItemText primary="Products" />
+              {openProduct ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={openProduct} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_LIST === page ? true : false} component={Link} to="/admin/product-list" >
+                  <ListItemIcon>
+                    <StoreIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Product List" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_CATEGORY === page ? true : false} component={Link} to="/admin/product-category" >
+                  <ListItemIcon>
+                    <CategoryIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Category" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_BRAND === page ? true : false} component={Link} to="/admin/product-brand">
+                  <ListItemIcon>
+                    <BrandingWatermarkIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Brand" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_COLOR === page ? true : false} component={Link} to="/admin/product-color">
+                  <ListItemIcon>
+                    <FormatColorFillIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Color" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_SIZE === page ? true : false} component={Link} to="/admin/product-size">
+                  <ListItemIcon>
+                    <FormatSizeIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Size" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+              </List>
+            </Collapse>
+            <ListItem button onClick={handleClickBlog}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Blogs" />
+              {openBlog ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={openBlog} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested} selected={AdminPath.BLOG_LIST === page ? true : false} component={Link} to="/admin/blog-list">
+                  <ListItemIcon>
+                    <PostAddIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Blog List" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+                <ListItem button className={classes.nested} selected={AdminPath.BLOG_CATEGORY === page ? true : false} component={Link} to="/admin/blog-category">
+                  <ListItemIcon>
+                    <CategoryIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Blog Category" classes={{ primary: classes.subMenu }} />
+                </ListItem>
+              </List>
+            </Collapse>
+            <ListItem button selected={AdminPath.CUSTOMERS === page ? true : false} component={Link} to="/admin/customers">
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Customers" />
+            </ListItem>
+            <ListItem button selected={AdminPath.REPORTS === page ? true : false} component={Link} to="/admin/reports">
+              <ListItemIcon>
+                <BarChartIcon />
+              </ListItemIcon>
+              <ListItemText primary="Reports" />
+            </ListItem>
+          </>
+        ) : (
+          <>
+ 
+ 
     <ListItem button  onClick={handleClickProduct}>
       <ListItemIcon>
         <LayersIcon />
@@ -124,21 +208,14 @@ export const Menu = ({page}) => {
           </ListItem>
         </List>
       </Collapse>
-    <ListItem button selected={AdminPath.CUSTOMERS === page ? true : false} component={Link} to="/admin/customers">
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
-    <ListItem button selected={AdminPath.REPORTS === page ? true : false} component={Link} to="/admin/reports">
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
+          </>
+        )
+      }
 
-  </div>
-)};
+
+    </div>
+  )
+};
 
 export const secondaryListItems = (
   <div>

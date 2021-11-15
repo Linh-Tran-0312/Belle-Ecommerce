@@ -10,14 +10,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import Stepper from "./OrderStepper";
-import orderActions from '../../actions/adminOrder';
+import orderAdminActions from '../../actions/adminOrder';
+import orderUserActions from '../../actions/order';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import OrderStatus from '../OrderStatus';
 import { ORDER_STATUS } from '../../constants';
 import { TableRow, Grid, Typography, Box, Button, Divider, IconButton, MenuItem, FormControl, InputLabel, Select } from '@material-ui/core';
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
+ 
 const StyledTableCell = withStyles((theme) => ({
     head: {
         color: theme.palette.common.black,
@@ -75,11 +74,17 @@ const initState = {
     paymentCheck: "",
     paymentMethod: ""
 }
-export default function SimpleModal({ id, admin }) {
+export default function SimpleModal({ id, role }) {
     const classes = useStyles();
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
-    const detail = useSelector(state => state.adminOrder).order;
+    const [ detail, setDetail] = React.useState();
+
+     const detailAdmin = useSelector(state => state.adminOrder).order;
+ 
+    const  detailUser = useSelector(state => state.order).order;
+ 
+    
     const dispatch = useDispatch();
     const [state, setState] = React.useState(initState);
 
@@ -91,22 +96,37 @@ export default function SimpleModal({ id, admin }) {
     };
 
     useEffect(() => {
-        dispatch(orderActions.getOrderById(id))
-    }, [id])
-
+        if(open === true) {
+            if(role === "admin") {
+                console.log("AA")
+                dispatch(orderAdminActions.getOrderById(id))
+            } else {
+                dispatch(orderUserActions.getOrderById(id))
+            }
+        }
+       
+     
+    }, [open])
     useEffect(() => {
-        setState({ status: detail.status, paymentCheck: detail.paymentCheck, paymentMethod: detail.paymentMethod })
-    }, [detail])
+        if(role === "admin") {
+            setDetail(detailAdmin);
+            setState({ status: detailAdmin.status, paymentCheck: detailAdmin.paymentCheck, paymentMethod: detailAdmin.paymentMethod })
+        } else {
+            setDetail(detailUser);
+            setState({ status: detailUser.status, paymentCheck: detailUser.paymentCheck, paymentMethod: detailUser.paymentMethod })
+        }
+    },[detailAdmin, detailUser])
+ 
 
     const handleChange = (e) => {
         setState({ ...state, [e.target.name]: e.target.value });
     }
     const handleSubmitOrder = (e) => {
-        dispatch(orderActions.updateOrderStatus(detail.id, state));
-        console.log(state);
+        dispatch(orderAdminActions.updateOrderStatus(detail.id, state));
+
     }
     const body = () => {
-        if (!detail.id) return <CircularProgress />
+        if (!detail?.id) return <CircularProgress />
         return (<div style={modalStyle} className={classes.paper}>
             <Typography variant="subtitle2">Mã đơn hàng: {detail?.id}</Typography>
             <Typography variant="subtitle2">Ngày đặt hàng: {new Date(detail?.orderAt).toLocaleDateString()}</Typography>
@@ -169,7 +189,7 @@ export default function SimpleModal({ id, admin }) {
             <Box my={3}>
                
                 {
-                    admin ? (
+                   role === "admin" ? (
                         <> 
                         <Box textAlign="center" my={2}>
                             <Typography variant="h6" gutterBottom color="primary">CẬP NHẬT TÌNH TRẠNG ĐƠN HÀNG </Typography>
@@ -261,7 +281,7 @@ export default function SimpleModal({ id, admin }) {
             <Box my={2}>
                 <Grid container direction="row" justifyContent='center' spacing={2}>
                     {
-                        admin ? (
+                        role === "admin" ? (
                             <>
                                 <Grid item md={2} sm={2} xs={3}>
                                     <Button variant="contained" fullWidth color="secondary">Delete</Button>

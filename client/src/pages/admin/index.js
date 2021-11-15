@@ -17,7 +17,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import clsx from 'clsx';
 import React, { useState, useEffect, useRef} from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation , useHistory, Redirect} from "react-router-dom";
 import blogActions from "../../actions/adminBlog";
 import productActions from '../../actions/adminProduct';
 import Dashboard from "./dashboard";
@@ -33,7 +33,7 @@ import Report from "./report";
 import Customer from "./user";
 import { Menu , secondaryListItems } from '../../components/Admin/Menu';
 import { AdminPath } from '../../constants';
-
+import adminAuthActions from '../../actions/adminAuth';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -124,21 +124,25 @@ export default function AdminPage() {
   const location = useLocation();
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   const topPage = useRef()
   const [open, setOpen] = React.useState(true);
   const [ page, setPage ] = React.useState(AdminPath.DASHBOARD);
   const [ title, setTitle] = useState("DASHBOARD");
-
-  console.log("Admin re-render")
+ //const admin = useSelector(state => state.auth).admin;
+ const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
   React.useEffect(() => {
-    const pathName = location.pathname.substring(7);
-    if(Object.keys(AdminPath).find(path => AdminPath[path] == pathName))
-    {
-      setPage(pathName);
-      const temp = pathName.replace(/\-/g," ").toUpperCase();
-      setTitle(temp);
-    }
-    topPage.current.scrollIntoView();
+   
+      const pathName = location.pathname.substring(7);
+      if(Object.keys(AdminPath).find(path => AdminPath[path] == pathName))
+      {
+        setPage(pathName);
+        const temp = pathName.replace(/\-/g," ").toUpperCase();
+        setTitle(temp);
+      }
+      topPage?.current?.scrollIntoView();
+   
+    setAdmin(JSON.parse(localStorage.getItem('admin')));
   },[location]);
 
   useEffect(() => {
@@ -155,15 +159,18 @@ export default function AdminPage() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+const handleLogout = (e) => {
+  dispatch(adminAuthActions.logout(history))
+}
  const renderPage = (page) => {
      switch(page) {
-     /*    case AdminPath.DASHBOARD:
-             return <Dashboard/>; */
+ 
         case AdminPath.ORDERS:
-            return <Order />;
-/*         case AdminPath.PRODUCTS:
-            return <Product />; */
+          if(admin.role === "admin") {
+            return <Order/>;
+          } else {
+            return <Product />;
+          }
         case AdminPath.PRODUCT_LIST:
             return <Product />
         case AdminPath.PRODUCT_CATEGORY:
@@ -181,13 +188,23 @@ export default function AdminPage() {
         case AdminPath.BLOG_CATEGORY:
             return <BlogCategory />;
         case AdminPath.CUSTOMERS:
+          return <Customer />;
+        /*   if(admin.role === "admin") {
             return <Customer />;
+          } else {
+            return <Product />;
+          } */
         case AdminPath.REPORTS:
+          if(admin.role === "admin") {
             return <Report />;
+          } else {
+            return <Product />;
+          }
         default:
           return <Dashboard/>
     }
  }
+ if(!admin?.id) return <Redirect to="/admin/login" />
   return (
     <div className={classes.root} >
       <CssBaseline />
@@ -205,12 +222,10 @@ export default function AdminPage() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {title ? title : "DASHBOARD"}
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton color="inherit">       
+          <Typography>
+            Xin Chao {admin.fname}
+          </Typography>
+          <IconButton color="inherit" onClick={handleLogout}>       
               <ExitToAppIcon />
           </IconButton>
         </Toolbar>
@@ -230,7 +245,7 @@ export default function AdminPage() {
         </div>
         <Divider />
         <List>
-        <Menu page={page}/>    
+        <Menu page={page} role={admin.role}/>    
         </List>
         <Divider />
        

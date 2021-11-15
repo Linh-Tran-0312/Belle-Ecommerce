@@ -10,7 +10,7 @@ const config: ConnectionOptions= {
     port: Number(process.env.POSTGRES_PORT),
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
+    database: process.env.POSTGRES_DB_TEST,
     entities: [ Entity.Blog,
                 Entity.BlogCategory, 
                 Entity.BlogComment, 

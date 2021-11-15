@@ -14,7 +14,8 @@ import Banner from '../components/Banner/Banner';
 import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
 import handlePriceRange from "../helper/handlePriceRange";
- 
+import { useQuery } from "../helper/customHook";
+import { useLocation } from "react-router-dom";
 
 const StyledAccordion = withStyles(() => ({
     root: {
@@ -116,7 +117,8 @@ const initFilter = {
 const ShopPage = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
-
+    const location = useLocation()
+    const query = useQuery();
     const categories = useSelector(state => state.home).productCategories;
     const brands = useSelector(state => state.home).productBrands;
     const products = useSelector(state => state.shop).products;
@@ -136,7 +138,11 @@ const ShopPage = () => {
     }, [total]) 
     useEffect(() => {
         dispatch(shopActions.getProducts(filter));
-    },[])
+    },[]);
+    useEffect(() => {
+        setFilter({...filter, category: query.get("category")});
+        dispatch(shopActions.getProducts({...filter, category: query.get("category")}))
+    },[location]);
     const handleChangePrice = (event, newValue) => {
         setPrice(newValue);
     }

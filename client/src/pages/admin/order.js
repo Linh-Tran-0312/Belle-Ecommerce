@@ -227,7 +227,7 @@ export default function Orders() {
                                 <TableCell align="right">{row?.total.toLocaleString()}</TableCell>
                                 <TableCell><OrderStatus status={row?.status}/></TableCell>
                                 <TableCell>
-                                     <OrderDetail  id={row?.id} admin={true}/>
+                                     <OrderDetail  id={row?.id} role="admin"/>
                                     </TableCell>
                             </TableRow>
                         ))}

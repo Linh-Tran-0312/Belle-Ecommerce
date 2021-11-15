@@ -40,6 +40,7 @@ const authActions = {
             }
         }
     },
+  
     logout: (history) => async(dispatch) => {
          dispatch({type: ACTION.LOGOUT})
          history.push("/");
@@ -47,6 +48,9 @@ const authActions = {
     updateProfile: (userId, formData) => async(dispatch) => {
         try {
             dispatch({ type: ACTION.AUTH_LOADING})
+            delete formData.id;
+            delete formData.createdAt;
+            console.log(formData);
             const { data } = await api.updateUser(userId, formData);
             dispatch({ type: ACTION.UPDATE_PROFILE, payload: data});
         } catch (error) {

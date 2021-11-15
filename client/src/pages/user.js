@@ -9,7 +9,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import authActions from '../actions/auth';
 import "../App.css";
 import Layout from "../components/Layout";
@@ -26,29 +26,40 @@ const initUser = {
     address: ""
 }
 export default () => {
-    const userDetail = useSelector(state => state.auth).user;
+    //const userDetail = useSelector(state => state.auth).user;
     const orders = useSelector(state => state.auth).orders;
     const history = useHistory();
-    const [user, setUser] = useState(initUser);
+    const location = useLocation();
+  
+    const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
     const dispatch = useDispatch();
     useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem('user')));
+        if(user?.id) {
+            dispatch(authActions.getOrdersByUserId(user.id))
+        }
+    },[location]);
+
+    /* useEffect(() => {
         setUser(userDetail);
         if(userDetail.id) {
             dispatch(authActions.getOrdersByUserId(userDetail.id))
         }
      
-    },[userDetail])
+    },[userDetail]) */
     const handleChange = (e) => {
         setUser({...user,[e.target.name] : e.target.value})
     }
     const handleSubmit = (e) => {
         e.preventDefault();
         if(user.id) {           
+           dispatch(authActions.updateProfile(user.id, {...user}));
     }
     }
     const handleLogout = (e) => {
         dispatch(authActions.logout(history));
     }
+    if(!user?.id ) return <Redirect to="/auth" />
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
@@ -124,7 +135,7 @@ export default () => {
                                             <TableCell  >{row.id}</TableCell>
                                             <TableCell  ><OrderStatus status={row.status}/></TableCell>
                                             <TableCell  >{row.total.toLocaleString()}</TableCell>
-                                            <TableCell  ><OrderDetail id={row.id} admin={false}/></TableCell>
+                                            <TableCell  ><OrderDetail id={row.id} role="user"/></TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

@@ -53,7 +53,7 @@ const orderActions = {
             dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
         } catch (error) {
             console.log(error)
-        }
+        };
     },
     updateItemQuantity: (orderId, itemId, formData) => async(dispatch) => {
         try {
@@ -68,7 +68,24 @@ const orderActions = {
         try {
             const { data } = await api.getCurrentOrderByUserId(userId)
         } catch (error) {
-            
+            console.log(error);
+        }
+    },
+    getOrderById: (orderId) => async(dispatch) => {
+        try {
+            const { data } = await api.getOrderById(orderId);
+            dispatch({type: ACTION.USER_GET_ORDER_BY_ID, payload: data})
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    placeOrder: (orderId, formData, history) => async(dispatch) => {
+        try {
+            const {data} = await api.placeOrder(orderId, formData);
+            dispatch({ type: ACTION.CLEAR_ORDER });
+            history.push("/user")
+        } catch (error) {
+            console.log(error);
         }
     }
 

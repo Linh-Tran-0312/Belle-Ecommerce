@@ -65,7 +65,7 @@ const initFilter = {
     category: "",
     sortMethod: "",
     page: 1,
-    limit: 2
+    limit: 4
 }
  
 const initBlog = {
@@ -164,7 +164,7 @@ export default function BlogAdmin() {
         <>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
                     <Grid item md={6} sm={12} xs={12}   >
-                        <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} name="search" label="Search" placeholder="Search order's @ID, name, address" variant="outlined" />
+                        <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} name="search" label="Search" placeholder="Search blog title..." variant="outlined" />
                     </Grid>
                     <Grid item md={3} sm={6} xs={6}  >
                     <FormControl fullWidth variant="outlined" >
