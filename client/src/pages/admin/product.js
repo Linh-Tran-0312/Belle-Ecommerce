@@ -274,6 +274,7 @@ export default function ProductAdmin() {
                         </Typography>
                         <Slider
                             min={0}
+                            step={20000}
                             max={10000000}
                             value={price}
                             onChange={handleChangePrice}

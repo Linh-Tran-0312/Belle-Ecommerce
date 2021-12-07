@@ -43,6 +43,7 @@ const authActions = {
   
     logout: (history) => async(dispatch) => {
          dispatch({type: ACTION.LOGOUT})
+         dispatch({type: ACTION.CLEAR_ORDER});
          history.push("/");
     },
     updateProfile: (userId, formData) => async(dispatch) => {

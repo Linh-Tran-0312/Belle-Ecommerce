@@ -8,7 +8,7 @@ const handleFilter = (filter) => {
     if(filter.role) queryString += `&role=${filter.role}`;
     if(filter.paymentCheck) queryString += `&paymentCheck=${filter.paymentCheck}`;
     if(filter.status) queryString += `&status=${filter.status}`;
-    if(filter.period) queryString += `&period=${filter.period}`;
+    if(filter.period) queryString += `&time=${filter.period}`;
     return queryString;
 }
 

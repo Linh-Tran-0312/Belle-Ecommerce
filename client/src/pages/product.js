@@ -1,31 +1,29 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useParams, Link } from "react-router-dom";
-import { useSelector, useDispatch} from "react-redux";
-import ProductImage from "../components/ProductImage";
-import Layout from "../components/Layout";
-import { Container, Grid, Breadcrumbs, Box, Typography, Tabs, Tab, Paper, Button, MenuItem, InputLabel, Select,FormControl, makeStyles } from '@material-ui/core';
-import RemoveIcon from '@material-ui/icons/Remove';
-import AddIcon from '@material-ui/icons/Add';
+import { Box, Breadcrumbs, Container, FormControl, Grid, makeStyles, MenuItem, Paper, Select, Tab, Tabs, Typography } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
+import CommentIcon from '@material-ui/icons/Comment';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import InfoIcon from '@material-ui/icons/Info';
 import StarIcon from '@material-ui/icons/Star';
-import FiberManualRecordIcon  from '@material-ui/icons/FiberManualRecord';
-import CommentIcon from '@material-ui/icons/Comment';
-import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import ReviewForm from '../components/ReviewForm'
-import '../App.css';
-import Review from '../components/Review';
-import {PageLoading} from "../components/PageLoading";
-import BlackButton from '../components/BlackButton';
-import Rating from '../components/Rating';
-import Comment from '../components/Comment';
-import SizeChart from '../components/SizeChart';
-import CommentForm from '../components/CommentForm';
-import QtyButton from '../components/QtyButton';
- 
-import shopActions from "../actions/shop";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useParams } from "react-router-dom";
 import orderActions from "../actions/order";
+import shopActions from "../actions/shop";
+import '../App.css';
+import BlackButton from '../components/BlackButton';
+import Comment from '../components/Comment';
+import CommentForm from '../components/CommentForm';
+import Layout from "../components/Layout";
+import { PageLoading } from "../components/PageLoading";
+import ProductImage from "../components/ProductImage";
+import QtyButton from '../components/QtyButton';
+import Rating from '../components/Rating';
+import Review from '../components/Review';
+import ReviewForm from '../components/ReviewForm';
+import SizeChart from '../components/SizeChart';
+ 
 const useStyle = makeStyles((theme) => ({
     tabPaper : {
         boxShadow: 'none',
@@ -83,7 +81,7 @@ const ProductPage = () => {
     const [tab, setTab] = useState(0);
     const classes = useStyle();
     const [ message, setMessage ] = useState("");
-    const [ item, setItem ] = useState(0);
+    const [ item, setItem ] = useState("");
     const [ qty, setQty ] = useState(1);
 
     const user = useSelector(state => state.auth).user;
@@ -94,7 +92,7 @@ const ProductPage = () => {
         {
            dispatch(shopActions.getProductById(productId))
         }
-        setItem(0);
+        setItem("");
         setQty(1);
           setMessage("");
         },[productId, location]); 
@@ -111,12 +109,14 @@ const ProductPage = () => {
     }
     const handleAddToCart = (e) => {
         e.preventDefault();
-        if(qty > 0 && item > 0) 
+        if(qty > 0 && item !== "") 
         {
             if(!user?.id) 
             {
+                console.log(orderId);
                 dispatch(orderActions.addItemToCart(product, {productVariantId: item, quantity: qty}));              
             } else {
+                console.log(orderId);
                 if(orderId === "") {
    
                     dispatch(orderActions.createOrder({userId: user.id, details: [{ productVariantId: item, quantity: qty, unitPrice: product.price}]}))

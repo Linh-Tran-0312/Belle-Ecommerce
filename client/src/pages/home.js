@@ -46,7 +46,7 @@ const HomePage = () =>  {
                         <Box textAlign="center">
                             <h2 className="parallaxTitle">Belle <br/> The best choice for your store</h2>
                             <p className="parallaxContent">Is a Spanish fast fashion clothing and accessories retailer. The company was founded in 1975 by Amancio Ortega and Rosalía Mera</p>
-                            <Link href="#" className="linkParallax">Purchase Now</Link>
+                            <Link to="/" className="linkParallax">Purchase Now</Link>
                         </Box>
                     </div>
                     </div>

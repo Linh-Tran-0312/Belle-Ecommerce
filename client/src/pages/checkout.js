@@ -126,7 +126,7 @@ export default () => {
   
     const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
     useEffect(() => {
-        setState({...state, address: user.address})
+        setState({...state, address: user?.address})
     },[user])
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))

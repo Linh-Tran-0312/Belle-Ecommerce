@@ -27,6 +27,7 @@
     "recharts": "^2.1.4",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
+    "serve": "^13.0.2",
     "swiper": "^6.8.1",
     "web-vitals": "^1.1.2"
   },
