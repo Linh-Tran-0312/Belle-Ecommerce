@@ -48,8 +48,9 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
                 }))
             };
             if (options.time !== "") {
-                orderQuery.andWhere("order.orderAt > :startAt", { startAt: options.time.start })
-                orderQuery.andWhere("order.orderAt < :endAt", { endAt: options.time.end })
+                orderQuery.andWhere("order.orderAt >= :startAt", { startAt: options.time.start.toUTCString() })
+               // orderQuery.andWhere("order.orderAt <= :endAt", { endAt: options.time.end.toISOString() })  
+               // orderQuery.andWhere("order.orderAt BETWEEN :begin AND :end", { begin: options.time.start.toISOString(), end: options.time.end.toISOString() }) 
             }
             orderQuery.select(["order.id", "order.address", "order.orderAt", "order.total", "order.status", "order.paymentCheck", "order.paymentMethod", "user.fname", "user.lname"])
                 .offset(options.limit * (options.page - 1))

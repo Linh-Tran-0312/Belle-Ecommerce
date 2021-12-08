@@ -7,7 +7,10 @@ export enum OperationalErrorMessage {
     NOT_FOUND = "Not Found",
     INVALID_EMAIL = "This email is invalid",
     QUERY_ERROR = "Database query failed",
-    PASSWORD_WRONG = "Password is not correct"
+    PASSWORD_WRONG = "Password is not correct",
+    NO_TOKEN = "No token provided",
+    UNAUTHORIZED = "Unauthorized",
+    EXPIRED_TOKEN = "Token is expired"
 };
 
 export class OperationalError extends Error {

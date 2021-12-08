@@ -8,7 +8,8 @@ import { IUsers, UserRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
 import { Not } from "typeorm";
- 
+import { signAccessToken, signRefreshToken } from "../helpers/jwtHandler";
+import { IRevokeToken, IToken } from "../controllers/authController";
 export enum UserField {
     NAME = "fname",
     SALE = "sale",
@@ -22,7 +23,11 @@ export interface IUserQuery {
     limit: number;
     page: number
 }
-
+export interface IUserAuth {
+    accessToken: string;
+    refreshToken: string;
+    profile: IUser
+}
 export class UserService extends BaseService<IUser, UserRepository> implements IBaseService<IUser>  {
     constructor() {
         super(new UserRepository())
@@ -33,19 +38,22 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         if(!existingEmail) return false;
         return true;
     }
-    public async register(data: IUserCreateProps): Promise<IUser> {       
+    public async register(data: IUserCreateProps): Promise<IUserAuth> {       
         //const existingUsers: IUser| any =  await this.repository.findOne({ where: { email: data.email}});
         const existingEmail = await this.isEmailExist(data.email);
         if(!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);          
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
-        const result = await this.repository.create(data);
-        delete result.password;
-        delete result.googleId;
+        const profile = await this.repository.create(data);
+        delete profile.password;
+        delete profile.googleId;
+        const accessToken = signAccessToken({ id: profile.id, role: profile.role}, 60000); // expire in 1 minute
+        const refreshToken = signRefreshToken({id: profile.id}, 604800000); // expire in 7 days
+        const result = { accessToken, refreshToken, profile}
         return result;
     }
 
-    public async login(email: string, password: string): Promise<IUser> {
+    public async login(email: string, password: string): Promise<IUserAuth> {
         const existingUser: IUser|any =  await this.repository.findOne({ where: { email }});
         if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
        
@@ -53,9 +61,12 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
         delete existingUser.password;
         delete existingUser.googleId;
-        return existingUser
+        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 60000); // expire in 1 minute
+        const refreshToken = signRefreshToken({id: existingUser.id}, 604800000); // expire in 7 days
+        const result = { accessToken, refreshToken, profile: existingUser}
+        return result;
     }
-    public async adminLogin(email: string, password: string): Promise<IUser> {
+    public async adminLogin(email: string, password: string): Promise<IUserAuth> {
         const existingUser: IUser|any =  await this.repository.findOne({ where: { email, role: Not("customer") }});
         if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
        
@@ -63,8 +74,14 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
         delete existingUser.password;
         delete existingUser.googleId;
-        return existingUser
+        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 60); // expire in 1 minute
+        const refreshToken = signRefreshToken({id: existingUser.id}, 604800); // expire in 7 days
+        const result = { accessToken, refreshToken, profile: existingUser}
+        return result;
     }
+  /*   public async revokeAccessToken(data: IRevokeToken): Promise<IToken> {
+        const {refreshToken} = data; 
+    } */
     public async getUsers(query: IUserQuery): Promise<IUsers> {
         return this.repository.getUsers(query);
     }

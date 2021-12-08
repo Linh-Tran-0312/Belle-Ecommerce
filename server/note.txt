@@ -65,3 +65,7 @@ Open postgres container: psql -U postgres
 \d user         # Show `user` table definition.
 \d post         # Show `post` table definition.
 \d comment      # Show `comment` table definition.
+
+-----------------------
+Unit test with Jest
+$npm i -D jest @types/jest

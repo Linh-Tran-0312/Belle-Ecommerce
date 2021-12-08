@@ -1,8 +1,8 @@
-import { Body, Delete, Get, Patch, Path, Post, Query, Res, TsoaResponse, Route, Tags } from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Query, Res, TsoaResponse,Security, Route, Tags } from "tsoa";
 import { HttpCode } from "../helpers/HttpCode";
 import { IUsers } from "../repositories";
 import { IUser, IUserCreateProps, UserRole } from "../models";
-import { UserService, IUserQuery, UserField, Change  } from "../services";
+import { UserService, IUserQuery, UserField, Change, IUserAuth  } from "../services";
 
 export interface IUserUpdateProps {
     lname?: string;
@@ -25,6 +25,7 @@ export class UserController {
     /**
      * Get all users
      */
+     @Security("jwt", [UserRole.ADMIN])
     @Get("/")
     public async getUsers(
         @Query() search?: string,

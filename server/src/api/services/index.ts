@@ -12,4 +12,4 @@ export { ProductCategoryService } from './productCategory.service';
 export { ProductCommentService } from './productComment.service';
 export { ProductReviewService } from './productReview.service';
 export { SizeService } from './size.service';
-export { UserService, IUserQuery, UserField } from "./user.service";
+export { UserService, IUserQuery, UserField, IUserAuth } from "./user.service";
