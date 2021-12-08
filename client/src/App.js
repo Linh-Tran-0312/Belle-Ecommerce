@@ -31,11 +31,9 @@ const App =  () => {
         dispatch(homeActions.getBlogCategories());
     },[])
     return(
-        <Suspense
-        fallback={<Loader />}
-      >
+        <Suspense fallback={<Loader />}>
           <Routes />
-      </Suspense>
+        </Suspense>
       /*   <Router>
             <Switch>
             <Route exact path="/user" component={User} />           

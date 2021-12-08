@@ -133,7 +133,7 @@ const BlogsPage = () => {
                 </div>
                 <Box ml={5} py={1}>
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
-                        <Link className="link" href="/"  >
+                        <Link className="link" to="/blogs" >
                             <Typography variant="subtitle2">Blogs</Typography>
 
                         </Link>
@@ -189,12 +189,10 @@ const BlogsPage = () => {
                                                         title="Contemplative Reptile"
                                                     />
                                                     <CardContent>
-                                                        <Typography gutterBottom >
-                                                            <Link to="/blogs/blog" className="link">
+                                                        <Typography gutterBottom >                                                        
                                                                 <span className="fontRoSlab fontSize20" >
                                                                     {item.title}
-                                                                </span>
-                                                            </Link>
+                                                                </span>                                                        
                                                         </Typography>
                                                         <Typography component="span" gutterBottom>
                                                             <Grid container direction="row" alignItems="center">

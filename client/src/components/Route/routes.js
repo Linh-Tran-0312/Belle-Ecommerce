@@ -37,7 +37,7 @@ const publicRoutes = [
     },
     {
         path: "/blogs/blog/:id",
-        exact: true,
+        exact: false,
         label: "Article",
         component: lazy(() => import("../../pages/blog"))
     },
@@ -49,7 +49,7 @@ const publicRoutes = [
     },
     {
         path: "/shop/product/:productId",
-        exact: true,
+        exact: false,
         label: "Product",
         component: lazy(() => import("../../pages/product"))
     },
@@ -61,7 +61,7 @@ const publicRoutes = [
     },
     {
         path: "/shop/product/:productId",
-        exact: true,
+        exact: false,
         label: "Cart",
         component: lazy(() => import("../../pages/product"))
     },

@@ -7,14 +7,15 @@ export default () => {
     return(
         <Router>
             <Switch>
+         
                 {
-                    route.publicRoutes.map(route => <PublicRoute key={route.path} exact to={route.path} component={route.component} />)
+                    route.userRoutes.map(route => <UserRoute key={route.path}  exact={route.exact} path={route.path} component={route.component} />)
                 }
                 {
-                    route.userRoutes.map(route => <UserRoute key={route.path}  exact={!!route.exact} to={route.path} component={route.component} />)
+                    route.adminRoutes.map(route => <AdminRoute key={route.path} exact={route.exact} path={route.path} component={route.component} />)
                 }
                 {
-                    route.adminRoutes.map(route => <AdminRoute key={route.path} exact to={route.path} component={route.component} />)
+                    route.publicRoutes.map(({ component, path, exact }) => <PublicRoute key={path} exact={exact} path={path} component={component}/>)
                 }
               
             </Switch>
