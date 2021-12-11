@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import dbConfig from './config/DatabaseConfig';
+import cookieParser from "cookie-parser"
 import morgan from "morgan";
 import  dotenv  from "dotenv";
 import cors from "cors";
@@ -30,6 +30,7 @@ dotenv.config();
 const app: Application = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan("tiny"));
 app.use(cors());
 // allow external access to swagger file in public folder and config swagger route 

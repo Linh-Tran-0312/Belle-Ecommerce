@@ -1,7 +1,7 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags } from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security} from "tsoa";
 import { IColor, IColorCreateProps } from "../models";
 import { ColorService } from "../services";
-
+import { UserRole } from "../models";
 export interface IColorUpdateProps {
     name?: string;
     code?: string;
@@ -26,6 +26,7 @@ export class ColorController {
     /**
      * Create new color
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
     public async createColor(@Body() data: IColorCreateProps): Promise<IColor> {
         return this._colorService.create(data)
@@ -33,6 +34,7 @@ export class ColorController {
     /**
     * Update color info
     */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
     public async updateColorById(@Path() id: number, @Body() data: IColorUpdateProps): Promise<IColor> {
         return this._colorService.update(id, data);
@@ -40,6 +42,7 @@ export class ColorController {
     /**
      * Delete color
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Delete("/:id")
     public async deleteColorById(@Path() id: number): Promise<void> {
         return this._colorService.delete(id);

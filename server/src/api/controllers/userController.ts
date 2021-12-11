@@ -69,6 +69,7 @@ export class UserController {
     /**
      * Get user and user's order list by user id
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Get("/:id")
     public async getUserById(@Path() id: number): Promise<IUser|null> {
         const user: any = await this._userService.getOneById(id,["orders"]);
@@ -77,6 +78,7 @@ export class UserController {
      /**
      * Create new user with admin permission
      */
+    @Security("jwt", [UserRole.ADMIN])
     @Post("/")
     public async createUser(@Body() data: IUserCreateProps): Promise<IUser|null> {
         return this._userService.createUser(data);
@@ -84,6 +86,7 @@ export class UserController {
     /**
      * Update user with admin permission
      */
+     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
      @Patch("/:id")
      public async updateUser(@Path() id: number,@Body() data: IUserUpdateProps): Promise<IUser|null> {
          

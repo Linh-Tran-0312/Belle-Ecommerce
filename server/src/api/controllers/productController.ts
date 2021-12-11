@@ -1,6 +1,6 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Query, Tags } from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Route, Query, Tags, Security } from "tsoa";
 import { IProducts } from "../repositories";
-import { IProduct, IProductCreateProps, IProductVariant, IProductVariantCreateProps } from "../models";
+import { IProduct, IProductCreateProps, IProductVariant, IProductVariantCreateProps, UserRole } from "../models";
 import { ProductService, IProductQuery, Change, ProductField, ProductVariantService } from "../services";
 
 export interface IProductUpdateProps {
@@ -79,6 +79,7 @@ export class ProductController {
     /**
      * Create new product
      */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
     public async createProduct(@Body() data: IProductCreateProps): Promise<IProduct|null> {
         return this._productService.createProduct(data)
@@ -86,6 +87,7 @@ export class ProductController {
     /**
     * Update product info
     */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
     public async updateProductById(@Path() id: number, @Body() data: IProductUpdateProps): Promise<IProduct|null> {
         return this._productService.updateProduct(id, data);
@@ -93,6 +95,7 @@ export class ProductController {
     /**
      * Delete product
      */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Delete("/:id")
     public async deleteProductById(@Path() id: number): Promise<void> {
         return this._productService.delete(id);
@@ -100,6 +103,7 @@ export class ProductController {
      /**
      * Create product variant
      */
+      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/variant")
     public async createProductVariant(@Body() data: IProductVariantCreateProps): Promise<IProductVariant|null> {
         return this._productVariantService.createProductVariant(data);
@@ -107,6 +111,7 @@ export class ProductController {
     /**
      * Update product variant partially
      */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/variant/:variantId")
     public async updateProductVariant(@Path() variantId: number, @Body() data: IProductVariantUpdateProps): Promise<IProductVariant|null> {
          return this._productVariantService.updateProductVariant(variantId, data)
@@ -114,6 +119,7 @@ export class ProductController {
     /**
      * Delete product variant
      */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Delete("/variant/:variantId")
     public async deleteProductVariant(@Path() variantId: number): Promise<void> {
         return this._productVariantService.delete(variantId)

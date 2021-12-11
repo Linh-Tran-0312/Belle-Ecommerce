@@ -1,6 +1,7 @@
 import { OperationalError } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
 import express from "express";
+import { SimpleConsoleLogger } from "typeorm";
 interface IError {
     status?: number;
     message?: string;
@@ -8,6 +9,7 @@ interface IError {
 
 const getErrorBody = (err: unknown) => {
      if(err instanceof OperationalError ) return { message: err.message, status: err.status}
+     console.log(err)
      return { message: "UNKNOWN_ERROR_1", status: HttpCode.INTERNAL_SERVER_ERROR,}
 }
 

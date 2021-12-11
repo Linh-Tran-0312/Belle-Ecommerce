@@ -334,7 +334,7 @@
 					"address": {
 						"type": "string"
 					},
-					"googleId": {
+					"token": {
 						"type": "string"
 					},
 					"wishList": {
@@ -357,7 +357,7 @@
 					"lname",
 					"email",
 					"password",
-					"googleId",
+					"token",
 					"phone",
 					"address",
 					"role",
@@ -824,7 +824,7 @@
 					"email": {
 						"type": "string"
 					},
-					"googleId": {
+					"token": {
 						"type": "string"
 					},
 					"phone": {
@@ -874,7 +874,7 @@
 					"email": {
 						"type": "string"
 					},
-					"googleId": {
+					"token": {
 						"type": "string"
 					},
 					"phone": {
@@ -1410,6 +1410,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ILogin": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IRevokeMessage": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IOrders": {
 				"properties": {
 					"orders": {
@@ -1595,42 +1623,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IUserAuth": {
-				"properties": {
-					"accessToken": {
-						"type": "string"
-					},
-					"refreshToken": {
-						"type": "string"
-					},
-					"profile": {
-						"$ref": "#/components/schemas/IUser"
-					}
-				},
-				"required": [
-					"accessToken",
-					"refreshToken",
-					"profile"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ILogin": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ISizeCreateProps": {
 				"properties": {
 					"name": {
@@ -1734,14 +1726,9 @@
 		},
 		"securitySchemes": {
 			"jwt": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			},
-			"api_key": {
 				"type": "apiKey",
-				"name": "access_token",
-				"in": "query"
+				"in": "cookie",
+				"name": "token"
 			},
 			"tsoa_auth": {
 				"type": "oauth2",
@@ -1866,7 +1853,14 @@
 				"tags": [
 					"Blog"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -1940,7 +1934,14 @@
 				"tags": [
 					"Blog"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -1974,7 +1975,14 @@
 				"tags": [
 					"Blog"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2060,7 +2068,15 @@
 				"tags": [
 					"Blog"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2093,7 +2109,15 @@
 				"tags": [
 					"Blog"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2127,7 +2151,15 @@
 				"tags": [
 					"Blog"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2265,7 +2297,14 @@
 				"tags": [
 					"Product"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2339,7 +2378,14 @@
 				"tags": [
 					"Product"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2373,7 +2419,14 @@
 				"tags": [
 					"Product"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2411,7 +2464,14 @@
 				"tags": [
 					"Product"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2449,7 +2509,14 @@
 				"tags": [
 					"Product"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2483,7 +2550,14 @@
 				"tags": [
 					"Product"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2599,7 +2673,13 @@
 				"tags": [
 					"User"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2637,7 +2717,15 @@
 				"tags": [
 					"User"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2673,7 +2761,15 @@
 				"tags": [
 					"User"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2697,6 +2793,128 @@
 				}
 			}
 		},
+		"/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow new users create their accounts",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IUserCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow customers login with their email and password",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ILogin"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/admin/login": {
+			"post": {
+				"operationId": "AdminLogin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow admin and editors login with their email and password",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ILogin"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/token": {
+			"get": {
+				"operationId": "RevokeToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IRevokeMessage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Refresh expired access token",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/orders": {
 			"get": {
 				"operationId": "GetOrders",
@@ -2716,7 +2934,13 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -2809,7 +3033,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -2845,7 +3077,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2883,7 +3123,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2921,7 +3169,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2945,7 +3201,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -2983,7 +3247,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3026,7 +3298,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3069,7 +3349,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3117,7 +3405,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3160,7 +3456,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3194,7 +3498,15 @@
 				"tags": [
 					"Order"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"customer",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3273,7 +3585,14 @@
 				"tags": [
 					"Blog Category"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3306,7 +3625,14 @@
 				"tags": [
 					"Blog Category"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3340,7 +3666,14 @@
 				"tags": [
 					"Blog Category"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3352,105 +3685,6 @@
 						}
 					}
 				]
-			}
-		},
-		"/auth/register": {
-			"post": {
-				"operationId": "Register",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUserAuth"
-								}
-							}
-						}
-					}
-				},
-				"description": "Allow new users create their accounts",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IUserCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/login": {
-			"post": {
-				"operationId": "Login",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUserAuth"
-								}
-							}
-						}
-					}
-				},
-				"description": "Allow users login with their email and password",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ILogin"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/admin/login": {
-			"post": {
-				"operationId": "AdminLogin",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUserAuth"
-								}
-							}
-						}
-					}
-				},
-				"description": "Allow admin and editer login with their email and password",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ILogin"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/sizes": {
@@ -3496,7 +3730,14 @@
 				"tags": [
 					"Product Size"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3529,7 +3770,14 @@
 				"tags": [
 					"Product Size"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3563,7 +3811,14 @@
 				"tags": [
 					"Product Size"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3620,7 +3875,14 @@
 				"tags": [
 					"Product Brand"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3653,7 +3915,14 @@
 				"tags": [
 					"Product Brand"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3687,7 +3956,14 @@
 				"tags": [
 					"Product Brand"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3744,7 +4020,14 @@
 				"tags": [
 					"Product Category"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3777,7 +4060,14 @@
 				"tags": [
 					"Product Category"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3811,7 +4101,14 @@
 				"tags": [
 					"Product Category"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3868,7 +4165,14 @@
 				"tags": [
 					"Product Color"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3901,7 +4205,14 @@
 				"tags": [
 					"Product Color"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3935,7 +4246,14 @@
 				"tags": [
 					"Product Color"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",

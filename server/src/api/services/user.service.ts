@@ -9,7 +9,11 @@ import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
 import { Not } from "typeorm";
 import { signAccessToken, signRefreshToken } from "../helpers/jwtHandler";
-import { IRevokeToken, IToken } from "../controllers/authController";
+import { IRefreshToken, IAccessToken } from "../controllers/authController";
+import  dotenv  from "dotenv";
+dotenv.config();
+import jwt from "jsonwebtoken";
+ 
 export enum UserField {
     NAME = "fname",
     SALE = "sale",
@@ -45,10 +49,12 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
         const profile = await this.repository.create(data);
-        delete profile.password;
-        delete profile.googleId;
+     
         const accessToken = signAccessToken({ id: profile.id, role: profile.role}, 60000); // expire in 1 minute
-        const refreshToken = signRefreshToken({id: profile.id}, 604800000); // expire in 7 days
+        const refreshToken = await signRefreshToken({id: profile.id}, 604800000); // expire in 7 days
+        await this.repository.create({...profile, token: refreshToken});
+        delete profile.password;
+        delete profile.token;
         const result = { accessToken, refreshToken, profile}
         return result;
     }
@@ -59,29 +65,50 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
        
         const match = await bcrypt.compare(password, existingUser.password);
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-        delete existingUser.password;
-        delete existingUser.googleId;
+      
         const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 60000); // expire in 1 minute
-        const refreshToken = signRefreshToken({id: existingUser.id}, 604800000); // expire in 7 days
+        const refreshToken = await signRefreshToken({id: existingUser.id}, 604800000); // expire in 7 days
+        await this.repository.create({...existingUser, token: refreshToken});
+        delete existingUser.password;
+        delete existingUser.token;
         const result = { accessToken, refreshToken, profile: existingUser}
         return result;
     }
     public async adminLogin(email: string, password: string): Promise<IUserAuth> {
-        const existingUser: IUser|any =  await this.repository.findOne({ where: { email, role: Not("customer") }});
-        if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
-       
-        const match = await bcrypt.compare(password, existingUser.password);
-        if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-        delete existingUser.password;
-        delete existingUser.googleId;
-        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 60); // expire in 1 minute
-        const refreshToken = signRefreshToken({id: existingUser.id}, 604800); // expire in 7 days
-        const result = { accessToken, refreshToken, profile: existingUser}
-        return result;
+        
+            const existingUser: IUser|any =  await this.repository.findOne({ where: { email, role: Not("customer") }});
+            if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
+           
+            const match = await bcrypt.compare(password, existingUser.password);
+            if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
+            const accessToken =  signAccessToken({ id: existingUser.id, role: existingUser.role}, 60); // expire in 1 minute
+            const refreshToken =  signRefreshToken({id: existingUser.id}, 604800); // expire in 7 days
+            await this.repository.create({...existingUser, token: refreshToken});
+            delete existingUser.password;
+            delete existingUser.token;        
+            const result = { accessToken, refreshToken, profile: existingUser}     
+            return result;
+     
+      
     }
-  /*   public async revokeAccessToken(data: IRevokeToken): Promise<IToken> {
-        const {refreshToken} = data; 
-    } */
+    public async revokeAccessToken(data: IRefreshToken): Promise<IAccessToken> {
+        const {refreshToken } = data;
+        let token = "";
+        if(!refreshToken) throw new OperationalError(OperationalErrorMessage.NO_TOKEN, HttpCode.BAD_REQUEST);
+        await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async(err , decoded ) => {
+            if(err)  throw new OperationalError(OperationalErrorMessage.INVALID_TOKEN, HttpCode.BAD_REQUEST);
+          
+            const user =  await this.repository.findOne({ where: { id : decoded?.id}});
+            if(refreshToken === user?.token )
+            {
+                token = signAccessToken({ id: decoded?.id, role: user?.role}, 60);
+            } else {
+                throw new OperationalError(OperationalErrorMessage.INVALID_TOKEN, HttpCode.BAD_REQUEST);
+            }
+         })
+
+         return { token }
+    }  
     public async getUsers(query: IUserQuery): Promise<IUsers> {
         return this.repository.getUsers(query);
     }

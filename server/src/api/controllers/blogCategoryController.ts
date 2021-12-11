@@ -1,7 +1,7 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags } from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
 import { IBlogCategory, IBlogCategoryCreateProps } from "../models";
 import { BlogCategoryService } from "../services";
-
+import { UserRole } from "../models";
 export interface IBlogCategoryUpdateProps {
     name?: string;
 }
@@ -25,6 +25,7 @@ export class BlogCategoryController {
     /**
      * Create new blog category
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
     public async createBlogCategory(@Body() data: IBlogCategoryCreateProps): Promise<IBlogCategory> {
         return this._blogCategoryService.create(data)
@@ -32,6 +33,7 @@ export class BlogCategoryController {
     /**
     * Update a blog category partially by its id
     */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
     public async updateBlogCategoryById(@Path() id: number, @Body() data: IBlogCategoryCreateProps): Promise<IBlogCategory> {
         return this._blogCategoryService.update(id, data);
@@ -39,6 +41,7 @@ export class BlogCategoryController {
     /**
      * Delete a blog category by its id
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Delete("/:id")
     public async deleteBlogCategoryById(@Path() id: number): Promise<void> {
         return this._blogCategoryService.delete(id);

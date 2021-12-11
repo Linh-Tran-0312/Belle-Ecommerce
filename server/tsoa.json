@@ -7,14 +7,9 @@
       "specVersion": 3,
       "securityDefinitions": {
         "jwt": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        },
-        "api_key": {
-            "type": "apiKey",
-            "name": "access_token",
-            "in": "query"
+          "type": "apiKey",
+          "in":"cookie",
+          "name": "token"
         },
         "tsoa_auth": {
             "type": "oauth2",
@@ -31,6 +26,7 @@
       "entryFile": "./src/index.ts",
       "routesDir": "./src/api/routes",
       "middleware": "express",
+      "middlewareTemplate": "./src/api/middlewares/custom-template.ts.hbs",
       "authenticationModule": "./src/api/middlewares/AuthHandler.ts"
     }
   }

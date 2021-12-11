@@ -1,8 +1,8 @@
-import { Body, Delete, Get, Patch, Path, Post, Query, Route, Tags } from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Query, Route, Tags, Security } from "tsoa";
 import { IBlogs } from "../repositories";
 import { IBlog, IBlogComment, IBlogCommentCreateProps, IBlogCreateProps } from "../models";
 import { BlogCommentService, BlogService, IBlogQuery, IBlogCommentQuery, BlogField, Change } from "../services";
-
+import { UserRole } from "../models";
 export interface IBlogUpdateProps {
     title?: string;
     categoryId?: number;
@@ -73,6 +73,7 @@ export class BlogController {
     /**
      * Create a new blog
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
     public async createBlog(@Body() data: IBlogCreateProps): Promise<IBlog|null> {
         return this._blogService.createBlog(data) 
@@ -87,6 +88,7 @@ export class BlogController {
     /**
      * Update a blog partially by its id
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
     public async updateBlogById(@Path() id: number, @Body() data: IBlogUpdateProps): Promise<IBlog|null> {
         return this._blogService.updateBlog(id, data);
@@ -94,6 +96,7 @@ export class BlogController {
     /**
      * Delete a blog  by its id
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Delete("/:id")
     public async deleteBlogById(@Path() id: number): Promise<void> {
         return this._blogService.delete(id);
@@ -120,6 +123,7 @@ export class BlogController {
     /**
      * Create new blog comment
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Post("/comments")
     public async createComment(@Body() data: IBlogCommentCreateProps): Promise<IBlogComment> {
         return this._blogCommentService.create(data)
@@ -127,6 +131,7 @@ export class BlogController {
     /**
      * Update a blog comment by its Id, 
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Patch("/comments/:commentId")
     public async updateCommentById(@Path() commentId: number, @Body() data: IBlogCommentUpdateProps): Promise<IBlogComment> {
         return this._blogCommentService.update(commentId, data )
@@ -134,6 +139,7 @@ export class BlogController {
     /**
      * Delete a blog comment by its Id, 
      */
+    @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Delete("/comments/:commentId")
     public async deleteCommentById(@Path() commentId: number): Promise<void> {
         return this._blogCommentService.delete(commentId)

@@ -25,7 +25,7 @@ export interface IUserCreateProps {
 export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBaseEntity {
     password?: string;
     email?: string;
-    googleId?: string;
+    token?: string;
     phone?: string;
     address?: string;
     orders?: Order[]
@@ -44,7 +44,7 @@ export class User extends CustomBaseEntity implements IUserCreateProps {
     email!: string;
 
     @Column({nullable: true})
-    googleId!: string;
+    token!: string;
 
     @Column({ nullable: true, default: "" })
     phone!: string;

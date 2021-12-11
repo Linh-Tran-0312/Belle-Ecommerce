@@ -1,5 +1,5 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags } from "tsoa";
-import { ISize, ISizeCreateProps } from "../models";
+import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
+import { ISize, ISizeCreateProps, UserRole } from "../models";
 import { SizeService } from "../services";
 
 export interface ISizeUpdateProps {
@@ -25,6 +25,7 @@ export class SizeController {
     /**
      * Create new Size
      */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
     public async createSize(@Body() data: ISizeCreateProps): Promise<ISize> {
         return this._sizeService.create(data)
@@ -32,6 +33,7 @@ export class SizeController {
     /**
     * Update Size info
     */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
     public async updateSizeById(@Path() id: number, @Body() data: ISizeUpdateProps): Promise<ISize> {
         return this._sizeService.update(id, data);
@@ -39,6 +41,7 @@ export class SizeController {
     /**
      * Delete Size
      */
+     @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Delete("/:id")
     public async deleteSizeById(@Path() id: number): Promise<void> {
         return this._sizeService.delete(id);
