@@ -50,7 +50,7 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         data.password = hashPassword;
         const profile = await this.repository.create(data);
      
-        const accessToken = signAccessToken({ id: profile.id, role: profile.role}, 60000); // expire in 1 minute
+        const accessToken = signAccessToken({ id: profile.id, role: profile.role}, 3600); // expire in 1 minute
         const refreshToken = await signRefreshToken({id: profile.id}, 604800000); // expire in 7 days
         await this.repository.create({...profile, token: refreshToken});
         delete profile.password;
@@ -66,7 +66,7 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         const match = await bcrypt.compare(password, existingUser.password);
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
       
-        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 60000); // expire in 1 minute
+        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 3600); // expire in 1 minute
         const refreshToken = await signRefreshToken({id: existingUser.id}, 604800000); // expire in 7 days
         await this.repository.create({...existingUser, token: refreshToken});
         delete existingUser.password;
@@ -81,7 +81,7 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
            
             const match = await bcrypt.compare(password, existingUser.password);
             if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-            const accessToken =  signAccessToken({ id: existingUser.id, role: existingUser.role}, 60); // expire in 1 minute
+            const accessToken =  signAccessToken({ id: existingUser.id, role: existingUser.role}, 3600); // expire in 1 hour
             const refreshToken =  signRefreshToken({id: existingUser.id}, 604800); // expire in 7 days
             await this.repository.create({...existingUser, token: refreshToken});
             delete existingUser.password;

@@ -32,7 +32,10 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("tiny"));
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 // allow external access to swagger file in public folder and config swagger route 
 app.use(express.static("public"));
  app.use(
