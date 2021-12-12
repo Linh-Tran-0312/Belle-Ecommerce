@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import adminAuthActions from "../../actions/adminAuth";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Link from '@material-ui/core/Link';
+import { makeStyles } from '@material-ui/core/styles';
+import {CircularProgress }from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { useDispatch , useSelector } from "react-redux";
+import adminAuthActions from "../../actions/adminAuth";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -54,8 +52,9 @@ const initState = {
 export default function SignIn() {
   const classes = useStyles();
   const history = useHistory();
-  const message  = useSelector(state => state.auth).adminMessage;
-  console.log(message);
+  const message  = useSelector(state => state.adminAuth).error;
+  const loading = useSelector(state => state.adminAuth).loading;
+
     const [ state, setState ] = useState(initState);
     const dispatch = useDispatch();
     const handleChange = e => {
@@ -100,16 +99,15 @@ export default function SignIn() {
             autoComplete="current-password"
             onChange={handleChange}
           />
-  
           <Typography variant="subtitle2" color="error">{message}</Typography>
           <Button
             type="submit"
             fullWidth
-            variant="contained"
+            variant="outlined"
             color="primary"
             className={classes.submit}
           >
-            Sign In
+           { loading ? <CircularProgress color="primary" size={23}/> : "Sign In"} 
           </Button>
         </form>
       </div>

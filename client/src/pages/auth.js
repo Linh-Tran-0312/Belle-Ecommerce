@@ -43,7 +43,7 @@ export default () => {
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch()
-    const message = useSelector(state => state.auth).error;
+    const message = useSelector(state => state.userAuth).error;
     const [ isSignIn, setIsSignIn] = useState(true);
     const [ state, setState ] = useState(initState);
     

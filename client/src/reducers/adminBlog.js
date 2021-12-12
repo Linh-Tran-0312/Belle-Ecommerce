@@ -11,15 +11,14 @@ const initBlog = {
     commentAllow: true
 }
 const initState = {
-    isDeletingBlogCategory: false,
-    isDeletingBlog: false,
+    blogCategoryLoading: false,
+    blogCategoryError: "",
+    blogLoading: false,
+    blogError: "",
     categories: [],
     blogs: [],
-    pagination: {
-        total: 5
-    },
+    blogCount: 0,
     blog: initBlog,
-    error: null,
 }
 
 export default (state = initState, {type, payload}) => produce(state, (draft) => {
@@ -47,7 +46,7 @@ export default (state = initState, {type, payload}) => produce(state, (draft) =>
         // reducer for blog
         case ACTION.GET_BLOGS:
             draft.blogs = payload.blogs;
-            draft.pagination.total = payload.total;
+            draft.blogCount = payload.total;
             return draft;
         case ACTION.GET_BLOG_BY_ID:
             draft.blog = payload
@@ -59,7 +58,7 @@ export default (state = initState, {type, payload}) => produce(state, (draft) =>
             draft.blog = payload;
             draft.blogs.unshift(payload);
             draft.blogs.pop();
-            draft.pagination.total = draft.pagination.total + 1;
+            draft.blogCount = draft.blogCount + 1;
             return draft;
         case ACTION.UPDATE_BLOG:
             draft.blog = payload;
@@ -70,7 +69,7 @@ export default (state = initState, {type, payload}) => produce(state, (draft) =>
             return draft;
         case ACTION.DELETE_BLOG:
             draft.blogs = draft.blogs.filter(b => b.id !== payload);
-            draft.pagination.total = draft.pagination.total - 1;
+            draft.blogCount = draft.blogCount - 1;
             draft.isDeletingBlog = false;
             return draft;
         default:

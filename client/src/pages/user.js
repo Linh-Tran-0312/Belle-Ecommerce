@@ -27,7 +27,7 @@ const initUser = {
 }
 export default () => {
     //const userDetail = useSelector(state => state.auth).user;
-    const orders = useSelector(state => state.auth).orders;
+    const orders = useSelector(state => state.userAuth).orders;
     const history = useHistory();
     const location = useLocation();
   

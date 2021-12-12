@@ -19,12 +19,12 @@ export const Query = {
     ASC : "ASC",
     DESC: "DESC",
 }
-// status for API fetching
-export const Status = {
-    IDLE: "idle",
-    LOADING: "loading",
-    SUCCEEDED: "succeed",
-    FAILED: "failed"
+// MUI Snackbar variant
+export const SnackBar = {
+    INFO: "info",
+    WARNING: "warning",
+    SUCCESS: "success",
+    ERROR: "error"
 }
 export const ORDER_STATUS = {
     ORDERING: "ordering",
@@ -33,12 +33,51 @@ export const ORDER_STATUS = {
     COMPLETED: "completed",
     CANCELED: "canceled"
 }
+
+export const MSG = {
+    STH_WRONG: "Sorry, something went wrong...",
+    CF_PASS: "Please make sure your password match",
+
+    C_BLOG_CATEGORY: "Create blog category successfully",
+    U_BLOG_CATEGORY: "Update blog category successfully",
+    D_BLOG_CATEGORY: "The blog category was deleted",
+    C_BLOG: "Create blog successfully",
+    U_BLOG: "Update blog successfully",
+    D_BLOG: "The blog was deleted",
+    C_PRODUCT: "Create product successfully",
+    U_PRODUCT: "Update product successfully",
+    D_PRODUCT: "The product was deleted",
+    C_PRODUCT_CATEGORY: "Create product category successfully",
+    U_PRODUCT_CATEGORY: "Update product category successfully",
+    D_PRODUCT_CATEGORY: "The product category was deleted",
+    C_PRODUCT_BRAND: "Create product brand successfully",
+    U_PRODUCT_BRAND: "Update product brand successfully",
+    D_PRODUCT_BRAND: "The product brand was deleted",
+    C_PRODUCT_SIZE: "Create product size successfully",
+    U_PRODUCT_SIZE: "Update product size successfully",
+    D_PRODUCT_SIZE: "The product size was deleted",
+    C_PRODUCT_COLOR: "Create product color successfully",
+    U_PRODUCT_COLOR: "Update product color successfully",
+    D_PRODUCT_COLOR: "The product color was deleted",
+
+    C_USER: "Create user successfully",
+    U_USER: "Update user successfully",
+
+    ADD_PRODUCT_TO_CART: "Add the product to cart successfully"
+  
+
+
+
+
+}
 export const ACTION = {
     /***********************************ADMIN ACTION***************************************/
+    //------------------AUTH ACTION----------------------------
     ADMIN_INIT: "ADMIN_INIT",
     ADMIN_AUTH: "ADMIN_AUTH",
     ADMIN_LOGOUT: "ADMIN_LOGOUT",
-    ADMIN_MESSAGE: "ADMIN_MESSAGE",
+    ADMIN_AUTH_ERROR: "ADMIN_AUTH_ERROR",
+    ADMIN_AUTH_LOADING: "ADMIN_AUTH_LOADING",
 
     //------------------BLOG ACTION----------------------------
     //Error Action
@@ -174,19 +213,18 @@ export const ACTION = {
 
     //User Auth Action
     USER_REGISTER: "USER_REGISTER",
-    USER_LOGIN: "LOGIN",
-    USER_LOGOUT: "LOGOUT",
-    USER_AUTH_LOADING: "AUTH_STATUS",
-    USER_AUTH_ERROR: "AUTH_STATUS",
+    USER_AUTH: "USER_AUTH",
+    USER_LOGOUT: "USER_LOGOUT",
+    USER_AUTH_LOADING: "USER_AUTH_LOADING",
+    USER_AUTH_ERROR: "USER_AUTH_ERROR",
 
     //Authorization Action 
     USER_INIT: "USER_INIT",
-    AUTH: "AUTH",
-    LOGOUT: "LOGOUT",
-    AUTH_LOADING: "AUTH_LOADING",
-    AUTH_ERROR: "AUTH_ERROR",
+ 
 
-
+    ENQUEUE_SNACKBAR:'ENQUEUE_SNACKBAR',
+    CLOSE_SNACKBAR:'CLOSE_SNACKBAR',
+    REMOVE_SNACKBAR:'REMOVE_SNACKBAR',
 
 
 

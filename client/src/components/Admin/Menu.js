@@ -57,7 +57,7 @@ export const Menu = ({ page, role }) => {
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItem>
-            <ListItem button selected={AdminPath.ORDERS === page ? true : false} component={Link} to="/admin/orders">
+            <ListItem button selected={AdminPath.ORDERS === page ? true : false} component={Link} to="/admin?section=orders">
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
@@ -72,31 +72,31 @@ export const Menu = ({ page, role }) => {
             </ListItem>
             <Collapse in={openProduct} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_LIST === page ? true : false} component={Link} to="/admin/product-list" >
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_LIST === page ? true : false} component={Link} to="/admin?section=product-list" >
                   <ListItemIcon>
                     <StoreIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Product List" classes={{ primary: classes.subMenu }} />
                 </ListItem>
-                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_CATEGORY === page ? true : false} component={Link} to="/admin/product-category" >
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_CATEGORY === page ? true : false} component={Link} to="/admin?section=product-category" >
                   <ListItemIcon>
                     <CategoryIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Category" classes={{ primary: classes.subMenu }} />
                 </ListItem>
-                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_BRAND === page ? true : false} component={Link} to="/admin/product-brand">
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_BRAND === page ? true : false} component={Link} to="/admin?section=product-brand">
                   <ListItemIcon>
                     <BrandingWatermarkIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Brand" classes={{ primary: classes.subMenu }} />
                 </ListItem>
-                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_COLOR === page ? true : false} component={Link} to="/admin/product-color">
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_COLOR === page ? true : false} component={Link} to="/admin?section=product-color">
                   <ListItemIcon>
                     <FormatColorFillIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Color" classes={{ primary: classes.subMenu }} />
                 </ListItem>
-                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_SIZE === page ? true : false} component={Link} to="/admin/product-size">
+                <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_SIZE === page ? true : false} component={Link} to="/admin?section=product-size">
                   <ListItemIcon>
                     <FormatSizeIcon fontSize="small" />
                   </ListItemIcon>
@@ -113,13 +113,13 @@ export const Menu = ({ page, role }) => {
             </ListItem>
             <Collapse in={openBlog} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem button className={classes.nested} selected={AdminPath.BLOG_LIST === page ? true : false} component={Link} to="/admin/blog-list">
+                <ListItem button className={classes.nested} selected={AdminPath.BLOG_LIST === page ? true : false} component={Link} to="/admin?section=blog-list">
                   <ListItemIcon>
                     <PostAddIcon fontSize="small" />
                   </ListItemIcon>
                   <ListItemText primary="Blog List" classes={{ primary: classes.subMenu }} />
                 </ListItem>
-                <ListItem button className={classes.nested} selected={AdminPath.BLOG_CATEGORY === page ? true : false} component={Link} to="/admin/blog-category">
+                <ListItem button className={classes.nested} selected={AdminPath.BLOG_CATEGORY === page ? true : false} component={Link} to="/admin?section=blog-category">
                   <ListItemIcon>
                     <CategoryIcon fontSize="small" />
                   </ListItemIcon>
@@ -127,13 +127,13 @@ export const Menu = ({ page, role }) => {
                 </ListItem>
               </List>
             </Collapse>
-            <ListItem button selected={AdminPath.CUSTOMERS === page ? true : false} component={Link} to="/admin/customers">
+            <ListItem button selected={AdminPath.CUSTOMERS === page ? true : false} component={Link} to="/admin?section=customers">
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
               <ListItemText primary="Customers" />
             </ListItem>
-            <ListItem button selected={AdminPath.REPORTS === page ? true : false} component={Link} to="/admin/reports">
+            <ListItem button selected={AdminPath.REPORTS === page ? true : false} component={Link} to="/admin?section=reports">
               <ListItemIcon>
                 <BarChartIcon />
               </ListItemIcon>
@@ -153,31 +153,31 @@ export const Menu = ({ page, role }) => {
     </ListItem>
     <Collapse in={openProduct} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_LIST === page ? true : false} component={Link} to="/admin/product-list" >
+          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_LIST === page ? true : false} component={Link} to="/admin?section=product-list" >
             <ListItemIcon>
             <StoreIcon fontSize="small"/>
             </ListItemIcon>
             <ListItemText primary="Product List" classes={{primary: classes.subMenu }}/>
           </ListItem>
-          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_CATEGORY === page ? true : false} component={Link} to="/admin/product-category" >
+          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_CATEGORY === page ? true : false} component={Link} to="/admin?section=product-category" >
             <ListItemIcon>
             <CategoryIcon fontSize="small"/>
             </ListItemIcon>
             <ListItemText primary="Category" classes={{primary: classes.subMenu }}/>
           </ListItem>
-          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_BRAND === page ? true : false} component={Link} to="/admin/product-brand">
+          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_BRAND === page ? true : false} component={Link} to="/admin?section=product-brand">
             <ListItemIcon>
             <BrandingWatermarkIcon fontSize="small"/>
             </ListItemIcon>
             <ListItemText primary="Brand" classes={{primary: classes.subMenu }}/>
           </ListItem>
-          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_COLOR === page ? true : false} component={Link} to="/admin/product-color">
+          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_COLOR === page ? true : false} component={Link} to="/admin?section=product-color">
             <ListItemIcon>
             <FormatColorFillIcon fontSize="small"/>
             </ListItemIcon>
             <ListItemText primary="Color" classes={{primary: classes.subMenu }}/>
           </ListItem>
-          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_SIZE === page ? true : false} component={Link} to="/admin/product-size">
+          <ListItem button className={classes.nested} selected={AdminPath.PRODUCT_SIZE === page ? true : false} component={Link} to="/admin?section=product-size">
             <ListItemIcon>
             <FormatSizeIcon fontSize="small"/>
             </ListItemIcon>
@@ -194,13 +194,13 @@ export const Menu = ({ page, role }) => {
     </ListItem>
     <Collapse in={openBlog} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItem button className={classes.nested} selected={AdminPath.BLOG_LIST === page ? true : false} component={Link} to="/admin/blog-list">
+          <ListItem button className={classes.nested} selected={AdminPath.BLOG_LIST === page ? true : false} component={Link} to="/admin?section=blog-list">
             <ListItemIcon>
             <PostAddIcon fontSize="small"/>
             </ListItemIcon>
             <ListItemText primary="Blog List" classes={{primary: classes.subMenu }}/>
           </ListItem>
-          <ListItem button className={classes.nested} selected={AdminPath.BLOG_CATEGORY === page ? true : false} component={Link} to="/admin/blog-category">
+          <ListItem button className={classes.nested} selected={AdminPath.BLOG_CATEGORY === page ? true : false} component={Link} to="/admin?section=blog-category">
             <ListItemIcon>
             <CategoryIcon fontSize="small"/>
             </ListItemIcon>

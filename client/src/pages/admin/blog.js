@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
         height: "100%",
         position: "absolute",
         top: 0,
-        borderRadius: 5
+        borderRadius: 5,
+        objectFit: "cover"
     },
     photoBlock: {
         border: "1px solid #bcbcbc",
@@ -56,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: "rgba(255,255,255,0.9)",
             borderColor: "transparent"
         },
-        borderColor: "transparent"
+        borderColor: "transparent",
+        objectFit: "cover"
     }
 }));
 
@@ -82,7 +84,7 @@ export default function BlogAdmin() {
  
     // Blog 
     const blogCategories = useSelector(state => state.adminBlog).categories;
-    const blogTotal = useSelector(state => state.adminBlog).pagination.total;
+    const blogTotal = useSelector(state => state.adminBlog).blogCount;
    
     //const page = useSelector(state => state.blog).pagination.page;
     const blogs = useSelector(state => state.adminBlog).blogs;

@@ -1,44 +1,71 @@
 import api from "../api";
-import { ACTION, Query } from "../constants";
+import { ACTION, Query, MSG, SnackBar } from "../constants";
 import handleFilter from "../helper/handleFilter";
+import { enqueueSnackbar } from "./notification";
 const blogActions = {
 
     // handle blog category actions
     getBlogCategories: () => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.BLOG_CATEGORY_LOADING });
             const res = await api.getBlogCategories();
-            console.log(res.data);
             dispatch({ type: ACTION.GET_BLOG_CATEGORIES, payload: res.data});
         } catch (error) {
-            console.log(error);
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: error.response.data?.message})
+            } else {
+                console.log(error);
+                dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: MSG.STH_WRONG})
+            }     
         }
     },
     createBlogCategory: (formData) => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.BLOG_CATEGORY_LOADING });
             const { data } = await api.createBlogCategory(formData);
-            console.log(data);
+            dispatch(enqueueSnackbar(MSG.C_BLOG_CATEGORY, SnackBar.SUCCESS ));
             dispatch({ type: ACTION.CREATE_BLOG_CATEGORY, payload: data});
         } catch (error) {
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                //dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: error.response.data?.message});
+                dispatch(enqueueSnackbar(error.response.data?.message, SnackBar.ERROR ));
+            } else {
+                console.log(error);
+                //dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: MSG.STH_WRONG})
+                dispatch(enqueueSnackbar(MSG.STH_WRONG, SnackBar.ERROR ));
+
+            }  
         }
     },
     updateBlogCategory: (id, formData) => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.BLOG_CATEGORY_LOADING });
             const { data } = await api.updateBlogCategory(id, formData);
-            console.log(data);
+            dispatch(enqueueSnackbar(MSG.U_BLOG_CATEGORY, SnackBar.SUCCESS ));
             dispatch({ type: ACTION.UPDATE_BLOG_CATEGORY, payload: data});
         } catch (error) {
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                //dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: error.response.data?.message})
+                dispatch(enqueueSnackbar(error.response.data?.message, SnackBar.ERROR ));
+            } else {
+                console.log(error);
+               // dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: MSG.STH_WRONG})
+               dispatch(enqueueSnackbar(MSG.STH_WRONG, SnackBar.ERROR ));
+            } 
         }
     },
     deleteBlogCategory: (id) => async(dispatch) => {
         try {
-            dispatch({ type: ACTION.IS_DELETING_BLOG_CATEGORY})
+            dispatch({ type: ACTION.BLOG_CATEGORY_LOADING });
             await api.deleteBlogCategory(id);          
             dispatch({ type: ACTION.DELETE_BLOG_CATEGORY, payload: id});
         } catch (error) {
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: error.response.data?.message})
+            } else {
+                console.log(error);
+                dispatch({ type: ACTION.BLOG_CATEGORY_ERROR, payload: MSG.STH_WRONG})
+            } 
         }
     },
 
@@ -63,22 +90,30 @@ const blogActions = {
                 default:
                     break;
             }
+            dispatch({ type: ACTION.BLOG_LOADING });
             const res = await api.getBlogs(queryString);
-            console.log(res.data);
             dispatch({ type: ACTION.GET_BLOGS, payload: res.data});
         } catch (error) {
-            console.log(error);
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                dispatch({ type: ACTION.BLOG_ERROR, payload: error.response.data?.message})
+            } else {
+                console.log(error);
+                dispatch({ type: ACTION.BLOG_ERROR, payload: MSG.STH_WRONG})
+            } 
         }
     },
     getBlogById: (id) => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.BLOG_LOADING });
             const res = await api.getBlogById(id);
-            console.log(res.data);
             dispatch({ type: ACTION.GET_BLOG_BY_ID, payload: res.data});
         } catch (error) {
-            console.log(error);
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                dispatch({ type: ACTION.BLOG_ERROR, payload: error.response.data?.message})
+            } else {
+                console.log(error);
+                dispatch({ type: ACTION.BLOG_ERROR, payload: MSG.STH_WRONG})
+            }
         }
     },
     createBlog: (formData) => async(dispatch) => {
@@ -90,13 +125,19 @@ const blogActions = {
                 commentAllow: formData.commentAllow,
                 content: formData.content
             }; 
-            console.log(copy);
-            const res = await api.createBlog(copy);
-            
+            dispatch({ type: ACTION.BLOG_LOADING });
+            const res = await api.createBlog(copy);   
+            dispatch(enqueueSnackbar(MSG.C_BLOG, SnackBar.SUCCESS ));        
             dispatch({ type: ACTION.CREATE_BLOG, payload: res.data});
         } catch (error) {
-            console.log(error);
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                //dispatch({ type: ACTION.BLOG_ERROR, payload: error.response.data?.message})
+                dispatch(enqueueSnackbar(error.response.data?.message, SnackBar.ERROR ));      
+            } else {
+                console.log(error);
+               // dispatch({ type: ACTION.BLOG_ERROR, payload: MSG.STH_WRONG})
+               dispatch(enqueueSnackbar(MSG.STH_WRONG, SnackBar.ERROR ));    
+            }
         }
     },
     updateBlog: (id,formData) => async(dispatch) => {
@@ -108,14 +149,19 @@ const blogActions = {
                 commentAllow: formData.commentAllow,
                 content: formData.content
             }; 
-           
-            console.log(copy);
+            dispatch({ type: ACTION.BLOG_LOADING });
             const res = await api.updateBlog(id,copy);
-            console.log(res.data);
+            dispatch(enqueueSnackbar(MSG.U_BLOG, SnackBar.SUCCESS ));
             dispatch({ type: ACTION.UPDATE_BLOG, payload: res.data});
         } catch (error) {
-            console.log(error);
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                //dispatch({ type: ACTION.BLOG_ERROR, payload: error.response.data?.message})
+                dispatch(enqueueSnackbar(error.response.data?.message, SnackBar.ERROR ));      
+            } else {
+                console.log(error);
+               // dispatch({ type: ACTION.BLOG_ERROR, payload: MSG.STH_WRONG})
+               dispatch(enqueueSnackbar(MSG.STH_WRONG, SnackBar.ERROR ));    
+            }
         }
     },
     deleteBlog: (id) => async(dispatch) => {
@@ -124,8 +170,12 @@ const blogActions = {
             await api.deleteBlog(id);            
             dispatch({ type: ACTION.DELETE_BLOG, payload: id});
         } catch (error) {
-            console.log(error);
-            dispatch({ type: ACTION.ERROR, payload: error.message})
+            if(error.response) {
+                dispatch({ type: ACTION.BLOG_ERROR, payload: error.response.data?.message})
+            } else {
+                console.log(error);
+                dispatch({ type: ACTION.BLOG_ERROR, payload: MSG.STH_WRONG})
+            }
         }
     }
 

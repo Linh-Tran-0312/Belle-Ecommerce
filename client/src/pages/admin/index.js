@@ -34,6 +34,7 @@ import Customer from "./user";
 import { Menu , secondaryListItems } from '../../components/Admin/Menu';
 import { AdminPath } from '../../constants';
 import adminAuthActions from '../../actions/adminAuth';
+import { useQuery } from '../../helper/customHook';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -129,11 +130,11 @@ export default function AdminPage() {
   const [open, setOpen] = React.useState(true);
   const [ page, setPage ] = React.useState(AdminPath.DASHBOARD);
   const [ title, setTitle] = useState("DASHBOARD");
- //const admin = useSelector(state => state.auth).admin;
+  const query = useQuery();
  const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
   React.useEffect(() => {
-   
-      const pathName = location.pathname.substring(7);
+
+      const pathName = query.get("section")
       if(Object.keys(AdminPath).find(path => AdminPath[path] == pathName))
       {
         setPage(pathName);

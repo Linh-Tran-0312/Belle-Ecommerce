@@ -84,7 +84,7 @@ const ProductPage = () => {
     const [ item, setItem ] = useState("");
     const [ qty, setQty ] = useState(1);
 
-    const user = useSelector(state => state.auth).user;
+    const user = useSelector(state => state.userAuth).user;
     const orderId = useSelector(state => state.order).orderId;
      const product = useSelector(state => state.shop).product;
     useEffect(() => {

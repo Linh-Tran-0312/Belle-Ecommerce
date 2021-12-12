@@ -9,13 +9,7 @@ const Layout = ({children}) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const ref = useRef()
-   /*  useEffect(() => {
-        dispatch(homeActions.getProductCategories());
-        dispatch(homeActions.getProductBrands());
-        dispatch(homeActions.getNewArrivals());
-        dispatch(homeActions.getLatestBlogs());
-        dispatch(homeActions.getBlogCategories());
-    },[]) */
+
     useEffect(() => {
        ref.current.scrollIntoView();
     },[location])

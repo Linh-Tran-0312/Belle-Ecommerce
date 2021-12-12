@@ -1,24 +1,24 @@
 
 
 export const isAdminAuthenticated = () => {
-    if(typeof window === "undefined") return false;
-    let data = localStorage.getItem("admin");
+    console.log("here")
+    //if(typeof window === "undefined") return false;
+    let data = JSON.parse(localStorage.getItem("admin"));
 
-    if(data)
+    if(data?.id)
     {
-        let token = JSON.parse(data).token;
-        if(token) return token;
+       return true
     }
     return false
-}
+} 
 export const isUserAuthenticated = () => {
-    if(typeof window === "undefined") return false;
-    let data = localStorage.getItem("user");
+    //if(typeof window === "undefined") return false;
+    console.log("here")
+    let data =  JSON.parse(localStorage.getItem("user"));
 
-    if(data)
-    {
-        let token = JSON.parse(data).token;
-        if(token) return token;
+    if(data?.id)
+    { console.log(data?.id)
+         return true
     }
     return false
 }
