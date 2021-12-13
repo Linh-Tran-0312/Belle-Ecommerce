@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import DeleteButton from "../../components/DeleteButton";
 import productActions from "../../actions/adminProduct";
-
+import { MSG } from "../../constants";
 
 
 const initBrand = {
@@ -26,7 +26,7 @@ export default function ProductBrand() {
     const dispatch = useDispatch();
    // Brand State
    const productBrands = useSelector(state => state.adminProduct).brands;
-   const isDeletingProductBrand = useSelector(state => state.adminProduct).isDeletingProductBrand;
+   const loading = useSelector(state => state.adminProduct).productBrandLoading;
    const [brand, setBrand] = useState(initBrand);
    const [showBrand, setShowBrand] = useState(false);
 
@@ -97,16 +97,16 @@ export default function ProductBrand() {
                                             brand?.id ? (
                                                 <>
                                                  <Grid item xs={6}>
-                                                <DeleteButton message="Are you sure you want to delete this brand?" status={isDeletingProductBrand} deleteFn={handleDeleteBrand}/>
+                                                <DeleteButton msgConfirm={MSG.A_PRODUCT_BRAND} deleteFn={handleDeleteBrand} disabled={loading}/>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Save</Button>
                                             </Grid>
                                                 </>
                                                
                                             ):(
                                                 <Grid item xs={12}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}  type="submit">Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />}  type="submit" disabled={loading}>Create</Button>
                                             </Grid>
                                             )
                                         }

@@ -1,6 +1,5 @@
 import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,11 +11,10 @@ import SaveIcon from '@material-ui/icons/Save';
 import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useDispatch, useSelector } from "react-redux";
-import DeleteButton from "../../components/DeleteButton";
 import blogActions from "../../actions/adminBlog";
-const useStyles = makeStyles((theme) => ({
- 
-}));
+import DeleteButton from "../../components/DeleteButton";
+import { MSG } from "../../constants"
+
 
 const initCategory = {
     id: "",
@@ -24,16 +22,17 @@ const initCategory = {
 };
 
 export default function BlogCategory() {
-    const classes = useStyles();
+   
     const dispatch = useDispatch();
 
 
     // Category State
     const blogCategories = useSelector(state => state.adminBlog).categories;
-    const isDeletingBlogCategory = useSelector(state => state.adminBlog).isDeletingBlogCategory;
+    const loading= useSelector(state => state.adminBlog).blogCategoryLoading;
+
     const [category, setCategory] = useState(initCategory);
     const [showCategory, setShowCategory] = useState(false);
-
+    
 
     // Handle events in Category Tab
     const handleSelectCategory = (value) => {
@@ -55,9 +54,10 @@ export default function BlogCategory() {
         }
     }
     const handleDeleteCategory = (e) => {
+         setCategory(initCategory);
+        setShowCategory(false); 
         dispatch(blogActions.deleteBlogCategory(category.id));
-        setCategory(initCategory);
-        setShowCategory(false);
+       
     }
 
   
@@ -101,17 +101,17 @@ export default function BlogCategory() {
                                                 !category.id ? (
                                                     <>
                                                         <Grid item xs={12}>
-                                                            <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
+                                                            <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory} disabled={loading}>Create</Button>
                                                         </Grid>
                                                     </>
 
                                                 ) : (
                                                     <>
                                                         <Grid item xs={6}>
-                                                            <DeleteButton message="Are your sure to delete this blog category" deleteFn={handleDeleteCategory} status={isDeletingBlogCategory} />
+                                                            <DeleteButton msgConfirm={MSG.A_BLOG_CATEGORY} deleteFn={handleDeleteCategory}  disabled={loading}/>
                                                         </Grid>
                                                         <Grid item xs={6}>
-                                                            <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}>Save</Button>
+                                                            <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory}  disabled={loading}>Save</Button>
                                                         </Grid>
                                                     </>
                                                 )

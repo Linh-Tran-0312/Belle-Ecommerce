@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 export default () => {
     const classes = useStyles();
     return (  <Box className={classes.box}>
-        <CircularProgress color="inherit" />
+        <img alt="loader" src={window.location.origin + '/loader.gif'}/>
       </Box>
     )
 }

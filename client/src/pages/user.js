@@ -59,7 +59,7 @@ export default () => {
     const handleLogout = (e) => {
         dispatch(authActions.logout(history));
     }
-    if(!user?.id ) return <Redirect to="/auth" />
+    //if(!user?.id ) return <Redirect to="/auth" />
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>

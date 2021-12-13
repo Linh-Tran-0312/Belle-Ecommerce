@@ -23,7 +23,7 @@ import blogActions from "../actions/blog";
 const useStyle = makeStyles((theme) => ({
     link: {
         textDecoration: 'none',
-        marginLeft: 14,
+ 
         color: 'black'
     },
     cardThumb: {
@@ -45,6 +45,14 @@ const useStyle = makeStyles((theme) => ({
         width: '100%',
         borderRadius: 0,
         boxShadow: 'none'
+    },
+    cartContent: {
+        padding: 0,
+        paddingTop: "16px",
+        paddingBottom: "16px"
+    },
+    cartAction : {
+        padding: 0
     },
     mediaItem: {
         height: 150,
@@ -73,7 +81,16 @@ const useStyle = makeStyles((theme) => ({
     center : {
         display: 'flex',
         justifyContent: "center",
-    }
+    },
+    customBox: {
+        display: "-webkit-box",
+        boxOrient: "vertical",
+        lineClamp: 2,
+        wordBreak: "break-all",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+     
+      }
 }))
 const initFilter = {
     search: "",
@@ -141,8 +158,8 @@ const BlogsPage = () => {
                     </Breadcrumbs>
                 </Box>
             </div>
-            <Box>
-                <Grid container spacing={3}>
+            <Box px={2}>
+                <Grid container >
                     <Grid item lg={3} md={3} sm={12} xs={12}>
                         <Box px={4} mt={1}>
                             <h5 className="fontRoSlab" >CATEGORY</h5>
@@ -154,9 +171,9 @@ const BlogsPage = () => {
                         <Box px={4} mt={4}>
                             <h5 className="fontRoSlab">RECENT POSTS</h5>
                             {
-                                latestBlogs.map(item =>
-                                    <BlogThumb key={item.id}  blog={item}/>
-                                )
+                                latestBlogs.map(item => <Link to={`/blogs/blog/${item.id}`} style={{textDecoration: 'none', color: 'black'}}>
+                                <BlogThumb key={item.id} blog={item} />
+                                </Link>)
                             }
                         </Box>
                     </Grid>
@@ -188,8 +205,8 @@ const BlogsPage = () => {
                                                         image={item.imgPath}
                                                         title="Contemplative Reptile"
                                                     />
-                                                    <CardContent>
-                                                        <Typography gutterBottom >                                                        
+                                                    <CardContent className={classes.cartContent}>
+                                                        <Typography gutterBottom  classes={{root: classes.customBox}}>                                                        
                                                                 <span className="fontRoSlab fontSize20" >
                                                                     {item.title}
                                                                 </span>                                                        
@@ -197,10 +214,10 @@ const BlogsPage = () => {
                                                         <Typography component="span" gutterBottom>
                                                             <Grid container direction="row" alignItems="center">
                                                                 <Grid item>
-                                                                    <AccessTimeIcon fontSize="small" />
+                                                                    <AccessTimeIcon style={{fontSize: 17}} />
                                                                 </Grid>
                                                                 <Grid item>
-                                                                    <Typography variant="subtitle2" gutterBottom> &nbsp;{displayMonDDYYYY(item.createdAt)}</Typography>
+                                                                    <Typography variant="subtitle2"  gutterBottom> &nbsp;{displayMonDDYYYY(item.createdAt)}</Typography>
                                                                 </Grid>
                                                             </Grid>
                                                         </Typography>
@@ -209,8 +226,8 @@ const BlogsPage = () => {
                                                         </Typography>
                                                     </CardContent>
                                                 </CardActionArea>
-                                                <CardActions>
-                                                    <Box textAlign="center">
+                                                <CardActions classes={{root: classes.cartAction}}>
+                                                    <Box>
                                                         <Link to={`/blogs/blog/${item.id}`} className={classes.link}>
                                                             <BlackButton>Read More <ArrowRightIcon /></BlackButton>
                                                         </Link>

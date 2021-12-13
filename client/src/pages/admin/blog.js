@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import blogActions from "../../actions/adminBlog";
 import DeleteButton from "../../components/DeleteButton";
 import UploadImage from "../../components/UploadImage";
+import { MSG } from "../../constants";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(3)
@@ -86,10 +87,9 @@ export default function BlogAdmin() {
     const blogCategories = useSelector(state => state.adminBlog).categories;
     const blogTotal = useSelector(state => state.adminBlog).blogCount;
    
-    //const page = useSelector(state => state.blog).pagination.page;
     const blogs = useSelector(state => state.adminBlog).blogs;
     const blogDetail = useSelector(state => state.adminBlog).blog;
-    const isDeletingBlog = useSelector(state => state.adminBlog).isDeletingBlog;
+    const loading = useSelector(state => state.adminBlog).blogLoading;
     const [blog, setBlog] = useState(initBlog);
     const [showBlog, setShowBlog] = useState(false);
     const [filter, setFilter] = useState(initFilter);
@@ -329,15 +329,15 @@ export default function BlogAdmin() {
                         {
                             !blog.id ? (
                                 <Grid item sm={3} md={2} xs={4}>
-                                 <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} type="submit" >Save</Button>
+                                 <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} type="submit" disabled={loading} >Create</Button>
                                 </Grid>
                             ) : (
                         <>
                             <Grid item sm={3} md={2} xs={4}>
-                                <DeleteButton message = "Are you sure you want to delete this post?" deleteFn={handleDeleteBlog} status={isDeletingBlog}/> 
+                                <DeleteButton message={MSG.A_BLOG} deleteFn={handleDeleteBlog} disabled={loading} /> 
                             </Grid>
                             <Grid item sm={3} md={2} xs={4}>
-                                <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} type="submit">Save</Button>
+                                <Button variant="contained" color="primary" fullWidth startIcon={<SaveIcon />} type="submit" disabled={loading}>Save</Button>
                             </Grid>
                         </>
                         )

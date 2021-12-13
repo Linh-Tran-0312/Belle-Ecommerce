@@ -33,41 +33,60 @@ export const ORDER_STATUS = {
     COMPLETED: "completed",
     CANCELED: "canceled"
 }
-
+export const DEL_STATUS = {
+    BEFORE: "before",
+    DELETING: "deleting",
+    AFTER: "after "
+}
 export const MSG = {
-    STH_WRONG: "Sorry, something went wrong...",
+    STH_WRONG: "Sorry, something went wrong. Please try again !",
     CF_PASS: "Please make sure your password match",
 
     C_BLOG_CATEGORY: "Create blog category successfully",
     U_BLOG_CATEGORY: "Update blog category successfully",
     D_BLOG_CATEGORY: "The blog category was deleted",
+    A_BLOG_CATEGORY: "Are you sure that you want to delete this blog category? This cannot be undone",
+
     C_BLOG: "Create blog successfully",
     U_BLOG: "Update blog successfully",
     D_BLOG: "The blog was deleted",
+    A_BLOG: "Are you sure that you want to delete this blog? This cannot be undone",
+
     C_PRODUCT: "Create product successfully",
     U_PRODUCT: "Update product successfully",
     D_PRODUCT: "The product was deleted",
+    A_PRODUCT: "Are you sure you want to delete this product. Its variants will be deleted too",
+
+    C_PRODUCT_VARIANT: "Create product variant successfully",
+    U_PRODUCT_VARIANT: "Update product variant successfully",
+    D_PRODUCT_VARIANT: "The product variant was deleted",
+    A_PRODUCT_VARIANT: "Are you sure that you want to delete this product variant? This cannot be undone",
+
     C_PRODUCT_CATEGORY: "Create product category successfully",
     U_PRODUCT_CATEGORY: "Update product category successfully",
     D_PRODUCT_CATEGORY: "The product category was deleted",
+    A_PRODUCT_CATEGORY: "Are you sure that you want to delete this product category? This cannot be undone",
+
     C_PRODUCT_BRAND: "Create product brand successfully",
     U_PRODUCT_BRAND: "Update product brand successfully",
     D_PRODUCT_BRAND: "The product brand was deleted",
+    A_PRODUCT_BRAND: "Are you sure that you want to delete this product brand? This cannot be undone",
+
     C_PRODUCT_SIZE: "Create product size successfully",
     U_PRODUCT_SIZE: "Update product size successfully",
     D_PRODUCT_SIZE: "The product size was deleted",
+    A_PRODUCT_SIZE: "Are you sure that you want to delete this product size? This cannot be undone",
+
     C_PRODUCT_COLOR: "Create product color successfully",
     U_PRODUCT_COLOR: "Update product color successfully",
     D_PRODUCT_COLOR: "The product color was deleted",
+    A_PRODUCT_COLOR: "Are you sure that you want to delete this product color? This cannot be undone",
 
     C_USER: "Create user successfully",
     U_USER: "Update user successfully",
 
     ADD_PRODUCT_TO_CART: "Add the product to cart successfully"
   
-
-
-
 
 }
 export const ACTION = {
@@ -88,10 +107,10 @@ export const ACTION = {
     CREATE_BLOG_CATEGORY: "CREATE_BLOG_CATEGORY",
     UPDATE_BLOG_CATEGORY: "UPDATE_BLOG_CATEGORY",
     DELETE_BLOG_CATEGORY: "DELETE_BLOG_CATEGORY",
-    IS_DELETING_BLOG_CATEGORY: "IS_DELETING_BLOG_CATEGORY",
     BLOG_CATEGORY_STATUS: "BLOG_CATEGORY_STATUS",
     BLOG_CATEGORY_LOADING: "BLOG_CATEGORY_LOADING",
     BLOG_CATEGORY_ERROR: " BLOG_CATEGORY_ERROR",
+    DELETE_BLOG_CATEGORY_MSG: "DELETE_BLOG_CATEGORY_MSG",
 
      //Blog Action
     GET_BLOGS: "GET_BLOGS",
@@ -100,9 +119,9 @@ export const ACTION = {
     CREATE_BLOG: "CREATE_BLOG",
     UPDATE_BLOG: "UPDATE_BLOG",
     DELETE_BLOG: "DELETE_BLOG",
-    IS_DELETING_BLOG: "IS_DELETING_BLOG",
     BLOG_LOADING: "BLOG_LOADING",
     BLOG_ERROR: "BLOG_ERROR",
+    DELETE_BLOG_MSG: "DELETE_BLOG_MSG",
 
     //------------------PRODUCT ACTION----------------------------
     //Product Size Action
@@ -110,26 +129,24 @@ export const ACTION = {
     CREATE_PRODUCT_SIZE: "CREATE_PRODUCT_SIZE",
     UPDATE_PRODUCT_SIZE: "UPDATE_PRODUCT_SIZE",
     DELETE_PRODUCT_SIZE: "DELETE_PRODUCT_SIZE",
-    IS_DELETING_PRODUCT_SIZE: "IS_DELETING_PRODUCT_SIZE",
-    PRODUCT_CATEGORY_LOADING: "PRODUCT_CATEGORY_LOADING",
-    PRODUCT_CATEGORY_ERROR: "PRODUCT_CATEGORY_ERROR",
-
+    PRODUCT_SIZE_LOADING: "PRODUCT_SIZE_LOADING",
+    PRODUCT_SIZE_ERROR: "PRODUCT_SIZE_ERROR",
+    DELETE_PRODUCT_MSG: "DELETE_PRODUCT_MSG",
 
      //Product Color Action
      GET_PRODUCT_COLORS: "GET_PRODUCT_COLORS",
      CREATE_PRODUCT_COLOR: "CREATE_PRODUCT_COLOR",
      UPDATE_PRODUCT_COLOR: "UPDATE_PRODUCT_COLOR",
      DELETE_PRODUCT_COLOR: "DELETE_PRODUCT_COLOR",
-     IS_DELETING_PRODUCT_COLOR: "IS_DELETING_PRODUCT_COLOR",
      PRODUCT_COLOR_LOADING: "  PRODUCT_COLOR_LOADING",
      PRODUCT_COLOR_ERROR: "  PRODUCT_COLOR_ERROR",
+     DELETE_PRODUCT_COLOR_MSG: "DELETE_PRODUCT_COLOR_MSG",
 
       //Product  Brand Action
     GET_PRODUCT_BRANDS: "GET_PRODUCT_BRANDS",
     CREATE_PRODUCT_BRAND: "CREATE_PRODUCT_BRAND",
     UPDATE_PRODUCT_BRAND: "UPDATE_PRODUCT_BRAND",
     DELETE_PRODUCT_BRAND: "DELETE_PRODUCT_BRAND",
-    IS_DELETING_PRODUCT_BRAND: "IS_DELETING_PRODUCT_BRAND",
     PRODUCT_BRAND_LOADING: "PRODUCT_BRAND_LOADING",
     PRODUCT_BRAND_ERROR: "PRODUCT_BRAND_ERROR",
 
@@ -138,7 +155,6 @@ export const ACTION = {
     CREATE_PRODUCT_CATEGORY: "CREATE_PRODUCT_CATEGORY",
     UPDATE_PRODUCT_CATEGORY: "UPDATE_PRODUCT_CATEGORY",
     DELETE_PRODUCT_CATEGORY: "DELETE_PRODUCT_CATEGORY",
-    IS_DELETING_PRODUCT_CATEGORY: "IS_DELETING_PRODUCT_CATEGORY",
     PRODUCT_CATEGORY_LOADING: "PRODUCT_CATEGORY_LOADING",
     PRODUCT_CATEGORY_ERROR: "PRODUCT_CATEGORY_ERROR",
 
@@ -148,7 +164,6 @@ export const ACTION = {
     CREATE_PRODUCT: "CREATE_PRODUCT",
     UPDATE_PRODUCT: "UPDATE_PRODUCT",
     DELETE_PRODUCT: "DELETE_PRODUCT",
-    IS_DELETING_PRODUCT: "IS_DELETING",
     PRODUCT_LOADING: "PRODUCT_LOADING",
     PRODUCT_ERROR: "PRODUCT_ERROR",
     
@@ -156,7 +171,6 @@ export const ACTION = {
     CREATE_PRODUCT_VARIANT: "CREATE_PRODUCT_VARIANT",
     UPDATE_PRODUCT_VARIANT: "UPDATE_PRODUCT_VARIANT",
     DELETE_PRODUCT_VARIANT: "DELETE_PRODUCT_VARIANT",
-    IS_DELETING_PRODUCT_VARIANT: "IS_DELETING_PRODUCT_VARIANT",
     PRODUCT_VARIANT_LOADING: "PRODUCT_VARIANT_LOADING",
     PRODUCT_VARIANT_ERROR: "PRODUCT_VARIANT_ERROR",
 

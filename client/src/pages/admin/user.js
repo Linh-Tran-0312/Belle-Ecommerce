@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import OrderDetail from "../../components/Admin/OrderDetailModal";
 import userActions from "../../actions/adminUser";
 import { displayMonDDYYYY } from "../../helper/handleTime";
+import { MSG } from "../../constants"
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
@@ -57,7 +58,7 @@ export default () => {
     const users = useSelector(state => state.adminUser).users;
     const userDetail = useSelector(state => state.adminUser).user;
     const userTotal = useSelector(state => state.adminUser).total;
-    const userMessage = useSelector(state => state.adminUser).user_message; 
+    const loading = useSelector(state => state.adminUser).userLoading;
 
     const [filter, setFilter] = useState(initFilter);
     const [ user, setUser ] = useState(initUser);
@@ -284,12 +285,9 @@ export default () => {
                                 <TextField fullWidth type="text" name="address" value={user.address}  label="Address" variant="outlined" onChange={handleUserChange}/>
                             </Box>
                             <Box my={2}>
-                                <Box my={1}>
-                                    <Typography color="secondary" variant="subtitle1">{userMessage}</Typography>
-                                </Box>
                                 <Grid container direction="row" justifyContent='center' spacing={2}>
                                     <Grid item   md={4} xs={4}>
-                                        <Button variant="contained" type="submit" color="primary" fullWidth startIcon={<SaveIcon />}  >Save</Button>
+                                        <Button variant="contained" type="submit" color="primary" fullWidth startIcon={<SaveIcon />}  disabled={loading}>Save</Button>
                                     </Grid>
                                 </Grid>
                             </Box>

@@ -1,8 +1,10 @@
 import api from "../api";
-import { ACTION, Query } from "../constants";
+import { ACTION, Query, MSG, SnackBar } from "../constants";
 import handleFilter from "../helper/handleFilter";
+import { enqueueSnackbar } from "./notification";
+import errorHandler from "../helper/errorHandler";
 const formProduct = (formData) => {
-   const body = {
+  const body = {
     name: formData.name,
     categoryId: formData.categoryId,
     brandId: formData.brandId,
@@ -16,252 +18,310 @@ const formProduct = (formData) => {
 }
 const formVariant = (formData) => {
   const body = {
-   productId: formData.productId,
-   colorId: formData.colorId,
-   sizeId: formData.sizeId,
-   quantity: formData.quantity
- }
- return body;
+    productId: formData.productId,
+    colorId: formData.colorId,
+    sizeId: formData.sizeId,
+    quantity: formData.quantity
+  }
+  return body;
 }
 
 
 const productActions = {
   //handle product size API
-  getProductSizes: () => async(dispatch) => {
-      try {
-          const { data } = await api.getProductSizes();
-          dispatch({ type: ACTION.GET_PRODUCT_SIZES, payload: data});
-      } catch (error) {
-          dispatch({ type: ACTION.ERROR, payload: error.message});
-      }
-  },
-  createProductSize: (formData) => async(dispatch) => {
+  getProductSizes: () => async (dispatch) => {
     try {
-        const { data } = await api.createProductSize(formData);
-        dispatch({ type: ACTION.CREATE_PRODUCT_SIZE, payload: data});
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: true});
+      const { data } = await api.getProductSizes();
+      dispatch({ type: ACTION.GET_PRODUCT_SIZES, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
   },
-  updateProductSize: (id,formData) => async(dispatch) => {
+  createProductSize: (formData) => async (dispatch) => {
     try {
-        const { data } = await api.updateProductSize(id,formData);
-        dispatch({ type: ACTION.UPDATE_PRODUCT_SIZE, payload: data});
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: true});
+      const { data } = await api.createProductSize(formData);
+      dispatch(enqueueSnackbar(MSG.C_PRODUCT_SIZE, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.CREATE_PRODUCT_SIZE, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  deleteProductSize: (id) => async(dispatch) => {
+  },
+  updateProductSize: (id, formData) => async (dispatch) => {
     try {
-        dispatch({ type: ACTION.IS_DELETING_PRODUCT_SIZE })
-        await api.deleteProductSize(id);
-        dispatch({ type: ACTION.DELETE_PRODUCT_SIZE, payload: id  });
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: true});
+      const { data } = await api.updateProductSize(id, formData);
+      dispatch(enqueueSnackbar(MSG.U_PRODUCT_SIZE, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.UPDATE_PRODUCT_SIZE, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
+  },
+  deleteProductSize: (id) => async (dispatch) => {
+    try {
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: true});
+      await api.deleteProductSize(id);
+      dispatch(enqueueSnackbar(MSG.D_PRODUCT_SIZE, SnackBar.ERROR))
+      dispatch({ type: ACTION.DELETE_PRODUCT_SIZE, payload: id });
+    } catch (error) {
+      dispatch({ type: ACTION.PRODUCT_SIZE_LOADING, payload: false});
+      errorHandler(error, dispatch)
+    }
+  },
 
   //handle product color API
-  getProductColors: () => async(dispatch) => {
+  getProductColors: () => async (dispatch) => {
     try {
-        const { data } = await api.getProductColors();
-        dispatch({ type: ACTION.GET_PRODUCT_COLORS, payload: data});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: true});
+      const { data } = await api.getProductColors();
+      dispatch({ type: ACTION.GET_PRODUCT_COLORS, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  createProductColor: (formData) => async(dispatch) => {
+  },
+  createProductColor: (formData) => async (dispatch) => {
     try {
-        const { data } = await api.createProductColor(formData);
-        dispatch({ type: ACTION.CREATE_PRODUCT_COLOR, payload: data});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: true});
+      const { data } = await api.createProductColor(formData);
+      dispatch(enqueueSnackbar(MSG.C_PRODUCT_COLOR, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.CREATE_PRODUCT_COLOR, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  updateProductColor: (id,formData) => async(dispatch) => {
+  },
+  updateProductColor: (id, formData) => async (dispatch) => {
     try {
-        const { data } = await api.updateProductColor(id,formData);
-        dispatch({ type: ACTION.UPDATE_PRODUCT_COLOR, payload: data});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: true});
+      const { data } = await api.updateProductColor(id, formData);
+      dispatch(enqueueSnackbar(MSG.U_PRODUCT_COLOR, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.UPDATE_PRODUCT_COLOR, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  deleteProductColor: (id) => async(dispatch) => {
+  },
+  deleteProductColor: (id) => async (dispatch) => {
     try {
-        dispatch({ type: ACTION.IS_DELETING_PRODUCT_COLOR })
-        await api.deleteProductColor(id);
-        dispatch({ type: ACTION.DELETE_PRODUCT_COLOR, payload: id  });
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: true});
+      await api.deleteProductColor(id);
+      dispatch(enqueueSnackbar(MSG.D_PRODUCT_COLOR, SnackBar.ERROR))
+      dispatch({ type: ACTION.DELETE_PRODUCT_COLOR, payload: id });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_COLOR_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
+  },
 
   //handle product brand API
-  getProductBrands: () => async(dispatch) => {
+  getProductBrands: () => async (dispatch) => {
     try {
-        const { data } = await api.getProductBrands();
-        dispatch({ type: ACTION.GET_PRODUCT_BRANDS, payload: data});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: true});
+      const { data } = await api.getProductBrands();
+      dispatch({ type: ACTION.GET_PRODUCT_BRANDS, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  createProductBrand: (formData) => async(dispatch) => {
+  },
+  createProductBrand: (formData) => async (dispatch) => {
     try {
-        const { data } = await api.createProductBrand(formData);
-        dispatch({ type: ACTION.CREATE_PRODUCT_BRAND, payload: data});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: true});
+      const { data } = await api.createProductBrand(formData);
+      dispatch(enqueueSnackbar(MSG.C_PRODUCT_BRAND, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.CREATE_PRODUCT_BRAND, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  updateProductBrand: (id,formData) => async(dispatch) => {
+  },
+  updateProductBrand: (id, formData) => async (dispatch) => {
     try {
-        const { data } = await api.updateProductBrand(id,formData);
-        dispatch({ type: ACTION.UPDATE_PRODUCT_BRAND, payload: data});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: true});
+      const { data } = await api.updateProductBrand(id, formData);
+      dispatch(enqueueSnackbar(MSG.U_PRODUCT_BRAND, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.UPDATE_PRODUCT_BRAND, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  deleteProductBrand: (id) => async(dispatch) => {
+  },
+  deleteProductBrand: (id) => async (dispatch) => {
     try {
-        dispatch({ type: ACTION.IS_DELETING_PRODUCT_BRAND })
-        await api.deleteProductBrand(id);
-        dispatch({ type: ACTION.DELETE_PRODUCT_BRAND, payload: id  });
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: true});
+      await api.deleteProductBrand(id);
+      dispatch(enqueueSnackbar(MSG.D_PRODUCT_BRAND, SnackBar.ERROR))
+      dispatch({ type: ACTION.DELETE_PRODUCT_BRAND, payload: id });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_BRAND_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
+  },
 
   //handle product category API
-  getProductCategories: () => async(dispatch) => {
+  getProductCategories: () => async (dispatch) => {
     try {
-        const { data } = await api.getProductCategories();
-        dispatch({ type: ACTION.GET_PRODUCT_CATEGORIES, payload: data});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: true});
+      const { data } = await api.getProductCategories();
+      dispatch({ type: ACTION.GET_PRODUCT_CATEGORIES, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  createProductCategory: (formData) => async(dispatch) => {
+  },
+  createProductCategory: (formData) => async (dispatch) => {
     try {
-        const { data } = await api.createProductCategory(formData);
-        dispatch({ type: ACTION.CREATE_PRODUCT_CATEGORY, payload: data});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: true});
+      const { data } = await api.createProductCategory(formData);
+      dispatch(enqueueSnackbar(MSG.C_PRODUCT_CATEGORY, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.CREATE_PRODUCT_CATEGORY, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  updateProductCategory: (id,formData) => async(dispatch) => {
+  },
+  updateProductCategory: (id, formData) => async (dispatch) => {
     try {
-        const { data } = await api.updateProductCategory(id,formData);
-        dispatch({ type: ACTION.UPDATE_PRODUCT_CATEGORY, payload: data});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: true});
+      const { data } = await api.updateProductCategory(id, formData);
+      dispatch(enqueueSnackbar(MSG.U_PRODUCT_CATEGORY, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.UPDATE_PRODUCT_CATEGORY, payload: data });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  deleteProductCategory: (id) => async(dispatch) => {
+  },
+  deleteProductCategory: (id) => async (dispatch) => {
     try {
-        dispatch({ type: ACTION.IS_DELETING_PRODUCT_CATEGORY })
-        await api.deleteProductCategory(id);
-        dispatch({ type: ACTION.DELETE_PRODUCT_CATEGORY, payload: id });
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: true});
+      await api.deleteProductCategory(id);
+      dispatch(enqueueSnackbar(MSG.D_PRODUCT_CATEGORY, SnackBar.ERROR))
+      dispatch({ type: ACTION.DELETE_PRODUCT_CATEGORY, payload: id });
     } catch (error) {
-        dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_CATEGORY_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
+  },
 
   //handle product and product variant API
-  getProducts: (filter) => async(dispatch) => {
+  getProducts: (filter) => async (dispatch) => {
     try {
+      dispatch({ type: ACTION.PRODUCT_LOADING});
       let queryString = "";
       queryString = handleFilter(filter);
-      if(filter.min !== 0 && filter.min !== "") queryString += `&min=${filter.min}`;
-      if(filter.max !== 5000 && filter.max !== "") queryString += `&max=${filter.max}`;
-      switch(filter.sortMethod) {
-          case "1":
-              queryString += `&sort=price&change=${Query.ASC}`;
-              break;
-          case "2":
-              queryString += `&sort=price&change=${Query.DESC}`;
-              break;
-          case "3":
-              queryString += `&sort=name&change=${Query.ASC}`;
-              break;
-          case "4":
-              queryString += `&sort=name&change=${Query.DESC}`;
-              break;
-          default:
-              break;
+      if (filter.min !== 0 && filter.min !== "") queryString += `&min=${filter.min}`;
+      if (filter.max !== 5000 && filter.max !== "") queryString += `&max=${filter.max}`;
+      switch (filter.sortMethod) {
+        case "1":
+          queryString += `&sort=price&change=${Query.ASC}`;
+          break;
+        case "2":
+          queryString += `&sort=price&change=${Query.DESC}`;
+          break;
+        case "3":
+          queryString += `&sort=name&change=${Query.ASC}`;
+          break;
+        case "4":
+          queryString += `&sort=name&change=${Query.DESC}`;
+          break;
+        default:
+          break;
       }
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
       const { data } = await api.getProducts(queryString);
-      dispatch({type: ACTION.GET_PRODUCTS, payload: data})
+      dispatch({ type: ACTION.GET_PRODUCTS, payload: data })
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  getProductById: (id) =>  async(dispatch) => {
+  },
+  getProductById: (id) => async (dispatch) => {
     try {
-        const { data } = await api.getProductById(id);
-        console.log(data);
-        dispatch({type: ACTION.GET_PRODUCT_BY_ID, payload: data})
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
+      const { data } = await api.getProductById(id);
+      console.log(data);
+      dispatch({ type: ACTION.GET_PRODUCT_BY_ID, payload: data })
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  createProduct: (formData) =>async(dispatch) => {
+  },
+  createProduct: (formData) => async (dispatch) => {
     try {
-        const body = formProduct(formData);
-        const { data } = await api.createProduct(body);
-        dispatch({ type: ACTION.CREATE_PRODUCT, payload: data})
-    } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
-    }
-},
-  updateProduct: (id,formData) => async(dispatch) => {
-    try {
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
       const body = formProduct(formData);
-      console.log(body);
-      const { data } = await api.updateProduct(id,body);
-      dispatch({ type: ACTION.UPDATE_PRODUCT, payload: data})
+      const { data } = await api.createProduct(body);
+      dispatch(enqueueSnackbar(MSG.C_PRODUCT, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.CREATE_PRODUCT, payload: data })
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  deleteProduct: (id) => async(dispatch) => {
+  },
+  updateProduct: (id, formData) => async (dispatch) => {
     try {
-      dispatch({ type: ACTION.IS_DELETING_PRODUCT })
-        await api.deleteProduct(id);
-        dispatch({ type: ACTION.DELETE_PRODUCT, payload: id})
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
+      const body = formProduct(formData);
+      const { data } = await api.updateProduct(id, body);
+      dispatch(enqueueSnackbar(MSG.U_PRODUCT, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.UPDATE_PRODUCT, payload: data })
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  createProductVariant: (formData) => async(dispatch) => {
+  },
+  deleteProduct: (id) => async (dispatch) => {
     try {
-        const body = formVariant(formData);
-        console.log(body);
-        const { data } = await api.createProductVariant(body);
-        dispatch({ type: ACTION.CREATE_PRODUCT_VARIANT, payload: data});
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
+      await api.deleteProduct(id);
+      dispatch(enqueueSnackbar(MSG.D_PRODUCT, SnackBar.ERROR))
+      dispatch({ type: ACTION.DELETE_PRODUCT, payload: id })
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  updateProductVariant: (id, formData) => async(dispatch) => {
+  },
+  createProductVariant: (formData) => async (dispatch) => {
     try {
+      dispatch({ type: ACTION.PRODUCT_VARIANT_LOADING, payload: true});
+      const body = formVariant(formData);
+      const { data } = await api.createProductVariant(body);
+      dispatch(enqueueSnackbar(MSG.C_PRODUCT_VARIANT, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.CREATE_PRODUCT_VARIANT, payload: data });
+    } catch (error) {
+      dispatch({ type: ACTION.PRODUCT_VARIANT_LOADING, payload: false});
+      errorHandler(error, dispatch)
+    }
+  },
+  updateProductVariant: (id, formData) => async (dispatch) => {
+    try {
+      dispatch({ type: ACTION.PRODUCT_VARIANT_LOADING, payload: true});
       const body = formVariant(formData);
       delete body.productId;
-      const { data } = await api.updateProductVariant(id,body);
-      dispatch({ type: ACTION.UPDATE_PRODUCT_VARIANT, payload: data});
-
+      const { data } = await api.updateProductVariant(id, body);
+      dispatch(enqueueSnackbar(MSG.U_PRODUCT_VARIANT, SnackBar.SUCCESS))
+      dispatch({ type: ACTION.UPDATE_PRODUCT_VARIANT, payload: data });
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_VARIANT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
-  deleteProductVariant: (id) => async(dispatch) => {
+  },
+  deleteProductVariant: (id) => async (dispatch) => {
     try {
-      dispatch({ type: ACTION.IS_DELETING_PRODUCT_VARIANT })
-        await api.deleteProductVariant(id);
-        dispatch({type: ACTION.DELETE_PRODUCT_VARIANT, payload: id})
+      dispatch({ type: ACTION.PRODUCT_VARIANT_LOADING, payload: true});
+      await api.deleteProductVariant(id);
+      dispatch(enqueueSnackbar(MSG.D_PRODUCT_VARIANT, SnackBar.ERROR))
+      dispatch({ type: ACTION.DELETE_PRODUCT_VARIANT, payload: id })
     } catch (error) {
-      dispatch({ type: ACTION.ERROR, payload: error.message});
+      dispatch({ type: ACTION.PRODUCT_VARIANT_LOADING, payload: false});
+      errorHandler(error, dispatch)
     }
-},
+  },
 
 }
 

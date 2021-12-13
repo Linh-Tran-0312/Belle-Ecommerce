@@ -60,10 +60,10 @@ const publicRoutes = [
         component: lazy(() => import("../../pages/contact"))
     },
     {
-        path: "/shop/product/:productId",
+        path: "/cart",
         exact: false,
         label: "Cart",
-        component: lazy(() => import("../../pages/product"))
+        component: lazy(() => import("../../pages/cart"))
     },
     {
         path: "/auth",

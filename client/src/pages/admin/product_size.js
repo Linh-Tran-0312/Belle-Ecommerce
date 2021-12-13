@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import productActions from "../../actions/adminProduct";
 import DeleteButton from "../../components/DeleteButton";
-
+import { MSG } from "../../constants"
 
 
 const initSize = {
@@ -25,7 +25,7 @@ export default function ProductSize() {
    
     // Size State
     const productSizes = useSelector(state => state.adminProduct).sizes;
-    const isDeletingProductSize = useSelector(state => state.adminProduct).isDeletingProductSize;
+    const loading = useSelector(state => state.adminProduct).productSizeLoading;
     const [size, setSize] = useState(initSize);
     const [showSize, setShowSize] = useState(false);
 
@@ -98,16 +98,16 @@ export default function ProductSize() {
                                             size?.id ? (
                                                 <>
                                                  <Grid item xs={6}>
-                                                <DeleteButton message="Are you sure you want to delete this size?" status={isDeletingProductSize} deleteFn={handleDeleteSize}/>
+                                                <DeleteButton msgConfirm={MSG.A_PRODUCT_SIZE} deleteFn={handleDeleteSize} disabled={loading}/>
                                             </Grid>
                                             <Grid item xs={6}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Save</Button>
                                             </Grid>
                                                 </>
                                                
                                             ):(
                                                 <Grid item xs={12}>
-                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Create</Button>
                                             </Grid>
                                             )
                                         }

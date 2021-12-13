@@ -286,6 +286,7 @@ font-family: Helvetica, sans-serif;
   .articleImg {
 	  width: 100%;
 	  max-height: 300px;
+	  object-fit: cover;
   }
   /* Contact Page Css*/
   .mapContainer div:first-of-type {

@@ -29,7 +29,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             localStorage.removeItem("admin");
             break;
         case ACTION.ADMIN_AUTH_LOADING: 
-           draft.loading = true;
+           draft.loading = payload;
            break;
         case ACTION.ADMIN_AUTH_ERROR:
             draft.loading = false;

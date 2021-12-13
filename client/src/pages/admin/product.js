@@ -8,19 +8,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
 import Pagination from '@material-ui/lab/Pagination';
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import productActions from "../../actions/adminProduct";
-import Rating from "../../components/Rating";
 import DeleteButton from "../../components/DeleteButton";
+import Rating from "../../components/Rating";
 import UploadImage from "../../components/UploadImage";
 import handlePriceRange from "../../helper/handlePriceRange";
+import { MSG } from "../../constants"
 const useStyles = makeStyles({
     root: {
         flexGrow: 1,
@@ -86,8 +84,8 @@ export default function ProductAdmin() {
     const productDetail = useSelector(state => state.adminProduct).product;
     const productTotal = useSelector(state => state.adminProduct).total;
 
-    const isDeletingProduct = useSelector(state => state.adminProduct).isDeletingProduct;
-    const isDeletingProductVariant = useSelector(state => state.adminProduct).isDeletingProductVariant;
+    const productLoading = useSelector(state => state.adminProduct).productLoading;
+    const variantLoading = useSelector(state => state.adminProduct).productVariantLoading;
 
     const [filter, setFilter] = useState(initFilter);
     const [product, setProduct] = useState(initProduct);
@@ -410,15 +408,15 @@ export default function ProductAdmin() {
                                                 {
                                                     product?.id === "" ? (
                                                         <Grid item xs={12}>
-                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={productLoading}>Create</Button>
                                                         </Grid>
                                                     ) : (
                                                         <>
                                                             <Grid item xs={6}>
-                                                                <DeleteButton message="Are you sure you want to delete this product. Its variants will be deleted too." deleteFn={handleDeleteProduct} status={isDeletingProduct} />
+                                                                <DeleteButton msgConfirm={MSG.A_PRODUCT} deleteFn={handleDeleteProduct} disabled={productLoading} />
                                                             </Grid>
                                                             <Grid item xs={6}>
-                                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                                <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={productLoading}>Save</Button>
                                                             </Grid>
                                                         </>
                                                     )
@@ -449,7 +447,7 @@ export default function ProductAdmin() {
                                                             </CardActionArea>
                                                             <CardActions >
                                                                 <Box width={1} >
-                                                                    <DeleteButton message="Are you sure you want to delete this image" deleteFn={() => handleDeleteProductImage(item)} />
+                                                                    <DeleteButton msgConfirm="Are you sure you want to delete this image" deleteFn={() => handleDeleteProductImage(item)} />
                                                                 </Box>
                                                             </CardActions>
                                                         </Card>
@@ -560,17 +558,17 @@ export default function ProductAdmin() {
                                                                             !variant.id ? (
                                                                                 <>
                                                                                     <Grid item xs={12}>
-                                                                                        <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit">Save</Button>
+                                                                                        <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit" disabled={variantLoading}>Create</Button>
                                                                                     </Grid>
                                                                                 </>
 
                                                                             ) : (
                                                                                 <>
                                                                                     <Grid item xs={6}>
-                                                                                        <DeleteButton message="Are your sure to delete this variant" deleteFn={handleDeleteVariant} status={isDeletingProductVariant} />
+                                                                                        <DeleteButton message={MSG.A_PRODUCT_VARIANT} deleteFn={handleDeleteVariant} disabled={variantLoading} />
                                                                                     </Grid>
                                                                                     <Grid item xs={6}>
-                                                                                        <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit">Save</Button>
+                                                                                        <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit" disabled={variantLoading}>Save</Button>
                                                                                     </Grid>
                                                                                 </>
                                                                             )

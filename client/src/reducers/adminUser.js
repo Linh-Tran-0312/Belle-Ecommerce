@@ -12,39 +12,38 @@ const initUser = {
 }
 const initState = {
     users: [],
-    user_message: "",
+    userLoading: false,
     user: initUser,
     total: 0,
-    error: ""
 
 }
 
 export default (state=initState, { type, payload}) => produce(state, (draft) => {
     switch(type) {
-        case ACTION.ERROR:
-            draft.error = payload;
-            break;
         case ACTION.GET_USERS:
             draft.users = payload.users;
             draft.total = payload.total;
+            draft.userLoading = false;
             break;
         case ACTION.GET_USER_BY_ID:
             draft.user = payload;
+            draft.userLoading = false;
             break;
         case ACTION.CREATE_USER:
             draft.user = payload;
             draft.user.sale = 0;
             draft.users.unshift(payload);
             draft.total = draft.total + 1;
-            draft.user_message = ""
+            draft.userLoading = false;
             break;
         case ACTION.UPDATE_USER:
             draft.user = payload;
             draft.user.sale = draft.user.orders.filter(o => o.status === "COMPLETED").reduce((preOrder, order) => { return preOrder + order.total }, 0 );
             draft.users = draft.users.map(u => u.id === payload.id ? payload : u );
+            draft.userLoading = false;
             break;
-        case ACTION.USER_MESSAGE:
-            draft.user_message = payload;
+        case ACTION.USER_LOADING:
+            draft.userLoading = payload;
             break;
         default:
             break;

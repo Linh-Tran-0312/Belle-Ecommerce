@@ -139,7 +139,7 @@ export default () => {
         dispatch(orderActions.placeOrder(orderId, state, history))
 
     }
-    if(!user?.id ) return <Redirect to="/auth" />
+    if(items?.length == 0 ) return <Redirect to="/cart" />
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>

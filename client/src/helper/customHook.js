@@ -1,4 +1,4 @@
-import React from "react";
+import React  from "react";
 import {
   BrowserRouter as Router,
   Link,
@@ -7,16 +7,23 @@ import {
 import { useSnackbar } from 'notistack';
 import { useDispatch, useSelector } from "react-redux";
 import { ACTION } from "../constants";
-import { store } from "../index";
+
+
+export const usePrevious = (data) => {
+    const ref = React.useRef();
+    React.useEffect(() => {
+      ref.current = data
+    }, [data])
+    return ref.current;
+}
 export function useQuery() {
     const { search } = useLocation();
   
     return React.useMemo(() => new URLSearchParams(search), [search]);
-  }
+}
  
 
 let displayed = [];
-
 export const useNotifier = () => {
     
     //const notifications = store.getState().notification.notifications;

@@ -8,14 +8,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import DeleteButton from "../../components/DeleteButton";
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import productActions from "../../actions/adminProduct";
+import DeleteButton from "../../components/DeleteButton";
 import UploadImage from "../../components/UploadImage";
+import { MSG } from "../../constants";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(3)
@@ -69,7 +69,7 @@ export default function ProductCategory() {
     const classes = useStyles();
      // Category State
      const productCategories = useSelector(state => state.adminProduct).categories;
-     const isDeletingProductCategory = useSelector(state => state.adminProduct).isDeletingProductCategory;
+     const loading = useSelector(state => state.adminProduct).productCategoryLoading;
      const [category, setCategory] = useState(initCategory);
      const [showCategory, setShowCategory] = useState(false);
   
@@ -157,28 +157,25 @@ export default function ProductCategory() {
                                                 category?.id ? (
                                                     <>
                                                     <Grid item xs={6}>
-                                                    <DeleteButton message="Are you sure you want to delete this category?" status={isDeletingProductCategory} deleteFn={handleDeleteCategory}/>
+                                                    <DeleteButton msgConfirm={MSG.A_PRODUCT_CATEGORY} deleteFn={handleDeleteCategory} disabled={loading}/>
                                                 </Grid>
                                                 <Grid item xs={6}>
-                                                    <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                    <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Save</Button>
                                                 </Grid>
                                                     </>
                                                 
                                                 ):(
                                                     <Grid item xs={12}>
-                                                    <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                    <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Create</Button>
                                                 </Grid>
                                                 )
-                                            }
-                                            
+                                            }                                           
                                             </Grid>
                                             </Box>
                                         </Box>
                                     </form>
-                                
                                 )
-                            }
-                           
+                            }                         
                         </Box>
                     </Grid>
                 </Grid>     

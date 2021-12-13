@@ -9,38 +9,48 @@ const useStyle = makeStyles({
         heigh: '100px',
         display: 'flex',
         flexDirection: 'row',
-        margin: 15,
         boxShadow: 'none',
-        borderRadius: 0
+        borderRadius: 0,
+        marginTop: 10
     },
     mediaThumb: {
-        width: '150px !important',
+    
+        minWidth: "80px",
+        maxHeight: "80px"
     },
     contentThumb: {
-        height: '100%'
-    }
+        height: '100%',
+        flexDirection: "column",
+        alignItems: "flex-start",
+        paddingTop: 0
+    },
+    customBox: {
+        display: "-webkit-box",
+        boxOrient: "vertical",
+        lineClamp: 2,
+        wordBreak: "break-all",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+     
+      }
 })
 export default ({blog}) => {
     const classes = useStyle();
     return(
              <Card  className={classes.cardThumb}>
-
                     <CardMedia
                         className={classes.mediaThumb}
                         image={blog.imgPath}
                         title="Contemplative Reptile"
                     />
                     <CardContent className={classes.contentThumb}>
-                        <Typography gutterBottom variant="body2" component="h2">
+                        <Typography gutterBottom variant="body2" component="h2"  classes={{root: classes.customBox}}>
                            {blog.title}
                         </Typography>
-                        <Typography variant="subtitle1" color="textSecondary" component="p">
+                        <Typography variant="caption" color="textSecondary" component="p">
                            {displayMonDDYYYY(blog.createdAt)}
                         </Typography>
                     </CardContent>
-
                 </Card>
-
-
     )
 }

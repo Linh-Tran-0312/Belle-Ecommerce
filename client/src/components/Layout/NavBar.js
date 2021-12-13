@@ -16,7 +16,7 @@ import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
 import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useState, useEffect } from "react";
-import { Link as RouterLink , useLocation} from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import SearchBar from './SearchBar';
 import CartPopover from "../CartPopup";
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
     root: {
         backgroundColor: "#white",
-   
+
         "@media (max-width: 900px)": {
             paddingLeft: 0,
         },
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: '10px'
     },
     logo: {
-        [theme.breakpoints.down('sm')] : {
+        [theme.breakpoints.down('sm')]: {
             height: 25
         }
     },
@@ -88,23 +88,23 @@ const useStyles = makeStyles((theme) => ({
         height: '100px',
 
     },
-    link : {
+    link: {
         textDecoration: 'none',
         color: 'white',
         fontSize: 12,
         fontFamily: 'Arial'
     },
-    logoLink : {
+    logoLink: {
         color: 'black'
     },
-    authBar : {
+    authBar: {
         textAlign: 'right',
         backgroundColor: 'black',
         padding: 10,
-        [theme.breakpoints.up('sm')] : {
+        [theme.breakpoints.up('sm')]: {
             paddingRight: 50
         },
-        [theme.breakpoints.down('xs')] : {
+        [theme.breakpoints.down('xs')]: {
             paddingRight: 10
         }
     }
@@ -113,19 +113,19 @@ const useStyles = makeStyles((theme) => ({
 export default function NarBar() {
     const { root, menuButton, toolbar, drawerContainer, toolbarMobile, icons, logo, authBar, link, logoLink } = useStyles();
     const location = useLocation();
-    const [ page, setPage ] = useState(false)
+    const [page, setPage] = useState(false)
     const [state, setState] = useState({
         mobileView: false,
         drawerOpen: false,
     });
     useEffect(() => {
         const path = location?.pathname?.substring(1);
-        if(path === "cart" || path === "checkout") {
+        if (path === "cart" || path === "checkout") {
             setPage(true);
         } else {
             setPage(false)
         }
-    },[location])
+    }, [location])
     const [search, setSearch] = useState(false);
     const { mobileView, drawerOpen } = state;
 
@@ -154,24 +154,26 @@ export default function NarBar() {
     const displayDesktop = () => {
         return (
             <>
-              <div className={authBar}>
-                            <Typography variant="button" className={link}>Hotline: 02385338234</Typography>
-                        </div>
-                        <Toolbar className={toolbar}>
-                {Logo}
-                <div>{getMenuButtons()}</div>
-                <div className={icons}>
-                   {
-                    !page &&  <CartPopover />    
-                    }  
-                    <IconButton color="inherit">
-                    <RouterLink to="/user" className={logoLink} ><AccountCircleOutlinedIcon/></RouterLink>
-                
-                    </IconButton>     
+                <div className={authBar}>
+                    <Typography variant="button" className={link}>Hotline: 02385338234</Typography>
                 </div>
-            </Toolbar>
+                <Toolbar className={toolbar}>
+                    {Logo}
+                    <div>{getMenuButtons()}</div>
+                    <div className={icons}>
+                        {
+                            !page && <CartPopover />
+                        }
+                        <RouterLink to="/user" className={logoLink} >
+                            <IconButton color="inherit">
+                                <AccountCircleOutlinedIcon />
+                            </IconButton>
+                        </RouterLink>
+
+                    </div>
+                </Toolbar>
             </>
-           
+
         );
     };
 
@@ -207,12 +209,12 @@ export default function NarBar() {
 
                 <div>{Logo}</div>
                 <div className={icons}>
-                {
-                    !page &&  <CartPopover />   
-                }                             
-                    <IconButton color="inherit">                       
-                        <AccountCircleOutlinedIcon/>                      
-                    </IconButton> 
+                    {
+                        !page && <CartPopover />
+                    }
+                    <IconButton color="inherit">
+                        <AccountCircleOutlinedIcon />
+                    </IconButton>
                 </div>
             </Toolbar>
         );
@@ -262,14 +264,11 @@ export default function NarBar() {
         <header>
             {
                 search ? <SearchBar closeSearch={handleCloseSearch} /> :
-              <div  className={root}>        
-                        <AppBar   position="relative">
-                        {mobileView ? displayMobile() : displayDesktop()}
-                    </AppBar>       
-              </div>
-                   
- 
-                    
+                    <div className={root}>
+                        <AppBar position="relative">
+                            {mobileView ? displayMobile() : displayDesktop()}
+                        </AppBar>
+                    </div>
             }
 
         </header>

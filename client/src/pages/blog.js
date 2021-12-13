@@ -1,20 +1,18 @@
-import Layout from "../components/Layout"
-import { Link } from 'react-router-dom';
-import '../App.css';
-import { Grid, Box, Breadcrumbs, Typography, Container } from "@material-ui/core";
-import BlogThumb from "../components/BlogThumb";
+import { Box, Breadcrumbs, Container, Grid, Typography } from "@material-ui/core";
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import CommentForm from "../components/CommentForm";
-import Comment from "../components/Comment";
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useParams, useLocation } from "react-router-dom";
-import { displayMonDDYYYY } from "../helper/handleTime";
-import { convertFromRaw } from "draft-js";
-import { PageLoading } from "../components/PageLoading";
 import draftToHtml from 'draftjs-to-html';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useParams } from 'react-router-dom';
 import blogActions from "../actions/blog";
-import api from "../api";
+import '../App.css';
+import BlogThumb from "../components/BlogThumb";
+import Comment from "../components/Comment";
+import CommentForm from "../components/CommentForm";
+import Layout from "../components/Layout";
+import Loader from "../components/Loader";
+import { displayMonDDYYYY } from "../helper/handleTime";
+
 
 export default () => {
     console.log("Blog Detail Page render")
@@ -35,6 +33,7 @@ export default () => {
         if (!!content)
             return <div dangerouslySetInnerHTML={{ __html: draftToHtml(JSON.parse(content)) }} />
     }
+    if(!blog?.id) return <Loader />
     return (
         <Layout>
             <div className="breadCrumbs">
@@ -43,6 +42,7 @@ export default () => {
                         <Typography variant="inherit">BLOG ARTICLE</Typography>
                     </Box>
                 </div>
+            </div>
                 <Box ml={5} py={1}>
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
                         <Link className="link" to="/" >
@@ -56,71 +56,70 @@ export default () => {
                         <Typography variant="subtitle2">Article</Typography>
                     </Breadcrumbs>
                 </Box>
-            </div>
-
-            {
-                blog?.id ? (
-                    <Box px={5} mx={5}>
-                        <Grid container spacing={2}>
-                            <Grid item lg={9} md={9} sm={12} xs={12}>
-                                <img src={blog.imgPath} className="articleImg" />
-                                <Box my={2}>
-                                    <Typography variant="h6">{blog?.title}</Typography>
-                                    <Grid container direction="row" alignItems="center">
-                                        <Grid item>
-                                            <AccessTimeIcon fontSize="small" />
-                                        </Grid>
-                                        <Grid item>
-                                            <Typography variant="subtitle2"> &nbsp;{displayMonDDYYYY(blog?.createdAt) || ""}</Typography>
-                                        </Grid>
+                <Box px={5} mx={5} my={3}>
+                    <Grid container spacing={2}>
+                        <Grid item lg={9} md={9} sm={12} xs={12}>
+                            <img src={blog.imgPath} className="articleImg" />
+                            <Box my={2}>
+                                <Typography variant="h6">{blog?.title}</Typography>
+                                <Grid container direction="row" alignItems="center">
+                                    <Grid item>
+                                        <AccessTimeIcon fontSize="small" />
                                     </Grid>
-                                    {
-                                        renderContent(blog?.content)
-
-                                    }
-
-                                </Box>
+                                    <Grid item>
+                                        <Typography variant="subtitle2"> &nbsp;{displayMonDDYYYY(blog?.createdAt) || ""}</Typography>
+                                    </Grid>
+                                </Grid>
                                 {
-                                    blog?.commentAllow && (<>
-                                        <Box>
-                                            <hr />
-                                            <CommentForm />
-                                        </Box>
-                                        <Container maxWidth="md">
-                                            {
-                                                [1, 2].map(item => <Comment key={item} />)
-                                            }
-
-
-                                        </Container>
-                                    </>)
+                                    renderContent(blog?.content)
 
                                 }
-                            </Grid>
-                            <Grid item lg={3} md={3} sm={12} xs={12}>
-                                <Box px={4} mt={5}>
-                                    <Typography variant="body1" gutterBottom>CATEGORY</Typography>
-                                    {
-                                        categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} style={{
-                                            textDecoration: 'none',
-                                            marginLeft: 14,
-                                            color: 'black'
-                                        }}>{item.name}</Link></Typography>)
-                                    }
-                                </Box>
-                                <Box px={4} mt={4}>
-                                    <Typography variant="body1" gutterBottom>RECENT POSTS</Typography>
-                                    {
-                                        latestBlogs.map(item => <BlogThumb key={item.id} blog={item} />)
-                                    }
-                                </Box>
 
-                            </Grid>
+                            </Box>
+                            {
+                                blog?.commentAllow && (<>
+                                    <Box>
+                                        <hr />
+                                        <CommentForm />
+                                    </Box>
+                                    <Container maxWidth="md">
+                                        {
+                                            [1, 2].map(item => <Comment key={item} />)
+                                        }
+
+
+                                    </Container>
+                                </>)
+
+                            }
                         </Grid>
-                    </Box>
-                ) : (<PageLoading message="Blog content is loading..." size="50px" />)
-            }
+                        <Grid item lg={3} md={3} sm={12} xs={12}>
+                            <Box  pl={2} className="fontRoSlab">
+                                <Box mb={2}>
+                                <Typography variant="inherit" gutterBottom >CATEGORY</Typography>
+                                </Box>
+                                {
+                                    categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} style={{
+                                        textDecoration: 'none',
+                                     
+                                        color: 'black'
+                                    }}>{item.name}</Link></Typography>)
+                                }
+                            </Box>
+                            <Box  pl={2} mt={4}  className="fontRoSlab">
+                                <Box mb={2}>
+                                <Typography variant="inherit" gutterBottom >RECENT POSTS</Typography>
+                                </Box>
+                                {
+                                    latestBlogs.map(item => <Link to={`/blogs/blog/${item.id}`} style={{textDecoration: 'none', color: 'black'}}>
+                                        <BlogThumb key={item.id} blog={item} />
+                                        </Link>)
+                                }
+                            </Box>
 
+                        </Grid>
+                    </Grid>
+                </Box>
         </Layout>
     )
 }

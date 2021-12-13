@@ -1,6 +1,5 @@
 import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,16 +8,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ColorLens from '@material-ui/icons/ColorLens';
-import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import OpacityIcon from '@material-ui/icons/Opacity';
 import SaveIcon from '@material-ui/icons/Save';
-import DeleteButton from "../../components/DeleteButton";
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import productActions from "../../actions/adminProduct";
 import { ChromePicker } from "react-color";
- 
+import { useDispatch, useSelector } from "react-redux";
+import productActions from "../../actions/adminProduct";
+import DeleteButton from "../../components/DeleteButton";
+import { MSG } from "../../constants";
+
 const initColor = {
     id: "",
     code: "",
@@ -32,7 +30,7 @@ export default function ProductColor() {
     const [showColorPicker, setShowColorPicker] = React.useState(false);
 
     const productColors = useSelector(state => state.adminProduct).colors;
-    const isDeletingProductColor = useSelector(state => state.adminProduct).isDeletingProductColor;
+    const loading = useSelector(state => state.adminProduct).productColorLoading;
     const [color, setColor] = useState(initColor);
     const [showColor, setShowColor] = useState(false);
  
@@ -140,16 +138,16 @@ export default function ProductColor() {
                                                         color?.id ? (
                                                             <>
                                                              <Grid item xs={6}>
-                                                            <DeleteButton message="Are you sure you want to delete this color?" status={isDeletingProductColor} deleteFn={handleDeleteColor}/>
+                                                            <DeleteButton msgConfirm={MSG.A_PRODUCT_COLOR} deleteFn={handleDeleteColor} disabled={loading}/>
                                                         </Grid>
                                                         <Grid item xs={6}>
-                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Save</Button>
                                                         </Grid>
                                                             </>
                                                            
                                                         ):(
                                                             <Grid item xs={12}>
-                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit">Save</Button>
+                                                            <Button color="primary" fullWidth variant="contained" startIcon={<SaveIcon />} type="submit" disabled={loading}>Create</Button>
                                                         </Grid>
                                                         )
                                                     }
