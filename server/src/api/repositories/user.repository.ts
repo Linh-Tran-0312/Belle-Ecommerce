@@ -48,7 +48,7 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
                     .groupBy("user.id")     
                     .offset(query.limit*(query.page - 1))
                     .limit(query.limit)
-                    .orderBy(`user.${query.sort}`, query.change)
+                    .orderBy(`${query.sort}`, query.change)
 
             const count = await userQuery.getCount();
             const result = await userQuery.getRawMany();

@@ -20,7 +20,7 @@ export abstract class BaseService<T extends IBaseEntity, R extends IBaseReposito
     }
 
     async getAll(options: any): Promise<T[]> {
-        return this.repository.find(options); 
+        return await this.repository.find(options); 
     };
 
     async getOneById(id: number | string, relations?: string[] ): Promise<T | null> {
@@ -35,13 +35,14 @@ export abstract class BaseService<T extends IBaseEntity, R extends IBaseReposito
     };
 
     async create(data: T | any): Promise<T> {
-        return this.repository.create(data)
+        return await this.repository.create(data)
     };
-    async delete(id: number | string): Promise<void> {
-         this.repository.delete(id);
+    async delete(id: number | string): Promise<void> {        
+        return await this.repository.delete(id);
+       
     };
     async update(id: number | string, data: T | any): Promise<T | any> {
-        return this.repository.update(id, data)
+        return await this.repository.update(id, data)
     }
 
 }

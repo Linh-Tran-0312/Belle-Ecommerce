@@ -1,6 +1,6 @@
 import { UpdateResult, Repository, FindManyOptions, FindOneOptions } from "typeorm";
 import { CustomBaseEntity, IBaseEntity } from "../models/base.model";
-
+import { PostgresError } from "../helpers/PostgresError";
 export interface IBaseRepository<T> {
     create(data: T | any): Promise<T>;
      update( id: number | string,data: T | any): Promise<T | UpdateResult>;
@@ -47,8 +47,8 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
     public async delete(id: number | string): Promise<void> {
         try {
             await this.entity.delete(id);
-        } catch (error) {
-            throw error;
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
     public async find(options :FindManyOptions): Promise<Props[]> {

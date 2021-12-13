@@ -1,4 +1,4 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security} from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security, Controller} from "tsoa";
 import { IColor, IColorCreateProps } from "../models";
 import { ColorService } from "../services";
 import { UserRole } from "../models";
@@ -9,10 +9,11 @@ export interface IColorUpdateProps {
 
 @Route("colors")
 @Tags('Product Color')
-export class ColorController {
+export class ColorController  extends Controller {
     private _colorService: ColorService;
 
     constructor() {
+        super()
         this._colorService = new ColorService();
     }
 
