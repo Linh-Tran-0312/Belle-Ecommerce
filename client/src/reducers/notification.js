@@ -7,7 +7,6 @@ const defaultState = {
 export default (state = defaultState, action) => {
     switch (action.type) {
         case ACTION.ENQUEUE_SNACKBAR:
-            console.log(action)
             return {
                 ...state,
                 notifications: [

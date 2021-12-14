@@ -1,7 +1,5 @@
-import axios from "axios";
+import API from "./";
 
-const API = axios.create({ baseURL: process.env.REACT_APP_BASE_URL});
-API.defaults.withCredentials = true;
 const api = {
      
     //------------------------BLOG API----------------------------
