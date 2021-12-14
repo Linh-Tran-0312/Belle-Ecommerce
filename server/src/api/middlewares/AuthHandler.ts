@@ -40,7 +40,7 @@ export function expressAuthentication(request: express.Request, securityName: st
           }
           jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, function (err: any, decoded: any) {
               if (err) {
-                  reject(new OperationalError(err.toString(), HttpCode.UNAUTHORIZED));
+                  reject(new OperationalError(err.message.toString(), HttpCode.UNAUTHORIZED));
               } else {
                   // Check if JWT contains all required scopes
                   if (scopes && !scopes.includes(decoded.role)) {

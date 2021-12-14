@@ -2,7 +2,7 @@
 import { getRepository } from "typeorm";
 import { IProduct, IProductCreateProps, Product } from "../models";
 import { BaseRepository } from "./base.repository";
-
+import { PostgresError } from "../helpers/PostgresError";
 export interface IProducts {
     products: Product[],
     total: number,
@@ -21,11 +21,9 @@ export class ProductRepository extends BaseRepository<IProduct, Product, IProduc
             const [ products, count ] = await this.entity.findAndCount(options);
             result.products = products;
             result.total = count;
-            console.log("Pro repo");
             return result;
-        } catch (error) {
-           console.error();          
-            throw error
-        }  
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
+        }
     }
 } 

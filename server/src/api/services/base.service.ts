@@ -1,7 +1,7 @@
-//import { IBaseRepository } from "../repositories";
-import { Repository } from "typeorm";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { IBaseRepository } from "../repositories/base.repository";
 import { IBaseEntity } from "../models/base.model";
+import { HttpCode } from "../helpers/HttpCode";
 
 export interface IBaseService<T extends IBaseEntity> {
     create(data: T): Promise<T>;
@@ -10,7 +10,6 @@ export interface IBaseService<T extends IBaseEntity> {
 
     getAll(options: any): Promise<T[]>;
     getOneById(id: number | string, relations?: string[] ): Promise<T | null>;
-
 }
 
 export abstract class BaseService<T extends IBaseEntity, R extends IBaseRepository<T>> implements IBaseService<T> {
@@ -23,14 +22,14 @@ export abstract class BaseService<T extends IBaseEntity, R extends IBaseReposito
         return await this.repository.find(options); 
     };
 
-    async getOneById(id: number | string, relations?: string[] ): Promise<T | null> {
+    async getOneById(id: number | string, relations?: string[] ): Promise<T> {
         const item: any = await this.repository.findOne({
             where: {
                 id
             },
             relations
         });
-        if(!item) return null;
+        if(!item) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.NOT_FOUND)
         return item
     };
 
@@ -41,7 +40,7 @@ export abstract class BaseService<T extends IBaseEntity, R extends IBaseReposito
         return await this.repository.delete(id);
        
     };
-    async update(id: number | string, data: T | any): Promise<T | any> {
+    async update(id: number | string, data: T | any): Promise<T|any> {
         return await this.repository.update(id, data)
     }
 

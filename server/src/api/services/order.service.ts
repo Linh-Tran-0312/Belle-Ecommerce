@@ -4,13 +4,14 @@ import { BaseService, IBaseService  } from "./base.service";
 import { Change } from "./index";
 import { IOrderUpdateItems, IOrderUpdateProps } from "../controllers/orderController";
 import  periodCal from "../helpers/periodCalculator";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { HttpCode } from "../helpers/HttpCode";
 export interface IPlaceOrder {
     address: string;
     note?: string;
     paymentMethod: PaymentMethod;
     shipping?: number;
     total?: number;
-
 }
 
 export enum OrderField {
@@ -56,10 +57,10 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
         return this.repository.getOrders(options)
         
     }
-    public async getOrderById(id: number): Promise<IOrder|null> {
-        return this.repository.getOrderById(id);
+    public async getOrderById(id: number): Promise<IOrder> {
+        return await this.repository.getOrderById(id);
     }
-    public async createOrder(data: IOrderCreateProps): Promise<IOrder|null> {
+    public async createOrder(data: IOrderCreateProps): Promise<IOrder> {
         try {
             let order = new Order();
             order.userId = data.userId;
@@ -75,15 +76,13 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
             return this.repository.getOrderById(newOrder.id)
           
         } catch (error) {
-            console.log(error);
             throw error;
         }
        
     }
-    public async updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder|null> {
+    public async updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder> {
         try {
             const currentOrder: IOrder | any = await super.getOneById(id, ["details"]);
-
             data.details.forEach(detail => {
                const index = currentOrder.details.findIndex((item: { productVariantId: number; }) => item.productVariantId === detail.productVariantId);
                if(index === -1) {
@@ -97,17 +96,16 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                }
                
             })
-            const temp = await this.repository.create(currentOrder);
+             await this.repository.create(currentOrder);
             return this.repository.getOrderById(id);
     
         } catch (error) {
-            console.log(error);
             throw error;
         }
     
     }
     public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrder> {
-        return this.repository.update(id, data);       
+        return await this.repository.update(id, data);       
     }
     public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
         try {
@@ -119,7 +117,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
         }
           
     }
-    public async getCurrentOrderByUserId(userId: number): Promise<IOrder | null> {
+    public async getCurrentOrderByUserId(userId: number): Promise<IOrder|null> {
             const options = {
                 select: ["id"],
                 where: {
@@ -129,7 +127,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
             }
         const order = await this.repository.findOne(options);
         if(!order) return null
-        return this.repository.getOrderById(order?.id);
+        return await this.repository.getOrderById(order.id);
     
     }
     public async getAllOrdersByUserId(userId: number): Promise<IOrder[]> {
@@ -138,7 +136,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                userId
            }
        }
-        return this.repository.find(options)
+        return await this.repository.find(options)
     }
 
     public async addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrder | null> {
@@ -164,7 +162,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                 }
                
             }
-            return this.repository.getOrderById(id);
+            return await this.repository.getOrderById(id);
             
     }
     

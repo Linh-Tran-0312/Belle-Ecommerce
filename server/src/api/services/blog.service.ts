@@ -39,24 +39,18 @@ export class BlogService extends BaseService<IBlog, BlogRepository> implements I
         if(!!query.sort && !!query.change ) {
             options.order[`${query.sort}`] = query.change
         } 
-        console.log("Blog service");
         const result: IBlogs = await this.repository.findAndCount(options);
         if(!result) return { blogs: [], total: 0}
         return result
     }
-    public async createBlog(data: IBlogCreateProps): Promise<IBlog|null> {
+    public async createBlog(data: IBlogCreateProps): Promise<IBlog> {
         const { id } = await this.repository.create(data);
-        const newBlog: IBlog|null = await this.repository.findOne({
-            where: {
-                id: id
-            },
-            relations: ["category"]
-        });
+        const newBlog: IBlog = await this.getOneById(id,["category"]);
         return newBlog
     }
-    public async updateBlog(id: number, data: IBlogUpdateProps ): Promise<IBlog|null> {
+    public async updateBlog(id: number, data: IBlogUpdateProps ): Promise<IBlog> {
         await this.repository.update(id, data);
-        const updatedBlog: IBlog|null = await this.getOneById(id,["category"]);
+        const updatedBlog: IBlog = await this.getOneById(id,["category"]);
         return updatedBlog;
     }
 }

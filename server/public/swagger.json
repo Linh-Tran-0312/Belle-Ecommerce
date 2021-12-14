@@ -1838,12 +1838,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IBlog"
 								}
 							}
 						}
@@ -1883,12 +1878,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IBlog"
 								}
 							}
 						}

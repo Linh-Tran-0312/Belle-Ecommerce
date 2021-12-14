@@ -13,6 +13,6 @@ export class OrderDetailService extends BaseService<IOrderDetail, OrderDetailRep
         if(item) {
             item.quantity += quantity;
         }
-        return this.repository.create(item);
+        return await this.repository.create(item);
     }
 }

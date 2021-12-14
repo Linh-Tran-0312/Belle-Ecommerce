@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { BlogComment, IBlogComment, IBlogCommentCreateProps } from "../models";
 import { BaseRepository } from "./base.repository";
-
+import { PostgresError } from "../helpers/PostgresError";
 export class BlogCommentRepository extends BaseRepository<IBlogComment, BlogComment, IBlogCommentCreateProps> {
     constructor() {
         super(getRepository(BlogComment));
@@ -29,10 +29,9 @@ export class BlogCommentRepository extends BaseRepository<IBlogComment, BlogComm
             if(!comments) return [];
             return comments;
 
-       } catch (error) {
-        throw error;
-        
-       }
+       } catch (err: any) {
+        throw new PostgresError(err.message, err);
+    }
  
     
 }

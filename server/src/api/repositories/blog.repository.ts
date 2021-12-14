@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { Blog, IBlog, IBlogCreateProps } from "../models";
 import { BaseRepository } from "./base.repository";
-
+import { PostgresError } from "../helpers/PostgresError";
 export interface IBlogs {
     blogs: Blog[],
     total: number
@@ -22,9 +22,8 @@ export class BlogRepository extends BaseRepository<IBlog, Blog, IBlogCreateProps
             result.total = count;
             console.log("Blog repo");
             return  result;
-        } catch (error) {
-           console.log(error);          
-            throw error
-        }  
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
+        } 
     }
 }

@@ -22,9 +22,8 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
     public async create(data: CreateProps | any): Promise<Props> {
         try {
             return this.entity.save({...data});
-        } catch (error) {
-            console.log(error)
-            throw error;
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
     public async update(id: number | string, data: CreateProps | any): Promise<Props> {
@@ -39,9 +38,8 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
                 .execute();
               
             return updatedItem.raw[0];
-        } catch (error) {
-            console.log(error)
-            throw error;
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
     public async delete(id: number | string): Promise<void> {
@@ -54,8 +52,8 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
     public async find(options :FindManyOptions): Promise<Props[]> {
         try {
             return this.entity.find(options);
-        } catch (error) {
-            throw error;
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
     public async findOne(options: FindOneOptions): Promise<Props | null> {
@@ -63,8 +61,8 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
             const item: Props | any = await this.entity.findOne(options);
             if (!item) return null
             return item;
-        } catch (error) {
-            throw error;
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
 

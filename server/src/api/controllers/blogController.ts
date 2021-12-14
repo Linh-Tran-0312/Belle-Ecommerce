@@ -75,14 +75,14 @@ export class BlogController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createBlog(@Body() data: IBlogCreateProps): Promise<IBlog|null> {
+    public async createBlog(@Body() data: IBlogCreateProps): Promise<IBlog> {
         return this._blogService.createBlog(data) 
     }
     /**
      * Get details for a blog by its id
      */
     @Get("/:id")
-    public async getBlogById(@Path() id: number): Promise<IBlog | null> {
+    public async getBlogById(@Path() id: number): Promise<IBlog> {
         return this._blogService.getOneById(id, ["category"]);
     }
     /**

@@ -13,3 +13,4 @@ export { ProductCommentService } from './productComment.service';
 export { ProductReviewService } from './productReview.service';
 export { SizeService } from './size.service';
 export { UserService, IUserQuery, UserField, IUserAuth } from "./user.service";
+export { AuthService } from "./auth.service"

@@ -3,6 +3,7 @@ import { BaseRepository,  } from "./base.repository";
 import { User, IUser, IUserCreateProps, UserRole, Status } from "../models";
 import { Service } from "typedi";
 import { IUserQuery } from "../services";
+import { PostgresError } from "../helpers/PostgresError";
 
 export interface IUsers {
     users: User[],
@@ -53,9 +54,8 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
             const count = await userQuery.getCount();
             const result = await userQuery.getRawMany();
             return { users : result, total: count}
-        } catch (error) {
-            console.log(error);
-            throw error
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
        
     }

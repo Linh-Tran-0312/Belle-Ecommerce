@@ -1,18 +1,14 @@
  
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 import { IUserUpdateProps } from "../controllers/userController";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
-import { IUser, IUserCreateProps, UserRole } from "../models";
-import { IUsers, UserRepository } from "../repositories";
+import { IUser, IUserCreateProps, UserRole} from "../models";
+import { UserRepository, IUsers  } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
-import { Not } from "typeorm";
-import { signAccessToken, signRefreshToken } from "../helpers/jwtHandler";
-import { IRefreshToken, IAccessToken } from "../controllers/authController";
-import  dotenv  from "dotenv";
 dotenv.config();
-import jwt from "jsonwebtoken";
  
 export enum UserField {
     NAME = "fname",
@@ -37,12 +33,12 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         super(new UserRepository())
     }
 
-    private async  isEmailExist(email: any): Promise<boolean> {
+    protected async  isEmailExist(email: any): Promise<boolean> {
         const existingEmail = await this.repository.findOne({ where: { email }});
         if(!existingEmail) return false;
         return true;
     }
-    public async register(data: IUserCreateProps): Promise<IUserAuth> {       
+  /*   public async register(data: IUserCreateProps): Promise<IUserAuth> {       
         //const existingUsers: IUser| any =  await this.repository.findOne({ where: { email: data.email}});
         const existingEmail = await this.isEmailExist(data.email);
         if(!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);          
@@ -109,10 +105,11 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
 
          return { token }
     }  
+ 
+    } */
     public async getUsers(query: IUserQuery): Promise<IUsers> {
         return this.repository.getUsers(query);
     }
-
     public async createUser(data: IUserCreateProps): Promise<IUser> {
         const existingUsers: IUser|any = await this.isEmailExist(data.email);
         if(!!existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);

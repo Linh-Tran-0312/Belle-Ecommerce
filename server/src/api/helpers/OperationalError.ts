@@ -1,7 +1,7 @@
 import { HttpCode } from "./HttpCode";
 
 export enum OperationalErrorMessage {
-    UNKNOWN_ERROR = "Something went wrong",
+    UNKNOWN_ERROR = "Internal Server Error",
     EMAIL_INUSE = "This email is already used",
     EMAIL_NOTFOUND = "This email is not registered",
     NOT_FOUND = "Not Found",
@@ -12,8 +12,9 @@ export enum OperationalErrorMessage {
     INVALID_TOKEN= "Invalid token",
     TOKEN_NOT_EXIST = "Token is not in store",
     UNAUTHORIZED = "Unauthorized",
-    EXPIRED_TOKEN = "Token is expired",
-    NOT_PERMISSION = "You might have not permission to access this resource"
+    EXPIRED_TOKEN = "Expired token",
+    NOT_PERMISSION = "You might have not permission to access this resource",
+    FOREIGN_VIOLATION = "Can't delete this item because it is in use",
 };
 
 export class OperationalError extends Error {

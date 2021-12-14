@@ -2,7 +2,9 @@ import { getRepository, Not, Equal, Brackets } from "typeorm";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 import { Order, IOrder, IOrderCreateProps, Status } from "../models";
 import { Service } from "typedi";
-
+import { PostgresError } from "../helpers/PostgresError";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { HttpCode } from "../helpers/HttpCode";
 export interface IOrders {
     orders: Order[],
     total: number
@@ -23,9 +25,8 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
             result.orders = orders;
             result.total = count;
             return result;
-        } catch (error) {
-            console.log(error);
-            throw error
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
     public async getOrders(options: any): Promise<IOrders> {
@@ -60,13 +61,12 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
             const total = await orderQuery.getCount();
             const orders = await orderQuery.getMany();
             return { orders, total}
-        } catch (error) {
-            console.log(error);
-            throw error
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
 
     }
-    public async getOrderById(id: number): Promise<IOrder|null> {
+    public async getOrderById(id: number): Promise<IOrder> {
         try {
             
             const result: any = await this.entity.createQueryBuilder("order")
@@ -88,12 +88,11 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
                                             ])
                                             .getOne();
                                             
-            if(!result) return null;
+            if(!result) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.NOT_FOUND);
             return result;
 
-        } catch (error) {
-            console.log(error);
-            throw error
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
         }
     }
 }  

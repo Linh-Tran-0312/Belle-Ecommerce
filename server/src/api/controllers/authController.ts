@@ -1,6 +1,6 @@
 import { Body, Post, Route, Tags, Get, Controller, Request } from "tsoa";
 import { IUser, IUserCreateProps } from "../models";
-import { UserService, IUserAuth } from "../services";
+import { AuthService, IUserAuth } from "../services";
 import express from "express";
 
 export interface ILogin {
@@ -19,11 +19,11 @@ interface IRevokeMessage {
 @Route("auth")
 @Tags('Authorization')
 export class AuthController  extends Controller {
-    private   _userService: UserService ;
+    private   _authService: AuthService ;
     private cookies = {};
    constructor() {
         super();
-        this._userService = new UserService();
+        this._authService = new AuthService();
     }  
 
     /**
@@ -31,7 +31,7 @@ export class AuthController  extends Controller {
      */
     @Post("/register")
     public async register(@Body() data: IUserCreateProps): Promise<IUser> {
-        const result = await  this._userService.register(data);
+        const result = await  this._authService.register(data);
         this.setCookies({
             token: {
               value: result.accessToken,
@@ -53,7 +53,7 @@ export class AuthController  extends Controller {
      */
     @Post("/login")
     public async login(@Body() data: ILogin): Promise<IUser> {
-        const result = await this._userService.login(data.email, data.password);
+        const result = await this._authService.login(data.email, data.password);
         this.setCookies({
             token: {
               value: result.accessToken,
@@ -75,7 +75,7 @@ export class AuthController  extends Controller {
      */
     @Post("/admin/login")
     public async adminLogin(@Body() data: ILogin): Promise<IUser> {       
-        const result = await this._userService.adminLogin(data.email, data.password);
+        const result = await this._authService.adminLogin(data.email, data.password);
         this.setCookies({
             token: {
               value: result.accessToken,
@@ -99,7 +99,7 @@ export class AuthController  extends Controller {
     @Get("/token")
     public async revokeToken(@Request() req: express.Request): Promise<IRevokeMessage> {
         const data = req.cookies.refreshToken;
-       const result = await this._userService.revokeAccessToken({ refreshToken: data});
+       const result = await this._authService.revokeAccessToken({ refreshToken: data});
        this.setCookies({ token: {
         value: result.token,
         options: {
