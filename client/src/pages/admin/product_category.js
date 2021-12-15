@@ -56,7 +56,8 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: "rgba(255,255,255,0.9)",
             borderColor: "transparent"
         },
-        borderColor: "transparent"
+        borderColor: "transparent",
+        width: "100%"
     }
 }));
 const initCategory = {

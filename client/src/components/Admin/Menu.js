@@ -51,7 +51,7 @@ export const Menu = ({ page, role }) => {
       {
         role === "admin" ? (
           <>
-            <ListItem button selected={AdminPath.DASHBOARD === page ? true : false} component={Link} to="/admin">
+            <ListItem button selected={AdminPath.DASHBOARD === page ? true : false} component={Link} to="/admin?section=dashboard">
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>

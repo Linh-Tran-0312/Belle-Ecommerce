@@ -6,6 +6,7 @@ import { Modal, Button, Grid, Box, Typography, Divider} from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { usePrevious } from "../helper/customHook";
+import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -62,11 +63,17 @@ export default function DeleteModal({ msgConfirm, deleteFn, disabled }) {
   }
   const body = (
     <div style={modalStyle} className={classes.paper}>
-      <Box my={2} textAlign="left">
-      <Typography variant="h5" >Confirm delete</Typography>
+      <Box my={2} textAlign="left" style={{
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  }}>
+      <Typography variant="h5" >Confirm Delete </Typography>
+      
       </Box>
          <Divider/>
-        <Box my={5} textAlign="center">        
+        <Box my={3} textAlign="center">     
+          <WarningRoundedIcon style={{color: "#f44336"}} fontSize="large"/>      
             <Typography variant="subtitle2">{msgConfirm}</Typography>
         </Box>
         <Divider/>

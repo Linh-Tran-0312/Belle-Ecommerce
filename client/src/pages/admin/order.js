@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from "@material-ui/core";
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto',
         flexDirection: 'column',
     },
-    formControl : {
+    formControl: {
         minWidth: 170,
         margin: 10
     },
-    formButton : {
+    formButton: {
         margin: 5,
     },
 }));
@@ -43,164 +43,161 @@ const initFilter = {
     sortMethod: ""
 }
 const paymentMethodToString = (string) => {
-    if(string === "cod") return "COD";
-    if(string === "banktransfer") return "BANK TRANSFER"
+    if (string === "cod") return "COD";
+    if (string === "banktransfer") return "BANK TRANSFER"
 };
 const paymentStatusToString = (status) => {
-    if(status) return "Done";
+    if (status) return "Done";
     else {
         return "Not yet"
     }
 }
 export default function Orders() {
-     const classes = useStyles();
-     const dispatch = useDispatch();
-      // Orders
-      const orders = useSelector(state => state.adminOrder).orders;
-      const orderTotal = useSelector(state => state.adminOrder).total;
-      const orderDetail = useSelector(state => state.adminOrder).order;
-       
-      const [filter, setFilter] = useState(initFilter);
-      const [ order, setOrder] = useState({})
-      const [ pageCount, setPageCount] = useState(0)
-    
-    
-      useEffect(() => {
-          dispatch(orderActions.getOrders(filter));
-      },[])
-      useEffect(() => {
-          setOrder({...orderDetail});                 
-      },[orderDetail]);
+    const classes = useStyles();
+    const dispatch = useDispatch();
+    // Orders
+    const orders = useSelector(state => state.adminOrder).orders;
+    const orderTotal = useSelector(state => state.adminOrder).total;
+    const orderDetail = useSelector(state => state.adminOrder).order;
 
-      useEffect(() => {
-          const mod = orderTotal%filter.limit;
-          let pageNumber = orderTotal/filter.limit;
-           pageNumber = mod === 0 ? pageNumber : Math.floor(pageNumber) + 1;
-          setPageCount(pageNumber)
-      },[orderTotal])
+    const [filter, setFilter] = useState(initFilter);
+    const [order, setOrder] = useState({})
+    const [pageCount, setPageCount] = useState(0)
 
-      const handleFilterChange = (e) => {
-          setFilter({...filter, [e.target.name]: e.target.value, page: 1 });
-      };
-      const handleReset = (e) => {
-          setFilter(initFilter);
-      };
-      const handleSubmitFilter = (e) => {
-          dispatch(orderActions.getOrders(filter)) 
-      }
-      const handleChangePage = (event, value) => {
-          dispatch(orderActions.getOrders({...filter, page: value})) 
-          setFilter({...filter, page : value});   
-      };
 
-      const handleGetOrderById = (id) => {
-          dispatch(orderActions.getOrderById(id));
-      }
+    useEffect(() => {
+        dispatch(orderActions.getOrders(filter));
+    }, [])
+    useEffect(() => {
+        setOrder({ ...orderDetail });
+    }, [orderDetail]);
+
+    useEffect(() => {
+        const mod = orderTotal % filter.limit;
+        let pageNumber = orderTotal / filter.limit;
+        pageNumber = mod === 0 ? pageNumber : Math.floor(pageNumber) + 1;
+        setPageCount(pageNumber)
+    }, [orderTotal])
+
+    const handleFilterChange = (e) => {
+        setFilter({ ...filter, [e.target.name]: e.target.value, page: 1 });
+    };
+    const handleReset = (e) => {
+        setFilter(initFilter);
+    };
+    const handleSubmitFilter = (e) => {
+        dispatch(orderActions.getOrders(filter))
+    }
+    const handleChangePage = (event, value) => {
+        dispatch(orderActions.getOrders({ ...filter, page: value }))
+        setFilter({ ...filter, page: value });
+    };
+
+    const handleGetOrderById = (id) => {
+        dispatch(orderActions.getOrderById(id));
+    }
     return (
         <>
             <Paper className={classes.paper}>
                 <Grid container direction="row" justifyContent="flex-start" spacing={1}>
-                    <Grid item  md={4} sm={12} xs={12}   >
-                    <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} name="search" label="Search" placeholder="Search order's information..." variant="outlined" />
+                    <Grid item md={4} sm={12} xs={12}   >
+                        <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} name="search" label="Search" placeholder="Search order's information..." variant="outlined" />
                     </Grid>
-                    <Grid item  md={2} sm={3} xs={6}  >
-                    <FormControl  fullWidth variant="outlined"  >
-                        <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value={filter.paymentCheck}
-                            onChange={handleFilterChange}
-                            label="Payment Status"
-                            name="paymentCheck"
-                        >
-                            <MenuItem value="">
-                                <em>All</em>
-                            </MenuItem>
-                            <MenuItem value="true">Done</MenuItem>
-                            <MenuItem value="false">Not yet</MenuItem>
+                    <Grid item md={2} sm={3} xs={6}  >
+                        <FormControl fullWidth variant="outlined"  >
+                            <InputLabel id="demo-simple-select-outlined-label">Payment Status</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={filter.paymentCheck}
+                                onChange={handleFilterChange}
+                                label="Payment Status"
+                                name="paymentCheck"
+                            >
+                                <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value="true">Done</MenuItem>
+                                <MenuItem value="false">Not yet</MenuItem>
 
-                        </Select>
-                    </FormControl>
+                            </Select>
+                        </FormControl>
                     </Grid>
-                    <Grid item   md={2} sm={3} xs={6} >
-                    <FormControl fullWidth variant="outlined"  >
-                        <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value={filter.status}
-                            onChange={handleFilterChange}
-                            label="Status"
-                            name="status"
-                        >
-                            <MenuItem value="">
-                                <em>All</em>
-                            </MenuItem>
-                            <MenuItem value="ordered">NEW ORDER</MenuItem>
-                            <MenuItem value="delivery">IN DELIVERY</MenuItem>
-                            <MenuItem value="completed">COMPLETED</MenuItem>
-                            <MenuItem value="canceled">CANCELED</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Grid item md={2} sm={3} xs={6} >
+                        <FormControl fullWidth variant="outlined"  >
+                            <InputLabel id="demo-simple-select-outlined-label">Status</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={filter.status}
+                                onChange={handleFilterChange}
+                                label="Status"
+                                name="status"
+                            >
+                                <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value="ordered">NEW ORDER</MenuItem>
+                                <MenuItem value="delivery">IN DELIVERY</MenuItem>
+                                <MenuItem value="completed">COMPLETED</MenuItem>
+                                <MenuItem value="canceled">CANCELED</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
-                    <Grid item   md={2} sm={3} xs={6} >
-                    <FormControl fullWidth  variant="outlined"  >
-                        <InputLabel id="demo-simple-select-outlined-label">Period</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value={filter.period}
-                            onChange={handleFilterChange}
-                            label="Period"
-                            name="period"
-                        >
-                            <MenuItem value="">
-                                <em>All</em>
-                            </MenuItem>
-                            <MenuItem value="today">Today</MenuItem>
-                            <MenuItem value="week">This Week</MenuItem>
-                            <MenuItem value="month">This Month</MenuItem>
-                            <MenuItem value="quarter">This Quarter</MenuItem>
-                            <MenuItem value="year">This Year</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Grid item md={2} sm={3} xs={6} >
+                        <FormControl fullWidth variant="outlined"  >
+                            <InputLabel id="demo-simple-select-outlined-label">Period</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={filter.period}
+                                onChange={handleFilterChange}
+                                label="Period"
+                                name="period"
+                            >
+                                <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value="today">Today</MenuItem>
+                                <MenuItem value="week">This Week</MenuItem>
+                                <MenuItem value="month">This Month</MenuItem>
+                                <MenuItem value="quarter">This Quarter</MenuItem>
+                                <MenuItem value="year">This Year</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
-                    <Grid item  md={2} sm={3} xs={6} >
-                    <FormControl fullWidth  variant="outlined"  >
-                        <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value={filter.sortMethod}
-                            onChange={handleFilterChange}
-                            label="Sort"
-                            name="sortMethod"
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="1">Ascending date</MenuItem>
-                            <MenuItem value="2">Descending date</MenuItem>
-                            <MenuItem value="3">Ascending sale</MenuItem>
-                            <MenuItem value="4">Descending sale</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <Grid item md={2} sm={3} xs={6} >
+                        <FormControl fullWidth variant="outlined"  >
+                            <InputLabel id="demo-simple-select-outlined-label">Sort</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-outlined-label"
+                                id="demo-simple-select-outlined"
+                                value={filter.sortMethod}
+                                onChange={handleFilterChange}
+                                label="Sort"
+                                name="sortMethod"
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value="1">Ascending date</MenuItem>
+                                <MenuItem value="2">Descending date</MenuItem>
+                                <MenuItem value="3">Ascending sale</MenuItem>
+                                <MenuItem value="4">Descending sale</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
-                    <Grid item  md={12} sm={12} xs={12}   >
+                    <Grid item md={12} sm={12} xs={12}   >
                         <Button variant="contained" color="primary" size="large" className={classes.formButton} onClick={handleSubmitFilter}>
                             Apply
                         </Button>
                         <Button variant="contained" color="default" size="large" className={classes.formButton} onClick={handleReset}>
-                           Reset
+                            Reset
                         </Button>
-                    </Grid>          
-                </Grid> 
+                    </Grid>
+                </Grid>
             </Paper>
             <Paper className={classes.paper}>
-                <Box>
-                    <Title>All Orders</Title>              
-                </Box>
                 <Table size="small">
                     <TableHead>
                         <TableRow>
@@ -222,20 +219,27 @@ export default function Orders() {
                                 <TableCell>{new Date(row?.orderAt).toLocaleDateString()}</TableCell>
                                 <TableCell>{`${row?.user?.lname} ${row?.user?.fname}`}</TableCell>
                                 <TableCell>{row?.address}</TableCell>
-                                <TableCell  align="center">{paymentMethodToString(row?.paymentMethod)}</TableCell>
+                                <TableCell align="center">{paymentMethodToString(row?.paymentMethod)}</TableCell>
                                 <TableCell>{paymentStatusToString(row?.paymentCheck)}</TableCell>
                                 <TableCell align="right">{row?.total.toLocaleString()}</TableCell>
-                                <TableCell><OrderStatus status={row?.status}/></TableCell>
+                                <TableCell><OrderStatus status={row?.status} /></TableCell>
                                 <TableCell>
-                                     <OrderDetail  id={row?.id} role="admin"/>
-                                    </TableCell>
+                                    <OrderDetail id={row?.id} role="admin" />
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-                <Box my={5}  >
-                        <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
-                    </Box>
+                <Box px={2} pt={4} pb={3}  >
+                    <Grid container direction="row" justifyContent="space-between" >
+                        <Grid item>
+                            <Typography variant="subtitle2">Show { orders.length > 5 ? "5" : orders.length} of {orderTotal} orders</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
+                        </Grid>
+                    </Grid>
+                </Box>
             </Paper>
         </>
     );

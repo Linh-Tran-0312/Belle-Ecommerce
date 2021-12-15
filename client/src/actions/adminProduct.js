@@ -244,7 +244,6 @@ const productActions = {
     try {
       dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
       const { data } = await api.getProductById(id);
-      console.log(data);
       dispatch({ type: ACTION.GET_PRODUCT_BY_ID, payload: data })
     } catch (error) {
       dispatch({ type: ACTION.PRODUCT_LOADING, payload: false});

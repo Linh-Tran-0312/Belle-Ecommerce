@@ -55,11 +55,11 @@ export class AuthService extends UserService {
            
             const match = await bcrypt.compare(password, existingUser.password);
             if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-            const accessToken =  signAccessToken({ id: existingUser.id, role: existingUser.role}, 60); // expire in 1 hour
-            const refreshToken =  signRefreshToken({id: existingUser.id, role: existingUser.role}, 120); // expire in 7 days
+            const accessToken = await signAccessToken({ id: existingUser.id, role: existingUser.role}, 60); // expire in 1 hour
+            const refreshToken = await signRefreshToken({id: existingUser.id, role: existingUser.role}, 3600); // expire in 7 days
             await this.repository.create({...existingUser, token: refreshToken});
             delete existingUser.password;
-            delete existingUser.token;        
+            delete existingUser.token;         
             const result = { accessToken, refreshToken, profile: existingUser}     
             return result;
      

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ACTION } from "./constants";
  
 const App = () => {
-    useNotifier();
+    useNotifier(); 
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(homeActions.getProductCategories());

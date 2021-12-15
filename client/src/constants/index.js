@@ -1,6 +1,6 @@
 
 export const AdminPath = {
-    DASHBOARD: "",
+    DASHBOARD: "dashboard",
     ORDERS: "orders",
     PRODUCTS: "products",
     PRODUCT_LIST:"product-list",
@@ -84,6 +84,9 @@ export const MSG = {
 
     C_USER: "Create user successfully",
     U_USER: "Update user successfully",
+
+    U_ORDER: "Update order details successfully",
+    D_ORDER: "The order was deleted",
 
     ADD_PRODUCT_TO_CART: "Add the product to cart successfully"
   

@@ -6,6 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import Title from '../../components/Admin/Title';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -19,7 +20,7 @@ import Rating from "../../components/Rating";
 import UploadImage from "../../components/UploadImage";
 import handlePriceRange from "../../helper/handlePriceRange";
 import { MSG } from "../../constants"
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
     },
@@ -41,7 +42,13 @@ const useStyles = makeStyles({
     media: {
         height: 140,
     },
-});
+    paper: {
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(2),
+        display: 'flex',
+        flexDirection: 'column',
+    },
+}));
 
 const initFilter = {
     search: "",
@@ -200,7 +207,8 @@ export default function ProductAdmin() {
 
     return (
         <>
-            <Grid container direction="row" justifyContent="flex-start" spacing={1}>
+            <Paper  className={classes.paper}>
+            <Grid container direction="row" justifyContent="flex-start" spacing={1} >
                 <Grid item md={4} sm={12} xs={12}   >
                     <TextField fullWidth id="outlined-basic" onChange={handleFilterChange} value={filter.search} name="search" label="Search" placeholder="Search product name" variant="outlined" />
                 </Grid>
@@ -266,7 +274,7 @@ export default function ProductAdmin() {
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                    <div>
+               
                         <Typography id="range-slider" gutterBottom>
                            {handlePriceRange(price[0],price[1])}
                         </Typography>
@@ -280,7 +288,7 @@ export default function ProductAdmin() {
                             aria-labelledby="range-slider"
                         /*  getAriaValueText={valuetext} */
                         />
-                    </div>
+                   
                 </Grid>
                 <Grid item xs={12} container direction="row" justifyContent="space-between">
                     <Grid item>
@@ -298,10 +306,11 @@ export default function ProductAdmin() {
                     </Grid>
                 </Grid>
             </Grid>
-            <Box my={2}>
+             </Paper>
+            <Paper  className={classes.paper}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <TableContainer component={Paper}>
+                        <TableContainer>
                             <Table aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
@@ -336,10 +345,17 @@ export default function ProductAdmin() {
                         </TableContainer>
                     </Grid>
                 </Grid>
-                <Box my={5} textAlign="center">
-                    <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
+                <Box px={2} pt={4} pb={3}>
+                <Grid container direction="row" justifyContent="space-between" >
+                        <Grid item>
+                            <Typography variant="subtitle2">Show { products.length > 5 ? "5" : products.length} of {productTotal} products</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} /> 
+                        </Grid>
+                    </Grid>                  
                 </Box>
-            </Box>
+            </Paper>
             <Divider />
             {
                 showProduct && (
@@ -565,7 +581,7 @@ export default function ProductAdmin() {
                                                                             ) : (
                                                                                 <>
                                                                                     <Grid item xs={6}>
-                                                                                        <DeleteButton message={MSG.A_PRODUCT_VARIANT} deleteFn={handleDeleteVariant} disabled={variantLoading} />
+                                                                                        <DeleteButton msgConfirm={MSG.A_PRODUCT_VARIANT} deleteFn={handleDeleteVariant} disabled={variantLoading} />
                                                                                     </Grid>
                                                                                     <Grid item xs={6}>
                                                                                         <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" type="submit" disabled={variantLoading}>Save</Button>

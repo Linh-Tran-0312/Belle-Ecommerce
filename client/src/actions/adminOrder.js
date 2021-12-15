@@ -1,7 +1,8 @@
 import api from "../api";
-import { ACTION, Query } from "../constants";
+import { ACTION, Query, MSG, SnackBar } from "../constants";
 import handleFilter from "../helper/handleFilter";
-
+import { enqueueSnackbar } from "./notification";
+import errorHandler from "../helper/errorHandler";
 const orderActions = {
     getOrders: (filter) => async(dispatch) => {
         try {
@@ -27,7 +28,7 @@ const orderActions = {
             const { data } = await api.getOrders(queryString);
             dispatch({ type: ACTION.GET_ORDERS, payload: data})
         } catch (error) {
-            console.log(error)
+            errorHandler(error, dispatch)
         }
        
     },
@@ -35,17 +36,17 @@ const orderActions = {
         try {
             const { data } = await api.getOrderById(id);
             dispatch({ type: ACTION.GET_ORDER_BY_ID, payload: data});
-            
         } catch (error) {
-            console.log(error)
+            errorHandler(error, dispatch)
         }
     },
     updateOrderStatus: (id, formData) => async(dispatch) =>  {
         try {
             const { data } = await api.updateOrderStatus(id, formData);
             dispatch({ type: ACTION.UPDATE_ORDER_STATUS, payload: data})
+            dispatch(enqueueSnackbar(MSG.U_ORDER, SnackBar.SUCCESS))
         } catch (error) {
-            console.log(error)
+            errorHandler(error, dispatch)
         }
     }
 

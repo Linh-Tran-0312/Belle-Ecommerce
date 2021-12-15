@@ -166,7 +166,7 @@ export default function SimpleModal({ id, role }) {
                                     </TableRow>
                                 ))}
                                 <TableRow  >
-                                    <StyledTableCell colSpan={4} component="th" align="right" scope="row">Phí vận chuẩn</StyledTableCell>
+                                    <StyledTableCell colSpan={4} component="th" align="right" scope="row">Phí vận chuyển</StyledTableCell>
                                     <StyledTableCell align="center">{detail?.shipping?.toLocaleString()}</StyledTableCell>
 
                                 </TableRow>
@@ -181,7 +181,7 @@ export default function SimpleModal({ id, role }) {
             </Grid>
             <Box my={2}>
                 <Typography variant="subtitle2">Tình trạng thanh toán: <strong>{detail?.paymentCheck ? "Đã thanh toán" : "Chưa thanh toán"}</strong></Typography>
-                <Typography variant="subtitle2">Lưu ý giao hàng: {detail?.note}
+                <Typography variant="subtitle2">{ detail?.note !== "" && `Lưu ý giao hàng: ${detail?.note}`}
                 </Typography>
 
             </Box>

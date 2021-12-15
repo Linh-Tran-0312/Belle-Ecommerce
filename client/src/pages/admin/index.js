@@ -165,7 +165,8 @@ const handleLogout = (e) => {
 }
  const renderPage = (page) => {
      switch(page) {
- 
+        case AdminPath.DASHBOARD: 
+        return <Dashboard/>
         case AdminPath.ORDERS:
           if(admin.role === "admin") {
             return <Order/>;
