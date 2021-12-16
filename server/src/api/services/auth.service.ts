@@ -65,7 +65,7 @@ export class AuthService extends UserService {
      
       
     }
-    public async revokeAccessToken(data: IRefreshToken): Promise<IAccessToken> {
+    public async refreshAccessToken(data: IRefreshToken): Promise<IAccessToken> {
         const {refreshToken } = data;
         let token = "";
         if(!refreshToken) throw new TokenError(OperationalErrorMessage.NO_TOKEN)

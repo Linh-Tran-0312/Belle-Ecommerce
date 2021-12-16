@@ -8,10 +8,10 @@ export interface IBaseRepository<T> {
 
     find(options: any): Promise<T[]>;
     findOne(options: any): Promise<T | null>;
-
+    findAndCount(options: any): Promise<any>
 }
 
-export abstract class BaseRepository<Props extends IBaseEntity, Class extends CustomBaseEntity & Props,CreateProps>
+export abstract class BaseRepository<Props extends IBaseEntity, Class extends CustomBaseEntity & Props,CreateProps> implements IBaseRepository<IBaseEntity>
 {
     protected entity: Repository<Class>;
 
@@ -61,6 +61,15 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
             const item: Props | any = await this.entity.findOne(options);
             if (!item) return null
             return item;
+        } catch (err: any) {
+            throw new PostgresError(err.message, err);
+        }
+    }
+
+    public async findAndCount(options: FindManyOptions): Promise<any> {
+        try {
+            const result = await this.entity.findAndCount(options);
+            return result;
         } catch (err: any) {
             throw new PostgresError(err.message, err);
         }

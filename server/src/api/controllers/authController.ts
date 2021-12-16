@@ -99,7 +99,7 @@ export class AuthController  extends Controller {
     @Get("/token")
     public async revokeToken(@Request() req: express.Request): Promise<IRevokeMessage> {
         const data = req.cookies.refreshToken;
-       const result = await this._authService.revokeAccessToken({ refreshToken: data});
+       const result = await this._authService.refreshAccessToken({ refreshToken: data});
        this.setCookies({ token: {
         value: result.token,
         options: {

@@ -1438,6 +1438,29 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"IOverviewReport": {
+				"properties": {
+					"sales": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"registers": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"sales",
+					"orders",
+					"registers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IOrders": {
 				"properties": {
 					"orders": {
@@ -1491,6 +1514,13 @@
 					"createdAt": {
 						"type": "string",
 						"format": "date-time"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
 					},
 					"details": {
 						"items": {
@@ -2903,6 +2933,58 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/report/overview": {
+			"get": {
+				"operationId": "GetOverviewReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOverviewReport"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get overview of revenue, orders and new register of current month",
+				"tags": [
+					"Report Controller"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/report/sales-orders": {
+			"get": {
+				"operationId": "GetSalesAndOrdersReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Report Controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/orders": {

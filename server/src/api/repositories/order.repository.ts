@@ -95,4 +95,18 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
             throw new PostgresError(err.message, err);
         }
     }
+    public async getOrderByDate(): Promise<any> {
+        try {
+            const orders = await this.entity.createQueryBuilder("order")
+                                            .select("DATE_TRUNC('month', order.createdAt)","date")
+                                            .addSelect("SUM(order.total)","sales")
+                                            .addSelect("COUNT(order.id)","orders")
+                                            .groupBy("date")
+                                            .orderBy("date")
+                                            .getRawMany()
+                return orders;
+        } catch (error: any) {
+            throw new  PostgresError(error.message, error)
+        }
+    }
 }  

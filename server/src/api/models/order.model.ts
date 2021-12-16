@@ -26,6 +26,8 @@ export interface IOrderCreateProps {
 }
 
 export interface IOrder extends Omit<IOrderCreateProps, "details">, IBaseEntity {
+    status?: Status;
+    total?: number;
     details?: IOrderDetail[];
 };
 
