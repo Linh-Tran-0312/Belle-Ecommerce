@@ -195,6 +195,14 @@ export const ACTION = {
     ORDER_LOADING: "ORDER_LOADING",
     ORDER_ERROR: "ORDER_ERROR",
 
+     //------------------REPORT ACTION----------------------------
+    //Order Action
+    GET_OVERVIEW_REPORT: "GET_OVERVIEW",
+    GET_SALES_REPORT: "GET_SALES_REPORT",
+    GET_ORDER_REPORT: "GET_ORDER_STATUS_REPORT",
+    GET_TOP_PRODUCT_REPORT: "GET_TOP_PRODUCT_REPORT",
+    REPORT_LOADING: "REPORT_LOADING",
+    REPORT_ERROR: "REPORT_ERROR",
     /************************************USER ACTION***************************************/
     //Home Action:
     BLOG_CATEGORIES: "BLOG_CATEGORIES",

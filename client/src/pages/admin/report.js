@@ -3,7 +3,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import StopIcon from '@material-ui/icons/Stop';
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, CircularProgress } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,8 +12,11 @@ import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getMonth } from "../../helper/handleTime";
+import { useDispatch, useSelector } from "react-redux";
+import reportActions from "../../actions/adminReport";
+
 const useStyles = makeStyles({
 
 })
@@ -86,12 +89,20 @@ const rowsProduct = [
     {name: "Az Polo", brand : "Leo", quantity: 60, total : 3403400},
     {name: "Green shirt", brand : "Leo", quantity: 20, total : 3403400},
 ]
+
 export default () => {
-
-    const [filter, setFilter] = useState("");
+    const dispatch = useDispatch()
+    const overview = useSelector(state => state.report).overview;
+    const salesReport = useSelector(state => state.report).salesReport;
+    const [salePeriod, setSalePeriod] = useState("week");
     const handleChange = e => {
-
+        setSalePeriod(e.target.value)
+        dispatch(reportActions.getSalesReport(e.target.value))
     }
+    useEffect(() => {
+        dispatch(reportActions.getOverviewReport());
+        dispatch(reportActions.getSalesReport("week"))
+    },[])
     return (
         <>
             <Box component={Paper} p={3} my={2}>
@@ -111,7 +122,11 @@ export default () => {
                             <Grid container alignItems="center">
                                 <Grid item xs={9}>
                                     <Typography variant="body1">Total Money (VND)</Typography>
-                                    <Typography variant="h5" color="primary">250.000.000</Typography>
+                                    {
+                                        overview?.sales ?  <Typography variant="h5" color="primary">{overview?.sales.toLocaleString()}</Typography>
+                                                        : <CircularProgress />
+                                    }
+                                   
                                 </Grid>
                                 <Grid item xs={3}>
                                     <MonetizationOnIcon color="primary" fontSize="large" />
@@ -124,7 +139,10 @@ export default () => {
                             <Grid container alignItems="center">
                                 <Grid item xs={9}>
                                     <Typography variant="body1">New Orders</Typography>
-                                    <Typography variant="h5" color="primary">345 </Typography>
+                                    {
+                                        overview?.sales ?  <Typography variant="h5" color="primary">{overview?.orders.toLocaleString()}</Typography>
+                                                        : <CircularProgress />
+                                    }
                                 </Grid>
                                 <Grid item xs={3}>
                                     <AddShoppingCartIcon color="primary" fontSize="large" />
@@ -137,7 +155,10 @@ export default () => {
                             <Grid container alignItems="center">
                                 <Grid item xs={9}>
                                     <Typography variant="body1">New Registers</Typography>
-                                    <Typography variant="h5" color="primary">38</Typography>
+                                    {
+                                        overview?.sales ?  <Typography variant="h5" color="primary">{overview?.registers.toLocaleString()}</Typography>
+                                                        : <CircularProgress />
+                                    }
                                 </Grid>
                                 <Grid item xs={3}>
                                     <PersonAddIcon color="primary" fontSize="large" />
@@ -159,7 +180,7 @@ export default () => {
                                 <Select
                                     labelId="demo-simple-select-outlined-label"
                                     id="demo-simple-select-outlined"
-                                    value="week"
+                                    value={salePeriod}
                                     onChange={handleChange}
                                     label="Period"
                                     name="period"
@@ -177,11 +198,13 @@ export default () => {
                 </Box>
                 <Grid container>
                     <Grid item xs={12} style={{ height: 350 }}>
-                        <ResponsiveContainer width="100%" height="100%">
+                        {
+                            salesReport?.length === 0 ? <CircularProgress />
+                            :   <ResponsiveContainer width="100%" height="100%">
                             <LineChart
                                 width={500}
                                 height={250}
-                                data={saleData}
+                                data={salesReport}
                                 margin={{
                                     top: 5,
                                     right: 30,
@@ -190,15 +213,17 @@ export default () => {
                                 }}
                             >
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis yAxisId="left" />
+                                <XAxis dataKey="time" />
+                                <YAxis yAxisId="left" tickFormatter={(value) => new Intl.NumberFormat('en').format(value)} />
                                 <YAxis yAxisId="right" orientation="right" />
-                                <Tooltip />
+                                <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                                 <Legend height={10} />
-                                <Line yAxisId="left" type="monotone" dataKey="sales" stroke="#8884d8" activeDot={{ r: 8 }} />
+                                <Line  yAxisId="left" type="monotone" dataKey="sales" stroke="#8884d8" activeDot={{ r: 8 }} />
                                 <Line yAxisId="right" type="monotone" dataKey="orders" stroke="#82ca9d" />
                             </LineChart>
                         </ResponsiveContainer>
+                        }
+                      
                     </Grid>
                 </Grid>
             </Box>

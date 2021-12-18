@@ -10,4 +10,5 @@ import blog from "./blog";
 import order from "./order";
 import userAuth from "./userAuth";
 import notification  from './notification';
-export const appReducer = combineReducers({ notification, adminAuth, adminBlog, adminProduct, adminUser, adminOrder, home, shop, blog, order, userAuth })
+import report from "./adminReport";
+export const appReducer = combineReducers({ report, notification, adminAuth, adminBlog, adminProduct, adminUser, adminOrder, home, shop, blog, order, userAuth })

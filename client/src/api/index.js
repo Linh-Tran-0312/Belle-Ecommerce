@@ -78,7 +78,10 @@ const api = {
     deleteItem: (itemId) => API.delete(`/orders/items/${itemId}`),
     updateItemQuantity: (itemId, formData) => API.patch(`/orders/items/${itemId}`, formData),
     placeOrder: (orderId, formData) => API.patch(`/orders/${orderId}/place`, formData),
-   
+
+     //------------------------REPORT API----------------------------
+    getOverviewReport: () => API.get("/report/overview"),
+    getSalesReport: (time) => API.get(`/report/sales-orders?time=${time}`),
 }
 
 export default api;
