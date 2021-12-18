@@ -3,7 +3,7 @@ import { OrderRepository, IOrders } from "../repositories";
 import { BaseService, IBaseService  } from "./base.service";
 import { Change } from "./index";
 import { IOrderUpdateItems, IOrderUpdateProps } from "../controllers/orderController";
-import  periodCal from "../helpers/periodCalculator";
+import { periodCal } from "../helpers/timeHandler";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
 export interface IPlaceOrder {

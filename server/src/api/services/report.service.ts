@@ -1,9 +1,10 @@
 import { ProductRepository, UserRepository, OrderRepository } from "../repositories"
-import { IOverviewReport, ISaleOrderReport, IReportDetail, IProductReport  } from "../controllers/reportController";
-import periodCalculator, { Period }from "../helpers/periodCalculator";
+import { IOverviewReport, ISaleOrderReport, IReportDetail, IProductReport } from "../controllers/reportController";
+import {periodCal, Period, getDay, daysInCurrentMonth, getMonth } from "../helpers/timeHandler";
 import { Status, IOrder } from "../models";
 import { MoreThan, In } from "typeorm";
- 
+import { getDefaultSettings } from "http2";
+
 
 export class ReportService {
     private productRepo: ProductRepository;
@@ -16,13 +17,13 @@ export class ReportService {
         this.productRepo = new ProductRepository();
     }
 
-    public async getOverviewReport(): Promise<IOverviewReport> {  
+    public async getOverviewReport(): Promise<IOverviewReport> {
         const result: IOverviewReport = {
             sales: 0,
             orders: 0,
             registers: 0,
         };
-        const time = periodCalculator(Period.QUARTER);
+        const time = periodCal(Period.QUARTER);
         const sales: IOrder[] = await this.orderRepo.find({
             select: ["total", "status"],
             where: {
@@ -32,15 +33,15 @@ export class ReportService {
 
         });
 
-        result.sales = sales.reduce((preSum,order) => {
-            if(order.status === Status.COMPLETED) {
+        result.sales = sales.reduce((preSum, order) => {
+            if (order.status === Status.COMPLETED) {
                 return preSum + order.total!
             }
-            return preSum ;
-        },0); 
+            return preSum;
+        }, 0);
         result.orders = sales.length;
 
-        const [ users, userCount ] = await this.userRepo.findAndCount({
+        const [users, userCount] = await this.userRepo.findAndCount({
             select: ["id"],
             where: {
                 createdAt: MoreThan(time.start)
@@ -52,15 +53,57 @@ export class ReportService {
     }
     public async getSaleAndOrderReport(time: Period): Promise<any> {
 
-        const period = periodCalculator(time);
-        //if week, data will be grouped by day (mon,tuesday,wednesday)
-        // if month, data will be grouped by date (1st,2rd,... )
-        //if quarter, data will be grouped by date
-        //if year, data will be grouped by month
-        //group sales and orders by date, then retrieve from DB 
-
-        const orders = await this.orderRepo.getOrderByDate();
-        return orders
+        const period = periodCal(time);
+        let orders: any;
+        let result: any;
+        switch (time) {
+            case Period.WEEK:   
+            orders = await this.orderRepo.getOrderByDate("day", period.start);
+             
+            result = Array(7).fill({
+                time: "",
+                sales: 0,
+                orders: 0
+               }).map((item,index) => ({...item, time : getDay(index)}))
+            orders.forEach(o => {
+                result[o.date.getDay()].sales = o.sales;
+                result[o.date.getDay()].orders = o.orders;
+            });
+            result.push(result[0]);
+            result.shift();
+                break;
+            case Period.MONTH:
+            orders = await this.orderRepo.getOrderByDate("day", period.start);
+            result = Array(daysInCurrentMonth()).fill({
+                time: "",
+                sales: 0,
+                orders: 0
+               }).map((item,index) => ({...item, time : index + 1}));
+            orders.forEach(o => {
+                result[o.date.getDate() - 1].sales = o.sales;
+                result[o.date.getDate() - 1].orders = o.orders;
+            });
+                break;
+            case Period.QUARTER:
+            orders = await this.orderRepo.getOrderByDate("day", period.start);
+                break;
+            case Period.YEAR:
+            orders = await this.orderRepo.getOrderByDate("month", period.start);
+            result = Array(12).fill({
+                time: "",
+                sales: 0,
+                orders: 0
+               }).map((item,index) => ({...item, time : getMonth(index)}));
+            orders.forEach(o => {
+                result[o.date.getMonth()].sales = o.sales;
+                result[o.date.getMonth()].orders = o.orders;
+            });
+                break;
+            default:
+                break;
+        }  
+        console.log(result)
+        return result
     }
 
 }

@@ -1,4 +1,3 @@
-const t = new Date(Date.now()).toISOString();
 
 const quarters = [0,0,0,3,3,3,6,6,6,9,9,9];
 export enum Period {
@@ -9,7 +8,7 @@ export enum Period {
     YEAR = "year"
 
 }
-const periodCal = (period: string) => {
+export const periodCal = (period: string) => {
     const now = new Date();
     const time: any = {
         start: null,
@@ -38,4 +37,27 @@ const periodCal = (period: string) => {
     return time
 }
 
-export default periodCal
+const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+export const getDay = (day: number): string => {
+    return days[day]
+}
+
+export const getDMY = (time:Date): string => {
+    const date = time.getDate();
+    const month = time.getMonth();
+    const year = time.getFullYear();
+    return `${date}-${month}-${year}`;
+}
+const months = [ "January ","February","March","April","May","June","July","August","September","October","November","December"];
+export function getMonth(month: number) {
+    return months[month]
+}
+
+export const daysInCurrentMonth = () => {
+    const date = new Date();
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+}
+
+
+
+ 

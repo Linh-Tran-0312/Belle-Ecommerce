@@ -44,7 +44,7 @@ export class ReportController {
 
      @Get("/sales-orders")
     public async getSalesAndOrdersReport(@Query() time: string): Promise<any> {
-        return this._reportService.getSaleAndOrderReport();
+        return this._reportService.getSaleAndOrderReport(time);
     }
 /*
     @Get("/order-status")

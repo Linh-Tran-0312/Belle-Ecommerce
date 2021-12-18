@@ -5,6 +5,7 @@ import { Service } from "typedi";
 import { PostgresError } from "../helpers/PostgresError";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
+import { Period } from "../helpers/timeHandler";
 export interface IOrders {
     orders: Order[],
     total: number
@@ -95,10 +96,12 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
             throw new PostgresError(err.message, err);
         }
     }
-    public async getOrderByDate(): Promise<any> {
+    public async getOrderByDate(trunc: string, from: Date): Promise<any> {
         try {
             const orders = await this.entity.createQueryBuilder("order")
-                                            .select("DATE_TRUNC('month', order.createdAt)","date")
+                                            .select(`DATE_TRUNC('${trunc}', order.createdAt)`,"date")
+                                            .where("order.orderAt >= :startAt",{startAt: from})
+                                            .andWhere("order.status = :status", {status: Status.COMPLETED})
                                             .addSelect("SUM(order.total)","sales")
                                             .addSelect("COUNT(order.id)","orders")
                                             .groupBy("date")
