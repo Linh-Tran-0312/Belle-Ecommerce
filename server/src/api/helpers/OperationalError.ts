@@ -15,6 +15,8 @@ export enum OperationalErrorMessage {
     EXPIRED_TOKEN = "Expired token",
     NOT_PERMISSION = "You might have not permission to access this resource",
     FOREIGN_VIOLATION = "Can't delete this item because it is in use",
+    INVALID_QUERY = "Invalid query string",
+    INVALID_INPUT = "Invalid input"
 };
 
 export class OperationalError extends Error {

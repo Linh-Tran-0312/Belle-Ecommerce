@@ -7,15 +7,13 @@ export interface IOverviewReport {
     orders: number,
     registers: number
 }
-export interface IReportDetail {
-    name: string,
+export interface ISalesReport {
+    time: string,
     sales: number,
     orders: number
 }
-export interface ISaleOrderReport {
-    data: Array<IReportDetail>
-}
-export interface IOrderStatus {
+ 
+export interface IOrderReport {
     completedOrders: number,
     canceledOrders: number
 }
@@ -25,6 +23,10 @@ export interface IProductReport {
     brand: string,
     quantity: number,
     sales: number
+}
+export interface IProductReports {
+    total: string,
+    products: IProductReport[]
 }
 @Route("/report")
 @Tags("Report Controller")
@@ -42,17 +44,18 @@ export class ReportController {
         return this._reportService.getOverviewReport();
     }
 
-     @Get("/sales-orders")
-    public async getSalesAndOrdersReport(@Query() time: string): Promise<any> {
-        return this._reportService.getSaleAndOrderReport(time);
+     @Get("/sales")
+    public async getSalesReport(@Query() time: string): Promise<ISalesReport[]> {
+        return this._reportService.getSalesReport(time);
     }
-/*
-    @Get("/order-status")
-    public async getOrderStatusReport(@Query() month: string): Promise<IOrderStatusReport> {
-
+    @Get("/orders")
+    public async getOrderReport(@Query() time: string): Promise<IOrderReport> {
+        return this._reportService.getOrderReport(time);
     }
-    @Get("/top-products")
-    public async getTopProductsReport(@Query() month: string): Promise<IProdutReport[]> {
-
-    } */
+ 
+    @Get("/products")
+    public async getTopProductsReport(@Query() time: string, @Query() page: number, @Query() limit: number): Promise<IProductReports> {
+        const query = { page,limit }
+        return this._reportService.getTopProductsReport(time,query);
+    }
 }

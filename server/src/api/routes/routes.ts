@@ -1,11 +1,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from '@tsoa/runtime';
+import { ReportController } from './../controllers/reportController';
 import { BlogController } from './../controllers/blogController';
 import { ProductController } from './../controllers/productController';
 import { UserController } from './../controllers/userController';
 import { AuthController } from './../controllers/authController';
-import { ReportController } from './../controllers/reportController';
 import { OrderController } from './../controllers/orderController';
 import { PingController } from './../controllers/pingController';
 import { BlogCategoryController } from './../controllers/blogCategoryController';
@@ -16,6 +16,43 @@ import { ColorController } from './../controllers/colorController';
 import { expressAuthentication } from './../middlewares/AuthHandler';
 
 const models: TsoaRoute.Models = {
+    "IOverviewReport": {
+        "dataType": "refObject",
+        "properties": {
+            "sales": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+            "registers": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ISalesReport": {
+        "dataType": "refObject",
+        "properties": {
+            "time": {"dataType":"string","required":true},
+            "sales": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrderReport": {
+        "dataType": "refObject",
+        "properties": {
+            "completedOrders": {"dataType":"double","required":true},
+            "canceledOrders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IProductReport": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "brand": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
     "BlogCategory": {
         "dataType": "refObject",
         "properties": {
@@ -513,15 +550,6 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "IOverviewReport": {
-        "dataType": "refObject",
-        "properties": {
-            "sales": {"dataType":"double","required":true},
-            "orders": {"dataType":"double","required":true},
-            "registers": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
     "IOrders": {
         "dataType": "refObject",
         "properties": {
@@ -672,6 +700,83 @@ const models: TsoaRoute.Models = {
 };
 
 export function RegisterRoutes(app: any) {
+        app.get('/report/overview',
+            function (request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReportController();
+
+
+            const promise = controller.getOverviewReport.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/report/sales',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReportController();
+
+
+            const promise = controller.getSalesReport.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/report/orders',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReportController();
+
+
+            const promise = controller.getOrderReport.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/report/products',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
+                    page: {"in":"query","name":"page","required":true,"dataType":"double"},
+                    limit: {"in":"query","name":"limit","required":true,"dataType":"double"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReportController();
+
+
+            const promise = controller.getTopProductsReport.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
         app.get('/blogs',
             function (request: any, response: any, next: any) {
             const args = {
@@ -1186,43 +1291,6 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.revokeToken.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/report/overview',
-            function (request: any, response: any, next: any) {
-            const args = {
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ReportController();
-
-
-            const promise = controller.getOverviewReport.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/report/sales-orders',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ReportController();
-
-
-            const promise = controller.getSalesAndOrdersReport.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.get('/orders',

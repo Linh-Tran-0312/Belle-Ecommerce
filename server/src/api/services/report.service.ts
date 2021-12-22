@@ -1,9 +1,11 @@
 import { ProductRepository, UserRepository, OrderRepository } from "../repositories"
-import { IOverviewReport, ISaleOrderReport, IReportDetail, IProductReport } from "../controllers/reportController";
-import {periodCal, Period, getDay, daysInCurrentMonth, getMonth } from "../helpers/timeHandler";
+import { IOverviewReport, ISalesReport, IOrderReport, IProductReports } from "../controllers/reportController";
+import {periodCal, Period, getDay, daysInMonth, getMonth, regYearMonth,regYear, timeCal } from "../helpers/timeHandler";
 import { Status, IOrder } from "../models";
 import { MoreThan, In } from "typeorm";
 import { getDefaultSettings } from "http2";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { HttpCode } from "../helpers/HttpCode";
 
 
 export class ReportService {
@@ -51,14 +53,15 @@ export class ReportService {
 
         return result;
     }
-    public async getSaleAndOrderReport(time: Period): Promise<any> {
+    public async getSalesReport(time: string): Promise<ISalesReport> {
 
-        const period = periodCal(time);
+       
         let orders: any;
         let result: any;
-        switch (time) {
-            case Period.WEEK:   
-            orders = await this.orderRepo.getOrderByDate("day", period.start);
+
+        if(time === Period.WEEK) {
+            const period = periodCal(time);
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", period.start);
              
             result = Array(7).fill({
                 time: "",
@@ -71,24 +74,9 @@ export class ReportService {
             });
             result.push(result[0]);
             result.shift();
-                break;
-            case Period.MONTH:
-            orders = await this.orderRepo.getOrderByDate("day", period.start);
-            result = Array(daysInCurrentMonth()).fill({
-                time: "",
-                sales: 0,
-                orders: 0
-               }).map((item,index) => ({...item, time : index + 1}));
-            orders.forEach(o => {
-                result[o.date.getDate() - 1].sales = o.sales;
-                result[o.date.getDate() - 1].orders = o.orders;
-            });
-                break;
-            case Period.QUARTER:
-            orders = await this.orderRepo.getOrderByDate("day", period.start);
-                break;
-            case Period.YEAR:
-            orders = await this.orderRepo.getOrderByDate("month", period.start);
+        }
+        else if(regYear.test(time)) {
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("month", new Date(time));
             result = Array(12).fill({
                 time: "",
                 sales: 0,
@@ -98,12 +86,56 @@ export class ReportService {
                 result[o.date.getMonth()].sales = o.sales;
                 result[o.date.getMonth()].orders = o.orders;
             });
-                break;
-            default:
-                break;
-        }  
-        console.log(result)
+        }
+         else if(regYearMonth.test(time))
+        {
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day",  new Date(time));
+            result = Array(daysInMonth(time)).fill({
+                time: "",
+                sales: 0,
+                orders: 0
+               }).map((item,index) => ({...item, time : index + 1}));
+            orders.forEach(o => {
+                result[o.date.getDate() - 1].sales = o.sales;
+                result[o.date.getDate() - 1].orders = o.orders;
+            });
+        } else {
+            throw new OperationalError(OperationalErrorMessage.INVALID_QUERY, HttpCode.BAD_REQUEST)
+        }    
+
         return result
     }
+    public async getOrderReport(timeStr: string): Promise<IOrderReport> {
+        let orders: any;
+        let result: IOrderReport = {
+            completedOrders: 0,
+            canceledOrders: 0
+        };
+        if(timeStr === Period.WEEK || regYear.test(timeStr) || regYearMonth.test(timeStr) ) {
+            const time = timeCal(timeStr);
+            orders = await this.orderRepo.getOrderProportionByTime(time)
+            console.log(orders);
+            orders.forEach(o => {
+                if(o.status === Status.COMPLETED) {
+                    result.completedOrders += 1 ;
+                } else {
+                    result.canceledOrders += 1 ;
+                }
+        })
+        } else {
+            throw new OperationalError(OperationalErrorMessage.INVALID_QUERY, HttpCode.BAD_REQUEST)
+        }    
 
+        return result
+    }
+    public async getTopProductsReport(timeStr: string, queryStr: {page: number, limit: number}): Promise<IProductReports> {
+         const query = {
+             page: 1,
+             limit: 5
+         }
+         if(queryStr.page && !isNaN(queryStr.page)) query.page = queryStr.page;
+         if(queryStr.limit && !isNaN(queryStr.limit)) query.limit = queryStr.limit;
+         const time = timeCal(timeStr);
+         return await this.orderRepo.getTopProductByTime(time, query);
+    }
 }

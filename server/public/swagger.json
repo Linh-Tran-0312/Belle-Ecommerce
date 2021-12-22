@@ -6,6 +6,100 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"IOverviewReport": {
+				"properties": {
+					"sales": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"registers": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"sales",
+					"orders",
+					"registers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ISalesReport": {
+				"properties": {
+					"time": {
+						"type": "string"
+					},
+					"sales": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"time",
+					"sales",
+					"orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderReport": {
+				"properties": {
+					"completedOrders": {
+						"type": "number",
+						"format": "double"
+					},
+					"canceledOrders": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"completedOrders",
+					"canceledOrders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IProductReport": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"brand": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"sales": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"brand",
+					"quantity",
+					"sales"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"BlogCategory": {
 				"properties": {
 					"id": {
@@ -1438,29 +1532,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IOverviewReport": {
-				"properties": {
-					"sales": {
-						"type": "number",
-						"format": "double"
-					},
-					"orders": {
-						"type": "number",
-						"format": "double"
-					},
-					"registers": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"sales",
-					"orders",
-					"registers"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"IOrders": {
 				"properties": {
 					"orders": {
@@ -1786,6 +1857,146 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/report/overview": {
+			"get": {
+				"operationId": "GetOverviewReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOverviewReport"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get overview of revenue, orders and new register of current month",
+				"tags": [
+					"Report Controller"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/report/sales": {
+			"get": {
+				"operationId": "GetSalesReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ISalesReport"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Report Controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/report/orders": {
+			"get": {
+				"operationId": "GetOrderReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrderReport"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Report Controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/report/products": {
+			"get": {
+				"operationId": "GetTopProductsReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IProductReport"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Report Controller"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/blogs": {
 			"get": {
 				"operationId": "GetBlogs",
@@ -2933,58 +3144,6 @@
 				],
 				"security": [],
 				"parameters": []
-			}
-		},
-		"/report/overview": {
-			"get": {
-				"operationId": "GetOverviewReport",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IOverviewReport"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get overview of revenue, orders and new register of current month",
-				"tags": [
-					"Report Controller"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/report/sales-orders": {
-			"get": {
-				"operationId": "GetSalesAndOrdersReport",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Report Controller"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "time",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
 			}
 		},
 		"/orders": {

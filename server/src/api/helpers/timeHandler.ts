@@ -53,9 +53,39 @@ export function getMonth(month: number) {
     return months[month]
 }
 
-export const daysInCurrentMonth = () => {
-    const date = new Date();
+export const daysInMonth = (time: string) => {
+    const date = new Date(time);
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+}
+
+export const regYear = /^[\d]{4}$/;
+export const regYearMonth = /^[\d]{4}-([0][1-9]|[1][0-2])$/;
+
+export const timeCal = (timeStr: string) => {
+    const now = new Date();
+    const time: any = {
+        start: now,
+        end: now
+    }
+    if(timeStr === "week")
+    {
+        time.start =  new Date(now.getFullYear(),now.getMonth(),now.getDate() - now.getDay() + 1,0,0,0);
+
+    }
+    else if(regYear.test(timeStr)){
+        time.start =  new Date(parseInt(timeStr),0,1);
+        time.end =  new Date(parseInt(timeStr),11,31,23,59,59);
+    }
+    else if(regYearMonth.test(timeStr)){
+        const date = new Date(timeStr);
+        time.start =  date;
+        if(date.getMonth() === 11) {
+            time.end =  new Date(date.getFullYear() + 1 ,0,1);
+        } else {
+            time.end =  new Date(date.getFullYear() ,date.getMonth() + 1,1); 
+        }
+    }
+    return time;
 }
 
 

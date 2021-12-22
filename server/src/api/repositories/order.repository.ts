@@ -1,11 +1,13 @@
 import { getRepository, Not, Equal, Brackets } from "typeorm";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-import { Order, IOrder, IOrderCreateProps, Status } from "../models";
+import { Order, IOrder, IOrderCreateProps, Status, OrderDetail } from "../models";
 import { Service } from "typedi";
 import { PostgresError } from "../helpers/PostgresError";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
 import { Period } from "../helpers/timeHandler";
+import { time } from "console";
+import { IProductReport } from "../controllers/reportController";
 export interface IOrders {
     orders: Order[],
     total: number
@@ -96,10 +98,10 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
             throw new PostgresError(err.message, err);
         }
     }
-    public async getOrderByDate(trunc: string, from: Date): Promise<any> {
+    public async getTotalSalesAndOrdersByTime(trunc: string, from: Date): Promise<any> { 
         try {
-            const orders = await this.entity.createQueryBuilder("order")
-                                            .select(`DATE_TRUNC('${trunc}', order.createdAt)`,"date")
+            const report = await this.entity.createQueryBuilder("order")
+                                            .select(`DATE_TRUNC('${trunc}', order.orderAt)`,"date")
                                             .where("order.orderAt >= :startAt",{startAt: from})
                                             .andWhere("order.status = :status", {status: Status.COMPLETED})
                                             .addSelect("SUM(order.total)","sales")
@@ -107,7 +109,46 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
                                             .groupBy("date")
                                             .orderBy("date")
                                             .getRawMany()
+                return report;
+        } catch (error: any) {
+            throw new  PostgresError(error.message, error)
+        }
+    }
+    public async getOrderProportionByTime(time: any): Promise<any> {
+        try {
+            const orders = await this.entity.createQueryBuilder("order")
+                                            .select(["order.status as status","order.orderAt as date"])
+                                            .where("order.orderAt >= :startAt",{startAt: time.start})
+                                            .andWhere("order.orderAt < :endAt",{endAt: time.end})
+                                            .andWhere("order.status IN (:...status)",{status: [Status.COMPLETED,Status.CANCELLED]})
+                                            .getRawMany()
                 return orders;
+        } catch (error: any) {
+            throw new  PostgresError(error.message, error)
+        }
+    }
+    public async getTopProductByTime(time: any, query: any): Promise<any> {
+        try {
+            const productsQuery = this.entity.createQueryBuilder("order")      
+                                            .where("order.orderAt >= :startAt",{startAt: time.start})
+                                            .andWhere("order.orderAt < :endAt",{endAt: time.end})
+                                            .andWhere("order.status = :status",{status: Status.COMPLETED})                                                                     
+                                            .leftJoinAndSelect("order.details","orderDetail")
+                                            .leftJoinAndSelect("orderDetail.productVariant","variant")
+                                            .leftJoinAndSelect("variant.product","product")
+                                            .leftJoinAndSelect("product.brand","brand")                                    
+                                            .select("SUM(orderDetail.quantity)","quantity")
+                                            .addSelect("SUM(orderDetail.unitPrice * orderDetail.quantity)","sales")
+                                            .addSelect(["product.name as name","brand.name as brand"])
+                                            .groupBy("product.id")
+                                            .addGroupBy("brand.id")
+                                            .orderBy("sales","DESC")
+                                            .offset(query.limit * (query.page - 1))
+                                            .limit(query.limit)
+                                           
+                const total = await productsQuery.getCount();
+                const products = await productsQuery.getRawMany();
+                return { total, products};
         } catch (error: any) {
             throw new  PostgresError(error.message, error)
         }
