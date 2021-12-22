@@ -10,10 +10,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart } from 'recharts';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { useEffect, useState } from "react";
-import { getMonth } from "../../helper/handleTime";
+import { getMonth, getMonthsForReport } from "../../helper/handleTime";
 import { useDispatch, useSelector } from "react-redux";
 import reportActions from "../../actions/adminReport";
 
@@ -95,8 +95,15 @@ export default () => {
     const overview = useSelector(state => state.report).overview;
     const salesReport = useSelector(state => state.report).salesReport;
     const [salePeriod, setSalePeriod] = useState("week");
-    const handleChange = e => {
+    const [ productPeriod, setProductPeriod ] = useState("week");
+
+    const months = getMonthsForReport();
+    const handleChangeSales = e => {
         setSalePeriod(e.target.value)
+        dispatch(reportActions.getSalesReport(e.target.value))
+    }
+    const handleChangeProducts = e => {
+        setProductPeriod(e.target.value)
         dispatch(reportActions.getSalesReport(e.target.value))
     }
     useEffect(() => {
@@ -124,7 +131,7 @@ export default () => {
                                     <Typography variant="body1">Total Money (VND)</Typography>
                                     {
                                         overview?.sales ?  <Typography variant="h5" color="primary">{overview?.sales.toLocaleString()}</Typography>
-                                                        : <CircularProgress />
+                                                        : <CircularProgress size={25} />
                                     }
                                    
                                 </Grid>
@@ -141,7 +148,7 @@ export default () => {
                                     <Typography variant="body1">New Orders</Typography>
                                     {
                                         overview?.sales ?  <Typography variant="h5" color="primary">{overview?.orders.toLocaleString()}</Typography>
-                                                        : <CircularProgress />
+                                                        : <CircularProgress size={25} />
                                     }
                                 </Grid>
                                 <Grid item xs={3}>
@@ -157,7 +164,7 @@ export default () => {
                                     <Typography variant="body1">New Registers</Typography>
                                     {
                                         overview?.sales ?  <Typography variant="h5" color="primary">{overview?.registers.toLocaleString()}</Typography>
-                                                        : <CircularProgress />
+                                                        :<CircularProgress size={25} /> 
                                     }
                                 </Grid>
                                 <Grid item xs={3}>
@@ -181,15 +188,13 @@ export default () => {
                                     labelId="demo-simple-select-outlined-label"
                                     id="demo-simple-select-outlined"
                                     value={salePeriod}
-                                    onChange={handleChange}
+                                    onChange={handleChangeSales}
                                     label="Period"
                                     name="period"
                                 >
-
-                                    <MenuItem value="week">This Week</MenuItem>
-                                    <MenuItem value="month">This Month</MenuItem>
-                                    <MenuItem value="quarter">This Quarter</MenuItem>
-                                    <MenuItem value="year">This Year</MenuItem>
+                                    {
+                                        months.map(item =>  <MenuItem key={item.time }value={item.time}>{item.name}</MenuItem>)
+                                    }
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -197,11 +202,11 @@ export default () => {
 
                 </Box>
                 <Grid container>
-                    <Grid item xs={12} style={{ height: 350 }}>
+                    <Grid item md={9} xs={12} style={{ height: 350 }}>
                         {
                             salesReport?.length === 0 ? <CircularProgress />
                             :   <ResponsiveContainer width="100%" height="100%">
-                            <LineChart
+                            <BarChart
                                 width={500}
                                 height={250}
                                 data={salesReport}
@@ -218,17 +223,13 @@ export default () => {
                                 <YAxis yAxisId="right" orientation="right" />
                                 <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                                 <Legend height={10} />
-                                <Line  yAxisId="left" type="monotone" dataKey="sales" stroke="#8884d8" activeDot={{ r: 8 }} />
-                                <Line yAxisId="right" type="monotone" dataKey="orders" stroke="#82ca9d" />
-                            </LineChart>
+                                <Bar  yAxisId="left" type="monotone" dataKey="sales" fill="#8884d8"  />
+                                <Bar yAxisId="right" type="monotone" dataKey="orders" fill="#82ca9d" />
+                            </BarChart> 
                         </ResponsiveContainer>
                         }
                       
                     </Grid>
-                </Grid>
-            </Box>
-            <Box component={Paper} p={3} my={2}>
-                <Grid container spacing={2}>
                     <Grid item md={3} xs={12} >
                         <Box style={{ height: 400}}>
                             <Box>
@@ -258,7 +259,11 @@ export default () => {
                             </ResponsiveContainer>
                         </Box>
                     </Grid>
-                    <Grid item md={9} xs={12}>
+                </Grid>
+            </Box>
+            <Box component={Paper} p={3} my={2}>
+                <Grid container spacing={2}>                  
+                    <Grid item xs={12}>
                         <Box mb={2}>
                             <Grid container justifyContent="space-between">
                                     <Grid item>
@@ -270,13 +275,13 @@ export default () => {
                                 <Select
                                     labelId="demo-simple-select-outlined-label"
                                     id="demo-simple-select-outlined"
-                                    value="10"
-                                    onChange={handleChange}
+                                    value={productPeriod}
+                                    onChange={handleChangeProducts}
                                     label="Month"
                                     name="period"
                                 >
-                                    {
-                                        [1,2,3,4,5,6,7,8,9,10,11,12].map(item =>  <MenuItem key={item} value={item}>{getMonth(item)}</MenuItem>)
+                                      {
+                                        months.map(item =>  <MenuItem key={item.time }value={item.time}>{item.name}</MenuItem>)
                                     }
 
                                 </Select>

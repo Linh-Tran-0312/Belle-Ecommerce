@@ -2,10 +2,9 @@ import axios from "axios";
 import {store }from "../index";
 import { ACTION } from "../constants";
 
-const refreshToken =  (originalReq) => {
+const refreshToken =  () => {
     return  API.get("/auth/token").then((res) => { 
         console.log(res.data.message);
-     
     }).catch(err => {
        if(err?.response?.data?.role === "admin" || err?.response?.data?.role === "editor" ) {
             store.dispatch({ type: ACTION.ADMIN_LOGOUT})
@@ -20,7 +19,6 @@ API.defaults.withCredentials = true;
 
 // handle expired access token
 API.interceptors.response.use((response) => { 
-    
     return response 
 }, async(error) => {
     const originalReq = error.config;

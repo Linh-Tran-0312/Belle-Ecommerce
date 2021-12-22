@@ -1,6 +1,6 @@
-const months = [ "January ","February","March","April","May","June","July","August","September","October","November","December"];
+const months = ["January ", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 export function getMonth(month) {
-    return months[month - 1]
+    return months[month]
 }
 export function displayMonDDYYYY(time) {
     const date = new Date(time)
@@ -13,4 +13,33 @@ export function displayDDMMYYYY(time) {
     const month = date.getMonth() + 1;
     const year = date.getFullYear()
     return `${day}-${month}-${year}`
+}
+
+export const getMonthsForReport = () => {
+    const now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+
+    let arr = [{
+        time: "week",
+        name: "This week"
+    },
+    { time: `${year}`, name: `In ${year}`}
+];
+    while ( year > 2020) {  
+            if (month > 9) {      
+                arr.push({ time: `${year}-${month}`, name: `${year} ${getMonth(month - 1)}`});
+                month -= 1;              
+            } else {
+                arr.push({ time: `${year}-0${month}`, name: `${year} ${getMonth(month - 1)}`});
+             
+                if(month == 1) {
+                    month = 12;
+                    year -= 1;
+                } else {
+                    month -= 1;
+                }           
+            }     
+    }
+    return arr;
 }

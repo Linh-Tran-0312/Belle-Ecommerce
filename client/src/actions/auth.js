@@ -69,9 +69,9 @@ const authActions = {
             dispatch({type: ACTION.USER_ORDERS, payload: data})
         } catch (error) {
             if(error.response) {
-                dispatch({ type: ACTION.AUTH_ERROR, payload: error.response.data.message})
+                dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.response.data.message})
             } else {
-                dispatch({ type: ACTION.AUTH_ERROR, payload: error.message})
+                dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.message})
             }
         }
     }
