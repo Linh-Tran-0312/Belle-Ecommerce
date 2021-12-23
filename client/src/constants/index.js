@@ -203,6 +203,7 @@ export const ACTION = {
     GET_TOP_PRODUCT_REPORT: "GET_TOP_PRODUCT_REPORT",
     REPORT_LOADING: "REPORT_LOADING",
     REPORT_ERROR: "REPORT_ERROR",
+    
     /************************************USER ACTION***************************************/
     //Home Action:
     BLOG_CATEGORIES: "BLOG_CATEGORIES",
@@ -246,7 +247,7 @@ export const ACTION = {
     //Authorization Action 
     USER_INIT: "USER_INIT",
  
-
+    //Toast notification action
     ENQUEUE_SNACKBAR:'ENQUEUE_SNACKBAR',
     CLOSE_SNACKBAR:'CLOSE_SNACKBAR',
     REMOVE_SNACKBAR:'REMOVE_SNACKBAR',

@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
+import Pagination from '@material-ui/lab/Pagination';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart } from 'recharts';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { useEffect, useState } from "react";
@@ -17,53 +18,7 @@ import { getMonth, getMonthsForReport } from "../../helper/handleTime";
 import { useDispatch, useSelector } from "react-redux";
 import reportActions from "../../actions/adminReport";
 
-const useStyles = makeStyles({
 
-})
-const saleData = [
-    {
-        name: 'Monday',
-        sales: 30000000,
-        orders: 24,
-        amt: 2400,
-    },
-    {
-        name: 'Tuesday',
-        sales: 30000000,
-        orders: 13,
-        amt: 2210,
-    },
-    {
-        name: 'Wednesday',
-        sales: 20000000,
-        orders: 98,
-        amt: 2290,
-    },
-    {
-        name: 'Thursday',
-        sales: 27800000,
-        orders: 39,
-        amt: 2000,
-    },
-    {
-        name: 'Friday',
-        sales: 18900000,
-        orders: 48,
-        amt: 2181,
-    },
-    {
-        name: 'Saturday',
-        sales: 23900000,
-        orders: 38,
-        amt: 2500,
-    },
-    {
-        name: 'Sunday',
-        sales: 34900000,
-        orders: 43,
-        amt: 2100,
-    },
-];
 const orderData = [
     { name: 'Canceled', value: 800 },
     { name: 'Completed', value: 150 },
@@ -90,26 +45,51 @@ const rowsProduct = [
     {name: "Green shirt", brand : "Leo", quantity: 20, total : 3403400},
 ]
 
+const initProPagination = {
+    page: 1,
+    limit: 5,
+    total: 1,
+}
 export default () => {
     const dispatch = useDispatch()
     const overview = useSelector(state => state.report).overview;
     const salesReport = useSelector(state => state.report).salesReport;
+    const orderReport = useSelector(state => state.report).orderReport;
+    const productReport = useSelector(state => state.report.productReport);
     const [salePeriod, setSalePeriod] = useState("week");
     const [ productPeriod, setProductPeriod ] = useState("week");
+    const [ proPagination, setProPagination] = useState(initProPagination);
 
     const months = getMonthsForReport();
+     
     const handleChangeSales = e => {
         setSalePeriod(e.target.value)
-        dispatch(reportActions.getSalesReport(e.target.value))
+        dispatch(reportActions.getSalesReport(e.target.value));
+        dispatch(reportActions.getOrderReport(e.target.value));
     }
     const handleChangeProducts = e => {
-        setProductPeriod(e.target.value)
-        dispatch(reportActions.getSalesReport(e.target.value))
+        setProductPeriod(e.target.value);
+        setProPagination(initProPagination);
+        dispatch(reportActions.getTopProductReport(e.target.value,initProPagination))
+    }
+    const handleChangeProductPage= (e,value) => {
+        setProPagination({...proPagination, page: value});
+        dispatch(reportActions.getTopProductReport(productPeriod,{...proPagination, page: value}))
+
     }
     useEffect(() => {
         dispatch(reportActions.getOverviewReport());
-        dispatch(reportActions.getSalesReport("week"))
+        dispatch(reportActions.getSalesReport("week"));
+        dispatch(reportActions.getOrderReport("week"));
+        dispatch(reportActions.getTopProductReport("week",initProPagination))
     },[])
+
+    useEffect(() => {
+        const mod = productReport.total % proPagination.limit;
+        let pageNumber = productReport.total / proPagination.limit;
+        pageNumber = mod === 0 ? pageNumber : Math.floor(pageNumber) + 1;
+        setProPagination({...proPagination, total: pageNumber});
+    }, [productReport.total])
     return (
         <>
             <Box component={Paper} p={3} my={2}>
@@ -236,13 +216,13 @@ export default () => {
                                 <Typography variant="h6" color="primary">Order Status</Typography>
                             </Box>
                             <Box mt={2}>
-                          <Typography variant="body1">  <StopIcon style={{color: '#0088FE',position: 'relative', top: '7px'}}/>Completed Orders: {orderData[0].value}</Typography>
-                                <Typography><StopIcon style={{color: "#FFBB28",position: 'relative', top: '7px'}}/>Canceled Orders: {orderData[1].value}</Typography>
+                          <Typography variant="body1">  <StopIcon style={{color: '#0088FE',position: 'relative', top: '7px'}}/>Completed Orders: {orderReport[1].value}</Typography>
+                                <Typography><StopIcon style={{color: "#FFBB28",position: 'relative', top: '7px'}}/>Canceled Orders: {orderReport[0].value}</Typography>
                             </Box>
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart width={400} height={400}>
                                     <Pie
-                                        data={orderData}
+                                        data={orderReport}
                                         cx="50%"
                                         cy="30%"
                                         labelLine={false}
@@ -267,7 +247,7 @@ export default () => {
                         <Box mb={2}>
                             <Grid container justifyContent="space-between">
                                     <Grid item>
-                                    <Typography variant="h6" color="primary">Top-selling products</Typography>
+                                    <Typography variant="h5" color="primary">Top-selling products</Typography>
                                     </Grid>
                                     <Grid item>
                                     <FormControl size="small" fullWidth variant="outlined"  >
@@ -297,24 +277,27 @@ export default () => {
                                         <TableCell><strong>Product</strong></TableCell>
                                         <TableCell  ><strong>Brand</strong></TableCell>
                                         <TableCell  ><strong>Sell Quantity</strong></TableCell>
-                                        <TableCell  ><strong>Revenue</strong></TableCell>
+                                        <TableCell  ><strong>Sales (VND)</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rowsProduct.map((row, index) => (
+                                    {productReport.products.map((row, index) => (
                                         <TableRow key={row.name}>
                                             <TableCell component="th" scope="row">
-                                                {`${index + 1}`}
+                                            {`${(proPagination.page - 1) * proPagination.limit + index + 1}`}
                                             </TableCell>
                                             <TableCell  >{row.name}</TableCell>
                                             <TableCell  >{row.brand}</TableCell>
                                             <TableCell  >{row.quantity}</TableCell>
-                                            <TableCell  >{row.total}</TableCell>
+                                            <TableCell  >{row.sales.toLocaleString()}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <Box my={2}>
+                            <Pagination count={proPagination.total} page={proPagination.page} onChange={handleChangeProductPage}/>
+                        </Box>
                     </Grid>
                 </Grid>
             </Box>

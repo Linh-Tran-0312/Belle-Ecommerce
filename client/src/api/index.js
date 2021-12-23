@@ -81,7 +81,9 @@ const api = {
 
      //------------------------REPORT API----------------------------
     getOverviewReport: () => API.get("/report/overview"),
-    getSalesReport: (time) => API.get(`/report/sales-orders?time=${time}`),
+    getSalesReport: (time) => API.get(`/report/sales?time=${time}`),
+    getOrderReport: (time) => API.get(`/report/orders?time=${time}`),
+    getProductReport: (time, queryStr) => API.get(`/report/products?time=${time}&${queryStr}`)
 }
 
 export default api;

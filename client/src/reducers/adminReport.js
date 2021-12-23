@@ -1,11 +1,18 @@
+import draftToHtml from "draftjs-to-html";
 import produce from "immer";
 import {ACTION} from "../constants";
 
 const initState = {
     overview: {},
     salesReport: [],
-    orderStatus: {},
-    topProducts: [],
+    orderReport: [
+        { name: 'Canceled', value: 0},
+        { name: 'Completed', value: 0},
+    ],
+    productReport: {
+        total: 0,
+        products: []
+    },
     error: "",
     loading: false
 }
@@ -22,7 +29,17 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.error = "";
             break;
         case ACTION.GET_ORDER_REPORT:
-            draft.orderStatus = payload;
+
+            draft.orderReport =[
+                { name: 'Canceled', value: payload.canceledOrders },
+                { name: 'Completed', value: payload.completedOrders},
+            ];
+            draft.loading = false;
+            draft.error = "";
+            break;
+        case ACTION.GET_TOP_PRODUCT_REPORT:
+            draft.productReport.total = payload.total;
+            draft.productReport.products = payload.products;
             draft.loading = false;
             draft.error = "";
             break;

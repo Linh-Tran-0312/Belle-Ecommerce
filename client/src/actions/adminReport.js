@@ -23,6 +23,25 @@ const reportActions = {
             errorHandler(error, dispatch)
         }
     },
+    getOrderReport: (time) => async(dispatch) => {
+        try {
+            dispatch({type: ACTION.REPORT_LOADING});  
+            const { data } = await api.getOrderReport(time);
+            dispatch({ type: ACTION.GET_ORDER_REPORT, payload: data});
+        } catch (error) {
+            errorHandler(error, dispatch)
+        }
+    },
+    getTopProductReport: (time, query) => async(dispatch) => {
+        try {
+            const queryStr = handleFilter(query);
+            dispatch({type: ACTION.REPORT_LOADING});  
+            const { data } = await api.getProductReport(time,queryStr);
+            dispatch({ type: ACTION.GET_TOP_PRODUCT_REPORT, payload: data});
+        } catch (error) {
+            errorHandler(error, dispatch)
+        }
+    }
 
 
 }
