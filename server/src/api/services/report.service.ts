@@ -9,14 +9,12 @@ import { HttpCode } from "../helpers/HttpCode";
 
 
 export class ReportService {
-    private productRepo: ProductRepository;
     private userRepo: UserRepository;
     private orderRepo: OrderRepository;
 
     constructor() {
         this.userRepo = new UserRepository();
         this.orderRepo = new OrderRepository();
-        this.productRepo = new ProductRepository();
     }
 
     public async getOverviewReport(): Promise<IOverviewReport> {
@@ -25,7 +23,7 @@ export class ReportService {
             orders: 0,
             registers: 0,
         };
-        const time = periodCal(Period.QUARTER);
+        const time = periodCal(Period.MONTH);
         const sales: IOrder[] = await this.orderRepo.find({
             select: ["total", "status"],
             where: {
@@ -53,15 +51,15 @@ export class ReportService {
 
         return result;
     }
-    public async getSalesReport(time: string): Promise<ISalesReport> {
+    public async getSalesReport(timeStr: string): Promise<ISalesReport> {
 
        
         let orders: any;
         let result: any;
 
-        if(time === Period.WEEK) {
-            const period = periodCal(time);
-            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", period.start);
+        if(timeStr === Period.WEEK) {
+            const time = timeCal(timeStr);
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", time);
              
             result = Array(7).fill({
                 time: "",
@@ -75,8 +73,9 @@ export class ReportService {
             result.push(result[0]);
             result.shift();
         }
-        else if(regYear.test(time)) {
-            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("month", new Date(time));
+        else if(regYear.test(timeStr)) {
+            const time = timeCal(timeStr);
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("month",time);
             result = Array(12).fill({
                 time: "",
                 sales: 0,
@@ -87,10 +86,12 @@ export class ReportService {
                 result[o.date.getMonth()].orders = o.orders;
             });
         }
-         else if(regYearMonth.test(time))
+         else if(regYearMonth.test(timeStr))
         {
-            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day",  new Date(time));
-            result = Array(daysInMonth(time)).fill({
+            const time = timeCal(timeStr);
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", time);
+            const month = timeStr.split("-");
+            result = Array(daysInMonth(month[1])).fill({
                 time: "",
                 sales: 0,
                 orders: 0
@@ -114,7 +115,6 @@ export class ReportService {
         if(timeStr === Period.WEEK || regYear.test(timeStr) || regYearMonth.test(timeStr) ) {
             const time = timeCal(timeStr);
             orders = await this.orderRepo.getOrderProportionByTime(time)
-            console.log(orders);
             orders.forEach(o => {
                 if(o.status === Status.COMPLETED) {
                     result.completedOrders += 1 ;

@@ -53,6 +53,14 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "IProductReports": {
+        "dataType": "refObject",
+        "properties": {
+            "total": {"dataType":"string","required":true},
+            "products": {"dataType":"array","array":{"dataType":"refObject","ref":"IProductReport"},"required":true},
+        },
+        "additionalProperties": false,
+    },
     "BlogCategory": {
         "dataType": "refObject",
         "properties": {

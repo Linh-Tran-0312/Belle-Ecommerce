@@ -100,6 +100,25 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"IProductReports": {
+				"properties": {
+					"total": {
+						"type": "string"
+					},
+					"products": {
+						"items": {
+							"$ref": "#/components/schemas/IProductReport"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"total",
+					"products"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"BlogCategory": {
 				"properties": {
 					"id": {
@@ -1954,10 +1973,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IProductReport"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/IProductReports"
 								}
 							}
 						}

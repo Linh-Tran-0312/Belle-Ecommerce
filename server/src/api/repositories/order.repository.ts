@@ -98,11 +98,12 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
             throw new PostgresError(err.message, err);
         }
     }
-    public async getTotalSalesAndOrdersByTime(trunc: string, from: Date): Promise<any> { 
+    public async getTotalSalesAndOrdersByTime(trunc: string, time: any): Promise<any> { 
         try {
             const report = await this.entity.createQueryBuilder("order")
                                             .select(`DATE_TRUNC('${trunc}', order.orderAt)`,"date")
-                                            .where("order.orderAt >= :startAt",{startAt: from})
+                                            .where("order.orderAt >= :startAt",{startAt: time.start})
+                                            .andWhere("order.orderAt < :endAt",{endAt: time.end})
                                             .andWhere("order.status = :status", {status: Status.COMPLETED})
                                             .addSelect("SUM(order.total)","sales")
                                             .addSelect("COUNT(order.id)","orders")
