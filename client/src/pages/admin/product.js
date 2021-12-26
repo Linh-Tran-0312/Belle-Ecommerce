@@ -6,7 +6,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import Title from '../../components/Admin/Title';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -18,8 +17,8 @@ import productActions from "../../actions/adminProduct";
 import DeleteButton from "../../components/DeleteButton";
 import Rating from "../../components/Rating";
 import UploadImage from "../../components/UploadImage";
+import { MSG } from "../../constants";
 import handlePriceRange from "../../helper/handlePriceRange";
-import { MSG } from "../../constants"
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,

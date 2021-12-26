@@ -3,6 +3,8 @@ import produce from "immer";
 import {ACTION} from "../constants";
 
 const initState = {
+    todayReport: [],
+    todaySales: 0,
     overview: {},
     salesReport: [],
     orderReport: [
@@ -18,6 +20,12 @@ const initState = {
 }
 export default (state = initState, { type, payload}) => produce(state, (draft) => {
     switch(type) {
+        case ACTION.GET_TODAY_SALES_REPORT:
+            draft.todayReport = payload;
+            draft.todaySales = payload.reduce((preValue, currentItem) => preValue + currentItem.sales,0);
+            draft.error = "";
+            draft.loading = false;
+            break;
         case ACTION.GET_OVERVIEW_REPORT:
             draft.overview = payload;
             draft.error = "";

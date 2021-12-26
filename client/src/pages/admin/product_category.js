@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import productActions from "../../actions/adminProduct";
 import DeleteButton from "../../components/DeleteButton";
@@ -74,7 +74,9 @@ export default function ProductCategory() {
      const [category, setCategory] = useState(initCategory);
      const [showCategory, setShowCategory] = useState(false);
   
-  
+     useEffect(() => {
+        dispatch(productActions.getProductCategories());
+      },[])
     
      const handleSelectCategory = (value) => {
          setShowCategory(true);

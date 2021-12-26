@@ -1,40 +1,35 @@
+import { Box, Container, Paper } from "@material-ui/core";
 import AppBar from '@material-ui/core/AppBar';
-import Badge from '@material-ui/core/Badge';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
-import Link from '@material-ui/core/Link';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Container, Box, Paper} from "@material-ui/core";
 import Typography from '@material-ui/core/Typography';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import clsx from 'clsx';
-import React, { useState, useEffect, useRef} from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation , useHistory, Redirect} from "react-router-dom";
-import blogActions from "../../actions/adminBlog";
-import productActions from '../../actions/adminProduct';
+import React, { useRef, useState } from 'react';
+import { useDispatch } from "react-redux";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
+import adminAuthActions from '../../actions/adminAuth';
+import { Menu } from '../../components/Admin/Menu';
+import { AdminPath } from '../../constants';
+import { useQuery } from '../../helper/customHook';
+import Blog from "./blog";
+import BlogCategory from './blog_category';
 import Dashboard from "./dashboard";
 import Order from "./order";
 import Product from "./product";
-import ProductCategory from './product_category';
 import ProductBrand from './product_brand';
+import ProductCategory from './product_category';
 import ProductColor from './product_color';
 import ProductSize from './product_size';
-import Blog from "./blog";
-import BlogCategory from './blog_category'; 
 import Report from "./report";
 import Customer from "./user";
-import { Menu , secondaryListItems } from '../../components/Admin/Menu';
-import { AdminPath } from '../../constants';
-import adminAuthActions from '../../actions/adminAuth';
-import { useQuery } from '../../helper/customHook';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -146,14 +141,6 @@ export default function AdminPage() {
     setAdmin(JSON.parse(localStorage.getItem('admin')));
   },[location]);
 
-  useEffect(() => {
-    dispatch(blogActions.getBlogCategories());
-    dispatch(productActions.getProductBrands());
-    dispatch(productActions.getProductCategories());
-    dispatch(productActions.getProductColors());
-    dispatch(productActions.getProductSizes());
-  },[])
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -183,19 +170,12 @@ const handleLogout = (e) => {
             return <ProductColor />;
         case AdminPath.PRODUCT_SIZE:
             return <ProductSize />;
-/*         case AdminPath.BLOGS:
-            return <Blog/>; */
         case AdminPath.BLOG_LIST:
             return <Blog/>;
         case AdminPath.BLOG_CATEGORY:
             return <BlogCategory />;
         case AdminPath.CUSTOMERS:
           return <Customer />;
-        /*   if(admin.role === "admin") {
-            return <Customer />;
-          } else {
-            return <Product />;
-          } */
         case AdminPath.REPORTS:
           if(admin.role === "admin") {
             return <Report />;

@@ -10,7 +10,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import ColorLens from '@material-ui/icons/ColorLens';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChromePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 import productActions from "../../actions/adminProduct";
@@ -34,7 +34,9 @@ export default function ProductColor() {
     const [color, setColor] = useState(initColor);
     const [showColor, setShowColor] = useState(false);
  
- 
+    useEffect(() => {
+        dispatch(productActions.getProductColors());
+      },[])
    
     const handleSelectColor = (value) => {
         setShowColor(true);

@@ -1,22 +1,20 @@
-import { Paper, Box, Grid, Typography, MenuItem, FormControl, Select, InputLabel } from "@material-ui/core";
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import StopIcon from '@material-ui/icons/Stop';
-import { makeStyles, CircularProgress } from "@material-ui/core";
+import { Box, CircularProgress, FormControl, Grid, InputLabel, MenuItem, Paper, Select, Typography } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableContainer from '@material-ui/core/TableContainer';
+import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import StopIcon from '@material-ui/icons/Stop';
 import Pagination from '@material-ui/lab/Pagination';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, BarChart } from 'recharts';
-import { PieChart, Pie, Sector, Cell } from 'recharts';
 import { useEffect, useState } from "react";
-import { getMonth, getMonthsForReport } from "../../helper/handleTime";
 import { useDispatch, useSelector } from "react-redux";
+import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import reportActions from "../../actions/adminReport";
+import { getMonth, getMonthsForReport } from "../../helper/handleTime";
 
 
 const orderData = [
@@ -37,13 +35,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
     );
 };
 const thisMonth = new Date();
-const rowsProduct = [
-    {name: "Caro shirt", brand : "Leo", quantity: 140, total : 3400000},
-    {name: "Black shirt", brand : "Zara", quantity: 45, total : 540000},
-    {name: "Soft hat", brand : "H&M", quantity: 30, total : 3403400},
-    {name: "Az Polo", brand : "Leo", quantity: 60, total : 3403400},
-    {name: "Green shirt", brand : "Leo", quantity: 20, total : 3403400},
-]
 
 const initProPagination = {
     page: 1,

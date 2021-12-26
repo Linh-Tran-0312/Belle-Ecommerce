@@ -3,7 +3,7 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from './Title';
-
+import { displayDDMonthYYYY } from "../../helper/handleTime";
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -14,22 +14,22 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Deposits() {
+export default function Deposits({total}) {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>Today sales</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+       {total.toLocaleString()} VND
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
+        on {displayDDMonthYYYY(new Date())}
       </Typography>
-      <div>
+{/*       <div>
         <Link color="primary" href="#" onClick={preventDefault}>
           View balance
         </Link>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 }

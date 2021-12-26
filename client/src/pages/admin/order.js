@@ -5,14 +5,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import OrderDetail from "../../components/Admin/OrderDetailModal";
-import Title from '../../components/Admin/Title';
-import OrderStatus from "../../components/OrderStatus";
-import orderActions from "../../actions/adminOrder";
 import Pagination from '@material-ui/lab/Pagination';
-import { CompositeDecorator } from "draft-js";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import orderActions from "../../actions/adminOrder";
+import OrderDetail from "../../components/Admin/OrderDetailModal";
+import OrderStatus from "../../components/OrderStatus";
 const useStyles = makeStyles((theme) => ({
     seeMore: {
         marginTop: theme.spacing(3),
@@ -58,19 +56,15 @@ export default function Orders() {
     // Orders
     const orders = useSelector(state => state.adminOrder).orders;
     const orderTotal = useSelector(state => state.adminOrder).total;
-    const orderDetail = useSelector(state => state.adminOrder).order;
 
     const [filter, setFilter] = useState(initFilter);
-    const [order, setOrder] = useState({})
     const [pageCount, setPageCount] = useState(0)
 
 
     useEffect(() => {
         dispatch(orderActions.getOrders(filter));
-    }, [])
-    useEffect(() => {
-        setOrder({ ...orderDetail });
-    }, [orderDetail]);
+    },[])
+ 
 
     useEffect(() => {
         const mod = orderTotal % filter.limit;
@@ -93,9 +87,6 @@ export default function Orders() {
         setFilter({ ...filter, page: value });
     };
 
-    const handleGetOrderById = (id) => {
-        dispatch(orderActions.getOrderById(id));
-    }
     return (
         <>
             <Paper className={classes.paper}>

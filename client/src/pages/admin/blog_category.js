@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useDispatch, useSelector } from "react-redux";
 import blogActions from "../../actions/adminBlog";
@@ -25,7 +25,6 @@ export default function BlogCategory() {
    
     const dispatch = useDispatch();
 
-
     // Category State
     const blogCategories = useSelector(state => state.adminBlog).categories;
     const loading= useSelector(state => state.adminBlog).blogCategoryLoading;
@@ -33,7 +32,9 @@ export default function BlogCategory() {
     const [category, setCategory] = useState(initCategory);
     const [showCategory, setShowCategory] = useState(false);
     
-
+    useEffect(() => {
+        dispatch(blogActions.getBlogCategories());
+      },[])
     // Handle events in Category Tab
     const handleSelectCategory = (value) => {
         setShowCategory(true);

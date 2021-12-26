@@ -1,22 +1,22 @@
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import clsx from 'clsx';
-import Chart from '../../components/Admin/Chart';
-import Deposits from '../../components/Admin/Deposit';
- 
-import React from 'react';
-import { Link } from "react-router-dom";
-import Table from '@material-ui/core/Table'; 
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
+import clsx from 'clsx';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from "react-router-dom";
+import { Label, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import orderActions from '../../actions/adminOrder';
+import reportActions from '../../actions/adminReport';
 import Title from "../../components/Admin/Title";
+import { displayDDMMYYYY, displayDDMonthYYYY } from '../../helper/handleTime';
 
 function Copyright() {
   return (
@@ -32,9 +32,7 @@ function Copyright() {
 }
 
 const drawerWidth = 240;
-function preventDefault(event) {
-    event.preventDefault();
-  }
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -113,82 +111,104 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
   logo: {
-    [theme.breakpoints.down('sm')] : {
-        height: 25
+    [theme.breakpoints.down('sm')]: {
+      height: 25
     }
-},
+  },
 }));
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
-  }
-  
-  const rows = [
-    createData(0, '16 Mar, 2019', 'Elvis Presley', 'Tupelo, MS', 'VISA ⠀•••• 3719', 312.44),
-    createData(1, '16 Mar, 2019', 'Paul McCartney', 'London, UK', 'VISA ⠀•••• 2574', 866.99),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-    createData(3, '16 Mar, 2019', 'Michael Jackson', 'Gary, IN', 'AMEX ⠀•••• 2000', 654.39),
-    createData(4, '15 Mar, 2019', 'Bruce Springsteen', 'Long Branch, NJ', 'VISA ⠀•••• 5919', 212.79),
-  ];
 export default function Dashboard() {
+  const dispatch = useDispatch();
+  const classes = useStyles();
+  const theme = useTheme();
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-    const classes = useStyles();
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const orders = useSelector(state => state.adminOrder.orders);
+  const report = useSelector(state => state.report.todayReport);
+  const total = useSelector(state => state.report.todaySales)
 
-    return(
-       <>  
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-              <Title>Recent Orders</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <div className={classes.seeMore}>
-      
-         <Typography variant="subtitle2" color="primary" component={Link} to="/admin/orders"> See more orders</Typography> 
-       
-      </div>
-              </Paper>
-            </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-       
-        </>
-    )
+  useEffect(() => {
+    dispatch(orderActions.getOrders({ page: 1, limit: 5, sortMethod: 2 }));
+    dispatch(reportActions.getTodayReport());
+  }, [])
+  return (
+    <>
+      <Grid container spacing={3}>
+        {/* Chart */}
+        <Grid item xs={12} md={8} lg={9}>
+          <Paper className={fixedHeightPaper}>
+            <Title>Today</Title>
+            <ResponsiveContainer>
+              <LineChart
+                data={report}
+                margin={{
+                  top: 16,
+                  right: 16,
+                  bottom: 0,
+                  left: 24,
+                }}
+              >
+                <XAxis dataKey="time" stroke={theme.palette.text.secondary} />
+                <YAxis stroke={theme.palette.text.secondary}>
+                  <Label
+                    angle={270}
+                    position="left"
+                    style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
+                  >
+                    Sales ($)
+                  </Label>
+                </YAxis>
+                <Line type="monotone" dataKey="sales" stroke={theme.palette.primary.main} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Paper>
+        </Grid>
+        {/* Recent Deposits */}
+        <Grid item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightPaper}>
+            <Title>Today sales</Title>
+            <Typography component="p" variant="h4">
+              {total.toLocaleString()} VND
+            </Typography>
+            <Typography color="textSecondary" className={classes.depositContext}>
+              on {displayDDMonthYYYY(new Date())}
+            </Typography>
+          </Paper>
+        </Grid>
+        {/* Recent Orders */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <Title>Recent Orders</Title>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Ship To</TableCell>
+                  <TableCell align="right">Sale Amount (VND)</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell>{displayDDMMYYYY(row.orderAt)}</TableCell>
+                    <TableCell>{`${row?.user?.lname} ${row?.user?.fname}`}</TableCell>
+                    <TableCell>{row.address}</TableCell>
+                    <TableCell align="right">{row.total.toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <div className={classes.seeMore}>
+              <Typography variant="subtitle2" color="primary" component={Link} to="/admin?section=orders"> See more orders</Typography>
+            </div>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Box pt={4}>
+        <Copyright />
+      </Box>
+
+    </>
+  )
 }

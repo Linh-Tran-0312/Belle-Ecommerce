@@ -41,6 +41,15 @@ const reportActions = {
         } catch (error) {
             errorHandler(error, dispatch)
         }
+    },
+    getTodayReport: () => async(dispatch) => {
+        try {
+            dispatch({type: ACTION.REPORT_LOADING});  
+            const { data } = await api.getSalesReport("today");
+            dispatch({ type: ACTION.GET_TODAY_SALES_REPORT, payload: data});
+        } catch (error) {
+            errorHandler(error, dispatch)
+        }
     }
 
 

@@ -7,6 +7,10 @@ export function displayMonDDYYYY(time) {
     const arr = date.toDateString().substr(4).split(" ");
     return `${arr[0]} ${arr[1]}, ${arr[2]}`
 }
+export function displayDDMonthYYYY(time) {
+    const date = new Date(time)
+    return `${date.getDate()} ${getMonth(date.getMonth())}, ${date.getFullYear()}`
+}
 export function displayDDMMYYYY(time) {
     const date = new Date(time)
     const day = date.getDate();

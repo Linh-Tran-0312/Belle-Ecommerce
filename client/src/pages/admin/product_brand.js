@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import DeleteButton from "../../components/DeleteButton";
 import productActions from "../../actions/adminProduct";
@@ -30,7 +30,9 @@ export default function ProductBrand() {
    const [brand, setBrand] = useState(initBrand);
    const [showBrand, setShowBrand] = useState(false);
 
-
+   useEffect(() => {
+    dispatch(productActions.getProductBrands());
+  },[])
   
    const handleSelectBrand = (value) => {
        setShowBrand(true);

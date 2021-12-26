@@ -197,6 +197,7 @@ export const ACTION = {
 
      //------------------REPORT ACTION----------------------------
     //Order Action
+    GET_TODAY_SALES_REPORT: "GET_TODAY_SALES_REPORT",
     GET_OVERVIEW_REPORT: "GET_OVERVIEW",
     GET_SALES_REPORT: "GET_SALES_REPORT",
     GET_ORDER_REPORT: "GET_ORDER_STATUS_REPORT",
