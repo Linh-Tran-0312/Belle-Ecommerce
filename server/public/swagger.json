@@ -1891,11 +1891,17 @@
 						}
 					}
 				},
-				"description": "Get overview of revenue, orders and new register of current month",
+				"description": "Get overview of sales, orders and new register of current month",
 				"tags": [
 					"Report Controller"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -1917,10 +1923,17 @@
 						}
 					}
 				},
+				"description": "Get sales and number of order reports for specific time",
 				"tags": [
 					"Report Controller"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -1948,10 +1961,17 @@
 						}
 					}
 				},
+				"description": "Get the number of completed orders and canceled order",
 				"tags": [
 					"Report Controller"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -1979,10 +1999,17 @@
 						}
 					}
 				},
+				"description": "Get list of products in descending  sales",
 				"tags": [
 					"Report Controller"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",

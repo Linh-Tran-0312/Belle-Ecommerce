@@ -60,7 +60,7 @@ export class ReportService {
         if(timeStr === Period.WEEK) {
             const time = timeCal(timeStr);
             orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", time);
-             
+             console.log(orders);
             result = Array(7).fill({
                 time: "",
                 sales: 0,
@@ -72,6 +72,21 @@ export class ReportService {
             });
             result.push(result[0]);
             result.shift();
+        }
+        else if(timeStr === Period.TODAY) {
+            const time = periodCal(timeStr);
+            orders = await this.orderRepo.getTotalSalesAndOrdersByTime("hour", time);
+             
+            result = Array(24).fill({
+                time: "",
+                sales: 0,
+                orders: 0
+               }).map((item,index) => ({...item, time : index}));
+
+            orders.forEach(o => {
+                result[o.date.getHours()].sales = o.sales;
+                result[o.date.getHours()].orders = o.orders;
+            });
         }
         else if(regYear.test(timeStr)) {
             const time = timeCal(timeStr);

@@ -105,14 +105,15 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
     
     }
     public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrder> {
-        return await this.repository.update(id, data);       
+        return await this.repository.update(id, {...data, id: id});       
     }
     public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
         try {
+             
             const order: IOrder| any = this.repository.update(id, {...data, status: Status.ORDERED, orderAt:  new Date(Date.now()).toISOString()});
+           
             return order
         } catch (error) {
-            console.log(error)
             throw error
         }
           

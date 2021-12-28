@@ -1,5 +1,5 @@
 
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, EventSubscriber } from "typeorm";
 import { Color, Product, Size, ISize, IColor } from "./";
 import { CustomBaseEntity, IBaseEntity } from "./base.model";
 

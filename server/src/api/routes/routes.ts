@@ -709,6 +709,7 @@ const models: TsoaRoute.Models = {
 
 export function RegisterRoutes(app: any) {
         app.get('/report/overview',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
             };
@@ -727,6 +728,7 @@ export function RegisterRoutes(app: any) {
             promiseHandler(controller, promise, response, next);
         });
         app.get('/report/sales',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
                     time: {"in":"query","name":"time","required":true,"dataType":"string"},
@@ -746,6 +748,7 @@ export function RegisterRoutes(app: any) {
             promiseHandler(controller, promise, response, next);
         });
         app.get('/report/orders',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
                     time: {"in":"query","name":"time","required":true,"dataType":"string"},
@@ -765,6 +768,7 @@ export function RegisterRoutes(app: any) {
             promiseHandler(controller, promise, response, next);
         });
         app.get('/report/products',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
                     time: {"in":"query","name":"time","required":true,"dataType":"string"},

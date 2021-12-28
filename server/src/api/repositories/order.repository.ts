@@ -104,7 +104,7 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
                                             .select(`DATE_TRUNC('${trunc}', order.orderAt)`,"date")
                                             .where("order.orderAt >= :startAt",{startAt: time.start})
                                             .andWhere("order.orderAt < :endAt",{endAt: time.end})
-                                            .andWhere("order.status = :status", {status: Status.COMPLETED})
+                                            .andWhere("order.status IN (:...status)", {status: [Status.COMPLETED,Status.ORDERED,Status.DELIVERY]})
                                             .addSelect("SUM(order.total)","sales")
                                             .addSelect("COUNT(order.id)","orders")
                                             .groupBy("date")
