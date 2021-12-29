@@ -20,7 +20,6 @@ class OrderSubscriber implements EntitySubscriberInterface<Order> {
             })
         }  
     }
-    // update total of order when updating item quantities 
    
 }
 export default OrderSubscriber
