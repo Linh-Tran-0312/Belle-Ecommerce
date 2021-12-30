@@ -20,6 +20,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SuccessOrderModal from "../components/SuccessOrderModal";
 import { useSelector, useDispatch } from "react-redux";
 import orderActions from "../actions/order";
 import shipCal from "../helper/shipCalculator";
@@ -121,6 +122,8 @@ export default () => {
     const items = useSelector(state => state.order).items;
     const orderId = useSelector(state => state.order).orderId;
     const subTotal = useSelector(state => state.order).subTotal;
+    const loading = useSelector(state => state.order.loading);
+    const orderSuccess =  useSelector(state => state.order.orderSuccess);
     const shipping = shipCal(subTotal);
     const [ state, setState ] = useState({...initState, shipping: shipping, total: subTotal + shipping});
   
@@ -128,15 +131,24 @@ export default () => {
     useEffect(() => {
         setState({...state, address: user?.address})
     },[user])
+
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
     },[location])
+
+    useEffect(() => {
+        if(orderSuccess) {
+            setTimeout(() => {
+                dispatch(orderActions.clearOrder())
+            },6000)
+        }
+    },[orderSuccess])
     const handleChange = (e) => {
         setState({...state, [e.target.name] : e.target.value});
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(orderActions.placeOrder(orderId, state, history))
+        dispatch(orderActions.placeOrder(orderId, state))
 
     }
     if(items?.length == 0 ) return <Redirect to="/cart" />
@@ -343,6 +355,7 @@ export default () => {
                                 </RadioGroup>
                             </div>
                             <Box my={2} textAlign="center">
+                                <SuccessOrderModal state={orderSuccess} history={history}/>
                                     <BlackButton height={'50px'} type="submit"><strong>place order</strong></BlackButton>
                             </Box>
                         </Box>

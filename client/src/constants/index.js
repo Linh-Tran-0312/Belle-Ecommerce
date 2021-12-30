@@ -88,9 +88,10 @@ export const MSG = {
     U_ORDER: "Update order details successfully",
     D_ORDER: "The order was deleted",
 
-    ADD_PRODUCT_TO_CART: "Add the product to cart successfully"
-  
+    ADD_PRODUCT_TO_CART: "Add the product to cart successfully",
+    U_PROFILE: "Update your profile successfully"
 
+   
 }
 export const ACTION = {
     /***********************************ADMIN ACTION***************************************/
@@ -237,6 +238,9 @@ export const ACTION = {
     CLEAR_ORDER: "CLEAR_ORDER",
     USER_ORDER_LOADING: "USER_ORDER_LOADING",
     USER_ORDER_ERROR: "USER_ORDER_ERROR",
+
+    PLACE_ORDER_SUCCESS: "PLACE_ORDER_SUCCESS",
+    PLACE_ORDER_IDLE: "PLACE_ORDER_IDLE",
 
     //User Auth Action
     USER_REGISTER: "USER_REGISTER",

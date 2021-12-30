@@ -32,9 +32,6 @@ export default function BlogCategory() {
     const [category, setCategory] = useState(initCategory);
     const [showCategory, setShowCategory] = useState(false);
     
-    useEffect(() => {
-        dispatch(blogActions.getBlogCategories());
-      },[])
     // Handle events in Category Tab
     const handleSelectCategory = (value) => {
         setShowCategory(true);

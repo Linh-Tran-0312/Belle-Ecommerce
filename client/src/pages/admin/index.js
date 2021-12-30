@@ -12,10 +12,12 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
-import React, { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
 import adminAuthActions from '../../actions/adminAuth';
+import blogActions from "../../actions/adminBlog";
+import productActions from "../../actions/adminProduct";
 import { Menu } from '../../components/Admin/Menu';
 import { AdminPath } from '../../constants';
 import { useQuery } from '../../helper/customHook';
@@ -122,12 +124,20 @@ export default function AdminPage() {
   const dispatch = useDispatch();
   const history = useHistory();
   const topPage = useRef()
-  const [open, setOpen] = React.useState(true);
-  const [ page, setPage ] = React.useState(AdminPath.DASHBOARD);
+  const [open, setOpen] = useState(true);
+  const [ page, setPage ] = useState(AdminPath.DASHBOARD);
   const [ title, setTitle] = useState("DASHBOARD");
   const query = useQuery();
  const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
-  React.useEffect(() => {
+
+  useEffect(() => {
+    dispatch(productActions.getProductBrands());
+    dispatch(productActions.getProductCategories());
+    dispatch(productActions.getProductColors());
+    dispatch(productActions.getProductSizes());
+    dispatch(blogActions.getBlogCategories());
+  },[])
+  useEffect(() => {
 
       const pathName = query.get("section")
       if(Object.keys(AdminPath).find(path => AdminPath[path] == pathName))

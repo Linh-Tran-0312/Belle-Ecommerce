@@ -126,15 +126,8 @@ export default function NarBar() {
             setPage(false)
         }
     }, [location])
-    const [search, setSearch] = useState(false);
     const { mobileView, drawerOpen } = state;
 
-    const handleOpenSearch = (e) => {
-        setSearch(true);
-    }
-    const handleCloseSearch = (e) => {
-        setSearch(false);
-    }
     useEffect(() => {
         const setResponsiveness = () => {
             return window.innerWidth < 900
@@ -263,7 +256,7 @@ export default function NarBar() {
     return (
         <header>
             {
-                search ? <SearchBar closeSearch={handleCloseSearch} /> :
+              
                     <div className={root}>
                         <AppBar position="relative">
                             {mobileView ? displayMobile() : displayDesktop()}

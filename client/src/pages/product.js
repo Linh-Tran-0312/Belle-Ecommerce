@@ -17,6 +17,7 @@ import Comment from '../components/Comment';
 import CommentForm from '../components/CommentForm';
 import Layout from "../components/Layout";
 import { PageLoading } from "../components/PageLoading";
+import Loader from '../components/Loader';
 import ProductImage from "../components/ProductImage";
 import QtyButton from '../components/QtyButton';
 import Rating from '../components/Rating';
@@ -100,7 +101,6 @@ const ProductPage = () => {
     const handleChangeTab = (event, newValue) => {
         setTab(newValue);
     };
-    console.log({ item, qty})
     const handleChangeItem = e => {
         setItem(e.target.value)
     }
@@ -111,16 +111,20 @@ const ProductPage = () => {
         e.preventDefault();
         if(qty > 0 && item !== "") 
         {
+            // when user has not logged in
             if(!user?.id) 
             {
-                console.log(orderId);
                 dispatch(orderActions.addItemToCart(product, {productVariantId: item, quantity: qty}));              
-            } else {
+            } 
+            // when user has logged in
+            else {
                 console.log(orderId);
-                if(orderId === "") {
-   
+                // when use has not had any pending carts before
+                if(orderId === "") {  
                     dispatch(orderActions.createOrder({userId: user.id, details: [{ productVariantId: item, quantity: qty, unitPrice: product.price}]}))
-                } else {
+                }
+                // when user has got a pending cart
+                else {
                     dispatch(orderActions.updateOrderItem(orderId, {orderId: orderId, productVariantId: item, quantity: qty, unitPrice: product.price }))
                 }
             } 
@@ -129,6 +133,7 @@ const ProductPage = () => {
             setMessage("Vui lòng chọn một phiên bản bên dưới")
         }
     }
+    if(!product?.id) return <Loader />
     return (
         <Layout>
            {/*  Breadcrumbs section */}
@@ -141,17 +146,12 @@ const ProductPage = () => {
                     <Link className="link" to="/shop" >
                     <Typography variant="subtitle2">Shop</Typography>
                     </Link>
-                   {/*  <Link className="link" to="/shop/accessory" >
-                    <Typography variant="subtitle2">Accessory</Typography>
-                    </Link> */}
-                    <Typography color="textPrimary">Product</Typography>
+                    <Typography variant="subtitle2">Product</Typography>
                 </Breadcrumbs>
                 </Box>
               
             </div>
-             {/*  Product summary section */}
-             {
-                 product?.id ? (
+             {/*  Product summary section */}   
             <Container maxWidth="md"  >
                 <Grid container>
                     <Grid item md={6} sm={6} xs={12}>
@@ -231,10 +231,7 @@ const ProductPage = () => {
                         </div>
                     </Grid>
                 </Grid>
-            </Container>
-                 ) : (<PageLoading message="Product details are loading..." />)
-             }
-          
+            </Container>          
              {/*  Product feature section */}
             <Container maxWidth="md" className="featuresBox">
                 <Grid container spacing={3}>
@@ -259,12 +256,9 @@ const ProductPage = () => {
               {/*  Product review section */}
             <Container maxWidth="md" className="featuresBox">
                 <Paper className={classes.tabPaper}>
-                    <Tabs
-                   
+                    <Tabs              
                         value={tab}
                         onChange={handleChangeTab}
-                      /*   indicatorColor="inherit"
-                        textColor="inherit" */
                         centered
                     >
                         <Tab label={ matchXS ? <InfoIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>DETAILS</span>} {...a11yProps(0)} />

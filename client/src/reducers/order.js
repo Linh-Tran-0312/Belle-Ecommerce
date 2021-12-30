@@ -6,7 +6,9 @@ const initState = {
     orderId: "",
     items: [],
     subTotal: 0,
-    order: {}
+    order: {},
+    loading: false,
+    orderSuccess: false
 }
 export default (state = initState, { type, payload}) => produce(state, (draft) => {
     switch(type) {
@@ -69,9 +71,20 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.orderId = "";
             draft.items = [];
             draft.subTotal = 0;
+            draft.orderSuccess = false;
             break;
         case ACTION.USER_GET_ORDER_BY_ID:
             draft.order = payload;
+            break;
+        case ACTION.USER_ORDER_LOADING: 
+        draft.loading = true;
+        break;
+        case ACTION.PLACE_ORDER_SUCCESS:
+            draft.loading = false;
+            draft.orderSuccess = true;
+            break;
+        case ACTION.PLACE_ORDER_IDLE:
+            draft.orderSuccess = false;
             break;
         default:
             break;

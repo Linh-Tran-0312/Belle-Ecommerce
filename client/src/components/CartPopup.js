@@ -78,8 +78,9 @@ export default function CartPopover() {
 
     const subTotal = useSelector(state => state.order).subTotal;
     const items = useSelector(state => state.order).items;
-    
- 
+    const dispatch = useDispatch();
+    const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
+  
     const classes = useStyle();
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -90,7 +91,11 @@ export default function CartPopover() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
+    useEffect(() => {
+        if(user?.id) {
+            dispatch(orderActions.getCurrentOrder(user.id));
+        }
+    },[])
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 

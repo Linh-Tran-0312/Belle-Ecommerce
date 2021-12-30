@@ -109,9 +109,9 @@ export default () => {
                             <Box  pl={2} mt={4}  className="fontRoSlab">
                                 <Box mb={2}>
                                 <Typography variant="inherit" gutterBottom >RECENT POSTS</Typography>
-                                </Box>
+                                </Box>  
                                 {
-                                    latestBlogs.map(item => <Link to={`/blogs/blog/${item.id}`} style={{textDecoration: 'none', color: 'black'}}>
+                                    latestBlogs.map(item => <Link key={item.id} to={`/blogs/blog/${item.id}`} style={{textDecoration: 'none', color: 'black'}}>
                                         <BlogThumb key={item.id} blog={item} />
                                         </Link>)
                                 }

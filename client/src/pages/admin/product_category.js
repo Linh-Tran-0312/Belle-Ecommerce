@@ -74,9 +74,7 @@ export default function ProductCategory() {
      const [category, setCategory] = useState(initCategory);
      const [showCategory, setShowCategory] = useState(false);
   
-     useEffect(() => {
-        dispatch(productActions.getProductCategories());
-      },[])
+ 
     
      const handleSelectCategory = (value) => {
          setShowCategory(true);

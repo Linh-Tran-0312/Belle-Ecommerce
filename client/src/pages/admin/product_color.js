@@ -34,9 +34,7 @@ export default function ProductColor() {
     const [color, setColor] = useState(initColor);
     const [showColor, setShowColor] = useState(false);
  
-    useEffect(() => {
-        dispatch(productActions.getProductColors());
-      },[])
+
    
     const handleSelectColor = (value) => {
         setShowColor(true);

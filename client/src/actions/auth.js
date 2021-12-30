@@ -1,6 +1,7 @@
 import api from "../api";
-import { ACTION, MSG } from "../constants";
-
+import { ACTION, MSG, SnackBar } from "../constants";
+import { enqueueSnackbar } from "./notification";
+import errorHandler from "../helper/errorHandler";
 const authActions = {
     register: (formData, history) => async(dispatch) => {
         try {
@@ -52,15 +53,12 @@ const authActions = {
             dispatch({ type: ACTION.USER_PROFILE_LOADING})
             delete formData.id;
             delete formData.createdAt;
-            console.log(formData);
+            console.log(formData)
             const { data } = await api.updateUser(userId, formData);
             dispatch({ type: ACTION.UPDATE_PROFILE, payload: data});
+            dispatch(enqueueSnackbar(MSG.U_PROFILE, SnackBar.SUCCESS))
         } catch (error) {
-            if(error.response) {
-                dispatch({ type: ACTION.USER_PROFILE_ERROR, payload: error.response?.data?.message})
-            } else {
-                dispatch({ type:ACTION.USER_PROFILE_ERROR, payload: MSG.STH_WRONG})
-            }
+            errorHandler(error,dispatch)
         }
     },
     getOrdersByUserId: (userId) => async(dispatch) => {

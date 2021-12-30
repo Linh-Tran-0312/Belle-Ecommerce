@@ -171,7 +171,7 @@ const BlogsPage = () => {
                         <Box px={4} mt={4}>
                             <h5 className="fontRoSlab">RECENT POSTS</h5>
                             {
-                                latestBlogs.map(item => <Link to={`/blogs/blog/${item.id}`} style={{textDecoration: 'none', color: 'black'}}>
+                                latestBlogs.map(item => <Link key={item.id} to={`/blogs/blog/${item.id}`} style={{textDecoration: 'none', color: 'black'}}>
                                 <BlogThumb key={item.id} blog={item} />
                                 </Link>)
                             }

@@ -29,10 +29,10 @@ const userActions = {
                     queryString += `&sort=sale&change=${Query.DESC}`;
                     break;
                 case "1":
-                    queryString += `&sort=name&change=${Query.ASC}`;
+                    queryString += `&sort=lname&change=${Query.ASC}`;
                     break;
                 case "2":
-                    queryString += `&sort=name&change=${Query.DESC}`;
+                    queryString += `&sort=lname&change=${Query.DESC}`;
                     break;
                 case "5":
                     queryString += `&sort=createdAt&change=${Query.ASC}`;

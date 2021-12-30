@@ -66,7 +66,7 @@ export class Order  extends CustomBaseEntity implements IOrderCreateProps {
     @Column({default: 0})
     total!: number;
   
-    @Column({type: "timestamptz",nullable: true})
+    @Column({type: "timestamptz", nullable: true, default: () => "now()"})
     orderAt!: Date;
 
     @OneToMany(() => OrderDetail, orderDetail => orderDetail.order, { cascade: true})

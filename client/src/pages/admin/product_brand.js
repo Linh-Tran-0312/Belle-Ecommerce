@@ -30,10 +30,7 @@ export default function ProductBrand() {
    const [brand, setBrand] = useState(initBrand);
    const [showBrand, setShowBrand] = useState(false);
 
-   useEffect(() => {
-    dispatch(productActions.getProductBrands());
-  },[])
-  
+
    const handleSelectBrand = (value) => {
        setShowBrand(true);
        setBrand({ id: value.id, name: value.name })

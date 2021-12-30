@@ -181,7 +181,7 @@ export default function SimpleModal({ id, role }) {
             </Grid>
             <Box my={2}>
                 <Typography variant="subtitle2">Tình trạng thanh toán: <strong>{detail?.paymentCheck ? "Đã thanh toán" : "Chưa thanh toán"}</strong></Typography>
-                <Typography variant="subtitle2">{ detail?.note !== "" && `Lưu ý giao hàng: ${detail?.note}`}
+                <Typography variant="subtitle2">{ detail?.note  && `Lưu ý giao hàng: ${detail?.note}`}
                 </Typography>
 
             </Box>

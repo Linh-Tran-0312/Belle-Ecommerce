@@ -129,7 +129,7 @@ const ShopPage = () => {
     const [pageCount, setPageCount] = React.useState(1);
     const [filter, setFilter] = useState(initFilter);
     const [price, setPrice] = React.useState([0, 10000000]);
-    console.log(filter);
+
     useEffect(() => {
         const mod = total % filter.limit;
         let pageNumber = total / filter.limit;

@@ -132,10 +132,11 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
     
     }
     public async getAllOrdersByUserId(userId: number): Promise<IOrder[]> {
-       const options = {
+       const options: any= {
            where: {
                userId
-           }
+           },
+           order: { orderAt: "DESC"}
        }
         return await this.repository.find(options)
     }

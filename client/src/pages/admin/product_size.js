@@ -30,9 +30,6 @@ export default function ProductSize() {
     const [showSize, setShowSize] = useState(false);
 
 
-    useEffect(() => {
-        dispatch(productActions.getProductSizes());
-      },[])
     // Handle events in Size Tab
     const handleSelectSize = (value) => {
         setShowSize(true);

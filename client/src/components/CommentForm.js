@@ -32,7 +32,9 @@ const CommentForm = () => {
             </Box>
             <Box my={2} mx={2}>
                 <Typography variant="body2">You're replying to: &nbsp; 
-                    <Chip
+            
+                </Typography>
+                <Chip
                         size="small"
                       
                         label="Alice Nguyen"
@@ -40,8 +42,6 @@ const CommentForm = () => {
                         onDelete={handleDelete}
                         variant="outlined"
                     />
-                </Typography>
-         
             </Box>
             <TextField
                     id="outlined-multiline-static"
