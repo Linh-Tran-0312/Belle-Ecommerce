@@ -22,13 +22,17 @@ API.interceptors.response.use((response) => {
     return response 
 }, async(error) => {
     const originalReq = error.config;
-    const { message } = error.response?.data;
-    if(error.response.status === 401 && message === "jwt expired" && !originalReq._retry) {
+    const { message } = error?.response?.data || "";
+    if(error?.response?.status === 401 && message === "jwt expired" && !originalReq._retry) {
         originalReq._retry = true;      
         await refreshToken();
        return API(originalReq)
     }  else {
-        return Promise.reject(error);
+        if( message === "No token provided") {
+            store.dispatch(ACTION.CLEAR_PROFILE_LOCAL)
+        }   
+       // return Promise.reject(error);
+       return error
     }
 })
 

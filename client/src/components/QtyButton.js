@@ -54,7 +54,7 @@ const QtyButton = ({ getQuantity, updateCart, variantId, itemId, quantity, width
             if(orderId) {
                 dispatch(orderActions.updateItemQuantity(orderId, itemId, { quantity: 1 } ))
             } else {
-                dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(variantId), quantity: state + 1})) // item { variantId, quant}
+                dispatch(orderActions.updateItemQuantityInCart({productVariantId : parseInt(variantId), quantity: state + 1})) // item { variantId, quant}
             }
        }  
     }
@@ -66,7 +66,7 @@ const QtyButton = ({ getQuantity, updateCart, variantId, itemId, quantity, width
                 if(orderId) {
                     dispatch(orderActions.updateItemQuantity(orderId, itemId, { quantity: -1 } ))
                 } else {
-                    dispatch(orderActions.updateItemQuantity({productVariantId : parseInt(variantId), quantity: state - 1})) // item { variantId, quant}
+                    dispatch(orderActions.updateItemQuantityInCart({productVariantId : parseInt(variantId), quantity: state - 1})) // item { variantId, quant}
                 }
        }
         }

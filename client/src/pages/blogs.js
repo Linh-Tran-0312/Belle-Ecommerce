@@ -8,18 +8,18 @@ import Paper from '@material-ui/core/Paper';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import SearchIcon from '@material-ui/icons/Search';
-import { Link, useLocation, useParams } from 'react-router-dom';
 import Pagination from '@material-ui/lab/Pagination';
+import { convertFromRaw } from "draft-js";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from 'react-router-dom';
+import blogActions from "../actions/blog";
 import '../App.css';
 import BlackButton from "../components/BlackButton";
 import BlogThumb from '../components/BlogThumb';
 import Layout from "../components/Layout";
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { convertToHtml, convertFromRaw } from "draft-js"
-import { displayMonDDYYYY } from '../helper/handleTime';
 import { useQuery } from "../helper/customHook";
-import blogActions from "../actions/blog";
+import { displayMonDDYYYY } from '../helper/handleTime';
 const useStyle = makeStyles((theme) => ({
     link: {
         textDecoration: 'none',
@@ -99,7 +99,7 @@ const initFilter = {
     limit: 6
 }
 const BlogsPage = () => {
-    console.log("Blogs Page render")
+ 
     const query = useQuery();
     const dispatch = useDispatch();
     const classes = useStyle();
@@ -131,10 +131,7 @@ const BlogsPage = () => {
             dispatch(blogActions.getBlogs(filter))
         }
     }
-    const handleReset = () => {
-        setFilter(initFilter);
-        
-    }
+
     const handleChangePage = (event, value) => {
         dispatch(blogActions.getBlogs({...filter, page: value}));
         setFilter({...filter, page: value});
@@ -152,7 +149,6 @@ const BlogsPage = () => {
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
                         <Link className="link" to="/blogs" >
                             <Typography variant="subtitle2">Blogs</Typography>
-
                         </Link>
                         <Typography variant="subtitle2">Blogs</Typography>
                     </Breadcrumbs>

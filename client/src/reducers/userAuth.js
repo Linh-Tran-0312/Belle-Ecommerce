@@ -48,6 +48,11 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
         case ACTION.USER_AUTH_ERROR:
             draft.loading = false;
             draft.error = payload;
+            break;
+        case ACTION.CLEAR_PROFILE_LOCAL:
+            localStorage.removeItem("user");
+            localStorage.removeItem("admin");
+            break;
         default:
             break;
     }

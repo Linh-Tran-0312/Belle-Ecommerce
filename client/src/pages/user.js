@@ -83,13 +83,6 @@ export default () => {
         setValue(newValue);
     };
 
-    /* useEffect(() => {
-        setUser(userDetail);
-        if(userDetail.id) {
-            dispatch(authActions.getOrdersByUserId(userDetail.id))
-        }
-     
-    },[userDetail]) */
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value })
     }
@@ -102,7 +95,7 @@ export default () => {
     const handleLogout = (e) => {
         dispatch(authActions.logout(history));
     }
-    //if(!user?.id ) return <Redirect to="/auth" />
+
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>

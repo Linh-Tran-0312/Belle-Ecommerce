@@ -1,16 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import Layout from '../components/Layout';
-import Banner from '../components/Banner/Banner';
+import { Box, Container, Grid, Typography } from '@material-ui/core';
+import { convertFromRaw } from "draft-js";
+import { Parallax } from "react-parallax";
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import CollectionSwiper from '../components/CategorySwiper';
-import { Parallax, Background } from "react-parallax";
-import { Box, Typography, Grid, Container} from '@material-ui/core';
-import ProductItem from '../components/ProductItem';
-import { convertToHtml, convertFromRaw } from "draft-js"
-import { displayMonDDYYYY } from '../helper/handleTime';
 import '../App.css';
+import Banner from '../components/Banner/Banner';
+import CollectionSwiper from '../components/CategorySwiper';
+import Layout from '../components/Layout';
+import ProductItem from '../components/ProductItem';
+import { displayMonDDYYYY } from '../helper/handleTime';
 const insideStyles = {
     height: '100%',
     display: 'flex',
@@ -23,13 +21,11 @@ const HomePage = () =>  {
     const newArrivals =   useSelector(state => state.home).newArrivals;
     const latestBlogs =   useSelector(state => state.home).latestBlogs;
      
- 
     return(
         <>
         <Layout>
             <Banner/>
-            <Box textAlign="center" mt={5} style={{marginTop: 80}}>
-              
+            <Box textAlign="center" mt={5} style={{marginTop: 80}}>            
                 <Box my={4}>
                 <h2 className="sectionTitle">Our Collections</h2>
                 <span className="fontRoSlab">A wide range of product lines for your choice  </span>
@@ -66,9 +62,7 @@ const HomePage = () =>  {
                             </Grid>
                             )
                     }
-
                 </Grid>
-
             </Box>
             <Box my={5} style={{marginTop: 80}}>
             <Container className="latestBlog">
@@ -104,8 +98,7 @@ const HomePage = () =>  {
                         </div>
                     </Grid>
                         ))
-                    }
-                 
+                    }               
                 </Grid> 
             </Container>
         </Box>

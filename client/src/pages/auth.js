@@ -24,9 +24,7 @@ const StyledTextField = withStyles((theme) => ({
     }
 
 }))(TextField);
-const useStyle = makeStyles((theme) => ({
 
-}))
  
 const initState = {
     fname: "",
@@ -37,9 +35,8 @@ const initState = {
     confirm_password: "",
     address: "",
 }
-export default () => {
+export default (props) => {
     const query = useQuery();
-    const classes = useStyle();
     const location = useLocation();
     const history = useHistory();
     const dispatch = useDispatch()
@@ -47,17 +44,19 @@ export default () => {
     const [ isSignIn, setIsSignIn] = useState(true);
     const [ state, setState ] = useState(initState);
     
+    console.log(props.location.state.from); 
     useEffect(() => {
         if(query.get('page') === "signin" || query.get('page') === null) {
        setIsSignIn(true)
         } else {
        setIsSignIn(false)
         }
-       
     },[location]);
+
     const handleChange = (e) => {
         setState({...state, [e.target.name] : e.target.value})
     }
+
    const handleSubmit = e => {
        e.preventDefault();
        if(isSignIn) {

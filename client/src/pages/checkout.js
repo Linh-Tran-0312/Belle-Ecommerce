@@ -1,30 +1,27 @@
-import Layout from "../components/Layout"
-import "../App.css";
-import { useEffect, useState } from 'react';
-import { Box, Typography, Grid, IconButton, RadioGroup, TextField } from '@material-ui/core';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { Box, Grid, RadioGroup, TextField, Typography } from '@material-ui/core';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import QtyButton from "../components/QtyButton";
-import { Link, Redirect } from 'react-router-dom';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import BlackButton from "../components/BlackButton";
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SuccessOrderModal from "../components/SuccessOrderModal";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import orderActions from "../actions/order";
+import "../App.css";
+import BlackButton from "../components/BlackButton";
+import Layout from "../components/Layout";
+import SuccessOrderModal from "../components/SuccessOrderModal";
+import {CircularProgress }from "@material-ui/core"
 import shipCal from "../helper/shipCalculator";
-import { useHistory, useLocation } from "react-router-dom";
 const StyledRadio = withStyles({
     root: {
         color: 'black',
@@ -118,7 +115,6 @@ export default () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const location = useLocation();
-    //const user = useSelector(state => state.auth).user;
     const items = useSelector(state => state.order).items;
     const orderId = useSelector(state => state.order).orderId;
     const subTotal = useSelector(state => state.order).subTotal;
@@ -302,61 +298,11 @@ export default () => {
                                         </Box>
                                     </AccordionDetails>
                                 </Accordion>
-                              {/*   <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-label="Expand"
-                                        aria-controls="additional-actions3-content"
-                                        id="additional-actions3-header"
-                                    >
-
-                                            <FormControlLabel
-                                                aria-label="Acknowledge"
-                                                onClick={(event) => event.stopPropagation()}
-                                                onFocus={(event) => event.stopPropagation()}
-                                                control={<StyledRadio />}
-                                                label="PAYMENT GATEWAY"
-                                                value="GATEWAY"
-                                            />
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography color="textSecondary">
-                                            If you forget to put an aria-label on the nested action, the label of the action will
-                                            also be included in the label of the parent button that controls the accordion
-                                            expansion.
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-label="Expand"
-                                        aria-controls="additional-actions3-content"
-                                        id="additional-actions3-header"
-                                    >
-
-                                            <FormControlLabel
-                                                aria-label="Acknowledge"
-                                                onClick={(event) => event.stopPropagation()}
-                                                onFocus={(event) => event.stopPropagation()}
-                                                control={<StyledRadio />}
-                                                label="USING E-WALLET"
-                                                value="EWALLET"
-                                            />
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Typography color="textSecondary">
-                                            If you forget to put an aria-label on the nested action, the label of the action will
-                                            also be included in the label of the parent button that controls the accordion
-                                            expansion.
-                                        </Typography>
-                                    </AccordionDetails>
-                                </Accordion> */}
                                 </RadioGroup>
                             </div>
                             <Box my={2} textAlign="center">
                                 <SuccessOrderModal state={orderSuccess} history={history}/>
-                                    <BlackButton height={'50px'} type="submit"><strong>place order</strong></BlackButton>
+                                    <BlackButton height='50px' width="150px" type="submit" disabled={loading}>{ loading ? <CircularProgress style={{color: "white"}} size={30}/> : <strong>place order</strong>}</BlackButton>
                             </Box>
                         </Box>
                     </Grid>

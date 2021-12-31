@@ -34,18 +34,22 @@ const orderActions = {
     },
     getOrderById: (id) => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.GET_ORDER_DETAIL_LOADING, payload: true})
             const { data } = await api.getOrderById(id);
             dispatch({ type: ACTION.GET_ORDER_BY_ID, payload: data});
         } catch (error) {
+            dispatch({ type: ACTION.GET_ORDER_DETAIL_LOADING, payload: false})
             errorHandler(error, dispatch)
         }
     },
     updateOrderStatus: (id, formData) => async(dispatch) =>  {
         try {
+            dispatch({ type: ACTION.ORDER_LOADING, payload: true})
             const { data } = await api.updateOrderStatus(id, formData);
             dispatch({ type: ACTION.UPDATE_ORDER_STATUS, payload: data})
             dispatch(enqueueSnackbar(MSG.U_ORDER, SnackBar.SUCCESS))
         } catch (error) {
+            dispatch({ type: ACTION.ORDER_LOADING, payload: false})
             errorHandler(error, dispatch)
         }
     }

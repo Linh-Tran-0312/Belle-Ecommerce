@@ -51,15 +51,13 @@ const authActions = {
     updateProfile: (userId, formData) => async(dispatch) => {
         try {
             dispatch({ type: ACTION.USER_PROFILE_LOADING})
-            delete formData.id;
-            delete formData.createdAt;
-            console.log(formData)
-            const { data } = await api.updateUser(userId, formData);
+            const { fname, lname, email, address, phone } = formData
+            const { data } = await api.updateUser(userId, { fname, lname, email, address, phone });
             dispatch({ type: ACTION.UPDATE_PROFILE, payload: data});
             dispatch(enqueueSnackbar(MSG.U_PROFILE, SnackBar.SUCCESS))
         } catch (error) {
             errorHandler(error,dispatch)
-        }
+        } 
     },
     getOrdersByUserId: (userId) => async(dispatch) => {
         try {

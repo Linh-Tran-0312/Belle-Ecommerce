@@ -26,9 +26,9 @@ const StyledTableCell = withStyles((theme) => ({
     body: {
         fontSize: 14,
     }
-    
+
 }))(TableCell);
-const useStyle = makeStyles((theme) =>({
+const useStyle = makeStyles((theme) => ({
     itemImg: {
         width: '70px',
         height: '90px',
@@ -39,21 +39,21 @@ const useStyle = makeStyles((theme) =>({
     table: {
         minWidth: 350,
     },
-    priceCol : {
-        [theme.breakpoints.down('xs')] : {
+    priceCol: {
+        [theme.breakpoints.down('xs')]: {
             display: 'none'
         }
     },
-    bodyXs : {
+    bodyXs: {
         fontWeight: 600,
-        [theme.breakpoints.down('xs')] : {
+        [theme.breakpoints.down('xs')]: {
             fontSize: '12px'
         }
     },
-    noteTextField : {
-       
+    noteTextField: {
+
         marginTop: 15,
-        '& .MuiOutlinedInput-root' : {
+        '& .MuiOutlinedInput-root': {
             borderRadius: 0,
         }
     }
@@ -66,16 +66,14 @@ export default () => {
     const orderId = useSelector(state => state.order).orderId;
 
     const handleDeleteItem = (id, itemId) => {
-        if(orderId) 
-        {   
+        if (orderId) {
+            // if user has logged in
             dispatch(orderActions.deleteItem(orderId, itemId))
         } else {
+            // if user has not logged in
             dispatch(orderActions.deleteItemFromCart(id))
-
         }
-      
     }
-    
     return (
         <Layout>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
@@ -86,90 +84,78 @@ export default () => {
                 </div>
             </div>
             <Box mx={2} my={4}>
-             { items.length > 0 ? (
-                <Grid container spacing={3}   direction="row" justifyContent="center">
-                    <Grid item lg={8} md={8} sm={12}>                      
-                        <TableContainer >
-                            <Table className={classes.table}  aria-label="customized table">
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell >PRODUCT</StyledTableCell>
-                                        <StyledTableCell classes={{ head: classes.priceCol}} >PRICE</StyledTableCell>
-                                        <StyledTableCell  >QUANTITY</StyledTableCell>
-                                        <StyledTableCell  >TOTAL</StyledTableCell>
-
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {items.map((item, index) => (
-                                        <TableRow key={index}>
-                                            <StyledTableCell component="th" scope="row">
-                                                <Grid container spacing={1}>
-                                                    <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                        <img src={item.productVariant.product.imgPaths[0]} className={classes.itemImg} alt="" />
-                                                    </Grid>
-                                                    <Grid item sm={8} xs={12}>
-                                                        <Link to="/product" className="link"><Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>{item.productVariant.product.name}</Typography></Link>
-                                                        <Typography variant="caption" display="block" gutterBottom>Color: {item.productVariant.color.name}</Typography>
-                                                        <Typography variant="caption" display="block"   gutterBottom>Size: {item.productVariant.size.name}</Typography>
-                                                    </Grid>   
-                                                </Grid>
-                                            </StyledTableCell>
-                                            <StyledTableCell align="right"  classes={{ body: classes.priceCol}} >{item.unitPrice.toLocaleString()} VND</StyledTableCell>
-                                            <StyledTableCell align="right">
-                                                <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity}  itemId={item?.id} variantId={item.productVariant.id} />
-                                            </StyledTableCell>
-                                            <StyledTableCell align="right">
-                                                <Grid container>
-                                                    <Grid item sm={8} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                    <Typography variant="subtitle2">{(item.unitPrice*item.quantity).toLocaleString()} VND</Typography>
-                                               
-                                                    </Grid>
-                                                    <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                        <IconButton size="small" onClick={() => handleDeleteItem(item.productVariant.id, item.id)}><DeleteForeverIcon/></IconButton>
-                                                    </Grid>
-                                                </Grid>
-                                            </StyledTableCell>
+                {items.length > 0 ? (
+                    <Grid container spacing={3} direction="row" justifyContent="center">
+                        <Grid item lg={8} md={8} sm={12}>
+                            <TableContainer >
+                                <Table className={classes.table} aria-label="customized table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <StyledTableCell >PRODUCT</StyledTableCell>
+                                            <StyledTableCell classes={{ head: classes.priceCol }} >PRICE</StyledTableCell>
+                                            <StyledTableCell  >QUANTITY</StyledTableCell>
+                                            <StyledTableCell  >TOTAL</StyledTableCell>
 
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                                    </TableHead>
+                                    <TableBody>
+                                        {items.map((item, index) => (
+                                            <TableRow key={index}>
+                                                <StyledTableCell component="th" scope="row">
+                                                    <Grid container spacing={1}>
+                                                        <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
+                                                            <img src={item.productVariant.product.imgPaths[0]} className={classes.itemImg} alt="" />
+                                                        </Grid>
+                                                        <Grid item sm={8} xs={12}>
+                                                            <Link to="/product" className="link"><Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>{item.productVariant.product.name}</Typography></Link>
+                                                            <Typography variant="caption" display="block" gutterBottom>Color: {item.productVariant.color.name}</Typography>
+                                                            <Typography variant="caption" display="block" gutterBottom>Size: {item.productVariant.size.name}</Typography>
+                                                        </Grid>
+                                                    </Grid>
+                                                </StyledTableCell>
+                                                <StyledTableCell align="right" classes={{ body: classes.priceCol }} >{item.unitPrice.toLocaleString()} VND</StyledTableCell>
+                                                <StyledTableCell align="right">
+                                                    <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity} itemId={item?.id} variantId={item.productVariant.id} />
+                                                </StyledTableCell>
+                                                <StyledTableCell align="right">
+                                                    <Grid container>
+                                                        <Grid item sm={8} xs={12} container direction="row" justifyContent="center" alignItems="center">
+                                                            <Typography variant="subtitle2">{(item.unitPrice * item.quantity).toLocaleString()} VND</Typography>
+                                                        </Grid>
+                                                        <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
+                                                            <IconButton size="small" onClick={() => handleDeleteItem(item.productVariant.id, item.id)}><DeleteForeverIcon /></IconButton>
+                                                        </Grid>
+                                                    </Grid>
+                                                </StyledTableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Grid>
-                         <Grid item lg={4} md={4} sm={12}>
-                           {/* <Box p={3} border={1} borderColor="grey.500"> 
-                               <Typography variant="body2" gutterBottom>ADD A NOTE TO YOUR ORDER</Typography>
-                               <TextField multiline fullWidth rows={7} variant="outlined" label="" classes={{ root : classes.noteTextField}}/>
-                            </Box>  
-                             */}<Box  p={3} border={1} borderColor="grey.500">
+                        <Grid item lg={4} md={4} sm={12}>
+                            <Box p={3} border={1} borderColor="grey.500">
                                 <Grid container direction="row" justifyContent="space-between">
-                                        <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>SUBTOTAL</Typography>
-                                        <Typography variant="body2" gutterBottom classes={{body2: classes.bodyXs}}>{subTotal.toLocaleString()}</Typography>
+                                    <Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>SUBTOTAL</Typography>
+                                    <Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>{subTotal.toLocaleString()}</Typography>
                                 </Grid>
                                 <Typography variant="caption" gutterBottom>Shipping &amp; taxes calculated at checkout</Typography>
                                 <Box>
-                                <Box my={2}>
-                                    <Link to="/checkout" className="linkWhite"><BlackButton width={'100%'}>check out</BlackButton></Link>
-                                  
+                                    <Box my={2}>
+                                        <Link to="/checkout" className="linkWhite"><BlackButton width={'100%'}>check out</BlackButton></Link>
+
+                                    </Box>
+                                    <img alt="" src={window.location.origin + "/payment-img.jpg"} style={{ width: '100%' }} />
                                 </Box>
-                                <img alt="" src={window.location.origin + "/payment-img.jpg"} style={{ width: '100%'}}/>
-                               
-                            </Box> 
-                            </Box> 
-                                     
-                      </Grid>
-                     </Grid>
-                        ) : (<Box textAlign="center" >
-                        <Typography variant="h5">Your cart is empty</Typography>
-                        <img alt="empty-cart" style={{width: "50vw"}} src="../empty-cart.png"/>
-                        </Box>
-                        )
-                    }
-                       
-                    
-                   
-               
+                            </Box>
+                        </Grid>
+                    </Grid>
+                ) : (<Box textAlign="center" >
+                    <Typography variant="h5">Your cart is empty</Typography>
+                    <img alt="empty-cart" style={{ width: "50vw" }} src="../empty-cart.png" />
+                </Box>
+                )
+                }
             </Box>
         </Layout>
     )

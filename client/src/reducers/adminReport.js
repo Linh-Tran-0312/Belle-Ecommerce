@@ -52,7 +52,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.error = "";
             break;
         case ACTION.REPORT_LOADING:
-            draft.loading = true;
+            draft.loading = payload;
             break;
         default:
             break;

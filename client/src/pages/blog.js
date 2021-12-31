@@ -15,14 +15,14 @@ import { displayMonDDYYYY } from "../helper/handleTime";
 
 
 export default () => {
-    console.log("Blog Detail Page render")
+
     let { id } = useParams();
     const dispatch = useDispatch();
     const location = useLocation();
-    //const [ blog, setBlog ] = useState({});
     const latestBlogs = useSelector(state => state.home).latestBlogs;
     const categories = useSelector(state => state.home).blogCategories;
     const blog = useSelector(state => state.blog).blog;
+
     useEffect(() => {
         if (!isNaN(id) && id !== undefined) {
             dispatch(blogActions.getBlogById(id))
@@ -47,11 +47,9 @@ export default () => {
                     <Breadcrumbs separator="›" aria-label="breadcrumb">
                         <Link className="link" to="/" >
                             <Typography variant="subtitle2">Home</Typography>
-
                         </Link>
                         <Link className="link" to="/blogs" >
                             <Typography variant="subtitle2">Blogs</Typography>
-
                         </Link>
                         <Typography variant="subtitle2">Article</Typography>
                     </Breadcrumbs>
@@ -72,9 +70,7 @@ export default () => {
                                 </Grid>
                                 {
                                     renderContent(blog?.content)
-
                                 }
-
                             </Box>
                             {
                                 blog?.commentAllow && (<>
@@ -86,11 +82,8 @@ export default () => {
                                         {
                                             [1, 2].map(item => <Comment key={item} />)
                                         }
-
-
                                     </Container>
                                 </>)
-
                             }
                         </Grid>
                         <Grid item lg={3} md={3} sm={12} xs={12}>
@@ -100,8 +93,7 @@ export default () => {
                                 </Box>
                                 {
                                     categories.map(item => <Typography key={item.id} variant="subtitle2"><Link to={`/blogs?category=${item.id}`} style={{
-                                        textDecoration: 'none',
-                                     
+                                        textDecoration: 'none',                                    
                                         color: 'black'
                                     }}>{item.name}</Link></Typography>)
                                 }
@@ -116,7 +108,6 @@ export default () => {
                                         </Link>)
                                 }
                             </Box>
-
                         </Grid>
                     </Grid>
                 </Box>

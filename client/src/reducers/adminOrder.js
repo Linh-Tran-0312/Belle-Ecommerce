@@ -6,7 +6,8 @@ const initState = {
     order: {},
     total: 0,
     error: "",
-    loading: false
+    loading: false,
+    detailLoading: false,
 }
 export default (state = initState, { type, payload}) => produce(state, (draft) => {
     switch(type) {
@@ -17,7 +18,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             break;
         case ACTION.GET_ORDER_BY_ID:
             draft.order = payload;
-            draft.loading = false;
+            draft.detailLoading = false;
             break;
         case ACTION.UPDATE_ORDER_STATUS:
             draft.order = {...draft.order, status: payload.status, paymentMethod: payload.paymentMethod, paymentCheck: payload.paymentCheck};
@@ -26,7 +27,10 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.loading = false;
             break;
         case ACTION.ORDER_LOADING:
-            draft.loading = true;
+            draft.loading = payload;
+            break;
+        case ACTION.GET_ORDER_DETAIL_LOADING:
+            draft.detailLoading = payload;
             break;
         default:
             break;
