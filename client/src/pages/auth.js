@@ -43,8 +43,8 @@ export default (props) => {
     const message = useSelector(state => state.userAuth).error;
     const [ isSignIn, setIsSignIn] = useState(true);
     const [ state, setState ] = useState(initState);
-    
-    console.log(props.location.state.from); 
+
+    console.log(props?.location?.state?.from || "/drf");
     useEffect(() => {
         if(query.get('page') === "signin" || query.get('page') === null) {
        setIsSignIn(true)
@@ -60,9 +60,9 @@ export default (props) => {
    const handleSubmit = e => {
        e.preventDefault();
        if(isSignIn) {
-           dispatch(authActions.login({email: state.email, password: state.password}, history))
+           dispatch(authActions.login({email: state.email, password: state.password}, history, props?.location?.state?.from || "/user"))
        } else {
-        dispatch(authActions.register({...state}, history))
+        dispatch(authActions.register({...state}, history,props?.location?.state?.from || "/user"))
        }
    }
     return (

@@ -3,7 +3,7 @@ import { ACTION, MSG, SnackBar } from "../constants";
 import { enqueueSnackbar } from "./notification";
 import errorHandler from "../helper/errorHandler";
 const authActions = {
-    register: (formData, history) => async(dispatch) => {
+    register: (formData, history, prePath) => async(dispatch) => {
         try {
             if(formData.password !== formData.confirm_password)
             {
@@ -13,7 +13,7 @@ const authActions = {
                 delete formData.confirm_password;
                 const { data } = await api.register(formData);
                 dispatch({ type: ACTION.USER_AUTH, payload: data})
-                history.push("/user");
+                history.push(prePath);
             }       
         } catch (error) {
             if(error.response) {
@@ -24,7 +24,7 @@ const authActions = {
             }
         }
     },
-    login: (formData, history) => async(dispatch) => {
+    login: (formData, history, prePath) => async(dispatch) => {
         try {
             dispatch({ type: ACTION.USER_AUTH_LOADING})
             delete formData.confirm_password;      
@@ -32,7 +32,7 @@ const authActions = {
             dispatch({ type: ACTION.USER_AUTH, payload: userRes.data});
             const orderRes = await api.getCurrentOrderByUserId(userRes.data.id);
             dispatch({ type: ACTION.GET_ORDER_AFTER_LOGIN, payload: orderRes.data})
-            history.push("/user");
+            history.push(prePath);
         } catch (error) {
             if(error.response) {
                 dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.response?.data?.message})

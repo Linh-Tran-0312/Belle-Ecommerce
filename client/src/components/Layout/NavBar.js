@@ -138,10 +138,10 @@ export default function NarBar() {
         setResponsiveness();
 
         window.addEventListener("resize", () => setResponsiveness());
-
+/* 
         return () => {
             window.removeEventListener("resize", () => setResponsiveness());
-        };
+        }; */
     }, []);
 
     const displayDesktop = () => {
