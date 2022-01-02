@@ -19,7 +19,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             localStorage.setItem("user",JSON.stringify(payload))
             draft.isLogin = true;
             draft.user = payload;
-            draft.loading = false;
+           
             draft.error = "";
         }    
         break;
@@ -43,7 +43,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.orders = [];
             break;
         case ACTION.USER_AUTH_LOADING: 
-           draft.loading = true;
+           draft.loading = payload;
            break;
         case ACTION.USER_AUTH_ERROR:
             draft.loading = false;

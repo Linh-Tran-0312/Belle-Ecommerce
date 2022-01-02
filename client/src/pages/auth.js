@@ -41,6 +41,7 @@ export default (props) => {
     const history = useHistory();
     const dispatch = useDispatch()
     const message = useSelector(state => state.userAuth).error;
+    const orderItems = useSelector(state => state.order.items);
     const [ isSignIn, setIsSignIn] = useState(true);
     const [ state, setState ] = useState(initState);
 
@@ -60,9 +61,9 @@ export default (props) => {
    const handleSubmit = e => {
        e.preventDefault();
        if(isSignIn) {
-           dispatch(authActions.login({email: state.email, password: state.password}, history, props?.location?.state?.from || "/user"))
+           dispatch(authActions.login({email: state.email, password: state.password}, history, props?.location?.state?.from || "/user", orderItems))
        } else {
-        dispatch(authActions.register({...state}, history,props?.location?.state?.from || "/user"))
+        dispatch(authActions.register({...state}, history,props?.location?.state?.from || "/user", orderItems))
        }
    }
     return (

@@ -1,25 +1,13 @@
 
 import {
-    AppBar,
-    Toolbar,
-    Typography,
-    makeStyles,
-    Button,
-    IconButton,
-    Drawer,
-    Link,
-    MenuItem,
-    Badge
+    AppBar, Button, Drawer, IconButton, Link, makeStyles, MenuItem, Toolbar,
+    Typography
 } from "@material-ui/core";
-import LocalMallIcon from '@material-ui/icons/LocalMall';
-import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
-import SearchIcon from '@material-ui/icons/Search';
-import MenuIcon from "@material-ui/icons/Menu";
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import SearchBar from './SearchBar';
-import CartPopover from "../CartPopup";
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import MenuIcon from "@material-ui/icons/Menu";
+import React, { useEffect, useState } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import CartPopover from "../CartPopup";
 const headersData = [
     {
         label: "HOME",

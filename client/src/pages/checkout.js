@@ -131,6 +131,10 @@ export default () => {
     useEffect(() => {
         setUser(JSON.parse(localStorage.getItem('user')))
     },[location])
+    
+    useEffect(() => {
+       setState({...state,shipping: shipCal(subTotal), total: subTotal + shipCal(subTotal) })
+    },[subTotal]);
 
     useEffect(() => {
         if(orderSuccess) {

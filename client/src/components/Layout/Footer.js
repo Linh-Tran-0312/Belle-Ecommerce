@@ -1,11 +1,10 @@
-import { Box, Typography, Grid, Paper, Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
+import { Accordion, AccordionDetails, AccordionSummary, Grid, makeStyles, Paper, Typography, withStyles } from '@material-ui/core';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 const useStyle = makeStyles(() => ({
     mobileBox: {
         borderTop: '1px solid gray',
@@ -76,9 +75,6 @@ const Footer = () => {
 
         window.addEventListener("resize", () => setResponsiveness());
 
-        return () => {
-            window.removeEventListener("resize", () => setResponsiveness());
-        };
     }, []);
     const desktopFooter = () => {
         return (

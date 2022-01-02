@@ -21,22 +21,16 @@ SwiperCore.use([Navigation, Thumbs]);
 
 
 export default function ProductImage({list}) {
-
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
-
     return (
         <div className="productSwiper">
-
             <Swiper style={{ '--swiper-navigation-color': '#fff', '--swiper-pagination-color': '#fff' }} 
             spaceBetween={10} navigation={true} thumbs={{ swiper: thumbsSwiper }} className="myProductSwiper2">
             {
                 list.map(i =>  <SwiperSlide key={i}>
                                     <img src={i} alt="img" />
                                 </SwiperSlide>)
-            }
-                
-               
+            }             
             </Swiper>
             <Swiper onSwiper={setThumbsSwiper} spaceBetween={10} slidesPerView={4} freeMode={true} watchSlidesVisibility={true} watchSlidesProgress={true} className="myProductSwiper">
                  {
@@ -44,7 +38,6 @@ export default function ProductImage({list}) {
                                     <img src={i} alt="img" />
                                 </SwiperSlide>)
             }
-     
             </Swiper>
         </div>
     )

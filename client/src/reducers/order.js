@@ -40,14 +40,14 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             if(payload) {
                 draft.orderId = payload.id;
                 draft.items = payload.details;
-                draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
+                draft.subTotal = payload.total
             }
             break;
         case ACTION.UPDATE_ORDER:
             if(payload) {
                 draft.orderId = payload.id;
                 draft.items = payload.details;
-                draft.subTotal = payload.details?.reduce(((preValue,curValue) => preValue + curValue.unitPrice*curValue.quantity),0);
+                draft.subTotal = payload.total
             }
             break;
         case ACTION.CLEAR_ORDER: 

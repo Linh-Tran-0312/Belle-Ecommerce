@@ -47,6 +47,8 @@ export default () => {
     const salesReport = useSelector(state => state.report).salesReport;
     const orderReport = useSelector(state => state.report).orderReport;
     const productReport = useSelector(state => state.report.productReport);
+    const loading = useSelector(state => state.report.loading);
+
     const [salePeriod, setSalePeriod] = useState("week");
     const [ productPeriod, setProductPeriod ] = useState("week");
     const [ proPagination, setProPagination] = useState(initProPagination);
@@ -101,7 +103,7 @@ export default () => {
                                 <Grid item xs={9}>
                                     <Typography variant="body1">Total Money (VND)</Typography>
                                     {
-                                        overview?.sales ?  <Typography variant="h5" color="primary">{overview?.sales.toLocaleString()}</Typography>
+                                        !loading ?  <Typography variant="h5" color="primary">{overview?.sales.toLocaleString()}</Typography>
                                                         : <CircularProgress size={25} />
                                     }
                                    
@@ -118,7 +120,7 @@ export default () => {
                                 <Grid item xs={9}>
                                     <Typography variant="body1">New Orders</Typography>
                                     {
-                                        overview?.sales ?  <Typography variant="h5" color="primary">{overview?.orders.toLocaleString()}</Typography>
+                                        !loading ?  <Typography variant="h5" color="primary">{overview?.orders.toLocaleString()}</Typography>
                                                         : <CircularProgress size={25} />
                                     }
                                 </Grid>
@@ -134,7 +136,7 @@ export default () => {
                                 <Grid item xs={9}>
                                     <Typography variant="body1">New Registers</Typography>
                                     {
-                                        overview?.sales ?  <Typography variant="h5" color="primary">{overview?.registers.toLocaleString()}</Typography>
+                                       !loading ?  <Typography variant="h5" color="primary">{overview?.registers.toLocaleString()}</Typography>
                                                         :<CircularProgress size={25} /> 
                                     }
                                 </Grid>
@@ -207,8 +209,8 @@ export default () => {
                                 <Typography variant="h6" color="primary">Order Status</Typography>
                             </Box>
                             <Box mt={2}>
-                          <Typography variant="body1">  <StopIcon style={{color: '#0088FE',position: 'relative', top: '7px'}}/>Completed Orders: {orderReport[1].value}</Typography>
-                                <Typography><StopIcon style={{color: "#FFBB28",position: 'relative', top: '7px'}}/>Canceled Orders: {orderReport[0].value}</Typography>
+                          <Typography variant="body1">  <StopIcon style={{color: '#FFBB28',position: 'relative', top: '7px'}}/>Completed Orders: {orderReport[1].value}</Typography>
+                                <Typography><StopIcon style={{color: "#0088FE",position: 'relative', top: '7px'}}/>Canceled Orders: {orderReport[0].value}</Typography>
                             </Box>
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart width={400} height={400}>

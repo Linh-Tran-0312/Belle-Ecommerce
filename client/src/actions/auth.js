@@ -3,16 +3,23 @@ import { ACTION, MSG, SnackBar } from "../constants";
 import { enqueueSnackbar } from "./notification";
 import errorHandler from "../helper/errorHandler";
 const authActions = {
-    register: (formData, history, prePath) => async(dispatch) => {
+    register: (formData, history, prePath, items) => async(dispatch) => {
         try {
             if(formData.password !== formData.confirm_password)
             {
                 dispatch({ type: ACTION.USER_AUTH_ERROR, payload: MSG.CF_PASS})
             } else {
-                dispatch({ type: ACTION.USER_AUTH_LOADING})
+                dispatch({ type: ACTION.USER_AUTH_LOADING, payload: true})
                 delete formData.confirm_password;
                 const { data } = await api.register(formData);
-                dispatch({ type: ACTION.USER_AUTH, payload: data})
+                dispatch({ type: ACTION.USER_AUTH, payload: data});
+                let details = [];
+                items.forEach(item => {
+                    details.push({ productVariantId: item.productVariant.id, unitPrice: item.unitPrice, quantity: item.quantity})
+                })
+                const orderRes = await api.updateOrderAfterLogin(data.id, { details });
+                dispatch({ type: ACTION.GET_ORDER_AFTER_LOGIN, payload: orderRes.data}); 
+                dispatch({ type: ACTION.USER_AUTH_LOADING, payload: false})
                 history.push(prePath);
             }       
         } catch (error) {
@@ -24,14 +31,19 @@ const authActions = {
             }
         }
     },
-    login: (formData, history, prePath) => async(dispatch) => {
+    login: (formData, history, prePath, items) => async(dispatch) => {
         try {
-            dispatch({ type: ACTION.USER_AUTH_LOADING})
+            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: true})
             delete formData.confirm_password;      
             const userRes= await api.login(formData);
             dispatch({ type: ACTION.USER_AUTH, payload: userRes.data});
-            const orderRes = await api.getCurrentOrderByUserId(userRes.data.id);
-            dispatch({ type: ACTION.GET_ORDER_AFTER_LOGIN, payload: orderRes.data})
+           let details = [];
+           items.forEach(item => {
+               details.push({ productVariantId: item.productVariant.id, unitPrice: item.unitPrice, quantity: item.quantity})
+           })
+            const orderRes = await api.updateOrderAfterLogin(userRes.data.id, { details });
+            dispatch({ type: ACTION.GET_ORDER_AFTER_LOGIN, payload: orderRes.data});
+            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: false})
             history.push(prePath);
         } catch (error) {
             if(error.response) {

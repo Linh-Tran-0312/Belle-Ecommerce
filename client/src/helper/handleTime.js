@@ -40,6 +40,7 @@ export const getMonthsForReport = () => {
                 if(month == 1) {
                     month = 12;
                     year -= 1;
+                    arr.push({ time: `${year}`, name: `In ${year}`});
                 } else {
                     month -= 1;
                 }           
