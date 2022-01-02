@@ -1412,11 +1412,11 @@ export function RegisterRoutes(app: any) {
             const promise = controller.getOrderById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.patch('/orders/:orderId/addItems',
+        app.patch('/orders/:userId/afterLogin',
             authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
                     data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateItems"},
             };
 

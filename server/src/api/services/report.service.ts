@@ -1,9 +1,8 @@
 import { ProductRepository, UserRepository, OrderRepository } from "../repositories"
 import { IOverviewReport, ISalesReport, IOrderReport, IProductReports } from "../controllers/reportController";
-import {periodCal, Period, getDay, daysInMonth, getMonth, regYearMonth,regYear, timeCal } from "../helpers/timeHandler";
+import {periodCal, Period, getDay, daysInMonth, getMonth, regYearMonth,regYear, timeCal, displayTime } from "../helpers/timeHandler";
 import { Status, IOrder } from "../models";
 import { MoreThan, In } from "typeorm";
-import { getDefaultSettings } from "http2";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
 
@@ -59,6 +58,8 @@ export class ReportService {
 
         if(timeStr === Period.WEEK) {
             const time = timeCal(timeStr);
+            console.log(displayTime(time.start));
+            console.log(displayTime(time.end));
             orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", time);
              console.log(orders);
             result = Array(7).fill({

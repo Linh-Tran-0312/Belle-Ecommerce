@@ -3497,7 +3497,7 @@
 				]
 			}
 		},
-		"/orders/{orderId}/addItems": {
+		"/orders/{userId}/afterLogin": {
 			"patch": {
 				"operationId": "UpdateOrderItems",
 				"responses": {
@@ -3533,7 +3533,7 @@
 				"parameters": [
 					{
 						"in": "path",
-						"name": "orderId",
+						"name": "userId",
 						"required": true,
 						"schema": {
 							"format": "double",

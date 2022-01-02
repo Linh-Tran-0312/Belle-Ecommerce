@@ -20,7 +20,9 @@ export const periodCal = (period: string) => {
             break;
         case Period.WEEK:
             // start day is Monday
-            time.start =  new Date(now.getFullYear(),now.getMonth(),now.getDate() - now.getDay() + 1,0,0,0);
+            while (time.start.getDay() != 1) {
+                time.start.setDate(time.start.getDate() - 1);
+            }
             break;
         case Period.MONTH:
             time.start =  new Date(now.getFullYear(),now.getMonth(),1,0,0,0);
@@ -57,7 +59,14 @@ export const daysInMonth = (time: string) => {
     const date = new Date(time);
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
-
+export const displayTime = (time: Date) => {
+    const date = time.getDate();
+    const month = time.getMonth();
+    const year = time.getFullYear();
+    const hour = time.getHours();
+    const minute = time.getMinutes();
+    return `${date}-${month}-${year} ${hour}:${minute}`;
+}
 export const regYear = /^[\d]{4}$/;
 export const regYearMonth = /^[\d]{4}-([0][1-9]|[1][0-2])$/;
 
@@ -68,9 +77,11 @@ export const timeCal = (timeStr: string) => {
         end: now
     }
     if(timeStr === "week")
-    {
-        time.start =  new Date(now.getFullYear(),now.getMonth(),now.getDate() - now.getDay() + 1,0,0,0);
-
+    {    time.start = new Date(now.getFullYear(),now.getMonth(),now.getDate(),0,0,0);
+        while (time.start.getDay() != 1) {
+            time.start.setDate(time.start.getDate() - 1);
+        }
+          time.end = new Date();
     }
     else if(regYear.test(timeStr)){
         time.start =  new Date(parseInt(timeStr),0,1);

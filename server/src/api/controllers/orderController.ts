@@ -100,9 +100,9 @@ export class OrderController {
     * Update order (add items when use login if there are cart items saved in local storage)
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
-    @Patch("/:orderId/addItems")
-    public async updateOrderItems(@Path() orderId: number, @Body() data: IOrderUpdateItems): Promise<IOrder|null> {
-        return this._orderService.updateOrderItems(orderId,data)
+    @Patch("/:userId/afterLogin")
+    public async updateOrderItems(@Path() userId: number, @Body() data: IOrderUpdateItems): Promise<IOrder|null> {
+        return this._orderService.updateOrderItems(userId,data)
     }
     /**
     * Update order status

@@ -82,20 +82,39 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
     }
     public async updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder> {
         try {
-            const currentOrder: IOrder | any = await super.getOneById(id, ["details"]);
-            data.details.forEach(detail => {
-               const index = currentOrder.details.findIndex((item: { productVariantId: number; }) => item.productVariantId === detail.productVariantId);
-               if(index === -1) {
-                   const newItem = new OrderDetail();
-                   newItem.productVariantId = detail.productVariantId;
-                   newItem.quantity = detail.quantity;
-                   newItem.unitPrice = detail.unitPrice;
-                   currentOrder.details.push(newItem);
-               } else {
-                   currentOrder.details[index].quantity += detail.quantity;
-               }
-               
-            })
+            let currentOrder: IOrder | any = await  this.repository.findOne({
+                relations: ["details"],
+                where: {
+                userId: id,
+                status: Status.ORDERING
+            }})   // super.getOneById(id, ["details"]);
+            if(!currentOrder) {
+                currentOrder = new Order();
+                currentOrder.userId = id;
+                currentOrder.details = [];
+                data.details.forEach(detail => {
+                    const item = new OrderDetail();
+                    item.productVariantId = detail.productVariantId;
+                    item.unitPrice = detail.unitPrice;
+                    item.quantity = detail.quantity;
+                    currentOrder.details.push(item);
+                })
+            } else {
+                data.details.forEach(detail => {
+                    const index = currentOrder.details.findIndex((item: { productVariantId: number; }) => item.productVariantId === detail.productVariantId);
+                    if(index === -1) {
+                        const newItem = new OrderDetail();
+                        newItem.productVariantId = detail.productVariantId;
+                        newItem.quantity = detail.quantity;
+                        newItem.unitPrice = detail.unitPrice;
+                        currentOrder.details.push(newItem);
+                    } else {
+                        currentOrder.details[index].quantity += detail.quantity;
+                    }
+                    
+                 })
+            }
+          
              await this.repository.create(currentOrder);
             return this.repository.getOrderById(id);
     
