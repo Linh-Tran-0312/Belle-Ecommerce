@@ -8,10 +8,11 @@ export interface IProductReviewCreateProps {
     productId: number;
     rating: number;
     userId: string;
-    user?: User;
 }
 
-export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {};
+export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {
+    user?: IUser;
+};
 
 @Entity()
 export class ProductReview  extends CustomBaseEntity implements IProductReviewCreateProps{

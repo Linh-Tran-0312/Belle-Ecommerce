@@ -4,6 +4,7 @@ import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from
 import { ReportController } from './../controllers/reportController';
 import { BlogController } from './../controllers/blogController';
 import { ProductController } from './../controllers/productController';
+import { ReviewController } from './../controllers/reviewController';
 import { UserController } from './../controllers/userController';
 import { AuthController } from './../controllers/authController';
 import { OrderController } from './../controllers/orderController';
@@ -236,6 +237,23 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "IUser": {
+        "dataType": "refObject",
+        "properties": {
+            "password": {"dataType":"string"},
+            "email": {"dataType":"string"},
+            "token": {"dataType":"string"},
+            "phone": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole"},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
     "Size": {
         "dataType": "refObject",
         "properties": {
@@ -337,23 +355,6 @@ const models: TsoaRoute.Models = {
     "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"token":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
-    },
-    "IUser": {
-        "dataType": "refObject",
-        "properties": {
-            "password": {"dataType":"string"},
-            "email": {"dataType":"string"},
-            "token": {"dataType":"string"},
-            "phone": {"dataType":"string"},
-            "address": {"dataType":"string"},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole"},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
     },
     "IBlogComment": {
         "dataType": "refObject",
@@ -502,6 +503,40 @@ const models: TsoaRoute.Models = {
             "colorId": {"dataType":"double"},
             "sizeId": {"dataType":"double"},
             "quantity": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    "IProductReview": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string"},
+            "text": {"dataType":"string"},
+            "productId": {"dataType":"double","required":true},
+            "rating": {"dataType":"double","required":true},
+            "userId": {"dataType":"string","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "user": {"ref":"IUser"},
+        },
+        "additionalProperties": false,
+    },
+    "IReviewCount": {
+        "dataType": "refObject",
+        "properties": {
+            "reviewCount": {"dataType":"double","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"double"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IProductReviewCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string"},
+            "text": {"dataType":"string"},
+            "productId": {"dataType":"double","required":true},
+            "rating": {"dataType":"double","required":true},
+            "userId": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -1141,6 +1176,66 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.deleteProductVariant.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/reviews/:productId',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    productId: {"in":"path","name":"productId","required":true,"dataType":"double"},
+                    size: {"in":"query","name":"size","required":true,"dataType":"double"},
+                    cursor: {"in":"query","name":"cursor","required":true,"dataType":"double"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReviewController();
+
+
+            const promise = controller.getReviewsByProductId.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/reviews/:productId/count',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    productId: {"in":"path","name":"productId","required":true,"dataType":"double"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReviewController();
+
+
+            const promise = controller.getReviewCountByProductId.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/reviews',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"IProductReviewCreateProps"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReviewController();
+
+
+            const promise = controller.createReview.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.get('/users',

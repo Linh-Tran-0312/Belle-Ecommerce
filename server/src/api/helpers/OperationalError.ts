@@ -16,7 +16,8 @@ export enum OperationalErrorMessage {
     NOT_PERMISSION = "You might have not permission to access this resource",
     FOREIGN_VIOLATION = "Can't delete this item because it is in use",
     INVALID_QUERY = "Invalid query string",
-    INVALID_INPUT = "Invalid input"
+    INVALID_INPUT = "Invalid input",
+    NO_REVIEW_PERMISSION = "You're not allowed to review this product because you haven't bought this one"
 };
 
 export class OperationalError extends Error {

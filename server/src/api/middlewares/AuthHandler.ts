@@ -46,6 +46,7 @@ export function expressAuthentication(request: express.Request, securityName: st
                   if (scopes && !scopes.includes(decoded.role)) {
                       reject(new OperationalError(OperationalErrorMessage.NOT_PERMISSION, HttpCode.FORBIDDEN));
                   }
+                  
                   resolve(decoded);
               }
           });

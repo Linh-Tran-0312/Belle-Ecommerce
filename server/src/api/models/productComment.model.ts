@@ -7,7 +7,7 @@ export interface IProductCommentCreateProps {
     userId: number;
     productId: number;
     parentCommentId?: number;
-    user?: User;
+    user?: IUser;
 }
 
 export interface IProductComment extends IProductCommentCreateProps, IBaseEntity {
