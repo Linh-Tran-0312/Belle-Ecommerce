@@ -18,8 +18,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
         if(payload?.id) {
             localStorage.setItem("user",JSON.stringify(payload))
             draft.isLogin = true;
-            draft.user = payload;
-           
+            draft.user = payload;          
             draft.error = "";
         }    
         break;

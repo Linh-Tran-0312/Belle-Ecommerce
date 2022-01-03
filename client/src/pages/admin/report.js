@@ -103,7 +103,7 @@ export default () => {
                                 <Grid item xs={9}>
                                     <Typography variant="body1">Total Money (VND)</Typography>
                                     {
-                                        !loading ?  <Typography variant="h5" color="primary">{overview?.sales.toLocaleString()}</Typography>
+                                        !loading ?  <Typography variant="h5" color="primary">{overview?.sales?.toLocaleString()}</Typography>
                                                         : <CircularProgress size={25} />
                                     }
                                    
@@ -120,7 +120,7 @@ export default () => {
                                 <Grid item xs={9}>
                                     <Typography variant="body1">New Orders</Typography>
                                     {
-                                        !loading ?  <Typography variant="h5" color="primary">{overview?.orders.toLocaleString()}</Typography>
+                                        !loading ?  <Typography variant="h5" color="primary">{overview?.orders?.toLocaleString()}</Typography>
                                                         : <CircularProgress size={25} />
                                     }
                                 </Grid>
@@ -136,7 +136,7 @@ export default () => {
                                 <Grid item xs={9}>
                                     <Typography variant="body1">New Registers</Typography>
                                     {
-                                       !loading ?  <Typography variant="h5" color="primary">{overview?.registers.toLocaleString()}</Typography>
+                                       !loading ?  <Typography variant="h5" color="primary">{overview?.registers?.toLocaleString()}</Typography>
                                                         :<CircularProgress size={25} /> 
                                     }
                                 </Grid>

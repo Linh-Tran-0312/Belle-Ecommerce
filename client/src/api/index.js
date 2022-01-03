@@ -85,7 +85,12 @@ const api = {
     getOverviewReport: () => API.get("/report/overview"),
     getSalesReport: (time) => API.get(`/report/sales?time=${time}`),
     getOrderReport: (time) => API.get(`/report/orders?time=${time}`),
-    getProductReport: (time, queryStr) => API.get(`/report/products?time=${time}&${queryStr}`)
+    getProductReport: (time, queryStr) => API.get(`/report/products?time=${time}&${queryStr}`),
+
+    //------------------------REVIEW API----------------------------
+    getReviewsByProductId: (productId, size, cursor) => API.get(`/reviews/${productId}?size=${size}&cursor=${cursor}`),
+    getReviewCount: (productId) => API.get(`/reviews/${productId}/count`),
+    createReview: (formData) => API.post("/reviews", formData)
 }
 
 export default api;

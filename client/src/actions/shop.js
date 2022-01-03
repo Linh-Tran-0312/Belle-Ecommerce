@@ -1,6 +1,8 @@
-import { ACTION, Query } from "../constants";
+import { ACTION, Query, MSG, SnackBar } from "../constants";
 import  api from "../api";
 import handleFilter from "../helper/handleFilter";
+import { enqueueSnackbar } from "./notification";
+import errorHandler from "../helper/errorHandler";
 const shopActions = {
     getProducts: (filter) => async(dispatch) => {
         try {
@@ -37,7 +39,36 @@ const shopActions = {
         } catch (error) {
                 console.log(error)
         }
-    }
+    },
+    getProductReviews: (productId, limit, cursor) => async(dispatch) => {
+        try {
+            dispatch({ type: ACTION.REVIEW_LOADING, payload: true})
+            const { data } = await api.getReviewsByProductId(productId, limit, cursor);
+            dispatch({ type: ACTION.REVIEWS, payload: data})
+        } catch (error) {
+            dispatch({ type: ACTION.REVIEW_LOADING, payload: false})
+            console.log(error)
+        }
+    },
+    getReviewCount: (productId) => async(dispatch) => {
+        try {
+            const { data } = await api.getReviewCount(productId);
+            dispatch({ type: ACTION.REVIEW_COUNT, payload: data})
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    createReview: (formData) => async(dispatch) => {
+        try {
+            dispatch({ type: ACTION.REVIEW_LOADING, payload: true})
+            const { data } = await api.createReview(formData);
+            dispatch({ type: ACTION.REVIEW, payload: data})
+            enqueueSnackbar(MSG.C_REVIEW, SnackBar.DEFAULT)
+        } catch (error) {
+            dispatch({ type: ACTION.REVIEW_LOADING, payload: false})
+            errorHandler(error,dispatch)
+        }
+    },
 }
 
 export default shopActions;

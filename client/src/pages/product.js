@@ -88,10 +88,17 @@ const ProductPage = () => {
     const user = useSelector(state => state.userAuth).user;
     const orderId = useSelector(state => state.order).orderId;
      const product = useSelector(state => state.shop).product;
+
+     const reviews = useSelector(state => state.shop.reviews);
+     const reviewCount = useSelector(state => state.shop.reviewCount);
+     const reviewLoading = useSelector(state => state.shop.reviewLoading);
+    console.log(reviews);
     useEffect(() => {
         if(!isNaN(productId) && productId !== undefined)
         {
            dispatch(shopActions.getProductById(productId))
+           dispatch(shopActions.getProductReviews(productId, 5,0));
+           dispatch(shopActions.getReviewCount(productId))
         }
         setItem("");
         setQty(1);
@@ -288,17 +295,21 @@ const ProductPage = () => {
                                     <Grid item container sm={6} xs={12} direction="column" alignItems="center" justifyContent="center" >
                                         <div className="ratingBox">
                                         <span className="reviewOverall">Overall</span>
-                                        <span className="reviewRating">3,67</span>
-                                        <span>(5 reviews)</span>
+                                        <span className="reviewRating">{reviewCount?.overallReview?.toFixed(2)}</span>
+                                        <span>({reviewCount?.reviewCount} reviews)</span>
                                         </div>
                                     </Grid>
                                     <Grid item xs={12} container sm={6} direction="column" alignItems="center" justifyContent="center">
-                                            <p className="reviewCount">Base on 5 reviews</p>
-                                            <div className="starLine"><span>5 stars &nbsp;</span><Rating size={19} rating={5} /><span> &nbsp;1</span></div>
+                                            <p className="reviewCount">Base on {reviewCount?.reviewCount} reviews</p>
+                                            {
+                                                reviewCount?.details?.map((review,index) => <div key={index} className="starLine"><span>{5 - index} stars &nbsp;</span><Rating size={19} rating={5 - index} /><span> &nbsp;{review}</span></div>
+                                                )
+                                            }
+               {/*                              <div className="starLine"><span>5 stars &nbsp;</span><Rating size={19} rating={5} /><span> &nbsp;1</span></div>
                                             <div className="starLine"><span>4 stars &nbsp;</span><Rating size={19} rating={4} /><span> &nbsp;1</span></div>
                                             <div className="starLine"><span>3 stars &nbsp;</span><Rating size={19} rating={3} /><span> &nbsp;1</span></div>
                                             <div className="starLine"><span>2 stars &nbsp;</span><Rating size={19} rating={2} /><span> &nbsp;1</span></div>
-                                            <div className="starLine"><span>1 stars &nbsp;</span><Rating size={19} rating={1} /><span> &nbsp;1</span></div>
+                                            <div className="starLine"><span>1 stars &nbsp;</span><Rating size={19} rating={1} /><span> &nbsp;1</span></div> */}
                                     </Grid>
                             </Grid>
                             <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -307,7 +318,7 @@ const ProductPage = () => {
                         </Grid>
                    
                       {
-                          [0,1,2,3,4,5].map(item => <Review key={item}/>)
+                          reviews.map(item => <Review key={item?.id} review={item}/>)
                       }
                       <Box textAlign="center">
                         <BlackButton >Load More</BlackButton>

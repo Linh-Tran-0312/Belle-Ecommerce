@@ -35,6 +35,8 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
         case ACTION.ADMIN_AUTH_ERROR:
             draft.loading = false;
             draft.error = payload;
+            console.log(payload);
+            break;
         default:
             break;
     }

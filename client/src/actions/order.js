@@ -9,7 +9,7 @@ const orderActions = {
     addItemToCart: (product, { productVariantId, quantity}) => async(dispatch) => {
         const newItem = handleAddItem(product, {  productVariantId, quantity })
         dispatch({ type: ACTION.ADD_ITEM, payload: newItem});
-        dispatch(enqueueSnackbar(MSG.ADD_PRODUCT_TO_CART, SnackBar.SUCCESS))
+        dispatch(enqueueSnackbar(MSG.ADD_PRODUCT_TO_CART, SnackBar.DEFAULT))
     },
     deleteItemFromCart: (productVariantId) => async(dispatch) => {
             dispatch({ type: ACTION.DELETE_ITEM, payload: productVariantId})
@@ -23,7 +23,7 @@ const orderActions = {
         try {
             const { data } = await api.createOrder(formData);
             dispatch({ type: ACTION.UPDATE_ORDER, payload: data});
-            dispatch(enqueueSnackbar(MSG.ADD_PRODUCT_TO_CART, SnackBar.SUCCESS))
+            dispatch(enqueueSnackbar(MSG.ADD_PRODUCT_TO_CART, SnackBar.DEFAULT))
         } catch (error) {
             errorHandler(error,dispatch)
         }

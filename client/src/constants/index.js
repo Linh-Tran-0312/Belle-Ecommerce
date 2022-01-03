@@ -24,7 +24,8 @@ export const SnackBar = {
     INFO: "info",
     WARNING: "warning",
     SUCCESS: "success",
-    ERROR: "error"
+    ERROR: "error",
+    DEFAULT: "default"
 }
 export const ORDER_STATUS = {
     ORDERING: "ordering",
@@ -89,7 +90,9 @@ export const MSG = {
     D_ORDER: "The order was deleted",
 
     ADD_PRODUCT_TO_CART: "Add the product to cart successfully",
-    U_PROFILE: "Update your profile successfully"
+    U_PROFILE: "Update your profile successfully",
+
+    C_REVIEW: "You've post the review successfully"
 
    
 }
@@ -218,6 +221,11 @@ export const ACTION = {
     PRODUCT: "PRODUCT",
     NEW_ARRIVALS: "GET_NEW_ARRIVALS",
     LATEST_BLOGS: "GET_LATEST_BLOGS",
+    REVIEWS: "REVIEWS",
+    REVIEW: "REVIEW",
+    REVIEW_COUNT: "REVIEW_COUNT",
+    REVIEW_ERROR: "REVIEW_ERROR",
+    REVIEW_LOADING: "REVIEW_LOADING",
 
     //Order Action:
     ADD_ITEM: "ADD_ITEM",

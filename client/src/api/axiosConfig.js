@@ -29,7 +29,10 @@ API.interceptors.response.use((response) => {
        return API(originalReq)
     }  else {
         if( message === "No token provided") {
-            store.dispatch(ACTION.CLEAR_PROFILE_LOCAL)
+            console.log("no tk")
+            //store.dispatch(ACTION.CLEAR_PROFILE_LOCAL)
+            store.dispatch({ type: ACTION.ADMIN_LOGOUT});
+            store.dispatch({ type: ACTION.USER_LOGOUT});
         }   
        // return Promise.reject(error);
        return error

@@ -9,6 +9,7 @@ const adminAuthActions = {
             history.push("/admin")
         } catch (error) {
             if(error.response) {
+                console.log( error.response.data.message)
                 dispatch({type: ACTION.ADMIN_AUTH_ERROR, payload: error.response.data.message})
             } else {
                 dispatch({type: ACTION.ADMIN_AUTH_ERROR, payload: MSG.STH_WRONG})

@@ -269,7 +269,7 @@ export default function BlogAdmin() {
                     <Box px={2} pt={4} pb={3} >
                         <Grid container direction="row" justifyContent="space-between" >
                             <Grid item>
-                                <Typography variant="subtile2">Show {blogs.length > 5 ? "5" : blogs.length } of {blogTotal} blogs</Typography>
+                                <Typography variant="subtitle2">Show {blogs.length > 5 ? "5" : blogs.length } of {blogTotal} blogs</Typography>
                             </Grid>
                             <Grid item>
                                 <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
