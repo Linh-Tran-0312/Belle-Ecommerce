@@ -99,7 +99,7 @@ export default (props) => {
                         <StyledTextField type="email" name="email" label="Email" value={state.email} onChange={handleChange} required variant="outlined" fullWidth/>
                     </Box>
                     <Box my={2}>
-                        <StyledTextField type="password" name="password" label="Password" value={state.password} onChange={handleChange} required variant="outlined" fullWidth/>
+                        <StyledTextField type="password" name="password" label="Password" value={state.password} onChange={handleChange} required variant="outlined" fullWidth autoComplete="on"/>
                     </Box>
                     {
                         !isSignIn && <Box my={2}>

@@ -9,9 +9,9 @@ const Rating = ({rating, size}) => {
         <>
         {
             [1,2,3,4,5].map(item => {
-                if( item <= rating ) return <StarIcon key={item} style={{ color: '#e1dc61', fontSize: size}}/>;
-                else if (rating < item && item === Math.round(rating)) return <StarHalfIcon key={item} style={{ color: '#e1dc61', fontSize: size}}/>;
-                else return <StarOutlineIcon key={item} style={{ color: '#e1dc61', fontSize: size}} />
+                if( item <= rating ) return <StarIcon key={item} style={{ color: '#ff9500', fontSize: size}}/>;
+                else if (rating < item && item === Math.round(rating)) return <StarHalfIcon key={item} style={{ color: '#ff9500', fontSize: size}}/>;
+                else return <StarOutlineIcon key={item} style={{ color: '#ff9500', fontSize: size}} />
             })
         }
         </>

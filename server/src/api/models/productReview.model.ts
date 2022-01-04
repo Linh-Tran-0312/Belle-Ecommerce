@@ -7,7 +7,7 @@ export interface IProductReviewCreateProps {
     text?: string;
     productId: number;
     rating: number;
-    userId: string;
+    userId: number;
 }
 
 export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {
@@ -26,8 +26,8 @@ export class ProductReview  extends CustomBaseEntity implements IProductReviewCr
     @Column({default: 0})
     rating!: number;
 
-    @Column("uuid")
-    userId!: string;
+    @Column()
+    userId!: number;
 
     @ManyToOne(() => User)
     @JoinColumn()

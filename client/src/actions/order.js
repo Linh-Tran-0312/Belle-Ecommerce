@@ -32,7 +32,7 @@ const orderActions = {
         try {
             const { data } = await api.addItemToOrder(id, formData);
             dispatch({ type: ACTION.UPDATE_ORDER, payload: data});
-            dispatch(enqueueSnackbar(MSG.ADD_PRODUCT_TO_CART, SnackBar.SUCCESS))
+            dispatch(enqueueSnackbar(MSG.ADD_PRODUCT_TO_CART, SnackBar.DEFAULT))
         } catch (error) {
             errorHandler(error,dispatch)
         }

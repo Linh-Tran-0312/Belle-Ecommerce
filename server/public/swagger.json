@@ -804,7 +804,8 @@
 						"format": "double"
 					},
 					"userId": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"user": {
 						"$ref": "#/components/schemas/User"
@@ -1452,7 +1453,8 @@
 						"format": "double"
 					},
 					"userId": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"id": {
 						"type": "number",
@@ -1519,7 +1521,8 @@
 						"format": "double"
 					},
 					"userId": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [

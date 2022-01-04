@@ -6,6 +6,7 @@ const errorHandler = (error, dispatch) => {
         if(error.response?.data.message === "jwt expired") {
             dispatch(enqueueSnackbar("The authentication token has expired, please login again.", SnackBar.ERROR));
         } else {
+            console.log(error.response.data?.message)
             dispatch(enqueueSnackbar(error.response.data?.message, SnackBar.ERROR));
         }
     } else {

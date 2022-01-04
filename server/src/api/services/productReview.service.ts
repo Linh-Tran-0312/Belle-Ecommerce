@@ -1,4 +1,4 @@
-import { IProductReview, IProductReviewCreateProps, ProductReview } from "../models";
+import { IProductReview, IProductReviewCreateProps, ProductReview, Status } from "../models";
 import { ProductReviewRepository, OrderDetailRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { LessThan } from "typeorm";
@@ -64,7 +64,7 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
             where: {
                 order: {
                     userId: data.userId,
-
+                    status: Status.COMPLETED
                 }, 
                 productVariant: {
                     productId: data.productId

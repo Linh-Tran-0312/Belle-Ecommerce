@@ -40,11 +40,21 @@ const shopActions = {
                 console.log(error)
         }
     },
-    getProductReviews: (productId, limit, cursor) => async(dispatch) => {
+    getProductReviews: (productId) => async(dispatch) => {
         try {
             dispatch({ type: ACTION.REVIEW_LOADING, payload: true})
-            const { data } = await api.getReviewsByProductId(productId, limit, cursor);
+            const { data } = await api.getReviewsByProductId(productId, 5, 0);
             dispatch({ type: ACTION.REVIEWS, payload: data})
+        } catch (error) {
+            dispatch({ type: ACTION.REVIEW_LOADING, payload: false})
+            console.log(error)
+        }
+    },
+    getMoreProductReviews: (productId, limit, cursor) => async(dispatch) => {
+        try {
+            dispatch({ type: ACTION.REVIEW_LOADING, payload: true})
+            const { data } = await api.getReviewsByProductId(productId,  limit, cursor);
+            dispatch({ type: ACTION.MORE_REVIEWS, payload: data})
         } catch (error) {
             dispatch({ type: ACTION.REVIEW_LOADING, payload: false})
             console.log(error)
@@ -62,8 +72,10 @@ const shopActions = {
         try {
             dispatch({ type: ACTION.REVIEW_LOADING, payload: true})
             const { data } = await api.createReview(formData);
+
+            dispatch(enqueueSnackbar(MSG.C_REVIEW, SnackBar.DEFAULT))
             dispatch({ type: ACTION.REVIEW, payload: data})
-            enqueueSnackbar(MSG.C_REVIEW, SnackBar.DEFAULT)
+              
         } catch (error) {
             dispatch({ type: ACTION.REVIEW_LOADING, payload: false})
             errorHandler(error,dispatch)

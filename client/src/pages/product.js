@@ -24,7 +24,13 @@ import Rating from '../components/Rating';
 import Review from '../components/Review';
 import ReviewForm from '../components/ReviewForm';
 import SizeChart from '../components/SizeChart';
- 
+import FacebookIcon from '@material-ui/icons/Facebook';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import PinterestIcon from '@material-ui/icons/Pinterest';
+import EmailIcon from '@material-ui/icons/Email';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import PeopleIcon from '@material-ui/icons/People';
 const useStyle = makeStyles((theme) => ({
     tabPaper : {
         boxShadow: 'none',
@@ -44,6 +50,9 @@ const useStyle = makeStyles((theme) => ({
   selectMenu : {
       display: 'flex',
       alignItems: "center"
+  },
+  indicator: {
+      backgroundColor: "black"
   }
   
 }))
@@ -85,26 +94,29 @@ const ProductPage = () => {
     const [ item, setItem ] = useState("");
     const [ qty, setQty ] = useState(1);
 
-    const user = useSelector(state => state.userAuth).user;
+   // const user = useSelector(state => state.userAuth).user;
+   const user = JSON.parse(localStorage.getItem('user'));
     const orderId = useSelector(state => state.order).orderId;
      const product = useSelector(state => state.shop).product;
 
      const reviews = useSelector(state => state.shop.reviews);
      const reviewCount = useSelector(state => state.shop.reviewCount);
      const reviewLoading = useSelector(state => state.shop.reviewLoading);
-    console.log(reviews);
+ 
     useEffect(() => {
         if(!isNaN(productId) && productId !== undefined)
         {
            dispatch(shopActions.getProductById(productId))
-           dispatch(shopActions.getProductReviews(productId, 5,0));
-           dispatch(shopActions.getReviewCount(productId))
+
         }
         setItem("");
         setQty(1);
           setMessage("");
         },[productId, location]); 
-
+    useEffect(() => {
+        dispatch(shopActions.getProductReviews(productId));
+        dispatch(shopActions.getReviewCount(productId))
+    },[])
     const handleChangeTab = (event, newValue) => {
         setTab(newValue);
     };
@@ -159,8 +171,8 @@ const ProductPage = () => {
               
             </div>
              {/*  Product summary section */}   
-            <Container maxWidth="md"  >
-                <Grid container>
+            <Container maxWidth="lg" className="featuresBox" >
+                <Grid container spacing={2}>
                     <Grid item md={6} sm={6} xs={12}>
                         <Box px={4}>
                             <ProductImage list={product.imgPaths}/>
@@ -168,10 +180,11 @@ const ProductPage = () => {
 
                     </Grid>
                     <Grid item md={6} sm={6} xs={12}>
-                        <span className="productSingle__title">{product.name}</span>
+                        <span className="productSingle__title">{product.name.toUpperCase()}</span>
                         <div className="prInfoRow">
                             <div className="productStock"> <span className="instock">In Stock</span></div>
                             <div className="productSku">SKU: <span className="variantSku">{product.sku}</span></div>
+                            <div className="productReview"><Rating size={20} rating={Math.ceil(reviewCount?.overallReview)}/> &nbsp; {reviewCount?.reviewCount} reviews</div>
                         </div>
                         <p className="productSingle__price">
                            {product.price.toLocaleString()} VND
@@ -179,12 +192,7 @@ const ProductPage = () => {
                         <div className="rte">
                             {product.summary}
                         </div>
-                        <Box mx={1} my={1}>
-                            <Typography variant="body1">Loại hàng: {product.category.name}</Typography>
-                        </Box>
-                       <Box mx={1} my={1}>
-                              <Typography variant="body1">Thương hiệu: {product.brand.name.toUpperCase()}</Typography>
-                        </Box>
+                
                          <Box mx={1} mt={3}>
                                 <Typography variant="body2">Phiên bản: <span style={{color: "red"}}>{message}</span> </Typography>
                         </Box>
@@ -210,21 +218,7 @@ const ProductPage = () => {
                             }
                             </Select>
                         </FormControl>
-                      {/*   <p className="featureTitle">COLOR: RED</p>
-                        <div className="color">
-                            <span className="spanColor" style={{ backgroundColor: 'yellow' }}></span>
-                            <span className="spanColor" style={{ backgroundColor: 'red' }}></span>
-                            <span className="spanColor" style={{ backgroundColor: 'black' }}></span>
-                            <span className="spanColor" style={{ backgroundColor: 'orange' }}></span>
-                        </div>
-                        <p className="featureTitle">SIZE</p>
-                        <div className="size">
-                            <span className="spanSize">XS</span>
-                            <span className="spanSize">S</span>
-                            <span className="spanSize">M</span>
-                            <span className="spanSize">L</span>
-                            <span className="spanSize">XL</span>
-                        </div> */}
+                    
                         <div className="featureButtonBox">
                             <Box mr={2}>
                             <QtyButton width={105} height={45}  getQuantity={handleChangeQty} updateCart={false}/>
@@ -233,14 +227,32 @@ const ProductPage = () => {
                             <button className="addToCartButton" onClick={handleAddToCart}>ADD TO CART</button>
                         </div>
                         
-                        <div className="wishListBox">
-                            <FavoriteBorderIcon fontSize="small" />&nbsp;&nbsp;<Typography variant="subtitle2">Add to your wishlist</Typography>
-                        </div>
+                        <Box my={3} className="wishListBox">
+                            <Grid container justifyContent='space-between'>
+                                <Grid item className="productReview">
+                                <FavoriteBorderIcon fontSize="small" />&nbsp; Add to your wishlist 
+                                </Grid>
+                                <Grid item  className="productReview">
+                                    <FacebookIcon fontSize="small"/>&nbsp;Share &nbsp;<TwitterIcon fontSize="small"/>&nbsp;Tweet &nbsp;<PinterestIcon fontSize="small"/>&nbsp;Pin it &nbsp;<EmailIcon fontSize="small"/>&nbsp;Mail
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <Box mx={1} my={1} className="fontRoSlab">
+                            <Typography variant="inherit"  ><strong>Loại hàng:</strong> {product.category.name}</Typography>
+                        </Box>
+                       <Box mx={1} my={1} className="fontRoSlab">
+                              <Typography variant="inherit"><strong>Thương hiệu:</strong> {product.brand.name.toUpperCase()}</Typography>
+                        </Box>
+                        <Box my={4}>
+                            <Box my={2} className="productReview"><LocalShippingIcon fontSize="small" color="action"/> &nbsp; <Typography variant="caption"> GETTING CLOSER! ONLY $199.00 AWAY FROM FREE SHIPPING!</Typography> </Box>
+                            <Box my={2} className="productReview"><QueryBuilderIcon fontSize="small" color="action"/> &nbsp; <Typography variant="caption"> ESTIMATED DELIVERY BETWEEN Wed. May 1 and Tue. May 7.</Typography></Box>
+                            <Box my={2} className="productReview"><PeopleIcon fontSize="small" color="error"/> &nbsp; <Typography variant="caption"> 14 PEOPLE ARE LOOKING FOR THIS PRODUCT</Typography></Box>
+                        </Box>
                     </Grid>
                 </Grid>
             </Container>          
              {/*  Product feature section */}
-            <Container maxWidth="md" className="featuresBox">
+            <Container maxWidth="lg" className="featuresBox">
                 <Grid container spacing={3}>
                     <Grid item lg={3} md={6} sm={6} className="productFeatures">
                         <img src="../../credit-card.png" alt="Safe Payment" title="Safe Payment" />
@@ -261,31 +273,47 @@ const ProductPage = () => {
                 </Grid>
             </Container>
               {/*  Product review section */}
-            <Container maxWidth="md" className="featuresBox">
+            <Container maxWidth="lg" className="featuresBox">
                 <Paper className={classes.tabPaper}>
                     <Tabs              
                         value={tab}
                         onChange={handleChangeTab}
                         centered
+                        classes={{ indicator: classes.indicator }}
                     >
-                        <Tab label={ matchXS ? <InfoIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>DETAILS</span>} {...a11yProps(0)} />
-                        <Tab label={matchXS ? <StarIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>REVIEWS</span>} {...a11yProps(1)} />
-                        <Tab label={matchXS ? <CommentIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>COMMENTS</span>} {...a11yProps(2)} />
+                        <Tab label={ matchXS ? <InfoIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>PRODUCT DETAILS</span>} {...a11yProps(0)} />
+                        <Tab label={matchXS ? <StarIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>PRODUCT REVIEWS</span>} {...a11yProps(1)} />
+                        <Tab label={matchXS ? <CommentIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>PRODUCT COMMENTS</span>} {...a11yProps(2)} />
                         <Tab label={matchXS ? <AccessibilityNewIcon style={{ margin: 10, fontSize: 30}}/> : <span className={classes.tabLabel}>SIZE CHART</span>} {...a11yProps(3)} />
                     </Tabs>
                 </Paper>
                 <TabPanel value={tab} index={0}>
-                    <Container maxWidth="md">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
-                    , when an unknown printer took a galley of type and scrambled it to make a type
-                    specimen book. It has survived not only five centuries, but also the leap into 
-                    electronic typesetting, remaining essentially unchanged.
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                    Sed ut perspiciatis unde omnis iste natus error sit
-                    Neque porro quisquam est qui dolorem ipsum quia dolor
-                    Lorem Ipsum is not simply random text.
-                    Free theme updates
+                    <Container maxWidth="lg">
+                    <div className="product-description rte">
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+                                    <ul>
+                                      <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit</li>
+                                      <li>Sed ut perspiciatis unde omnis iste natus error sit</li>
+                                      <li>Neque porro quisquam est qui dolorem ipsum quia dolor</li>
+                                      <li>Lorem Ipsum is not simply random text.</li>
+                                      <li>Free theme updates</li>
+                                    </ul>
+                                    <h3>Sed ut perspiciatis unde omnis iste natus error sit voluptatem</h3>
+                                    <p>You can change the position of any sections such as slider, banner, products, collection and so on by just dragging and dropping.&nbsp;</p>
+                                    <h3>Lorem Ipsum is not simply random text.</h3>
+<p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+                                    <p>Change colors, fonts, banners, megamenus and more. Preview changes are live before saving them.</p>
+                                    <h3>1914 translation by H. Rackham</h3>
+                                    <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+                                    <h3>Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC</h3>
+                                    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+                                    <h3>The standard Lorem Ipsum passage, used since the 1500s</h3>
+                                    <p>You can use variant style from colors, images or variant images. Also available differnt type of design styles and size.</p>
+                                    <h3>Lorem Ipsum is not simply random text.</h3>
+<p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+                                    <h3>Proin ut lacus eget elit molestie posuere.</h3>
+                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</p>
+                                </div>
                     </Container>
                 </TabPanel>
                 <TabPanel value={tab} index={1}>
@@ -293,7 +321,7 @@ const ProductPage = () => {
                         <Grid container spacing={1}>
                             <Grid item container lg={6} md={6} sm={12} xs={12}  direction="row" alignItems="flex-start" justifyContent="center" >
                                     <Grid item container sm={6} xs={12} direction="column" alignItems="center" justifyContent="center" >
-                                        <div className="ratingBox">
+                                        <div className="ratingBox"  >
                                         <span className="reviewOverall">Overall</span>
                                         <span className="reviewRating">{reviewCount?.overallReview?.toFixed(2)}</span>
                                         <span>({reviewCount?.reviewCount} reviews)</span>
@@ -313,20 +341,27 @@ const ProductPage = () => {
                                     </Grid>
                             </Grid>
                             <Grid item lg={6} md={6} sm={12} xs={12}>
-                                <ReviewForm/>
+                                {
+                                    user?.id ?  <ReviewForm loading={reviewLoading} productId={product?.id} userId={user?.id}/>:
+                                            <Typography variant="subtitle2">Please login to review this product</Typography>
+                                }
+                              
                             </Grid>
                         </Grid>
                    
                       {
-                          reviews.map(item => <Review key={item?.id} review={item}/>)
+                          reviews.map((item,index) => <Review key={index} review={item}/>)
                       }
                       <Box textAlign="center">
-                        <BlackButton >Load More</BlackButton>
+                          {
+                              reviews.length !== 0 &&  <BlackButton >Load More</BlackButton>
+
+                          }
                       </Box>
                     </Container>
                 </TabPanel>
                 <TabPanel value={tab} index={2}>
-                   <Container maxWidth="md">
+                   <Container maxWidth="lg">
                        <CommentForm/>
                    {
                        [1,2,3,4,5].map(item => <Comment key={item}/>)

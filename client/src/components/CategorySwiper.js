@@ -32,49 +32,46 @@ const useStyles = makeStyles((theme) => ({
           width: '100%',
         },
         position: 'relative',
-        "&:hover $button" : {
-            visibility: 'visible',
-            animation: "$fadeIn .3s ease-in-out"
+ 
+        "&:hover $middle" : {
+            opacity: 1
         },
-        "&:hover" : {
-            backgroundColor: "rgba(0,0,0,0.5)"
+        "&:hover $img" : {
+            opacity: 0.3
         },
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center' 
-    },
-    "@keyframes fadeIn": {
-        "0%": {
-          opacity: 0,
-          transform: "translateY(5rem)"
-        },
-        "100%": {
-          opacity: 1,
-          transform: "translateY(0)"
-        }
+        position: "relative"
+   
       },
     img : {
         width: '100%',
         height: '100%',
-        objectFit: 'cover' 
+        objectFit: 'cover',
+        transition: ".5s ease",
+        backfaceVisibility:" hidden",
+        opacity: 1
     },
-    button: {
+    middle : {
+        transition: ".5s ease",
+        opacity: 0,
+        top:0,
+        left: 0,
+        position: "absolute",
         width: "100%",
-        bottom: '20px',
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      
+      },
+    text :{
+        backgroundColor:"white",
+        color: "black",
+        fontSize: "14px",
+        padding: "16px",
         textDecoration: 'none',
         fontFamily: "Roboto slab",
-        padding: 10,
-        color: 'black',
-        backgroundColor: 'white',
-        visibility: 'hidden',
-        position: 'absolute',  
-        [theme.breakpoints.down('sm')] : {
-           fontSize: 14
-          },
-        zIndex: 1
-          
-    },
+ 
+      },
     myswiper : {
         width: '80%',
 
@@ -111,7 +108,9 @@ export default function CategorySwiper({list}) {
                         list?.map(c => ( <SwiperSlide key={c.id}>
                                             <div className={classes.itemContainer}>
                                             <img alt="category" src={c.imgPath} className={classes.img} />
-                                            <Link className={classes.button} to={`/shop?category=${c.id}`} >{c.name}</Link>
+                                            <div className={classes.middle}>
+                                            <Link  className={classes.text} to={`/shop?category=${c.id}`} >{c.name.toUpperCase()}</Link>
+                                            </div>
                                             </div>           
                                         </SwiperSlide>
                         ))

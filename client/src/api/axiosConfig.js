@@ -13,9 +13,14 @@ const refreshToken =  () => {
         }      
     })  
 }
-let config = { baseURL: process.env.REACT_APP_BASE_URL, timeout: 300000}
+let config = { 
+    baseURL: process.env.REACT_APP_BASE_URL,
+    timeout: 300000,
+    }
 const API = axios.create(config);
 API.defaults.withCredentials = true;
+
+// avoid OPTIONS response
 
 // handle expired access token
 API.interceptors.response.use((response) => { 
@@ -34,8 +39,8 @@ API.interceptors.response.use((response) => {
             store.dispatch({ type: ACTION.ADMIN_LOGOUT});
             store.dispatch({ type: ACTION.USER_LOGOUT});
         }   
-       // return Promise.reject(error);
-       return error
+      return Promise.reject(error);
+        // return error
     }
 })
 

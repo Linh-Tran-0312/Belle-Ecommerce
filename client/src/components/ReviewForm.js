@@ -3,8 +3,10 @@ import BlackButton from './BlackButton';
 import StarIcon from '@material-ui/icons/Star';
 import StarHalfIcon from '@material-ui/icons/StarHalf';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
-import { makeStyles  } from '@material-ui/core';
-import { useState } from 'react';
+import { makeStyles, CircularProgress  } from '@material-ui/core';
+import { useState, useEffect } from 'react';
+import { useDispatch } from "react-redux";
+import shopActions from  "../actions/shop"
 const useStyle = makeStyles(() => ({
     ratingBox : {
         display: 'flex',
@@ -12,7 +14,7 @@ const useStyle = makeStyles(() => ({
         margin: '10px 0px'
         },
     star : {
-        color: '#e1dc61',
+        color: '#ff9500',
         margin: 5,
         fontSize: 30,
         cursor: 'pointer'
@@ -21,7 +23,7 @@ const useStyle = makeStyles(() => ({
         '& .MuiOutlinedInput-root' : {
             borderRadius: 0,
             '&.Mui-focused fieldset': {
-                borderColor: '#e8e9eb',
+                borderColor: 'black',
             },
         },
         '& .MuiInputLabel-root': {
@@ -44,11 +46,30 @@ const Star = ({pos, ratedPos, selectPos}) => {
         </>
     )
 }
-const ReviewForm = () => {
+const initState = {
+    title: "",
+    text: "",
+    userId: "",
+    productId: "",
+    rating: 5
+}
+const ReviewForm = ({loading, productId, userId}) => {
     const classes = useStyle();
-    const [ rating, setRating] = useState(0);
+    const dispatch = useDispatch();
+    const [ state, setState ] = useState(initState);
+    useEffect(() => {
+        setState({...state, productId,userId})
+    },[productId, userId])
     const handleRating = (number) => {
-        setRating(number)
+        setState({...state,rating: number})
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(state);
+        dispatch(shopActions.createReview(state))
+    }
+    const handleChange = e => {
+        setState({...state, [e.target.name]: e.target.value})
     }
     return(
         <Box>
@@ -59,7 +80,7 @@ const ReviewForm = () => {
                 <Typography variant="body1">Your Rating: </Typography>
                 <div className={classes.ratingBox}>
                     {
-                        [1,2,3,4,5].map(item => <Star key={item} pos={item} ratedPos={rating} selectPos={handleRating} /> )
+                        [1,2,3,4,5].map(item => <Star key={item} pos={item} ratedPos={state.rating} selectPos={handleRating} /> )
                     
                     }
  
@@ -75,7 +96,10 @@ const ReviewForm = () => {
                         shrink: true,
                     }}
                     variant="outlined"
+                    name="title"
+                    value={state.title}
                     className={classes.textfield}
+                    onChange={handleChange}
             /> 
             <TextField
                     id="outlined-multiline-static"
@@ -89,10 +113,15 @@ const ReviewForm = () => {
                     style={{ margin: 8 }}
                     variant="outlined"
                     className={classes.textfield}
+                    name="text"
+                    value={state.text}
+                    onChange={handleChange}
             />
             <Box textAlign="right" my={2}>
-            <BlackButton>
-                    SUBMIT REVIEW
+            <BlackButton onClick={handleSubmit} width="133px" >
+                 {
+                     loading ? <CircularProgress style={{ color: "white"}} size={25}/> : "SUBMIT REVIEW"
+                 }  
             </BlackButton>
             </Box>
             

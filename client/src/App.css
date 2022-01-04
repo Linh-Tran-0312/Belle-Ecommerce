@@ -4,8 +4,9 @@ body {
 	margin: 0;
 }
 .sectionTitle {
-	font-size: 1.9em;
+	font-size: 1.5em;
 	font-family: "Roboto slab";
+	font-weight: 200;
 }
 .link {
 	text-decoration: none;
@@ -122,22 +123,30 @@ object-fit: cover;
 .prInfoRow {
 	display: flex;
 	justify-content: flex-start;
+	align-items: center;
     margin-bottom: 10px;
 	margin-top: 10px;
 }
 .productStock {
-
+	 
 }
 .instock {
 	color: #447900;
 	font-family: Helvetica, sans-serif;
+	font-size: 14px;
 }
 .outstock {
 	color: #973441;
 }
+.productReview {
+	display: flex;
+    align-items: center;
+	font-family: Helvetica, sans-serif;
+	font-size: 14px;
+}
 .productSku {
 margin-left: 20px;
-font-size: 13px;
+font-size: 14px;
 font-family: Helvetica, sans-serif;
 }
 .variantSku {
@@ -148,7 +157,7 @@ font-family: Helvetica, sans-serif;
 .productSingle__price {
 	display: inline-block;
     margin-right: 10px;
-    color: #555;
+    color: #e95144;
     font-size: 1.4em;
     font-weight: 600;
     margin-bottom: 15px;
@@ -237,11 +246,12 @@ font-family: Helvetica, sans-serif;
 	  margin-right: 10px;
   }
   .productFeatureDetails {
-	  font-family: Arial, Helvetica, sans-serif
+	  font-family: Arial, Helvetica, sans-serif;
+	  font-size: 14px;
   }
   .productFeatureDetails span {
 	display: block;
-	font-size: 17px;
+	font-size: 16px;
 	font-weight: 700;
 	font-family: Arial, Helvetica, sans-serif;
   }
@@ -262,12 +272,13 @@ font-family: Helvetica, sans-serif;
   .reviewRating {
 	  font-size: 50px;
 	  font-weight: 900;
-	  color: #e1dc61;
+	  color: rgb(255, 149, 0);
 	  font-family: Arial, Helvetica, sans-serif;
   }
   .reviewCount {
 	  font-size: 20px;
 	  font-weight: 200;
+	  margin-top: 40px;
 	  font-family: Arial, Helvetica, sans-serif;
   }
   .starLine {
