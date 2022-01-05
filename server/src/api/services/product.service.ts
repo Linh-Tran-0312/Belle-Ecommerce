@@ -1,7 +1,7 @@
 import { IProduct, IProductCreateProps } from "../models";
 import { ProductRepository, IProducts } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-import { ILike, LessThanOrEqual, MoreThanOrEqual, Between } from "typeorm";
+import { ILike, Like, LessThanOrEqual, MoreThanOrEqual, Between } from "typeorm";
 import { IProductUpdateProps } from "../controllers/productController";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
@@ -44,7 +44,24 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
 
             if(query.category > 0 ) options.where.categoryId = query.category;
             if(query.brand > 0 ) options.where.brandId = query.brand;
-            if (!!query.search) options.where.name = ILike(`%${query.search}%`);
+            if (!!query.search) options.where= [
+                {
+                    name:  ILike(`%${query.search}%`)
+                },
+                {
+                    sku:  ILike(`%${query.search}%`)
+                },
+                {
+                    brand: {
+                        name:  ILike(`%${query.search}%`)
+                    }
+                },
+                {
+                    category: {
+                        name:  ILike(`%${query.search}%`)
+                    }
+                }
+            ];
             if(query.min > 0) options.where.price = MoreThanOrEqual(query.min);
             if(query.max > 0) options.where.price = LessThanOrEqual(query.max);
             if(query.min > 0 && query.max > 0 )  options.where.price = Between(query.min,query.max);

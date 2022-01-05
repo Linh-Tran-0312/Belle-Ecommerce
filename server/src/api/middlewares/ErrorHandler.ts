@@ -4,6 +4,7 @@ import express from "express";
 import { PostgresError } from "../helpers/PostgresError";
 import { PostgresErrorCode } from "../helpers/PostgresCode";
 import { TokenError } from "../helpers/TokenError";
+import { ValidateError } from "tsoa";
 interface IError {
     status?: number;
     message?: string;
@@ -11,6 +12,7 @@ interface IError {
 }
 
 const getErrorBody = (err: unknown) => {
+    if(err instanceof ValidateError) return {status: HttpCode.UNPROCESSABLE_ENTITY, message: OperationalErrorMessage.VALIDATION_FAILED, details: err?.fields }
      if(err instanceof OperationalError ) return { message: err.message, status: err.status}
      if(err instanceof PostgresError) {
          if(err.code === PostgresErrorCode.FOREIGN_KEY_VIOLATION) return  { message: OperationalErrorMessage.FOREIGN_VIOLATION , status: HttpCode.INTERNAL_SERVER_ERROR}

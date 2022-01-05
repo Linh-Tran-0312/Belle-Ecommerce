@@ -3,7 +3,7 @@ import { Blog, IBlog, IBlogCreateProps } from "../models";
 import { BlogRepository, BaseRepository, IBlogs } from "../repositories";
 import { BaseService, IBaseService} from "./base.service";
 import { Change } from "./index";
-import { ILike, LessThan } from "typeorm";
+import { ILike, LessThan, Like } from "typeorm";
 import { IBlogUpdateProps } from "../controllers/blogController";
  
 export enum BlogField {

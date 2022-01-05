@@ -1,5 +1,5 @@
-import { EventSubscriber,EntitySubscriberInterface, UpdateEvent, InsertEvent } from "typeorm";
-import { Order, Status, OrderDetail,ProductVariant } from "../models";
+import { EntitySubscriberInterface, EventSubscriber, InsertEvent, UpdateEvent } from "typeorm";
+import { Order, OrderDetail } from "../models";
 @EventSubscriber()
 class OrderDetailSubscriber implements EntitySubscriberInterface<OrderDetail> {
     listenTo() {

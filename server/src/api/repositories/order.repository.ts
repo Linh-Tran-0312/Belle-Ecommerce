@@ -86,7 +86,7 @@ export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateP
                                                     "order.shipping","order.total","order.orderAt",
                                                     "user.fname","user.lname","user.email","user.phone","productVariant.id",
                                                     "orderDetail.quantity","orderDetail.unitPrice","orderDetail.id","orderDetail.orderId",
-                                                    "product.name","product.imgPaths","brand.name", "size.name","color.name"
+                                                    "product.name","product.id","product.imgPaths","brand.name", "size.name","color.name"
                                                    
                                             ])
                                             .getOne();

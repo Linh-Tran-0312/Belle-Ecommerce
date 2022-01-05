@@ -4,6 +4,7 @@ export enum OperationalErrorMessage {
     UNKNOWN_ERROR = "Internal Server Error",
     EMAIL_INUSE = "This email is already used",
     EMAIL_NOTFOUND = "This email is not registered",
+    VALIDATION_FAILED = "Validation Failed",
     NOT_FOUND = "Not Found",
     INVALID_EMAIL = "This email is invalid",
     QUERY_ERROR = "Database query failed",

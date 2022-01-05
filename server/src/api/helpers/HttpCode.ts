@@ -48,7 +48,10 @@ export enum HttpCode {
      * such as an edit conflict between multiple simultaneous updates.
      */
     CONFLICT = 409,
-
+  /**
+   * The request was well-formed but was unable to be followed due to semantic errors.
+   */
+   UNPROCESSABLE_ENTITY = 422,
     /**
     * A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.
     */
