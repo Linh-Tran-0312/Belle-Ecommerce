@@ -1,20 +1,20 @@
 
-import React, { useRef, useState } from "react";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-
-// Import Swiper styles
-import "swiper/swiper.min.css";
-import "swiper/components/navigation/navigation.min.css"
-import "swiper/components/thumbs/thumbs.min.css"
-
-import "./styles.css";
-
-
+import React, { useState } from "react";
+import "swiper/components/navigation/navigation.min.css";
+import "swiper/components/thumbs/thumbs.min.css";
 // import Swiper core and required modules
 import SwiperCore, {
     Navigation, Thumbs
 } from 'swiper/core';
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/swiper.min.css";
+import "./styles.css";
+
+
+
+
 
 // install Swiper modules
 SwiperCore.use([Navigation, Thumbs]);

@@ -9,13 +9,13 @@ import SearchIcon from '@material-ui/icons/Search';
 import Pagination from '@material-ui/lab/Pagination';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import shopActions from "../actions/shop";
 import Banner from '../components/Banner/Banner';
 import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
-import handlePriceRange from "../helper/handlePriceRange";
 import { useQuery } from "../helper/customHook";
-import { useLocation } from "react-router-dom";
+import handlePriceRange from "../helper/handlePriceRange";
 
 const StyledAccordion = withStyles(() => ({
     root: {

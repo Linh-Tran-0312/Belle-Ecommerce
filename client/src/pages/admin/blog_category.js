@@ -8,12 +8,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useDispatch, useSelector } from "react-redux";
 import blogActions from "../../actions/adminBlog";
 import DeleteButton from "../../components/DeleteButton";
-import { MSG } from "../../constants"
+import { MSG } from "../../constants";
 
 
 const initCategory = {
@@ -55,10 +55,8 @@ export default function BlogCategory() {
          setCategory(initCategory);
         setShowCategory(false); 
         dispatch(blogActions.deleteBlogCategory(category.id));
-       
     }
 
-  
     return (
             <Grid container spacing={2}>
                 <Grid item sm={6} xs={12}>
@@ -66,9 +64,9 @@ export default function BlogCategory() {
                         <Table aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell  ><strong>No</strong></TableCell>
+                                    <TableCell><strong>No</strong></TableCell>
                                     <TableCell><strong>Category Name</strong></TableCell>
-                                    <TableCell  ><strong>Detail</strong></TableCell>
+                                    <TableCell><strong>Detail</strong></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -79,7 +77,6 @@ export default function BlogCategory() {
                                         </TableCell>
                                         <TableCell  >{row.name}</TableCell>
                                         <TableCell  ><IconButton size="small" onClick={() => handleSelectCategory(row)}><MoreHorizIcon /></IconButton></TableCell>
-
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -102,7 +99,6 @@ export default function BlogCategory() {
                                                             <Button color="primary" fullWidth startIcon={<SaveIcon />} variant="contained" onClick={handleSubmitCategory} disabled={loading}>Create</Button>
                                                         </Grid>
                                                     </>
-
                                                 ) : (
                                                     <>
                                                         <Grid item xs={6}>
@@ -114,15 +110,11 @@ export default function BlogCategory() {
                                                     </>
                                                 )
                                             }
-
                                         </Grid>
                                     </Box>
-
                                 </Box>
                             )
                         }
-
-
                     </Box>
                 </Grid>
             </Grid>        

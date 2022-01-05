@@ -1,6 +1,5 @@
-import { Box, Chip, TextField, Typography } from '@material-ui/core';
+import { Box, Chip, makeStyles, TextField, Typography } from '@material-ui/core';
 import BlackButton from './BlackButton';
-import { makeStyles } from '@material-ui/core';
 
 const useStyle = makeStyles((theme) => ({
     textfield : {

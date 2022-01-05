@@ -1,26 +1,26 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import Collapse from '@material-ui/core/Collapse';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import Collapse from '@material-ui/core/Collapse';
-import PeopleIcon from '@material-ui/icons/People';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
-import StoreIcon from '@material-ui/icons/Store';
-import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
-import FormatSizeIcon from '@material-ui/icons/FormatSize';
-import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import CategoryIcon from '@material-ui/icons/Category';
 import { makeStyles } from '@material-ui/core/styles';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
+import CategoryIcon from '@material-ui/icons/Category';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
+import FormatSizeIcon from '@material-ui/icons/FormatSize';
+import LayersIcon from '@material-ui/icons/Layers';
+import PeopleIcon from '@material-ui/icons/People';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import StoreIcon from '@material-ui/icons/Store';
+import React from 'react';
+import { Link } from "react-router-dom";
 import { AdminPath } from '../../constants';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -217,26 +217,4 @@ export const Menu = ({ page, role }) => {
   )
 };
 
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItem>
-  </div>
-);
+ 

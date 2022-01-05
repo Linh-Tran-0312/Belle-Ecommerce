@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import React, { useEffect, useRef, useState } from 'react';
 const UploadImage = ({ getURL }) => {
     const [image, setImage] = useState("");
     const [url, setUrl] = useState("");
@@ -17,7 +17,7 @@ const UploadImage = ({ getURL }) => {
                 data.append("file", image);
                 data.append("upload_preset", "ldupxrel");
                 data.append("cloud_name", "linh-cloudinary-img");
-                fetch("https://api.cloudinary.com/v1_1/linh-cloudinary-img/image/upload", {
+                fetch(process.env.REACT_APP_CLOUDINARY_URL, {
                     method: "post",
                     body: data
                 })

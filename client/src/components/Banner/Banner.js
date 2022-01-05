@@ -1,21 +1,18 @@
 
-import React, { useRef, useState } from "react";
+import { Box, makeStyles } from "@material-ui/core";
+import React from "react";
+import { Link } from "react-router-dom";
+import "swiper/components/pagination/pagination.min.css";
+// import Swiper core and required modules
+import SwiperCore, { Autoplay, Pagination } from 'swiper/core';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Box, Grid } from "@material-ui/core";
-import BlackButton from "../BlackButton";
-import { Link } from "react-router-dom";
 // Import Swiper styles
 import "swiper/swiper.min.css";
-import "swiper/components/pagination/pagination.min.css"
-
+import BlackButton from "../BlackButton";
 import "./style.css";
 
-import { makeStyles } from "@material-ui/core";
-// import Swiper core and required modules
-import SwiperCore, {
-  Pagination, Autoplay
-} from 'swiper/core';
+
 
 // install Swiper modules
 SwiperCore.use([Pagination, Autoplay]);

@@ -8,7 +8,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import EditIcon from '@material-ui/icons/Edit';
+import LaunchIcon from '@material-ui/icons/Launch';
 import SaveIcon from '@material-ui/icons/Save';
 import Pagination from '@material-ui/lab/Pagination';
 import React, { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ import Rating from "../../components/Rating";
 import UploadImage from "../../components/UploadImage";
 import { MSG } from "../../constants";
 import handlePriceRange from "../../helper/handlePriceRange";
+import { Link } from "react-router-dom";
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
@@ -320,7 +322,7 @@ export default function ProductAdmin() {
                                         <TableCell  ><strong>Brand</strong></TableCell>
                                         <TableCell  ><strong>Price (VND)</strong></TableCell>
                                         <TableCell  ><strong>Review</strong></TableCell>
-                                        <TableCell  ><strong></strong></TableCell>
+                                        <TableCell  ><strong>Details</strong></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -335,7 +337,10 @@ export default function ProductAdmin() {
                                             <TableCell  >{row?.brand?.name}</TableCell>
                                             <TableCell  >{row?.price.toLocaleString()}</TableCell>
                                             <TableCell  > <Rating size={15} rating={4} /></TableCell>
-                                            <TableCell  ><IconButton size="small" onClick={() => handleGetProductById(row?.id)}><MoreHorizIcon /></IconButton></TableCell>
+                                            <TableCell  >
+                                                <IconButton size="small" onClick={() => handleGetProductById(row?.id)}><EditIcon /></IconButton>
+                                                <Link target="_blank" to={`/shop/product/${row.id}`}><IconButton size="small"><LaunchIcon /></IconButton></Link> 
+                                                </TableCell>
 
                                         </TableRow>
                                     ))}
@@ -516,7 +521,9 @@ export default function ProductAdmin() {
                                                                 <TableCell  ><div style={{ marginLeft: 10, border: "1px solid #999999", width: 15, height: 15, backgroundColor: row.color?.code }} /></TableCell>
                                                                 <TableCell  >{row?.size?.name}</TableCell>
                                                                 <TableCell  >{row?.quantity}</TableCell>
-                                                                <TableCell  ><IconButton size="small" onClick={() => handleSelectVariant(row)}><MoreHorizIcon /></IconButton></TableCell>
+                                                                <TableCell  >
+                                                                    <IconButton size="small" onClick={() => handleSelectVariant(row)}><EditIcon /></IconButton>
+                                                                    </TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>

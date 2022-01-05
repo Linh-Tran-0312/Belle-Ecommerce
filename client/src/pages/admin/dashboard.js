@@ -23,7 +23,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" to="https://mui.com/">
-        Your Website
+      Modified by Tran Chi Linh
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

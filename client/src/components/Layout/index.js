@@ -1,15 +1,15 @@
+import { Box, Container, Grid, InputBase, makeStyles } from "@material-ui/core";
+import FacebookIcon from '@material-ui/icons/Facebook';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import PinterestIcon from '@material-ui/icons/Pinterest';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import YouTubeIcon from '@material-ui/icons/YouTube';
 import { useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
+import BlackButton from '../BlackButton';
 import Footer from './Footer';
 import NavBar from './NavBar';
-import BlackButton from '../BlackButton';
 
-import FacebookIcon from '@material-ui/icons/Facebook';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import PinterestIcon from '@material-ui/icons/Pinterest';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import YouTubeIcon from '@material-ui/icons/YouTube';
-import { makeStyles, Box, Grid, Container, InputBase } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: '0px 5px',

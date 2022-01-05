@@ -92,7 +92,7 @@ export const MSG = {
     ADD_PRODUCT_TO_CART: "Add the product to cart successfully",
     U_PROFILE: "Update your profile successfully",
 
-    C_REVIEW: "You've post the review successfully"
+    C_REVIEW: "You've posted the review successfully"
 
    
 }

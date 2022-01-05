@@ -1,11 +1,18 @@
-import { Box, Breadcrumbs, Container, FormControl, Grid, makeStyles, MenuItem, Paper, Select, Tab, Tabs, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, CircularProgress, Container, FormControl, Grid, makeStyles, MenuItem, Paper, Select, Tab, Tabs, Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import CommentIcon from '@material-ui/icons/Comment';
+import EmailIcon from '@material-ui/icons/Email';
+import FacebookIcon from '@material-ui/icons/Facebook';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import InfoIcon from '@material-ui/icons/Info';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import PeopleIcon from '@material-ui/icons/People';
+import PinterestIcon from '@material-ui/icons/Pinterest';
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import StarIcon from '@material-ui/icons/Star';
+import TwitterIcon from '@material-ui/icons/Twitter';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -16,7 +23,6 @@ import BlackButton from '../components/BlackButton';
 import Comment from '../components/Comment';
 import CommentForm from '../components/CommentForm';
 import Layout from "../components/Layout";
-import { PageLoading } from "../components/PageLoading";
 import Loader from '../components/Loader';
 import ProductImage from "../components/ProductImage";
 import QtyButton from '../components/QtyButton';
@@ -24,13 +30,6 @@ import Rating from '../components/Rating';
 import Review from '../components/Review';
 import ReviewForm from '../components/ReviewForm';
 import SizeChart from '../components/SizeChart';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import PinterestIcon from '@material-ui/icons/Pinterest';
-import EmailIcon from '@material-ui/icons/Email';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
-import PeopleIcon from '@material-ui/icons/People';
 const useStyle = makeStyles((theme) => ({
     tabPaper : {
         boxShadow: 'none',
@@ -102,6 +101,7 @@ const ProductPage = () => {
      const reviews = useSelector(state => state.shop.reviews);
      const reviewCount = useSelector(state => state.shop.reviewCount);
      const reviewLoading = useSelector(state => state.shop.reviewLoading);
+     const lastReview = useSelector(state => state.shop.lastReview);
  
     useEffect(() => {
         if(!isNaN(productId) && productId !== undefined)
@@ -151,6 +151,9 @@ const ProductPage = () => {
         } else {
             setMessage("Vui lòng chọn một phiên bản bên dưới")
         }
+    }
+    const handleGetMoreReviews = () => {
+        dispatch(shopActions.getMoreProductReviews(product?.id, 5, reviews[reviews.length - 1].id))
     }
     if(!product?.id) return <Loader />
     return (
@@ -354,7 +357,7 @@ const ProductPage = () => {
                       }
                       <Box textAlign="center">
                           {
-                              reviews.length !== 0 &&  <BlackButton >Load More</BlackButton>
+                              !lastReview &&  <BlackButton onClick={handleGetMoreReviews} disabled={reviewLoading}>{ reviewLoading ? <CircularProgress style={{color: "white"}} size={30}/> : "Load More"}</BlackButton>
 
                           }
                       </Box>

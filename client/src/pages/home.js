@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Typography, Paper, InputBase } from '@material-ui/core';
+import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
 import { convertFromRaw } from "draft-js";
 import { Parallax } from "react-parallax";
 import { useSelector } from 'react-redux';
@@ -9,7 +9,6 @@ import CollectionSwiper from '../components/CategorySwiper';
 import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
 import { displayMonDDYYYY } from '../helper/handleTime';
-import { makeStyles } from '@material-ui/core';
 
 const insideStyles = {
     height: '100%',

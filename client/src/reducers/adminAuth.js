@@ -4,7 +4,6 @@ import { ACTION } from "../constants";
 const initState = {
     loading: false,
     error: "",
-    isLogin: false,
     admin: {},
 }
 export default (state = initState, { type, payload}) => produce(state, (draft) => {
@@ -35,7 +34,6 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
         case ACTION.ADMIN_AUTH_ERROR:
             draft.loading = false;
             draft.error = payload;
-            console.log(payload);
             break;
         default:
             break;

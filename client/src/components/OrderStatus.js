@@ -1,5 +1,5 @@
-import { ORDER_STATUS } from "../constants"
 import { Chip } from "@material-ui/core"
+import { ORDER_STATUS } from "../constants"
 
 const OrderStatus = ({status}) => {
 

@@ -1,12 +1,10 @@
 
 
-import React from 'react';
+import { Box, Button, Divider, Grid, Modal, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Modal, Button, Grid, Box, Typography, Divider} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { usePrevious } from "../helper/customHook";
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
+import React from 'react';
 function getModalStyle() {
   const top = 50;
   const left = 50;

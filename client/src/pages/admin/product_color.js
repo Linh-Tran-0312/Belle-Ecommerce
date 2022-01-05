@@ -10,7 +10,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import ColorLens from '@material-ui/icons/ColorLens';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ChromePicker } from "react-color";
 import { useDispatch, useSelector } from "react-redux";
 import productActions from "../../actions/adminProduct";

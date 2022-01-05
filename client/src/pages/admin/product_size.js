@@ -9,11 +9,11 @@ import TableRow from '@material-ui/core/TableRow';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import SaveIcon from '@material-ui/icons/Save';
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import productActions from "../../actions/adminProduct";
 import DeleteButton from "../../components/DeleteButton";
-import { MSG } from "../../constants"
+import { MSG } from "../../constants";
 
 
 const initSize = {

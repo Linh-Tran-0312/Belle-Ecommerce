@@ -1,7 +1,6 @@
-import { Box, Typography } from "@material-ui/core"
-import Rating from "./Rating"
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import { displayDDMonthYYYY } from "../helper/handleTime";
+import Rating from "./Rating";
 const useStyle = makeStyles(() => ({
     span : {
         fontWeight: 'bold'

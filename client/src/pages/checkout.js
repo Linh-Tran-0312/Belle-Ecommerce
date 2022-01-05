@@ -1,4 +1,4 @@
-import { Box, Grid, RadioGroup, TextField, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Grid, RadioGroup, TextField, Typography } from '@material-ui/core';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -20,7 +20,6 @@ import "../App.css";
 import BlackButton from "../components/BlackButton";
 import Layout from "../components/Layout";
 import SuccessOrderModal from "../components/SuccessOrderModal";
-import {CircularProgress }from "@material-ui/core"
 import shipCal from "../helper/shipCalculator";
 const StyledRadio = withStyles({
     root: {

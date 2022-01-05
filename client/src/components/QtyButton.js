@@ -1,8 +1,8 @@
-import { makeStyles } from "@material-ui/core"
-import RemoveIcon from '@material-ui/icons/Remove';
+import { makeStyles } from "@material-ui/core";
 import AddIcon from '@material-ui/icons/Add';
- import { useState, useEffect } from "react";
- import { useDispatch, useSelector } from "react-redux";
+import RemoveIcon from '@material-ui/icons/Remove';
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import orderActions from "../actions/order";
 const useStyle = makeStyles({
     container: {

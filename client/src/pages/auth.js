@@ -1,13 +1,13 @@
-import { Box, TextField, Typography, Container } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { Box, Container, TextField, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import authActions from '../actions/auth';
 import "../App.css";
 import BlackButton from "../components/BlackButton";
 import Layout from "../components/Layout";
-import authActions from '../actions/auth';
 import { useQuery } from "../helper/customHook";
-import { useDispatch, useSelector } from 'react-redux';
 const StyledTextField = withStyles((theme) => ({
     root: {
         '& .MuiOutlinedInput-root': {

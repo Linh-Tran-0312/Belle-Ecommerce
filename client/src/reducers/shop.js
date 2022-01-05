@@ -11,6 +11,7 @@ const initState = {
         details: [0,0,0,0,0]
     },
     reviewLoading: false,
+    lastReview: false,
     total: 0
 }
 
@@ -25,10 +26,17 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             break;
         case ACTION.REVIEWS:
             draft.reviews = payload;
+            draft.lastReview = false;
+            if(payload.length === 0) {
+                draft.lastReview = true;
+            }
             draft.reviewLoading = false;
             break;
         case ACTION.MORE_REVIEWS:
             draft.reviews = draft.reviews.concat(payload);
+            if(payload.length === 0) {
+                draft.lastReview = true;
+            }
             draft.reviewLoading = false;
             break;
         case ACTION.REVIEW_COUNT:
@@ -45,13 +53,11 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
                     draft.reviewCount.reviewCount = draft.reviewCount.reviewCount + 1;
                     draft.reviewCount.details[5 - payload.rating] = draft.reviewCount.details[5 - payload.rating] + 1
                 } else {
+                    draft.reviewCount.overallReview = (draft.reviewCount.overallReview* draft.reviewCount.reviewCount + payload.rating -  draft.reviews[index].rating )/(draft.reviewCount.reviewCount)
                     draft.reviews[index] = payload;
-                    draft.reviewCount.overallReview = (draft.reviewCount.overallReview* draft.reviewCount.reviewCount + payload.rating)/(draft.reviewCount.reviewCount + 1)
-                    draft.reviewCount.reviewCount = draft.reviewCount.reviewCount + 1;
                     draft.reviewCount.details[5 - payload.rating] = draft.reviewCount.details[5 - payload.rating] + 1
                 }
-                
-            
+                   
             } 
             draft.reviewLoading = false;
             break;

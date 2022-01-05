@@ -4,7 +4,6 @@ import { ACTION } from "../constants";
 const initState = {
     loading: false,
     error: "",
-    isLogin: false,
     user: {},
     orders: [],
 }
@@ -17,7 +16,6 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
         case ACTION.USER_AUTH:
         if(payload?.id) {
             localStorage.setItem("user",JSON.stringify(payload))
-            draft.isLogin = true;
             draft.user = payload;          
             draft.error = "";
         }    
@@ -37,7 +35,6 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             break;
         case ACTION.USER_LOGOUT:
             localStorage.removeItem("user");
-            draft.isLogin = false;
             draft.user = {};
             draft.orders = [];
             break;

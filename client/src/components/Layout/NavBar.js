@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 
     root: {
         backgroundColor: "#white",
-
         "@media (max-width: 900px)": {
             paddingLeft: 0,
         },
@@ -126,10 +125,7 @@ export default function NarBar() {
         setResponsiveness();
 
         window.addEventListener("resize", () => setResponsiveness());
-/* 
-        return () => {
-            window.removeEventListener("resize", () => setResponsiveness());
-        }; */
+
     }, []);
 
     const displayDesktop = () => {

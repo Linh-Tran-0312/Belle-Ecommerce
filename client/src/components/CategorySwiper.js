@@ -1,20 +1,18 @@
 
-import React, { useRef, useState } from "react";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Link } from 'react-router-dom';
-// Import Swiper styles
-import "swiper/swiper.min.css";
-import "swiper/components/pagination/pagination.min.css"
-import "../App.css";
- 
 import { makeStyles } from "@material-ui/core";
-
+import React from "react";
+import { Link } from 'react-router-dom';
+import "swiper/components/pagination/pagination.min.css";
 // import Swiper core and required modules
 import SwiperCore, {
     Pagination
 } from 'swiper/core';
-
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/swiper.min.css";
+import "../App.css";
+ 
 // install Swiper modules
 SwiperCore.use([Pagination]);
 

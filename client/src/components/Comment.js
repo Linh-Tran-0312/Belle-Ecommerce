@@ -1,6 +1,4 @@
-import { Box, Typography } from "@material-ui/core"
-import Rating from "./Rating"
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import ReplyIcon from '@material-ui/icons/Reply';
 import BlackButton from "./BlackButton";
 const useStyle = makeStyles(() => ({

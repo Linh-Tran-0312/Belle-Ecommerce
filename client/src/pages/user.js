@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, Paper, TextField, Typography, makeStyles, AppBar, Tabs, Tab } from '@material-ui/core';
+import { AppBar, Box, Button, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -6,19 +6,19 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import SaveIcon from '@material-ui/icons/Save';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import authActions from '../actions/auth';
 import "../App.css";
+import OrderDetail from "../components/Admin/OrderDetailModal";
 import Layout from "../components/Layout";
 import OrderStatus from '../components/OrderStatus';
 import { displayMonDDYYYY } from "../helper/handleTime";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import OrderDetail from "../components/Admin/OrderDetailModal";
-import FavoriteIcon from '@material-ui/icons/Favorite';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 

@@ -43,7 +43,7 @@ const shopActions = {
     getProductReviews: (productId) => async(dispatch) => {
         try {
             dispatch({ type: ACTION.REVIEW_LOADING, payload: true})
-            const { data } = await api.getReviewsByProductId(productId, 5, 0);
+            const { data } = await api.getReviewsByProductId(productId, 1, 0);
             dispatch({ type: ACTION.REVIEWS, payload: data})
         } catch (error) {
             dispatch({ type: ACTION.REVIEW_LOADING, payload: false})

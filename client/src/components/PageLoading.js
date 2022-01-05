@@ -1,5 +1,5 @@
 
-import { CircularProgress, Box, Typography}from '@material-ui/core';
+import { Box, CircularProgress, Typography } from '@material-ui/core';
 
 export const PageLoading = ({message, size}) => {
 const style ={

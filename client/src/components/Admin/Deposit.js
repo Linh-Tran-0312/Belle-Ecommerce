@@ -1,12 +1,8 @@
-import React from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Title from './Title';
+import React from 'react';
 import { displayDDMonthYYYY } from "../../helper/handleTime";
-function preventDefault(event) {
-  event.preventDefault();
-}
+import Title from './Title';
 
 const useStyles = makeStyles({
   depositContext: {
@@ -25,11 +21,6 @@ export default function Deposits({total}) {
       <Typography color="textSecondary" className={classes.depositContext}>
         on {displayDDMonthYYYY(new Date())}
       </Typography>
-{/*       <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
-        </Link>
-      </div> */}
     </React.Fragment>
   );
 }

@@ -1,12 +1,10 @@
-import { Box, Typography, TextField, Button} from '@material-ui/core';
-import BlackButton from './BlackButton';
+import { Box, CircularProgress, makeStyles, TextField, Typography } from '@material-ui/core';
 import StarIcon from '@material-ui/icons/Star';
-import StarHalfIcon from '@material-ui/icons/StarHalf';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
-import { makeStyles, CircularProgress  } from '@material-ui/core';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from "react-redux";
-import shopActions from  "../actions/shop"
+import shopActions from "../actions/shop";
+import BlackButton from './BlackButton';
 const useStyle = makeStyles(() => ({
     ratingBox : {
         display: 'flex',
@@ -65,7 +63,6 @@ const ReviewForm = ({loading, productId, userId}) => {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(state);
         dispatch(shopActions.createReview(state))
     }
     const handleChange = e => {

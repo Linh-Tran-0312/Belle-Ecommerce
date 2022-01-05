@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import orderActions from "../../actions/adminOrder";
 import OrderDetail from "../../components/Admin/OrderDetailModal";
 import OrderStatus from "../../components/OrderStatus";
+import {displayDDMMYYYY} from "../../helper/handleTime";
 const useStyles = makeStyles((theme) => ({
     seeMore: {
         marginTop: theme.spacing(3),
@@ -193,7 +194,7 @@ export default function Orders() {
                     <TableHead>
                         <TableRow>
                             <TableCell><strong>Order ID</strong></TableCell>
-                            <TableCell><strong>Date</strong></TableCell>
+                            <TableCell><strong>Date (DD-MM-YYYY)</strong></TableCell>
                             <TableCell><strong>Customer</strong></TableCell>
                             <TableCell><strong>Ship To</strong></TableCell>
                             <TableCell><strong>Payment Status</strong></TableCell>
@@ -207,7 +208,7 @@ export default function Orders() {
                         {orders.map((row) => (
                             <TableRow key={row?.id}>
                                 <TableCell>{row?.id}</TableCell>
-                                <TableCell>{new Date(row?.orderAt).toLocaleDateString()}</TableCell>
+                                <TableCell>{displayDDMMYYYY(row?.orderAt)}</TableCell>
                                 <TableCell>{`${row?.user?.lname} ${row?.user?.fname}`}</TableCell>
                                 <TableCell>{row?.address}</TableCell>
                                 <TableCell align="center">{paymentMethodToString(row?.paymentMethod)}</TableCell>

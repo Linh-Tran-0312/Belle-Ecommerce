@@ -1,17 +1,17 @@
-import React from 'react';
-import Layout from '../components/Layout';
-import '../App.css';
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
+import { Box, Breadcrumbs, Grid, TextField, Typography } from '@material-ui/core';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import FacebookIcon from '@material-ui/icons/Facebook';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import PinterestIcon from '@material-ui/icons/Pinterest';
 import InstagramIcon from '@material-ui/icons/Instagram';
+import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined';
+import PinterestIcon from '@material-ui/icons/Pinterest';
+import TwitterIcon from '@material-ui/icons/Twitter';
 import YouTubeIcon from '@material-ui/icons/YouTube';
-import BlackButton from '../components/BlackButton';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Typography, Breadcrumbs, Grid, TextField } from '@material-ui/core';
+import '../App.css';
+import BlackButton from '../components/BlackButton';
+import Layout from '../components/Layout';
 import Map from '../components/Map';
 const ContactPage = () => {
     return(
@@ -108,13 +108,10 @@ const ContactPage = () => {
                     </Box>
                 </Grid>
             </Grid>
-       
             </Box>
            </Layout>
- 
     )
         
-    
 }
 
  export default ContactPage

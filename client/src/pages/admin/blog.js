@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, Grid, IconButton, Typography, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import { Box, Button, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -7,10 +7,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Title from "../../components/Admin/Title";
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import LaunchIcon from '@material-ui/icons/Launch';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import SaveIcon from '@material-ui/icons/Save';
+import EditIcon from '@material-ui/icons/Edit';
 import Pagination from '@material-ui/lab/Pagination';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import React, { useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ import blogActions from "../../actions/adminBlog";
 import DeleteButton from "../../components/DeleteButton";
 import UploadImage from "../../components/UploadImage";
 import { MSG } from "../../constants";
+import { Link } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
     root: {
         padding: theme.spacing(3)
@@ -257,8 +258,10 @@ export default function BlogAdmin() {
                                                 <TableCell  >{row.title}</TableCell>
                                                 <TableCell  >{row.category.name}</TableCell>
                                                 <TableCell  >{row.createdAt.slice(0, 10)}</TableCell>
-                                                <TableCell  ><IconButton size="small" onClick={() => handleGetBlogDetail(row.id)}><MoreHorizIcon /></IconButton></TableCell>
-
+                                                <TableCell  >
+                                                    <IconButton size="small" onClick={() => handleGetBlogDetail(row.id)}><EditIcon /></IconButton>
+                                                   <Link target="_blank" to={`/blogs/blog/${row.id}`}><IconButton size="small"><LaunchIcon /></IconButton></Link> 
+                                                    </TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>

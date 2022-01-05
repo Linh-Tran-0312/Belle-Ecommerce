@@ -85,16 +85,13 @@ export default function SuccessOrderModal({ history, state }) {
                 alignItems: 'center',
                 flexWrap: 'wrap',
             }}>
-
             </Box>
-
             <Box my={3} textAlign="center">
                 <CheckCircleOutlineIcon style={{ color: "#5fca3f", fontSize: 50 }} fontSize="large" />
-                <Typography variant="subtitle1">Order Successful</Typography>
-                <Typography variant="subtitle2">Thank you so much for your order</Typography>
+                <Typography variant="h6">Order Successful</Typography>
+                <Typography variant="body1">Thank you so much for your order</Typography>
                 <Box my={2}>
-                    <Typography variant="caption" color="primary">Continue shopping in {time} second</Typography>
-
+                    <Typography variant="subtitle2" color="primary">Continue shopping in {time} seconds</Typography>
                 </Box>
             </Box>
             <Divider />
@@ -105,10 +102,8 @@ export default function SuccessOrderModal({ history, state }) {
                             Check status
                         </Button>
                     </Grid>
-
                 </Grid>
             </Box>
-
         </div>
     );
 

@@ -12,7 +12,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from "react-redux";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
 import adminAuthActions from '../../actions/adminAuth';

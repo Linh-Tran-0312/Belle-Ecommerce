@@ -20,7 +20,6 @@ let config = {
 const API = axios.create(config);
 API.defaults.withCredentials = true;
 
-// avoid OPTIONS response
 
 // handle expired access token
 API.interceptors.response.use((response) => { 
@@ -34,13 +33,12 @@ API.interceptors.response.use((response) => {
        return API(originalReq)
     }  else {
         if( message === "No token provided") {
-            console.log("no tk")
-            //store.dispatch(ACTION.CLEAR_PROFILE_LOCAL)
+            console.log("No token provided")
             store.dispatch({ type: ACTION.ADMIN_LOGOUT});
             store.dispatch({ type: ACTION.USER_LOGOUT});
         }   
       return Promise.reject(error);
-        // return error
+       
     }
 })
 

@@ -1,22 +1,23 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { Box, Button, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TableRow, Typography } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from '@material-ui/core/Modal';
-import MoreIcon from '@material-ui/icons/More';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import Stepper from "./OrderStepper";
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import MoreIcon from '@material-ui/icons/More';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import orderAdminActions from '../../actions/adminOrder';
 import orderUserActions from '../../actions/order';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import OrderStatus from '../OrderStatus';
 import { ORDER_STATUS } from '../../constants';
-import { TableRow, Grid, Typography, Box, Button, Divider, IconButton, MenuItem, FormControl, InputLabel, Select } from '@material-ui/core';
-
+import OrderStatus from '../OrderStatus';
+import Stepper from "./OrderStepper";
+import { displayDDMMYYYY } from '../../helper/handleTime';
+import { Link } from "react-router-dom";
 const StyledTableCell = withStyles((theme) => ({
     head: {
         color: theme.palette.common.black,
@@ -66,6 +67,13 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 240,
         margin: 20
     },
+    link: {
+        textDecoration: "none",
+        color: "black",
+        "&:hover" : {
+            color: "#1976d2"
+        }
+    }
 
 }));
 
@@ -165,7 +173,7 @@ export default function SimpleModal({ id, role }) {
         </div>)
         return (<div style={modalStyle} className={classes.paper}>
             <Typography variant="subtitle2">Mã đơn hàng: {detail?.id}</Typography>
-            <Typography variant="subtitle2">Ngày đặt hàng: {new Date(detail?.orderAt).toLocaleDateString()}</Typography>
+            <Typography variant="subtitle2">Ngày đặt hàng: {displayDDMMYYYY(detail?.orderAt)}</Typography>
 
             <Box my={2}>
                 <Typography variant="h6">Thông tin khách hàng</Typography>
@@ -192,7 +200,8 @@ export default function SimpleModal({ id, role }) {
                                 {detail?.details?.map((item, index) => (
                                     <TableRow key={index}>
                                         <StyledTableCell component="th" scope="row">
-                                            <Typography variant="subtitle2">  {`${item?.productVariant?.product?.name} (${item?.productVariant?.product?.brand?.name}) `} </Typography>
+                                        <Link className={classes.link} to={`/shop/product/${item?.productVariant?.product?.id}`}>  
+                                            <Typography variant="subtitle2">{`${item?.productVariant?.product?.name} (${item?.productVariant?.product?.brand?.name}) `}</Typography>  </Link>
                                             <Typography variant="caption">{item?.productVariant?.color?.name}</Typography>
                                         </StyledTableCell>
                                         <StyledTableCell align="center" >{item?.unitPrice?.toLocaleString()}</StyledTableCell>
@@ -319,9 +328,9 @@ export default function SimpleModal({ id, role }) {
                     {
                         role === "admin" ? (
                             <>
-                                <Grid item md={2} sm={2} xs={3}>
+                         {/*        <Grid item md={2} sm={2} xs={3}>
                                     <Button variant="contained" fullWidth color="secondary" disabled={loading}>Delete</Button>
-                                </Grid>
+                                </Grid> */}
                                 <Grid item md={2} sm={2} xs={3}>
                                     <Button variant="contained" fullWidth color="default" onClick={handleClose}  disabled={loading}>Cancel</Button>
                                 </Grid>
