@@ -156,9 +156,85 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "Status": {
+        "dataType": "refEnum",
+        "enums": ["ordering","ordered","delivery","canceled","completed"],
+    },
+    "IOrderDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"double"},
+            "productVariantId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
+    },
+    "IOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "status": {"ref":"Status"},
+            "total": {"dataType":"double"},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
+        },
+        "additionalProperties": false,
+    },
     "UserRole": {
         "dataType": "refEnum",
         "enums": ["all","admin","editor","customer"],
+    },
+    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"token":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
+    },
+    "IUser": {
+        "dataType": "refObject",
+        "properties": {
+            "password": {"dataType":"string"},
+            "email": {"dataType":"string"},
+            "token": {"dataType":"string"},
+            "phone": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole"},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IBlogComment": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double"},
+            "userId": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
+            "user": {"ref":"IUser"},
+        },
+        "additionalProperties": false,
+    },
+    "IBlogCommentUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "userId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
     },
     "ProductCategory": {
         "dataType": "refObject",
@@ -177,24 +253,6 @@ const models: TsoaRoute.Models = {
             "createdAt": {"dataType":"datetime","required":true},
             "name": {"dataType":"string","required":true},
             "imgPath": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "User": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true},
-            "password": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole","required":true},
-            "phone": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
-            "token": {"dataType":"string","required":true},
-            "wishList": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -221,6 +279,24 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "User": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "password": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole","required":true},
+            "phone": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "token": {"dataType":"string","required":true},
+            "wishList": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"},"required":true},
+        },
+        "additionalProperties": false,
+    },
     "ProductComment": {
         "dataType": "refObject",
         "properties": {
@@ -234,23 +310,6 @@ const models: TsoaRoute.Models = {
             "product": {"ref":"Product","required":true},
             "parentComment": {"ref":"ProductComment","required":true},
             "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IUser": {
-        "dataType": "refObject",
-        "properties": {
-            "password": {"dataType":"string"},
-            "email": {"dataType":"string"},
-            "token": {"dataType":"string"},
-            "phone": {"dataType":"string"},
-            "address": {"dataType":"string"},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole"},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
@@ -300,82 +359,6 @@ const models: TsoaRoute.Models = {
             "userId": {"dataType":"double","required":true},
             "user": {"ref":"User","required":true},
             "product": {"ref":"Product","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Order": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "userId": {"dataType":"double","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"},"required":true},
-            "user": {"ref":"User","required":true},
-            "status": {"ref":"Status","required":true},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "note": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
-            "shipping": {"dataType":"double","required":true},
-            "total": {"dataType":"double","required":true},
-            "orderAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Status": {
-        "dataType": "refEnum",
-        "enums": ["ordering","ordered","delivery","canceled","completed"],
-    },
-    "PaymentMethod": {
-        "dataType": "refEnum",
-        "enums": ["cod","banktransfer","e-wallet","gateway"],
-    },
-    "IOrderDetail": {
-        "dataType": "refObject",
-        "properties": {
-            "orderId": {"dataType":"double"},
-            "productVariantId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "unitPrice": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderDetailCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "orderId": {"dataType":"double"},
-            "productVariantId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "unitPrice": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"token":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"Order"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
-    },
-    "IBlogComment": {
-        "dataType": "refObject",
-        "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
-            "user": {"ref":"IUser"},
-        },
-        "additionalProperties": false,
-    },
-    "IBlogCommentUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -557,7 +540,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "fname": {"dataType":"string","required":true},
             "lname": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
             "password": {"dataType":"string","required":true},
             "role": {"ref":"UserRole"},
             "phone": {"dataType":"string"},
@@ -581,15 +564,48 @@ const models: TsoaRoute.Models = {
     "ILogin": {
         "dataType": "refObject",
         "properties": {
-            "email": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
             "password": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
-    "IRevokeMessage": {
+    "IRefreshMessage": {
         "dataType": "refObject",
         "properties": {
             "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "PaymentMethod": {
+        "dataType": "refEnum",
+        "enums": ["cod","banktransfer","e-wallet","gateway"],
+    },
+    "IOrderDetailCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"double"},
+            "productVariantId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Order": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "userId": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"},"required":true},
+            "user": {"ref":"User","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "note": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "shipping": {"dataType":"double","required":true},
+            "total": {"dataType":"double","required":true},
+            "orderAt": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
@@ -601,25 +617,13 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "Period": {
+        "dataType": "refEnum",
+        "enums": ["today","week","month","quarter","year"],
+    },
     "OrderField": {
         "dataType": "refEnum",
         "enums": ["orderAt","total"],
-    },
-    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
-    },
-    "IOrder": {
-        "dataType": "refObject",
-        "properties": {
-            "userId": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "status": {"ref":"Status"},
-            "total": {"dataType":"double"},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
-        },
-        "additionalProperties": false,
     },
     "IOrderCreateProps": {
         "dataType": "refObject",
@@ -766,7 +770,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -786,7 +790,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -806,9 +810,9 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string"},
-                    page: {"in":"query","name":"page","required":true,"dataType":"double"},
-                    limit: {"in":"query","name":"limit","required":true,"dataType":"double"},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"}}},
+                    page: {"in":"query","name":"page","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
+                    limit: {"in":"query","name":"limit","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
             };
 
             let validatedArgs: any[] = [];
@@ -827,10 +831,10 @@ export function RegisterRoutes(app: any) {
         app.get('/blogs',
             function (request: any, response: any, next: any) {
             const args = {
-                    category: {"in":"query","name":"category","dataType":"double"},
-                    limit: {"in":"query","name":"limit","dataType":"double"},
+                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"category"},"minimum":{"value":0}}},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
                     sort: {"in":"query","name":"sort","ref":"BlogField"},
-                    page: {"in":"query","name":"page","dataType":"double"},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
                     change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
             };
@@ -1013,15 +1017,15 @@ export function RegisterRoutes(app: any) {
         app.get('/products',
             function (request: any, response: any, next: any) {
             const args = {
-                    category: {"in":"query","name":"category","dataType":"double"},
-                    brand: {"in":"query","name":"brand","dataType":"double"},
-                    limit: {"in":"query","name":"limit","dataType":"double"},
-                    page: {"in":"query","name":"page","dataType":"double"},
+                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"category"},"minimum":{"value":0}}},
+                    brand: {"in":"query","name":"brand","dataType":"integer","validators":{"isInt":{"errorMsg":"brand"},"minimum":{"value":0}}},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
                     sort: {"in":"query","name":"sort","ref":"ProductField"},
                     change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
-                    min: {"in":"query","name":"min","dataType":"double"},
-                    max: {"in":"query","name":"max","dataType":"double"},
+                    min: {"in":"query","name":"min","dataType":"integer","validators":{"isInt":{"errorMsg":"min"},"minimum":{"value":0}}},
+                    max: {"in":"query","name":"max","dataType":"integer","validators":{"isInt":{"errorMsg":"max"},"minimum":{"value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1244,8 +1248,8 @@ export function RegisterRoutes(app: any) {
             const args = {
                     search: {"in":"query","name":"search","dataType":"string"},
                     role: {"in":"query","name":"role","ref":"UserRole"},
-                    limit: {"in":"query","name":"limit","dataType":"double"},
-                    page: {"in":"query","name":"page","dataType":"double"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
                     sort: {"in":"query","name":"sort","ref":"UserField"},
                     change: {"in":"query","name":"change","ref":"Change"},
             };
@@ -1397,7 +1401,7 @@ export function RegisterRoutes(app: any) {
             const controller = new AuthController();
 
 
-            const promise = controller.revokeToken.apply(controller, validatedArgs as any);
+            const promise = controller.RefreshToken.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.get('/orders',
@@ -1405,11 +1409,11 @@ export function RegisterRoutes(app: any) {
             function (request: any, response: any, next: any) {
             const args = {
                     search: {"in":"query","name":"search","dataType":"string"},
-                    limit: {"in":"query","name":"limit","dataType":"double"},
-                    page: {"in":"query","name":"page","dataType":"double"},
-                    time: {"in":"query","name":"time","dataType":"string"},
-                    status: {"in":"query","name":"status","dataType":"string"},
-                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"string"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
+                    time: {"in":"query","name":"time","ref":"Period"},
+                    status: {"in":"query","name":"status","ref":"Status"},
+                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"boolean"},
                     sort: {"in":"query","name":"sort","ref":"OrderField"},
                     change: {"in":"query","name":"change","ref":"Change"},
             };

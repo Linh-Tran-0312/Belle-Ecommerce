@@ -12,12 +12,12 @@ export enum BlogField {
 
 }
 export interface IBlogQuery  {
-    category: number,
-    limit: number,
-    page: number,
-    sort: BlogField,
-    change: Change,
-    search: string
+    category?: number,
+    limit?: number,
+    page?: number,
+    sort?: BlogField,
+    change?: Change,
+    search?: string
 }
 @Service({ id: "blog-service" })
 export class BlogService extends BaseService<IBlog, BlogRepository> implements IBaseService<IBlog>  {
@@ -32,13 +32,12 @@ export class BlogService extends BaseService<IBlog, BlogRepository> implements I
             where: {},
             order: {}
         }
-        if (query.category > 0 ) options.where.categoryId = query.category;
-        if (!!query.search) options.where.title = ILike(`%${query.search}%`);
-        if(query.limit > 0) options.take = query.limit;
-        if(query.page > 0) options.skip = query.limit*(query.page - 1);
-        if(!!query.sort && !!query.change ) {
-            options.order[`${query.sort}`] = query.change
-        } 
+        
+        if(query.category) options.where.categoryId = query.category;
+        if(query.search) options.where.title = ILike(`%${query.search}%`);
+        if(query.limit) options.take = query.limit;
+        if(query.page) options.skip = options.take*(query.page - 1);
+        options.order[`${query.sort}`] = query.change
         const result: IBlogs = await this.repository.findAndCount(options);
         if(!result) return { blogs: [], total: 0}
         return result

@@ -1,6 +1,6 @@
-import { Body, Post, Route, Tags, Get, Controller, Request, Security, Query } from "tsoa";
-import { IUser, IUserCreateProps, UserRole } from "../models";
-import { AuthService, IUserAuth , ReportService} from "../services";
+import { Get, Query, Route, Security, Tags } from "tsoa";
+import { UserRole } from "../models";
+import { ReportService } from "../services";
 
 export interface IOverviewReport {
     sales: number,
@@ -46,6 +46,8 @@ export class ReportController {
     }
       /**
      * Get sales and number of order reports for specific time
+     * @param {string} time
+     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2]))
      */
     @Security("jwt", [UserRole.ADMIN])
      @Get("/sales")
@@ -53,7 +55,9 @@ export class ReportController {
         return this._reportService.getSalesReport(time);
     }
       /**
-     * Get the number of completed orders and canceled order 
+     * Get the number of completed orders and canceled order
+     * @param {string} time
+     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2]))
      */
     @Security("jwt", [UserRole.ADMIN])
     @Get("/orders")
@@ -61,12 +65,20 @@ export class ReportController {
         return this._reportService.getOrderReport(time);
     }
       /**
-     * Get list of products in descending  sales 
+     * Get list of products in descending  sales
+     * @param {string} time
+     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2]))
+     * @param {number} limit
+     * @param {number} page
+     * @isInt limit
+     * @minimum limit 1
+     * @isInt page
+     * @minimum page 1
      */
     @Security("jwt", [UserRole.ADMIN])
     @Get("/products")
     public async getTopProductsReport(@Query() time: string, @Query() page: number, @Query() limit: number): Promise<IProductReports> {
-        const query = { page,limit }
+        const query = { page: page || 1,limit: limit || 5}
         return this._reportService.getTopProductsReport(time,query);
     }
 }

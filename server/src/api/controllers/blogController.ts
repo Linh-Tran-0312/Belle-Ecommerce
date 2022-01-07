@@ -29,6 +29,15 @@ export class BlogController {
 
     /**
      * Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order
+     * @param {number} category
+     * @param {number} limit
+     * @param {number} page
+     * @isInt category
+     * @minimum category 0
+     * @isInt limit
+     * @minimum limit 1
+     * @isInt page
+     * @minimum page 1
      */
     @Get("/")
     public async getBlogs(
@@ -41,33 +50,13 @@ export class BlogController {
     ): Promise<IBlogs> {
        
         const query: IBlogQuery = {
-            category: 0,
-            limit: 6,
-            page: 0,
-            sort: BlogField.DATE,
-            change: Change.DESC,
-            search: ""
+            category,
+            limit: limit || 5,
+            page: page || 1,
+            sort: sort || BlogField.DATE,
+            change: change || Change.DESC,
+            search: search?.trim() 
         }   
-        if(!!category && !isNaN(category)) {
-           query.category = category;
-        }
-        if(!!limit  && !isNaN(limit)) {
-            query.limit = limit;
-        }
-        if(!!page && !isNaN(page))
-        {
-            query.page = page
-        }
-        if(!!sort && sort.trim() !== "")
-        {
-            query.sort = sort
-        }
-         if(!!change && change.trim() !== "") {
-            query.change = change;
-         }
-         if(!!search && search.trim() !== "") {
-            query.search = search;
-         }
         return this._blogService.getBlogs(query)
     }
     /**
@@ -90,7 +79,7 @@ export class BlogController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateBlogById(@Path() id: number, @Body() data: IBlogUpdateProps): Promise<IBlog|null> {
+    public async updateBlogById(@Path() id: number, @Body() data: IBlogUpdateProps): Promise<IBlog> {
         return this._blogService.updateBlog(id, data);
     }
     /**

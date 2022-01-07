@@ -24,6 +24,12 @@ export class UserController {
     }
     /**
      * Get all users
+     * @param {number} limit
+     * @param {number} page
+     * @isInt limit
+     * @minimum limit 1
+     * @isInt page
+     * @minimum page 1
      */
      @Security("jwt", [UserRole.ADMIN])
     @Get("/")
@@ -37,33 +43,13 @@ export class UserController {
 
     ): Promise<IUsers> {
         const query: IUserQuery = {
-            search: "",
-            role: UserRole.ALL,
-            sort: UserField.CREATEDAT,
-            change: Change.DESC,
-            limit: 2,
-            page: 1
+            search: search?.trim(),
+            role: role || UserRole.ALL,
+            sort: sort || UserField.CREATEDAT,
+            change: change || Change.DESC,
+            limit: limit || 5,
+            page: page || 1
         }
-        if(!!role  && role.trim() !== "") {
-            query.role = role;
-        }
-        if(!!limit  && !isNaN(limit)) {
-            query.limit = limit;
-        }
-        if(!!page && !isNaN(page))
-        {
-            query.page = page
-        }
-        if(!!sort && sort.trim() !== "")
-        {
-            query.sort = sort
-        }
-         if(!!change && change.trim() !== "") {
-            query.change = change;
-         }
-         if(!!search && search.trim() !== "") {
-            query.search = search;
-         }
         return this._userService.getUsers(query);
     }
     /**
@@ -71,7 +57,7 @@ export class UserController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Get("/:id")
-    public async getUserById(@Path() id: number): Promise<IUser|null> {
+    public async getUserById(@Path() id: number): Promise<IUser> {
         const user: any = await this._userService.getOneById(id,["orders"]);
         return user;
     }
@@ -80,7 +66,7 @@ export class UserController {
      */
     @Security("jwt", [UserRole.ADMIN])
     @Post("/")
-    public async createUser(@Body() data: IUserCreateProps): Promise<IUser|null> {
+    public async createUser(@Body() data: IUserCreateProps): Promise<IUser> {
         return this._userService.createUser(data);
     }
     /**
@@ -88,7 +74,7 @@ export class UserController {
      */
      @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
      @Patch("/:id")
-     public async updateUser(@Path() id: number,@Body() data: IUserUpdateProps): Promise<IUser|null> {
+     public async updateUser(@Path() id: number,@Body() data: IUserUpdateProps): Promise<IUser> {
          
          return this._userService.updateUser(id,data);
      }

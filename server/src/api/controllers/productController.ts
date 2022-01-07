@@ -32,6 +32,24 @@ export class ProductController {
 
     /**
      * Get all products 
+     * @param {number} category
+     * @param {number} brand
+     * @param {number} limit
+     * @param {number} page
+     * @param {number} min
+     * @param {number} max
+     * @isInt category
+     * @minimum category 0
+     * @isInt brand
+     * @minimum brand 0
+     * @isInt limit
+     * @minimum limit 1
+     * @isInt page
+     * @minimum page 1
+     * @isInt min
+     * @minimum min 0
+     * @isInt max
+     * @minimum max 0
      */
     @Get("/")
     public async getProducts(
@@ -47,33 +65,24 @@ export class ProductController {
 
     ): Promise<IProducts> {
         let query: IProductQuery = {
-            category: 0,
-            brand: 0,
-            limit: 6,
-            page: 0,
-            sort: ProductField.CREATEDAT,
-            change: Change.DESC,
-            search: "",
-            min: 0,
-            max: 0,
+            category,
+            brand,
+            limit: limit || 5,
+            page: page || 1,
+            sort: sort || ProductField.CREATEDAT,
+            change: change || Change.DESC,
+            search: search?.trim(),
+            min,
+            max,
         }
-        if(!!category && !isNaN(category)) query.category = category;
-        if(!! brand && !isNaN(brand)) query.brand = brand;
-        if(!!limit && !isNaN(limit)) query.limit = limit;
-        if(!! page && !isNaN(page)) query.page = page;
-        if(!!sort && sort.trim() !== "") query.sort = sort;
-        if(!! change && change.trim() !== "") query.change = change;
-        if(!! search && search.trim() !== "") query.search = search;
-        if(!! min && !isNaN(min)) query.min = min;
-        if(!!max && !isNaN(max)) query.max = max;
-        console.log("Pro ctrl");
+
         return this._productService.getProducts(query);
     }
     /**
      * Get product details by its id
      */
      @Get("/:id")
-     public async getProductById(@Path() id: number): Promise<IProduct|null> {
+     public async getProductById(@Path() id: number): Promise<IProduct> {
          return this._productService.getOneById(id, ["category","brand","variants","variants.color","variants.size"]);
      }
     /**
@@ -81,7 +90,7 @@ export class ProductController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createProduct(@Body() data: IProductCreateProps): Promise<IProduct|null> {
+    public async createProduct(@Body() data: IProductCreateProps): Promise<IProduct> {
         return this._productService.createProduct(data)
     }
     /**
@@ -89,7 +98,7 @@ export class ProductController {
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateProductById(@Path() id: number, @Body() data: IProductUpdateProps): Promise<IProduct|null> {
+    public async updateProductById(@Path() id: number, @Body() data: IProductUpdateProps): Promise<IProduct> {
         return this._productService.updateProduct(id, data);
     }
     /**
@@ -105,15 +114,15 @@ export class ProductController {
      */
       @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/variant")
-    public async createProductVariant(@Body() data: IProductVariantCreateProps): Promise<IProductVariant|null> {
+    public async createProductVariant(@Body() data: IProductVariantCreateProps): Promise<IProductVariant> {
         return this._productVariantService.createProductVariant(data);
     }
     /**
-     * Update product variant partially
+     * Update product variant 
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/variant/:variantId")
-    public async updateProductVariant(@Path() variantId: number, @Body() data: IProductVariantUpdateProps): Promise<IProductVariant|null> {
+    public async updateProductVariant(@Path() variantId: number, @Body() data: IProductVariantUpdateProps): Promise<IProductVariant> {
          return this._productVariantService.updateProductVariant(variantId, data)
     }
     /**

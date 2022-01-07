@@ -18,15 +18,15 @@ export enum ProductField {
 
 }
 export interface IProductQuery  {
-    category: number,
-    brand: number,
-    limit: number,
-    page: number,
-    search: string,
-    min: number,
-    max: number,
-    sort: ProductField,
-    change: Change
+    category?: number,
+    brand?: number,
+    limit?: number,
+    page?: number,
+    search?: string,
+    min?: number,
+    max?: number,
+    sort?: ProductField,
+    change?: Change
 }
 //@Service({ id: "OrderRepository-service"})
 export class ProductService extends BaseService<IProduct, ProductRepository> implements IBaseService<IProduct>  {
@@ -42,8 +42,8 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
                 
             };
 
-            if(query.category > 0 ) options.where.categoryId = query.category;
-            if(query.brand > 0 ) options.where.brandId = query.brand;
+            if(query.category !== undefined) options.where.categoryId = query.category;
+            if(query.brand !== undefined) options.where.brandId = query.brand;
             if (!!query.search) options.where= [
                 {
                     name:  ILike(`%${query.search}%`)
@@ -62,12 +62,12 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
                     }
                 }
             ];
-            if(query.min > 0) options.where.price = MoreThanOrEqual(query.min);
-            if(query.max > 0) options.where.price = LessThanOrEqual(query.max);
-            if(query.min > 0 && query.max > 0 )  options.where.price = Between(query.min,query.max);
-            if(!!query.sort && !!query.change ) options.order[`${query.sort}`] = query.change;
-            if(query.limit > 0) options.take = query.limit;
-            if(query.page > 0) options.skip = query.limit * (query.page - 1);   
+            if(query.min !== undefined) options.where.price = MoreThanOrEqual(query.min);
+            if(query.max !== undefined) options.where.price = LessThanOrEqual(query.max);
+            if(query.min !== undefined && query.max !== undefined )  options.where.price = Between(query.min,query.max);
+            options.order[`${query.sort}`] = query.change;
+            if(query.limit) options.take = query.limit;
+            if(query.page) options.skip = options.take*(query.page - 1);
            const result: IProducts = await this.repository.findAndCount(options);
            return result 
     }

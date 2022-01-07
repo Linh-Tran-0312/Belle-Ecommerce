@@ -145,12 +145,9 @@ export class ReportService {
         return result
     }
     public async getTopProductsReport(timeStr: string, queryStr: {page: number, limit: number}): Promise<IProductReports> {
-         const query = {
-             page: 1,
-             limit: 5
-         }
-         if(queryStr.page && !isNaN(queryStr.page)) query.page = queryStr.page;
-         if(queryStr.limit && !isNaN(queryStr.limit)) query.limit = queryStr.limit;
+         const query: any = {};
+         if(queryStr.page) query.page = queryStr.page;
+         if(queryStr.limit) query.limit = queryStr.limit;
          const time = timeCal(timeStr);
          return await this.orderRepo.getTopProductByTime(time, query);
     }

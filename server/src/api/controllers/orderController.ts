@@ -2,6 +2,7 @@ import { Body, Delete, Get, Patch, Path, Post, Query, Route, Tags, Security } fr
 import { IOrder, IOrderCreateProps, IOrderDetail, IOrderDetailCreateProps, Status, PaymentMethod, OrderDetail, Order, UserRole } from "../models";
 import { OrderService, OrderDetailService , IPlaceOrder, IOrderQuery, OrderField, Change} from "../services";
 import { IOrders } from "../repositories";
+import { Period } from "../helpers/timeHandler";
 export interface IOrderUpdateProps {
     status?: Status;
     paymentCheck?: boolean;
@@ -35,7 +36,15 @@ export class OrderController {
     /**
      * For Admin permission
      * Get all Orders, be able to sort by price, time, user and to filter by price, time, user...
-     * Not done
+     * @param {string} time
+     * @param {number} limit
+     * @param {number} page
+     * @isInt category
+     * @minimum category 0
+     * @isInt limit
+     * @minimum limit 1
+     * @isInt page
+     * @minimum page 1
      */
     @Security("jwt", [UserRole.ADMIN])
     @Get("/")
@@ -43,31 +52,30 @@ export class OrderController {
         @Query() search?: string,
         @Query() limit?: number,
         @Query() page?: number,
-        @Query() time?: string,
-        @Query() status?: string,
-        @Query() paymentCheck?: string,
+        @Query() time?: Period,
+        @Query() status?: Status,
+        @Query() paymentCheck?: boolean,
         @Query() sort?: OrderField,
         @Query() change?: Change,
     ): Promise<IOrders> {
         const query: IOrderQuery = {
-            search,
+            search: search?.trim(),
             paymentCheck,
             status,
-            limit,
-            page,
+            limit: limit || 5,
+            page: page || 1,
             time,
-            sort,
-            change
+            sort: sort ||  OrderField.ORDERAT,
+            change: change || Change.DESC
         }
         return this._orderService.getOrders(query);
     }
     /**
      * Create new order when user add items to order that is not already existed.
-     * Done
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Post("/")
-    public async createOrder(@Body() data: IOrderCreateProps): Promise<IOrder|null> {
+    public async createOrder(@Body() data: IOrderCreateProps): Promise<IOrder> {
         return this._orderService.createOrder(data);
     }
      /**
@@ -85,7 +93,7 @@ export class OrderController {
      */
      @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:userId/current")
-    public async getCurrentOrderOfUser(@Path() userId: number): Promise<IOrder | null> {
+    public async getCurrentOrderOfUser(@Path() userId: number): Promise<IOrder|null> {
         return this._orderService.getCurrentOrderByUserId(userId);
     }
     /**
@@ -93,7 +101,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:orderId")
-    public async getOrderById(@Path() orderId: number): Promise<IOrder | null> {
+    public async getOrderById(@Path() orderId: number): Promise<IOrder> {
         return this._orderService.getOrderById(orderId)
     }
     /**
@@ -101,7 +109,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:userId/afterLogin")
-    public async updateOrderItems(@Path() userId: number, @Body() data: IOrderUpdateItems): Promise<IOrder|null> {
+    public async updateOrderItems(@Path() userId: number, @Body() data: IOrderUpdateItems): Promise<IOrder> {
         return this._orderService.updateOrderItems(userId,data)
     }
     /**
@@ -137,7 +145,7 @@ export class OrderController {
      */
      @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Post("/:orderId/items")
-    public async addItemToOrder(@Path() orderId: number,@Body() data: IOrderDetailCreateProps): Promise<IOrder|null> {
+    public async addItemToOrder(@Path() orderId: number,@Body() data: IOrderDetailCreateProps): Promise<IOrder> {
        return this._orderService.addItemToOrder(orderId, data)
     } 
     /**

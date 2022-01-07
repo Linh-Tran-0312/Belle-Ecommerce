@@ -355,6 +355,102 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Status": {
+				"enum": [
+					"ordering",
+					"ordered",
+					"delivery",
+					"canceled",
+					"completed"
+				],
+				"type": "string"
+			},
+			"IOrderDetail": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IOrder": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserRole": {
 				"enum": [
 					"all",
@@ -363,6 +459,173 @@
 					"customer"
 				],
 				"type": "string"
+			},
+			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/IOrder"
+						},
+						"type": "array"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IUser": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/IOrder"
+						},
+						"type": "array"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogComment": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"childComments": {
+						"items": {
+							"$ref": "#/components/schemas/IBlogCommentCreateProps"
+						},
+						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/IUser"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId",
+					"id",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCommentUpdateProps": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"ProductCategory": {
 				"properties": {
@@ -412,70 +675,6 @@
 					"createdAt",
 					"name",
 					"imgPath"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"User": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					},
-					"wishList": {
-						"items": {
-							"$ref": "#/components/schemas/Product"
-						},
-						"type": "array"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/Order"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"fname",
-					"lname",
-					"email",
-					"password",
-					"token",
-					"phone",
-					"address",
-					"role",
-					"wishList",
-					"orders"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -575,6 +774,70 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"User": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"wishList": {
+						"items": {
+							"$ref": "#/components/schemas/Product"
+						},
+						"type": "array"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/IOrder"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"fname",
+					"lname",
+					"email",
+					"password",
+					"token",
+					"phone",
+					"address",
+					"role",
+					"wishList",
+					"orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ProductComment": {
 				"properties": {
 					"id": {
@@ -627,56 +890,6 @@
 					"parentCommentId",
 					"parentComment",
 					"childComments"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IUser": {
-				"properties": {
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/Order"
-						},
-						"type": "array"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"fname",
-					"lname",
-					"id",
-					"createdAt"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -824,275 +1037,6 @@
 					"text",
 					"user",
 					"product"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Order": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
-						},
-						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/User"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"paymentCheck": {
-						"type": "boolean"
-					},
-					"note": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"shipping": {
-						"type": "number",
-						"format": "double"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"orderAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"userId",
-					"user",
-					"status",
-					"paymentMethod",
-					"paymentCheck",
-					"note",
-					"address",
-					"shipping",
-					"total",
-					"orderAt",
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Status": {
-				"enum": [
-					"ordering",
-					"ordered",
-					"delivery",
-					"canceled",
-					"completed"
-				],
-				"type": "string"
-			},
-			"PaymentMethod": {
-				"enum": [
-					"cod",
-					"banktransfer",
-					"e-wallet",
-					"gateway"
-				],
-				"type": "string"
-			},
-			"IOrderDetail": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderDetailCreateProps": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-				"properties": {
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/Order"
-						},
-						"type": "array"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"fname",
-					"lname",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IBlogComment": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"childComments": {
-						"items": {
-							"$ref": "#/components/schemas/IBlogCommentCreateProps"
-						},
-						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/IUser"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCommentUpdateProps": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1570,7 +1514,8 @@
 						"type": "string"
 					},
 					"email": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
 					},
 					"password": {
 						"type": "string"
@@ -1624,7 +1569,8 @@
 			"ILogin": {
 				"properties": {
 					"email": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
 					},
 					"password": {
 						"type": "string"
@@ -1637,7 +1583,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IRevokeMessage": {
+			"IRefreshMessage": {
 				"properties": {
 					"message": {
 						"type": "string"
@@ -1645,6 +1591,111 @@
 				},
 				"required": [
 					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaymentMethod": {
+				"enum": [
+					"cod",
+					"banktransfer",
+					"e-wallet",
+					"gateway"
+				],
+				"type": "string"
+			},
+			"IOrderDetailCreateProps": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Order": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"note": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"orderAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"userId",
+					"user",
+					"status",
+					"paymentMethod",
+					"paymentCheck",
+					"note",
+					"address",
+					"shipping",
+					"total",
+					"orderAt",
+					"details"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1669,61 +1720,22 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Period": {
+				"enum": [
+					"today",
+					"week",
+					"month",
+					"quarter",
+					"year"
+				],
+				"type": "string"
+			},
 			"OrderField": {
 				"enum": [
 					"orderAt",
 					"total"
 				],
 				"type": "string"
-			},
-			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"userId"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IOrder": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"userId",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
 			},
 			"IOrderCreateProps": {
 				"properties": {
@@ -2038,7 +2050,8 @@
 						"name": "time",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"
 						}
 					}
 				]
@@ -2076,7 +2089,8 @@
 						"name": "time",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"
 						}
 					}
 				]
@@ -2114,7 +2128,8 @@
 						"name": "time",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"type": "string",
+							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"
 						}
 					},
 					{
@@ -2122,8 +2137,9 @@
 						"name": "page",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -2131,8 +2147,9 @@
 						"name": "limit",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					}
 				]
@@ -2164,8 +2181,9 @@
 						"name": "category",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					},
 					{
@@ -2173,8 +2191,9 @@
 						"name": "limit",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -2190,8 +2209,9 @@
 						"name": "page",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -2291,12 +2311,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IBlog"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IBlog"
 								}
 							}
 						}
@@ -2571,8 +2586,9 @@
 						"name": "category",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					},
 					{
@@ -2580,8 +2596,9 @@
 						"name": "brand",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					},
 					{
@@ -2589,8 +2606,9 @@
 						"name": "limit",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -2598,8 +2616,9 @@
 						"name": "page",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -2631,8 +2650,9 @@
 						"name": "min",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					},
 					{
@@ -2640,8 +2660,9 @@
 						"name": "max",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -2654,12 +2675,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IProduct"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IProduct"
 								}
 							}
 						}
@@ -2699,12 +2715,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IProduct"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IProduct"
 								}
 							}
 						}
@@ -2735,12 +2746,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IProduct"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IProduct"
 								}
 							}
 						}
@@ -2821,12 +2827,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IProductVariant"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IProductVariant"
 								}
 							}
 						}
@@ -2866,18 +2867,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IProductVariant"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IProductVariant"
 								}
 							}
 						}
 					}
 				},
-				"description": "Update product variant partially",
+				"description": "Update product variant",
 				"tags": [
 					"Product"
 				],
@@ -3119,8 +3115,9 @@
 						"name": "limit",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -3128,8 +3125,9 @@
 						"name": "page",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -3158,12 +3156,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IUser"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IUser"
 								}
 							}
 						}
@@ -3202,12 +3195,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IUser"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IUser"
 								}
 							}
 						}
@@ -3246,12 +3234,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IUser"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IUser"
 								}
 							}
 						}
@@ -3394,14 +3377,14 @@
 		},
 		"/auth/token": {
 			"get": {
-				"operationId": "RevokeToken",
+				"operationId": "RefreshToken",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IRevokeMessage"
+									"$ref": "#/components/schemas/IRefreshMessage"
 								}
 							}
 						}
@@ -3430,7 +3413,7 @@
 						}
 					}
 				},
-				"description": "For Admin permission\r\nGet all Orders, be able to sort by price, time, user and to filter by price, time, user...\r\nNot done",
+				"description": "For Admin permission\r\nGet all Orders, be able to sort by price, time, user and to filter by price, time, user...",
 				"tags": [
 					"Order"
 				],
@@ -3455,8 +3438,9 @@
 						"name": "limit",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -3464,8 +3448,9 @@
 						"name": "page",
 						"required": false,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
 						}
 					},
 					{
@@ -3473,7 +3458,7 @@
 						"name": "time",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"$ref": "#/components/schemas/Period"
 						}
 					},
 					{
@@ -3481,7 +3466,7 @@
 						"name": "status",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"$ref": "#/components/schemas/Status"
 						}
 					},
 					{
@@ -3489,7 +3474,7 @@
 						"name": "paymentCheck",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"type": "boolean"
 						}
 					},
 					{
@@ -3518,18 +3503,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IOrder"
 								}
 							}
 						}
 					}
 				},
-				"description": "Create new order when user add items to order that is not already existed.\r\nDone",
+				"description": "Create new order when user add items to order that is not already existed.",
 				"tags": [
 					"Order"
 				],
@@ -3654,12 +3634,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IOrder"
 								}
 							}
 						}
@@ -3732,12 +3707,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IOrder"
 								}
 							}
 						}
@@ -3890,12 +3860,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/IOrder"
-										}
-									],
-									"nullable": true
+									"$ref": "#/components/schemas/IOrder"
 								}
 							}
 						}

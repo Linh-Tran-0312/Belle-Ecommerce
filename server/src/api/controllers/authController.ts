@@ -1,11 +1,46 @@
 import { Body, Post, Route, Tags, Get, Controller, Request } from "tsoa";
-import { IUser, IUserCreateProps } from "../models";
+import { IUser, IUserCreateProps, UserRole } from "../models";
 import { AuthService, IUserAuth } from "../services";
 import express from "express";
 
 export interface ILogin {
+  /** 
+  * @pattern ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+  */
+  email: string,
+  password: string,
+}
+class CreateUserModel  {
+
+  fname: string;
+  lname: string;
+   /** 
+  * @pattern ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+  */
+  email: string;
+  password: string;
+  role?: UserRole;
+   /** 
+  * @pattern [0-9]{10}
+  */
+  phone?: string;
+  address?: string;
+
+  constructor( fname: string,
+    lname: string,
     email: string,
     password: string,
+    role?: UserRole,
+    phone?: string,
+    address?: string) {
+    this.fname = fname;
+    this.lname = lname;
+    this.email = email;
+    this.role = role;
+    this.phone = phone;
+    this.password = password;
+    this.address = address;
+  }
 }
 export interface IRefreshToken {
     refreshToken: string
@@ -13,7 +48,7 @@ export interface IRefreshToken {
 export interface IAccessToken {
     token: string;
 }
-interface IRevokeMessage {
+interface IRefreshMessage {
     message: string
 }
 @Route("auth")
@@ -97,7 +132,7 @@ export class AuthController  extends Controller {
      * Refresh expired access token
      */
     @Get("/token")
-    public async revokeToken(@Request() req: express.Request): Promise<IRevokeMessage> {
+    public async RefreshToken(@Request() req: express.Request): Promise<IRefreshMessage> {
         const data = req.cookies.refreshToken;
        const result = await this._authService.refreshAccessToken({ refreshToken: data});
        this.setCookies({ token: {

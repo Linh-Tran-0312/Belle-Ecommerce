@@ -2,7 +2,7 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { Product } from ".";
 import { CustomBaseEntity, IBaseEntity } from "./base.model";
-import { Order } from "./order.model";
+import { IOrder, Order } from "./order.model";
 
 export enum UserRole {
     ALL = "all",
@@ -14,6 +14,9 @@ export enum UserRole {
 export interface IUserCreateProps {
     fname: string;
     lname: string;
+    /** 
+    * @pattern ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+    */
     email: string;
     password: string;
     role?: UserRole;
@@ -28,7 +31,7 @@ export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBa
     token?: string;
     phone?: string;
     address?: string;
-    orders?: Order[]
+    orders?: IOrder[]
 }; 
 
 @Entity()
@@ -67,5 +70,5 @@ export class User extends CustomBaseEntity implements IUserCreateProps {
     wishList!: Product[];
 
     @OneToMany(() => Order, order => order.user)
-    orders!: Array<Order>
+    orders!: Array<IOrder>
 }

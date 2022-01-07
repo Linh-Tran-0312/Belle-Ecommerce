@@ -32,7 +32,7 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
                                 .orWhere("user.address ILike :address", {address: (`%${query.search}%`) })
                             }))
             }
-            else if(query.search !== "" && query.role === UserRole.ALL)
+            else if(!!query.search && query.role === UserRole.ALL)
             {
                 userQuery.orWhere("user.fname ILike :fname", {fname: (`%${query.search}%`) })
                             .orWhere("user.lname ILike :lname", {lname: (`%${query.search}%`) })
@@ -40,7 +40,7 @@ export class UserRepository extends BaseRepository<IUser, User, IUserCreateProps
                             .orWhere("user.email ILike :email", {email: (`%${query.search}%`) })
                             .orWhere("user.address ILike :address", {address: (`%${query.search}%`) })
             }
-            else if(query.search === "" && query.role !== UserRole.ALL){
+            else if(!!query.search  && query.role !== UserRole.ALL){
                 userQuery.where("user.role = :role", { role: query.role})
             }
             else {};
