@@ -15,7 +15,7 @@ import StarIcon from '@material-ui/icons/Star';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams , useHistory} from "react-router-dom";
 import orderActions from "../actions/order";
 import shopActions from "../actions/shop";
 import '../App.css';
@@ -86,6 +86,7 @@ const ProductPage = () => {
     const { productId } = useParams();
     const location = useLocation();
     const dispatch = useDispatch();
+    const history = useHistory()
     const matchXS = useMediaQuery('(max-width:600px)');
     const [tab, setTab] = useState(0);
     const classes = useStyle();
@@ -106,7 +107,7 @@ const ProductPage = () => {
     useEffect(() => {
         if(!isNaN(productId) && productId !== undefined)
         {
-           dispatch(shopActions.getProductById(productId))
+           dispatch(shopActions.getProductById(productId,history))
 
         }
         setItem("");

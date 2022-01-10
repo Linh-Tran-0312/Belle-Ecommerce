@@ -1,7 +1,7 @@
 import api from "../api";
 import { ACTION, MSG, SnackBar } from "../constants";
 import { enqueueSnackbar } from "./notification";
-import errorHandler from "../helper/errorHandler";
+import errorHandler, { handleValidationError} from "../helper/errorHandler";
 const authActions = {
     register: (formData, history, prePath, items) => async(dispatch) => {
         try {
@@ -24,7 +24,12 @@ const authActions = {
             }       
         } catch (error) {
             if(error.response) {
-                dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.response?.data?.message})
+                if(error.response.data?.message === "Validation Failed") {
+                    const msg = handleValidationError(error);
+                    dispatch({ type: ACTION.USER_AUTH_ERROR, payload: msg})
+                } else {
+                    dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.response?.data?.message})
+                }
             } else {
                 console.log(error)
                 dispatch({ type: ACTION.USER_AUTH_ERROR, payload: MSG.STH_WRONG})
@@ -47,7 +52,12 @@ const authActions = {
             history.push(prePath);
         } catch (error) {
             if(error.response) {
-                dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.response?.data?.message})
+                if(error.response.data?.message === "Validation Failed") {
+                    const msg = handleValidationError(error);
+                    dispatch({ type: ACTION.USER_AUTH_ERROR, payload: msg})
+                } else {
+                    dispatch({ type: ACTION.USER_AUTH_ERROR, payload: error.response?.data?.message})
+                }
             } else {
                 console.log(error)
                 dispatch({ type: ACTION.USER_AUTH_ERROR, payload: MSG.STH_WRONG})

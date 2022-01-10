@@ -82,6 +82,12 @@ const publicRoutes = [
         exact: true,
         label: "Error Page",
         component: lazy(() => import("../../pages/404page"))
+    },
+    {
+        path: "/notfound",
+        exact: true,
+        label: "Error Page",
+        component: lazy(() => import("../../pages/404page"))
     }
 ]
 

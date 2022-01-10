@@ -3,7 +3,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import draftToHtml from 'draftjs-to-html';
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import blogActions from "../actions/blog";
 import '../App.css';
 import BlogThumb from "../components/BlogThumb";
@@ -19,13 +19,14 @@ export default () => {
     let { id } = useParams();
     const dispatch = useDispatch();
     const location = useLocation();
+    const history = useHistory() 
     const latestBlogs = useSelector(state => state.home).latestBlogs;
     const categories = useSelector(state => state.home).blogCategories;
     const blog = useSelector(state => state.blog).blog;
 
     useEffect(() => {
         if (!isNaN(id) && id !== undefined) {
-            dispatch(blogActions.getBlogById(id))
+            dispatch(blogActions.getBlogById(id,history))
         }
     }, [id, location]);
 

@@ -12,12 +12,13 @@ const blogActions = {
             console.log(error)
         }
     },
-    getBlogById: (id) => async(dispatch) => {
+    getBlogById: (id, history) => async(dispatch) => {
         try {
          
             const { data } = await api.getBlogById(id);
             dispatch({ type: ACTION.BLOG, payload: data})
         } catch (error) {
+            history.push("/notfound")
             console.log(error)
         }
     }

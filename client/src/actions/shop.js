@@ -32,11 +32,12 @@ const shopActions = {
             console.log(error)
         }
     },
-    getProductById: (id) => async(dispatch) => {
+    getProductById: (id, history) => async(dispatch) => {
         try {
                 const { data } = await api.getProductById(id);
                 dispatch({ type: ACTION.PRODUCT, payload: data})
         } catch (error) {
+            history.push("/notfound")
                 console.log(error)
         }
     },
