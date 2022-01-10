@@ -1,17 +1,14 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
-import { IBrand, IBrandCreateProps } from "../models";
+import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
+import { IBrand, UserRole } from "../models";
 import { BrandService } from "../services";
-import { UserRole } from "../models";
-export interface IBrandUpdateProps {
-    name?: string;
-    imgPath?: string;
-}
+import { ValidateBrandModel } from "../validations";
+
 
 @Route("brands")
 @Tags('Product Brand')
 export class BrandController {
     private _brandService: BrandService;
-
+ 
     constructor() {
         this._brandService = new BrandService();
     }
@@ -28,20 +25,26 @@ export class BrandController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createBrand(@Body() data: IBrandCreateProps): Promise<IBrand> {
+    public async createBrand(@Body() data: ValidateBrandModel): Promise<IBrand> {
         return this._brandService.create(data)
     }
     /**
     * Update brand info
+    * @param {number} id
+    * @isInt id Brand id must be an integer
+    * @minimum id 0 Brand id must be at least 0
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateBrandById(@Path() id: number, @Body() data: IBrandUpdateProps): Promise<IBrand> {
+    public async updateBrandById(@Path() id: number, @Body() data: ValidateBrandModel): Promise<IBrand> {
         return this._brandService.update(id, data);
     }
     /**
-     * Delete brand
-     */
+    * Delete brand
+    * @param {number} id
+    * @isInt id Brand id must be an integer
+    * @minimum id 0 Brand id must be at least 0
+    */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Delete("/:id")
     public async deleteBrandById(@Path() id: number): Promise<void> {

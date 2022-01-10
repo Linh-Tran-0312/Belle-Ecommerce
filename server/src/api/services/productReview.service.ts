@@ -2,10 +2,14 @@ import { IProductReview, IProductReviewCreateProps, ProductReview, Status } from
 import { ProductReviewRepository, OrderDetailRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { LessThan } from "typeorm";
-import { IReviewCount } from "../controllers/reviewController";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
-
+import { UserMapper, IUserName } from "../mappers";
+export interface IReviewCount {
+    reviewCount: number,
+    overallReview: number,
+    details: number[] // details[0] -> number of oneStar, details[1] -> number of twoStart,...
+}
 //@Service({ id: "OrderRepository-service"})
 export class ProductReviewService extends BaseService<IProductReview, ProductReviewRepository> implements IBaseService<IProductReview>  {
     private orderDetailRepository: OrderDetailRepository;
@@ -23,13 +27,8 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
         if(cursor !== 0) options.where.id = LessThan(cursor);
         const result = await this.repository.find(options)
         result.forEach(review => {
-            delete review?.user?.orders;
-            delete review?.user?.address;
-            delete review?.user?.email;
-            delete review?.user?.password;
-            delete review?.user?.phone;
-            delete review?.user?.role;
-            delete review?.user?.token;
+            const user = UserMapper.toUserName(review.user!);
+            review.user = user; 
         })
         return result
     }
@@ -97,15 +96,9 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
             }
         })
         if(!review) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.BAD_REQUEST);
-
-        delete review?.user?.orders;
-        delete review?.user?.address;
-        delete review?.user?.email;
-        delete review?.user?.password;
-        delete review?.user?.phone;
-        delete review?.user?.role;
-        delete review?.user?.token;
-         
+        const user = UserMapper.toUserName(review.user!);
+        review.user = user; 
+              
         return review;
     }
 }

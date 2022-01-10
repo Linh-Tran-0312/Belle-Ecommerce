@@ -14,9 +14,6 @@ export enum UserRole {
 export interface IUserCreateProps {
     fname: string;
     lname: string;
-    /** 
-    * @pattern ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
-    */
     email: string;
     password: string;
     role?: UserRole;

@@ -1,11 +1,36 @@
-import { ProductRepository, UserRepository, OrderRepository } from "../repositories"
-import { IOverviewReport, ISalesReport, IOrderReport, IProductReports } from "../controllers/reportController";
-import {periodCal, Period, getDay, daysInMonth, getMonth, regYearMonth,regYear, timeCal, displayTime } from "../helpers/timeHandler";
-import { Status, IOrder } from "../models";
-import { MoreThan, In } from "typeorm";
-import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { In, MoreThan } from "typeorm";
 import { HttpCode } from "../helpers/HttpCode";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { daysInMonth, displayTime, getDay, getMonth, Period, periodCal, regYear, regYearMonth, timeCal } from "../helpers/timeHandler";
+import { IOrder, Status } from "../models";
+import { OrderRepository, UserRepository } from "../repositories";
 
+export interface IOverviewReport {
+    sales: number,
+    orders: number,
+    registers: number
+}
+export interface ISalesReport {
+    time: string,
+    sales: number,
+    orders: number
+}
+ 
+export interface IOrderReport {
+    completedOrders: number,
+    canceledOrders: number
+}
+export interface IProductReport {
+    id: number,
+    name: string,
+    brand: string,
+    quantity: number,
+    sales: number
+}
+export interface IProductReports {
+    total: string,
+    products: IProductReport[]
+}
 
 export class ReportService {
     private userRepo: UserRepository;
@@ -52,7 +77,6 @@ export class ReportService {
     }
     public async getSalesReport(timeStr: string): Promise<ISalesReport> {
 
-       
         let orders: any;
         let result: any;
 

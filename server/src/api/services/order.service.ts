@@ -1,18 +1,30 @@
-import { IOrder, IOrderCreateProps, Order, OrderDetail, IOrderDetail, IOrderDetailCreateProps, Status, PaymentMethod  } from "../models";
-import { OrderRepository, IOrders } from "../repositories";
-import { BaseService, IBaseService  } from "./base.service";
-import { Change } from "./index";
-import { IOrderUpdateItems, IOrderUpdateProps } from "../controllers/orderController";
-import { periodCal  } from "../helpers/timeHandler";
-import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
-import { QueryExpressionMap } from "typeorm/query-builder/QueryExpressionMap";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { periodCal } from "../helpers/timeHandler";
+import { IOrder, IOrderCreateProps, IOrderDetailCreateProps, Order, OrderDetail, PaymentMethod, Status } from "../models";
+import { IOrders, OrderRepository } from "../repositories";
+import { BaseService, IBaseService } from "./base.service";
+import { Change } from "./index";
+
 export interface IPlaceOrder {
     address: string;
     note?: string;
     paymentMethod: PaymentMethod;
     shipping?: number;
     total?: number;
+}
+export interface IOrderUpdateProps {
+    status?: Status;
+    paymentCheck?: boolean;
+    paymentMethod?: PaymentMethod;
+    address?: string,
+}
+
+export interface IOrderDetailQtyUpdate {
+    quantity: number
+}
+export interface IOrderUpdateItems {
+    details: IOrderDetailCreateProps[];
 }
 
 export enum OrderField {
@@ -88,7 +100,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                 where: {
                 userId: id,
                 status: Status.ORDERING
-            }})   // super.getOneById(id, ["details"]);
+            }});
             if(!currentOrder) {
                 currentOrder = new Order();
                 currentOrder.userId = id;
@@ -185,8 +197,6 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
                
             }
             if(order === null) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.NOT_FOUND)
-            return await this.repository.getOrderById(id);
-            
+            return await this.repository.getOrderById(id);          
     }
-    
 }

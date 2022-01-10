@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, JoinColumn, OneToMany} from "typeorm";
-import { IBaseEntity, CustomBaseEntity  } from "./base.model";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { CustomBaseEntity, IBaseEntity } from "./base.model";
 import { Blog } from "./blog.model";
 import { IUser, User } from "./user.model";
 

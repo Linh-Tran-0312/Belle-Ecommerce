@@ -1,13 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from '@tsoa/runtime';
+import { OrderController } from './../controllers/orderController';
 import { ReportController } from './../controllers/reportController';
-import { BlogController } from './../controllers/blogController';
-import { ProductController } from './../controllers/productController';
 import { ReviewController } from './../controllers/reviewController';
 import { UserController } from './../controllers/userController';
+import { ProductController } from './../controllers/productController';
+import { BlogController } from './../controllers/blogController';
 import { AuthController } from './../controllers/authController';
-import { OrderController } from './../controllers/orderController';
 import { PingController } from './../controllers/pingController';
 import { BlogCategoryController } from './../controllers/blogCategoryController';
 import { SizeController } from './../controllers/sizeController';
@@ -17,6 +17,295 @@ import { ColorController } from './../controllers/colorController';
 import { expressAuthentication } from './../middlewares/AuthHandler';
 
 const models: TsoaRoute.Models = {
+    "UserRole": {
+        "dataType": "refEnum",
+        "enums": ["all","admin","editor","customer"],
+    },
+    "ProductCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "name": {"dataType":"string","required":true},
+            "imgPath": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Brand": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "name": {"dataType":"string","required":true},
+            "imgPath": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "User": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "password": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole","required":true},
+            "phone": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "token": {"dataType":"string","required":true},
+            "wishList": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Product": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "sku": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "brandId": {"dataType":"double","required":true},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "name": {"dataType":"string","required":true},
+            "summary": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "category": {"ref":"ProductCategory","required":true},
+            "brand": {"ref":"Brand","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "reviewCount": {"dataType":"double","required":true},
+            "comments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+            "variants": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductVariant"},"required":true},
+            "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductReview"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductComment": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "text": {"dataType":"string","required":true},
+            "userId": {"dataType":"double","required":true},
+            "productId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "product": {"ref":"Product","required":true},
+            "parentComment": {"ref":"ProductComment","required":true},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Status": {
+        "dataType": "refEnum",
+        "enums": ["ordering","ordered","delivery","canceled","completed"],
+    },
+    "IOrderDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"double"},
+            "productVariantId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+        },
+        "additionalProperties": false,
+    },
+    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
+    },
+    "IOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "userId": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "status": {"ref":"Status"},
+            "total": {"dataType":"double"},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
+        },
+        "additionalProperties": false,
+    },
+    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"token":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime"}},"validators":{}},
+    },
+    "IUser": {
+        "dataType": "refObject",
+        "properties": {
+            "password": {"dataType":"string"},
+            "email": {"dataType":"string"},
+            "token": {"dataType":"string"},
+            "phone": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole"},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+        },
+        "additionalProperties": false,
+    },
+    "Size": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Color": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "code": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductVariant": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "productId": {"dataType":"double","required":true},
+            "sizeId": {"dataType":"double","required":true},
+            "colorId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "product": {"ref":"Product","required":true},
+            "size": {"ref":"Size","required":true},
+            "color": {"ref":"Color","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductReview": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "title": {"dataType":"string","required":true},
+            "text": {"dataType":"string","required":true},
+            "productId": {"dataType":"double","required":true},
+            "rating": {"dataType":"double","required":true},
+            "userId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "product": {"ref":"Product","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "PaymentMethod": {
+        "dataType": "refEnum",
+        "enums": ["cod","banktransfer","e-wallet","gateway"],
+    },
+    "IOrderDetailCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"double"},
+            "productVariantId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Order": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "userId": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"},"required":true},
+            "user": {"ref":"User","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "note": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "shipping": {"dataType":"double","required":true},
+            "total": {"dataType":"double","required":true},
+            "orderAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrders": {
+        "dataType": "refObject",
+        "properties": {
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Period": {
+        "dataType": "refEnum",
+        "enums": ["today","week","month","quarter","year"],
+    },
+    "OrderField": {
+        "dataType": "refEnum",
+        "enums": ["orderAt","total"],
+    },
+    "Change": {
+        "dataType": "refEnum",
+        "enums": ["DESC","ASC"],
+    },
+    "ValidateOrderDetailModel": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"integer","validators":{"minimum":{"value":0}}},
+            "productVariantId": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+            "quantity": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+            "unitPrice": {"dataType":"double","required":true,"validators":{"minimum":{"value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderCreateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"ValidateOrderDetailModel"},"required":true},
+            "userId": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderUpdateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"ValidateOrderDetailModel"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrderUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"Status"},
+            "paymentCheck": {"dataType":"boolean"},
+            "paymentMethod": {"ref":"PaymentMethod"},
+            "address": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    "IPlaceOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "address": {"dataType":"string","required":true},
+            "note": {"dataType":"string"},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "shipping": {"dataType":"double"},
+            "total": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateUpdateQuantityModel": {
+        "dataType": "refObject",
+        "properties": {
+            "quantity": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+        },
+        "additionalProperties": false,
+    },
     "IOverviewReport": {
         "dataType": "refObject",
         "properties": {
@@ -62,303 +351,74 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "BlogCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Blog": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "title": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "imgPath": {"dataType":"string","required":true},
-            "content": {"dataType":"string","required":true},
-            "commentAllow": {"dataType":"boolean","required":true},
-            "category": {"ref":"BlogCategory","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IBlogs": {
-        "dataType": "refObject",
-        "properties": {
-            "blogs": {"dataType":"array","array":{"dataType":"refObject","ref":"Blog"},"required":true},
-            "total": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "BlogField": {
-        "dataType": "refEnum",
-        "enums": ["title","createdAt"],
-    },
-    "Change": {
-        "dataType": "refEnum",
-        "enums": ["DESC","ASC"],
-    },
-    "IBlogCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IBlog": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "imgPath": {"dataType":"string"},
-            "content": {"dataType":"string","required":true},
-            "commentAllow": {"dataType":"boolean"},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "category": {"ref":"IBlogCategory"},
-        },
-        "additionalProperties": false,
-    },
-    "IBlogCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "imgPath": {"dataType":"string"},
-            "content": {"dataType":"string","required":true},
-            "commentAllow": {"dataType":"boolean"},
-        },
-        "additionalProperties": false,
-    },
-    "IBlogUpdateProps": {
+    "IProductReview": {
         "dataType": "refObject",
         "properties": {
             "title": {"dataType":"string"},
-            "categoryId": {"dataType":"double"},
-            "imgPath": {"dataType":"string"},
-            "content": {"dataType":"string"},
-            "commentAllow": {"dataType":"boolean"},
-        },
-        "additionalProperties": false,
-    },
-    "IBlogCommentCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Status": {
-        "dataType": "refEnum",
-        "enums": ["ordering","ordered","delivery","canceled","completed"],
-    },
-    "IOrderDetail": {
-        "dataType": "refObject",
-        "properties": {
-            "orderId": {"dataType":"double"},
-            "productVariantId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "unitPrice": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
-    },
-    "IOrder": {
-        "dataType": "refObject",
-        "properties": {
+            "text": {"dataType":"string"},
+            "productId": {"dataType":"double","required":true},
+            "rating": {"dataType":"double","required":true},
             "userId": {"dataType":"double","required":true},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "status": {"ref":"Status"},
-            "total": {"dataType":"double"},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
-        },
-        "additionalProperties": false,
-    },
-    "UserRole": {
-        "dataType": "refEnum",
-        "enums": ["all","admin","editor","customer"],
-    },
-    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"token":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"role":{"ref":"UserRole"},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
-    },
-    "IUser": {
-        "dataType": "refObject",
-        "properties": {
-            "password": {"dataType":"string"},
-            "email": {"dataType":"string"},
-            "token": {"dataType":"string"},
-            "phone": {"dataType":"string"},
-            "address": {"dataType":"string"},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole"},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IBlogComment": {
-        "dataType": "refObject",
-        "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
+            "createdAt": {"dataType":"datetime"},
             "user": {"ref":"IUser"},
         },
         "additionalProperties": false,
     },
-    "IBlogCommentUpdateProps": {
+    "IReviewCount": {
         "dataType": "refObject",
         "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ProductCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-            "imgPath": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Brand": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-            "imgPath": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Product": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "sku": {"dataType":"string","required":true},
-            "categoryId": {"dataType":"double","required":true},
-            "brandId": {"dataType":"double","required":true},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "name": {"dataType":"string","required":true},
-            "summary": {"dataType":"string","required":true},
-            "description": {"dataType":"string","required":true},
-            "price": {"dataType":"double","required":true},
-            "category": {"ref":"ProductCategory","required":true},
-            "brand": {"ref":"Brand","required":true},
-            "overallReview": {"dataType":"double","required":true},
             "reviewCount": {"dataType":"double","required":true},
-            "comments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
-            "variants": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductVariant"},"required":true},
-            "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductReview"},"required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"double"},"required":true},
         },
         "additionalProperties": false,
     },
-    "User": {
+    "ValidateReviewModel": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true},
-            "password": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole","required":true},
-            "phone": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
-            "token": {"dataType":"string","required":true},
-            "wishList": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"},"required":true},
+            "title": {"dataType":"string"},
+            "text": {"dataType":"string"},
+            "productId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
+            "rating": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Rating must be an integer"},"minimum":{"errorMsg":"Min rating must be 1","value":1},"maximum":{"errorMsg":"Max rating must be 5","value":5}}},
+            "userId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
         },
         "additionalProperties": false,
     },
-    "ProductComment": {
+    "IUsers": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "text": {"dataType":"string","required":true},
-            "userId": {"dataType":"double","required":true},
-            "productId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double","required":true},
-            "user": {"ref":"User","required":true},
-            "product": {"ref":"Product","required":true},
-            "parentComment": {"ref":"ProductComment","required":true},
-            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"User"},"required":true},
+            "total": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
-    "Size": {
+    "UserField": {
+        "dataType": "refEnum",
+        "enums": ["fname","sale","createdAt"],
+    },
+    "ValidateUserCreateModel": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
+            "fname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"First name must not be empty","value":"^(?!\\s*$).+"}}},
+            "lname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Last name must not be empty","value":"^(?!\\s*$).+"}}},
+            "email": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Email is invalid","value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
+            "role": {"ref":"UserRole"},
+            "phone": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Phone number is invalid","value":9},"pattern":{"errorMsg":"Phone number is invalid","value":"[0-9]{9,12}"}}},
+            "address": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Address is invalid","value":5}}},
+            "password": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Password must be at least 6 characters","value":6}}},
         },
         "additionalProperties": false,
     },
-    "Color": {
+    "ValidateUserUpdateModel": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "code": {"dataType":"string","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ProductVariant": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "productId": {"dataType":"double","required":true},
-            "sizeId": {"dataType":"double","required":true},
-            "colorId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "product": {"ref":"Product","required":true},
-            "size": {"ref":"Size","required":true},
-            "color": {"ref":"Color","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ProductReview": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "title": {"dataType":"string","required":true},
-            "text": {"dataType":"string","required":true},
-            "productId": {"dataType":"double","required":true},
-            "rating": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
-            "user": {"ref":"User","required":true},
-            "product": {"ref":"Product","required":true},
+            "fname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"First name must not be empty","value":"^(?!\\s*$).+"}}},
+            "lname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Last name must not be empty","value":"^(?!\\s*$).+"}}},
+            "email": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Email is invalid","value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
+            "role": {"ref":"UserRole"},
+            "phone": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Phone number is invalid","value":9},"pattern":{"errorMsg":"Phone number is invalid","value":"[0-9]{9,12}"}}},
+            "address": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Address is invalid","value":5}}},
         },
         "additionalProperties": false,
     },
@@ -380,7 +440,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "imgPath": {"dataType":"string"},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": false,
     },
@@ -390,7 +450,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "imgPath": {"dataType":"string"},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": false,
     },
@@ -399,7 +459,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string"},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": false,
     },
@@ -409,7 +469,7 @@ const models: TsoaRoute.Models = {
             "code": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "createdAt": {"dataType":"datetime"},
         },
         "additionalProperties": false,
     },
@@ -421,7 +481,7 @@ const models: TsoaRoute.Models = {
             "colorId": {"dataType":"double","required":true},
             "quantity": {"dataType":"double","required":true},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "createdAt": {"dataType":"datetime"},
             "size": {"ref":"ISize"},
             "color": {"ref":"IColor"},
         },
@@ -433,7 +493,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "imgPath": {"dataType":"string"},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "createdAt": {"dataType":"datetime"},
             "category": {"ref":"IProductCategory"},
             "brand": {"ref":"IBrand"},
             "overallReview": {"dataType":"double"},
@@ -442,129 +502,157 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "IProductCreateProps": {
+    "ValidateProductModel": {
         "dataType": "refObject",
         "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
             "sku": {"dataType":"string"},
-            "categoryId": {"dataType":"double","required":true},
-            "brandId": {"dataType":"double","required":true},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"}},
-            "name": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
+            "brandId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id value must be at least 0","value":0}}},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"validators":{"minItems":{"value":0}}},
             "summary": {"dataType":"string"},
             "description": {"dataType":"string"},
-            "price": {"dataType":"double","required":true},
+            "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
         },
         "additionalProperties": false,
     },
-    "IProductUpdateProps": {
+    "ValidateVariantCreateModel": {
         "dataType": "refObject",
         "properties": {
-            "sku": {"dataType":"string"},
-            "categoryId": {"dataType":"double"},
-            "brandId": {"dataType":"double"},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"}},
-            "name": {"dataType":"string"},
-            "summary": {"dataType":"string"},
-            "description": {"dataType":"string"},
-            "price": {"dataType":"double"},
+            "sizeId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id value must be at least 0","value":0}}},
+            "colorId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id value must be at least 0","value":0}}},
+            "quantity": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Quantity must be an integer"},"minimum":{"errorMsg":"Quantity value must be at least 0","value":0}}},
+            "productId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
         },
         "additionalProperties": false,
     },
-    "IProductVariantCreateProps": {
+    "ValidateVariantUpdateModel": {
         "dataType": "refObject",
         "properties": {
-            "productId": {"dataType":"double","required":true},
-            "sizeId": {"dataType":"double","required":true},
-            "colorId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
+            "sizeId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id value must be at least 0","value":0}}},
+            "colorId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id value must be at least 0","value":0}}},
+            "quantity": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Quantity must be an integer"},"minimum":{"errorMsg":"Quantity value must be at least 0","value":0}}},
         },
         "additionalProperties": false,
     },
-    "IProductVariantUpdateProps": {
+    "BlogCategory": {
         "dataType": "refObject",
         "properties": {
-            "colorId": {"dataType":"double"},
-            "sizeId": {"dataType":"double"},
-            "quantity": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    "IProductReview": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string"},
-            "text": {"dataType":"string"},
-            "productId": {"dataType":"double","required":true},
-            "rating": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
             "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "user": {"ref":"IUser"},
+            "createdAt": {"dataType":"datetime"},
+            "name": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
-    "IReviewCount": {
+    "Blog": {
         "dataType": "refObject",
         "properties": {
-            "reviewCount": {"dataType":"double","required":true},
-            "overallReview": {"dataType":"double","required":true},
-            "details": {"dataType":"array","array":{"dataType":"double"},"required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string","required":true},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean","required":true},
+            "category": {"ref":"BlogCategory","required":true},
         },
         "additionalProperties": false,
     },
-    "IProductReviewCreateProps": {
+    "IBlogs": {
         "dataType": "refObject",
         "properties": {
-            "title": {"dataType":"string"},
-            "text": {"dataType":"string"},
-            "productId": {"dataType":"double","required":true},
-            "rating": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IUsers": {
-        "dataType": "refObject",
-        "properties": {
-            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"User"},"required":true},
+            "blogs": {"dataType":"array","array":{"dataType":"refObject","ref":"Blog"},"required":true},
             "total": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
-    "UserField": {
+    "BlogField": {
         "dataType": "refEnum",
-        "enums": ["fname","sale","createdAt"],
+        "enums": ["title","createdAt"],
     },
-    "IUserCreateProps": {
+    "IBlogCategory": {
         "dataType": "refObject",
         "properties": {
+            "name": {"dataType":"string","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+        },
+        "additionalProperties": false,
+    },
+    "IBlog": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "category": {"ref":"IBlogCategory"},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateBlogModel": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Blog title must not be empty","value":"^(?!\\s*$).+"}}},
+            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
+            "imgPath": {"dataType":"string"},
+            "content": {"dataType":"string","required":true},
+            "commentAllow": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IBlogCommentCreateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double"},
+            "userId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IBlogComment": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "parentCommentId": {"dataType":"double"},
+            "userId": {"dataType":"double","required":true},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime"},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
+            "user": {"ref":"IUser"},
+        },
+        "additionalProperties": false,
+    },
+    "IBlogCommentUpdateProps": {
+        "dataType": "refObject",
+        "properties": {
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "userId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IUserAuth": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
             "fname": {"dataType":"string","required":true},
             "lname": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
-            "password": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole"},
-            "phone": {"dataType":"string"},
-            "address": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "IUserUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "lname": {"dataType":"string"},
-            "fname": {"dataType":"string"},
-            "password": {"dataType":"string"},
-            "email": {"dataType":"string"},
             "phone": {"dataType":"string"},
             "address": {"dataType":"string"},
             "role": {"ref":"UserRole"},
         },
         "additionalProperties": false,
     },
-    "ILogin": {
+    "ValidateLoginModel": {
         "dataType": "refObject",
         "properties": {
-            "email": {"dataType":"string","required":true,"validators":{"pattern":{"value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
+            "email": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Email is invalid","value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
             "password": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -576,98 +664,6 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "PaymentMethod": {
-        "dataType": "refEnum",
-        "enums": ["cod","banktransfer","e-wallet","gateway"],
-    },
-    "IOrderDetailCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "orderId": {"dataType":"double"},
-            "productVariantId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "unitPrice": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Order": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "userId": {"dataType":"double","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"},"required":true},
-            "user": {"ref":"User","required":true},
-            "status": {"ref":"Status","required":true},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "note": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
-            "shipping": {"dataType":"double","required":true},
-            "total": {"dataType":"double","required":true},
-            "orderAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOrders": {
-        "dataType": "refObject",
-        "properties": {
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
-            "total": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Period": {
-        "dataType": "refEnum",
-        "enums": ["today","week","month","quarter","year"],
-    },
-    "OrderField": {
-        "dataType": "refEnum",
-        "enums": ["orderAt","total"],
-    },
-    "IOrderCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "userId": {"dataType":"double","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"}},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderUpdateItems": {
-        "dataType": "refObject",
-        "properties": {
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetailCreateProps"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "status": {"ref":"Status"},
-            "paymentCheck": {"dataType":"boolean"},
-            "paymentMethod": {"ref":"PaymentMethod"},
-            "address": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "IPlaceOrder": {
-        "dataType": "refObject",
-        "properties": {
-            "address": {"dataType":"string","required":true},
-            "note": {"dataType":"string"},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "shipping": {"dataType":"double"},
-            "total": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderDetailQtyUpdate": {
-        "dataType": "refObject",
-        "properties": {
-            "quantity": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
     "PingMessage": {
         "dataType": "refObject",
         "properties": {
@@ -675,78 +671,299 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "IBlogCategoryCreateProps": {
+    "ValidateBlogCateModel": {
         "dataType": "refObject",
         "properties": {
-            "name": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Blog category must not be empty","value":"^(?!\\s*$).+"}}},
         },
         "additionalProperties": false,
     },
-    "ISizeCreateProps": {
+    "ValidateSizeModel": {
         "dataType": "refObject",
         "properties": {
-            "name": {"dataType":"string"},
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Size must not be empty","value":"^(?!\\s*$).+"}}},
         },
         "additionalProperties": false,
     },
-    "ISizeUpdateProps": {
+    "ValidateBrandModel": {
         "dataType": "refObject",
         "properties": {
-            "name": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "IBrandCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Brand must not be empty","value":"^(?!\\s*$).+"}}},
             "imgPath": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
-    "IBrandUpdateProps": {
+    "ValidateCategoryModel": {
         "dataType": "refObject",
         "properties": {
-            "name": {"dataType":"string"},
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Category must not be empty","value":"^(?!\\s*$).+"}}},
             "imgPath": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
-    "IProductCategoryCreateProps": {
+    "ValidateColorModel": {
         "dataType": "refObject",
         "properties": {
-            "name": {"dataType":"string","required":true},
-            "imgPath": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "IProductCategoryUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string"},
-            "imgPath": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "IColorCreateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "code": {"dataType":"string","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IColorUpdateProps": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string"},
-            "code": {"dataType":"string"},
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Category must not be empty","value":"^(?!\\s*$).+"}}},
+            "code": {"dataType":"string","required":true,"validators":{"maxLength":{"value":7},"pattern":{"errorMsg":"Color code must be HEX format","value":"^[#]\\w{6}"}}},
         },
         "additionalProperties": false,
     },
 };
 
 export function RegisterRoutes(app: any) {
+        app.get('/orders',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    time: {"in":"query","name":"time","ref":"Period"},
+                    status: {"in":"query","name":"status","ref":"Status"},
+                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"boolean"},
+                    sort: {"in":"query","name":"sort","ref":"OrderField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.getOrders.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/orders',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderCreateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.createOrder.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/orders/:userId/all',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.getOrdersOfUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/orders/:userId/current',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.getCurrentOrderOfUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/orders/:orderId',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.getOrderById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/orders/:userId/afterLogin',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    userId: {"in":"path","name":"userId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderUpdateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateOrderItems.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/orders/:orderId/updateStatus',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateProps"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateOrderStatus.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/orders/:orderId/place',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"IPlaceOrder"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.placeOrder.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/orders/:orderId',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.deleteOrderById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/orders/:orderId/items',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderDetailModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.addItemToOrder.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/orders/items/:itemId',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Item id must be an integer"},"minimum":{"errorMsg":"Item id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUpdateQuantityModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/orders/items/:itemId',
+            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Item id must be an integer"},"minimum":{"errorMsg":"Item id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new OrderController();
+
+
+            const promise = controller.deleteItem.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
         app.get('/report/overview',
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
@@ -770,7 +987,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"}}},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$)|(^today$))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -790,7 +1007,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"}}},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -810,9 +1027,9 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"}}},
-                    page: {"in":"query","name":"page","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
-                    limit: {"in":"query","name":"limit","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"}}},
+                    page: {"in":"query","name":"page","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    limit: {"in":"query","name":"limit","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
             };
 
             let validatedArgs: any[] = [];
@@ -828,13 +1045,327 @@ export function RegisterRoutes(app: any) {
             const promise = controller.getTopProductsReport.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
+        app.get('/reviews/:productId',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    productId: {"in":"path","name":"productId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
+                    size: {"in":"query","name":"size","required":true,"dataType":"double"},
+                    cursor: {"in":"query","name":"cursor","required":true,"dataType":"double"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReviewController();
+
+
+            const promise = controller.getReviewsByProductId.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/reviews/:productId/count',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    productId: {"in":"path","name":"productId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReviewController();
+
+
+            const promise = controller.getReviewCountByProductId.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/reviews',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateReviewModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ReviewController();
+
+
+            const promise = controller.createReview.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/users',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    role: {"in":"query","name":"role","ref":"UserRole"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    sort: {"in":"query","name":"sort","ref":"UserField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UserController();
+
+
+            const promise = controller.getUsers.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/users/:id',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UserController();
+
+
+            const promise = controller.getUserById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/users',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UserController();
+
+
+            const promise = controller.createUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/users/:id',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserUpdateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new UserController();
+
+
+            const promise = controller.updateUser.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/products',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
+                    brand: {"in":"query","name":"brand","dataType":"integer","validators":{"isInt":{"errorMsg":"Product brand id must be an integer"},"minimum":{"errorMsg":"Product brand id must be at least 0","value":0}}},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    sort: {"in":"query","name":"sort","ref":"ProductField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    min: {"in":"query","name":"min","dataType":"double","validators":{"minimum":{"errorMsg":"Min price must be at least 0","value":0}}},
+                    max: {"in":"query","name":"max","dataType":"double","validators":{"minimum":{"errorMsg":"Max price must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.getProducts.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/products/:id',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.getProductById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/products',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateProductModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.createProduct.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/products/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateProductModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.updateProductById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/products/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.deleteProductById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/products/variant',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateVariantCreateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.createProductVariant.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/products/variant/:variantId',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    variantId: {"in":"path","name":"variantId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product variant id must be an integer"},"minimum":{"errorMsg":"Product variant id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateVariantUpdateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.updateProductVariant.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/products/variant/:variantId',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    variantId: {"in":"path","name":"variantId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product variant id must be an integer"},"minimum":{"errorMsg":"Product variant id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProductController();
+
+
+            const promise = controller.deleteProductVariant.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
         app.get('/blogs',
             function (request: any, response: any, next: any) {
             const args = {
-                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"category"},"minimum":{"value":0}}},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
+                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
                     sort: {"in":"query","name":"sort","ref":"BlogField"},
-                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
                     change: {"in":"query","name":"change","ref":"Change"},
                     search: {"in":"query","name":"search","dataType":"string"},
             };
@@ -856,7 +1387,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -875,7 +1406,7 @@ export function RegisterRoutes(app: any) {
         app.get('/blogs/:id',
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -895,8 +1426,8 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogUpdateProps"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -916,7 +1447,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -935,9 +1466,9 @@ export function RegisterRoutes(app: any) {
         app.get('/blogs/:blogId/comments',
             function (request: any, response: any, next: any) {
             const args = {
-                    blogId: {"in":"path","name":"blogId","required":true,"dataType":"double"},
+                    blogId: {"in":"path","name":"blogId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"blogId"},"minimum":{"value":0}}},
                     date: {"in":"query","name":"date","dataType":"string"},
-                    limit: {"in":"query","name":"limit","dataType":"double"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
             };
 
             let validatedArgs: any[] = [];
@@ -977,7 +1508,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"double"},
+                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"commentId"},"minimum":{"value":0}}},
                     data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentUpdateProps"},
             };
 
@@ -998,7 +1529,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"double"},
+                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"commentId"},"minimum":{"value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1014,324 +1545,10 @@ export function RegisterRoutes(app: any) {
             const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/products',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"category"},"minimum":{"value":0}}},
-                    brand: {"in":"query","name":"brand","dataType":"integer","validators":{"isInt":{"errorMsg":"brand"},"minimum":{"value":0}}},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
-                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
-                    sort: {"in":"query","name":"sort","ref":"ProductField"},
-                    change: {"in":"query","name":"change","ref":"Change"},
-                    search: {"in":"query","name":"search","dataType":"string"},
-                    min: {"in":"query","name":"min","dataType":"integer","validators":{"isInt":{"errorMsg":"min"},"minimum":{"value":0}}},
-                    max: {"in":"query","name":"max","dataType":"integer","validators":{"isInt":{"errorMsg":"max"},"minimum":{"value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.getProducts.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/products/:id',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.getProductById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/products',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductCreateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.createProduct.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/products/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductUpdateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.updateProductById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/products/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.deleteProductById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/products/variant',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductVariantCreateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.createProductVariant.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/products/variant/:variantId',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    variantId: {"in":"path","name":"variantId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductVariantUpdateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.updateProductVariant.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/products/variant/:variantId',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    variantId: {"in":"path","name":"variantId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ProductController();
-
-
-            const promise = controller.deleteProductVariant.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/reviews/:productId',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    productId: {"in":"path","name":"productId","required":true,"dataType":"double"},
-                    size: {"in":"query","name":"size","required":true,"dataType":"double"},
-                    cursor: {"in":"query","name":"cursor","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ReviewController();
-
-
-            const promise = controller.getReviewsByProductId.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/reviews/:productId/count',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    productId: {"in":"path","name":"productId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ReviewController();
-
-
-            const promise = controller.getReviewCountByProductId.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/reviews',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductReviewCreateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new ReviewController();
-
-
-            const promise = controller.createReview.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/users',
-            authenticateMiddleware([{"jwt":["admin"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    search: {"in":"query","name":"search","dataType":"string"},
-                    role: {"in":"query","name":"role","ref":"UserRole"},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
-                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
-                    sort: {"in":"query","name":"sort","ref":"UserField"},
-                    change: {"in":"query","name":"change","ref":"Change"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new UserController();
-
-
-            const promise = controller.getUsers.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/users/:id',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new UserController();
-
-
-            const promise = controller.getUserById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/users',
-            authenticateMiddleware([{"jwt":["admin"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IUserCreateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new UserController();
-
-
-            const promise = controller.createUser.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/users/:id',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IUserUpdateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new UserController();
-
-
-            const promise = controller.updateUser.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
         app.post('/auth/register',
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IUserCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1350,7 +1567,7 @@ export function RegisterRoutes(app: any) {
         app.post('/auth/login',
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ILogin"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1369,7 +1586,7 @@ export function RegisterRoutes(app: any) {
         app.post('/auth/admin/login',
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ILogin"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1402,258 +1619,6 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.RefreshToken.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/orders',
-            authenticateMiddleware([{"jwt":["admin"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    search: {"in":"query","name":"search","dataType":"string"},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
-                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"page"},"minimum":{"value":1}}},
-                    time: {"in":"query","name":"time","ref":"Period"},
-                    status: {"in":"query","name":"status","ref":"Status"},
-                    paymentCheck: {"in":"query","name":"paymentCheck","dataType":"boolean"},
-                    sort: {"in":"query","name":"sort","ref":"OrderField"},
-                    change: {"in":"query","name":"change","ref":"Change"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.getOrders.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/orders',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderCreateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.createOrder.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/orders/:userId/all',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.getOrdersOfUser.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/orders/:userId/current',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.getCurrentOrderOfUser.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/orders/:orderId',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.getOrderById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/orders/:userId/afterLogin',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateItems"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.updateOrderItems.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/orders/:orderId/updateStatus',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.updateOrderStatus.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/orders/:orderId/place',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IPlaceOrder"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.placeOrder.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/orders/:orderId',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.deleteOrderById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/orders/:orderId/items',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailCreateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.addItemToOrder.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/orders/items/:itemId',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderDetailQtyUpdate"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/orders/items/:itemId',
-            authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    itemId: {"in":"path","name":"itemId","required":true,"dataType":"double"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = new OrderController();
-
-
-            const promise = controller.deleteItem.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.get('/ping',
@@ -1696,7 +1661,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCategoryCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogCateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1716,8 +1681,8 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCategoryCreateProps"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogCateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1737,7 +1702,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1775,7 +1740,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ISizeCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateSizeModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1795,8 +1760,8 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"ISizeUpdateProps"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateSizeModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1816,7 +1781,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1854,7 +1819,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IBrandCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBrandModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1874,8 +1839,8 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IBrandUpdateProps"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBrandModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1895,7 +1860,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1933,7 +1898,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductCategoryCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateCategoryModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1953,8 +1918,8 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IProductCategoryUpdateProps"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateCategoryModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1974,7 +1939,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -2012,7 +1977,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IColorCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateColorModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -2032,8 +1997,8 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                    data: {"in":"body","name":"data","required":true,"ref":"IColorUpdateProps"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateColorModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -2053,7 +2018,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];

@@ -1,18 +1,9 @@
-import { Body, Delete, Get, Patch, Path, Post, Query, Res, TsoaResponse,Security, Route, Tags } from "tsoa";
-import { HttpCode } from "../helpers/HttpCode";
+import { Body, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
+import { IUser, UserRole } from "../models";
 import { IUsers } from "../repositories";
-import { IUser, IUserCreateProps, UserRole } from "../models";
-import { UserService, IUserQuery, UserField, Change, IUserAuth  } from "../services";
+import { Change, IUserQuery, UserField, UserService } from "../services";
+import { ValidateUserCreateModel, ValidateUserUpdateModel } from "../validations";
 
-export interface IUserUpdateProps {
-    lname?: string;
-    fname?: string;
-    password?: string;
-    email?: string;
-    phone?: string;
-    address?: string;
-    role?: UserRole
-}
  
 @Route("users")
 @Tags('User')
@@ -26,10 +17,10 @@ export class UserController {
      * Get all users
      * @param {number} limit
      * @param {number} page
-     * @isInt limit
-     * @minimum limit 1
-     * @isInt page
-     * @minimum page 1
+     * @isInt limit Limit must be an integer
+     * @minimum limit 1 Limit must be at least 1
+     * @isInt page Page must be an integer
+     * @minimum page 1 Page must be at least 1
      */
      @Security("jwt", [UserRole.ADMIN])
     @Get("/")
@@ -54,6 +45,9 @@ export class UserController {
     }
     /**
      * Get user and user's order list by user id
+    * @param {number} id
+    * @isInt id User id must be an integer
+    * @minimum id 0 User id value must be at least 0
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Get("/:id")
@@ -66,15 +60,18 @@ export class UserController {
      */
     @Security("jwt", [UserRole.ADMIN])
     @Post("/")
-    public async createUser(@Body() data: IUserCreateProps): Promise<IUser> {
+    public async createUser(@Body() data:  ValidateUserCreateModel): Promise<IUser> {
         return this._userService.createUser(data);
     }
     /**
-     * Update user with admin permission
+     * Update user info
+    * @param {number} id
+    * @isInt id User id must be an integer
+    * @minimum id 0 User id value must be at least 0
      */
      @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
      @Patch("/:id")
-     public async updateUser(@Path() id: number,@Body() data: IUserUpdateProps): Promise<IUser> {
+     public async updateUser(@Path() id: number,@Body() data:  ValidateUserUpdateModel): Promise<IUser> {
          
          return this._userService.updateUser(id,data);
      }

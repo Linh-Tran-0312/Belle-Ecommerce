@@ -6,6 +6,886 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"UserRole": {
+				"enum": [
+					"all",
+					"admin",
+					"editor",
+					"customer"
+				],
+				"type": "string"
+			},
+			"ProductCategory": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"imgPath"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Brand": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"imgPath": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"imgPath"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"User": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"wishList": {
+						"items": {
+							"$ref": "#/components/schemas/Product"
+						},
+						"type": "array"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/IOrder"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"fname",
+					"lname",
+					"email",
+					"password",
+					"token",
+					"phone",
+					"address",
+					"role",
+					"wishList",
+					"orders"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Product": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"sku": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"brandId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPaths": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"name": {
+						"type": "string"
+					},
+					"summary": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"category": {
+						"$ref": "#/components/schemas/ProductCategory"
+					},
+					"brand": {
+						"$ref": "#/components/schemas/Brand"
+					},
+					"overallReview": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"comments": {
+						"items": {
+							"$ref": "#/components/schemas/ProductComment"
+						},
+						"type": "array"
+					},
+					"variants": {
+						"items": {
+							"$ref": "#/components/schemas/ProductVariant"
+						},
+						"type": "array"
+					},
+					"reviews": {
+						"items": {
+							"$ref": "#/components/schemas/ProductReview"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"categoryId",
+					"brandId",
+					"name",
+					"price",
+					"sku",
+					"category",
+					"brand",
+					"summary",
+					"description",
+					"overallReview",
+					"reviewCount",
+					"imgPaths",
+					"comments",
+					"variants",
+					"reviews"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductComment": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"text": {
+						"type": "string"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					},
+					"parentComment": {
+						"$ref": "#/components/schemas/ProductComment"
+					},
+					"childComments": {
+						"items": {
+							"$ref": "#/components/schemas/ProductComment"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"text",
+					"userId",
+					"productId",
+					"user",
+					"product",
+					"parentCommentId",
+					"parentComment",
+					"childComments"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Status": {
+				"enum": [
+					"ordering",
+					"ordered",
+					"delivery",
+					"canceled",
+					"completed"
+				],
+				"type": "string"
+			},
+			"IOrderDetail": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice",
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"userId"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IOrder": {
+				"properties": {
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"userId",
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/IOrder"
+						},
+						"type": "array"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"id"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"IUser": {
+				"properties": {
+					"password": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/IOrder"
+						},
+						"type": "array"
+					},
+					"fname": {
+						"type": "string"
+					},
+					"lname": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Size": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Color": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"code": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"code",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductVariant": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"sizeId": {
+						"type": "number",
+						"format": "double"
+					},
+					"colorId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					},
+					"size": {
+						"$ref": "#/components/schemas/Size"
+					},
+					"color": {
+						"$ref": "#/components/schemas/Color"
+					}
+				},
+				"required": [
+					"id",
+					"productId",
+					"sizeId",
+					"colorId",
+					"quantity",
+					"product",
+					"size",
+					"color"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProductReview": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"text": {
+						"type": "string"
+					},
+					"productId": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"product": {
+						"$ref": "#/components/schemas/Product"
+					}
+				},
+				"required": [
+					"id",
+					"productId",
+					"rating",
+					"userId",
+					"title",
+					"text",
+					"user",
+					"product"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaymentMethod": {
+				"enum": [
+					"cod",
+					"banktransfer",
+					"e-wallet",
+					"gateway"
+				],
+				"type": "string"
+			},
+			"IOrderDetailCreateProps": {
+				"properties": {
+					"orderId": {
+						"type": "number",
+						"format": "double"
+					},
+					"productVariantId": {
+						"type": "number",
+						"format": "double"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Order": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/IOrderDetail"
+						},
+						"type": "array"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"note": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"orderAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"userId",
+					"user",
+					"status",
+					"paymentMethod",
+					"paymentCheck",
+					"note",
+					"address",
+					"shipping",
+					"total",
+					"orderAt",
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrders": {
+				"properties": {
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/Order"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"orders",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Period": {
+				"enum": [
+					"today",
+					"week",
+					"month",
+					"quarter",
+					"year"
+				],
+				"type": "string"
+			},
+			"OrderField": {
+				"enum": [
+					"orderAt",
+					"total"
+				],
+				"type": "string"
+			},
+			"Change": {
+				"enum": [
+					"DESC",
+					"ASC"
+				],
+				"type": "string"
+			},
+			"ValidateOrderDetailModel": {
+				"properties": {
+					"orderId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"productVariantId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"quantity": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"unitPrice": {
+						"type": "number",
+						"format": "double",
+						"minimum": 0
+					}
+				},
+				"required": [
+					"productVariantId",
+					"quantity",
+					"unitPrice"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateOrderCreateModel": {
+				"properties": {
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/ValidateOrderDetailModel"
+						},
+						"type": "array"
+					},
+					"userId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
+				},
+				"required": [
+					"details",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateOrderUpdateModel": {
+				"properties": {
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/ValidateOrderDetailModel"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IOrderUpdateProps": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"address": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IPlaceOrder": {
+				"properties": {
+					"address": {
+						"type": "string"
+					},
+					"note": {
+						"type": "string"
+					},
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"shipping": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"address",
+					"paymentMethod"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateUpdateQuantityModel": {
+				"properties": {
+					"quantity": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
+				},
+				"required": [
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IOverviewReport": {
 				"properties": {
 					"sales": {
@@ -119,889 +999,8 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BlogCategory": {
+			"IProductReview": {
 				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Blog": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					},
-					"category": {
-						"$ref": "#/components/schemas/BlogCategory"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"title",
-					"categoryId",
-					"content",
-					"category",
-					"imgPath",
-					"commentAllow"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogs": {
-				"properties": {
-					"blogs": {
-						"items": {
-							"$ref": "#/components/schemas/Blog"
-						},
-						"type": "array"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"blogs",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"BlogField": {
-				"enum": [
-					"title",
-					"createdAt"
-				],
-				"type": "string"
-			},
-			"Change": {
-				"enum": [
-					"DESC",
-					"ASC"
-				],
-				"type": "string"
-			},
-			"IBlogCategory": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"name",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlog": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"category": {
-						"$ref": "#/components/schemas/IBlogCategory"
-					}
-				},
-				"required": [
-					"title",
-					"categoryId",
-					"content",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCreateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"title",
-					"categoryId",
-					"content"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogUpdateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPath": {
-						"type": "string"
-					},
-					"content": {
-						"type": "string"
-					},
-					"commentAllow": {
-						"type": "boolean"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCommentCreateProps": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Status": {
-				"enum": [
-					"ordering",
-					"ordered",
-					"delivery",
-					"canceled",
-					"completed"
-				],
-				"type": "string"
-			},
-			"IOrderDetail": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"userId"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IOrder": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"userId",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UserRole": {
-				"enum": [
-					"all",
-					"admin",
-					"editor",
-					"customer"
-				],
-				"type": "string"
-			},
-			"Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-				"properties": {
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/IOrder"
-						},
-						"type": "array"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"fname",
-					"lname",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"description": "From T, pick a set of properties whose keys are in the union K"
-			},
-			"IUser": {
-				"properties": {
-					"password": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/IOrder"
-						},
-						"type": "array"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"fname",
-					"lname",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogComment": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"childComments": {
-						"items": {
-							"$ref": "#/components/schemas/IBlogCommentCreateProps"
-						},
-						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/IUser"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId",
-					"id",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBlogCommentUpdateProps": {
-				"properties": {
-					"text": {
-						"type": "string"
-					},
-					"blogId": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"text",
-					"blogId",
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductCategory": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"name",
-					"imgPath"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Brand": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"name",
-					"imgPath"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Product": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"sku": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"brandId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPaths": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"name": {
-						"type": "string"
-					},
-					"summary": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"price": {
-						"type": "number",
-						"format": "double"
-					},
-					"category": {
-						"$ref": "#/components/schemas/ProductCategory"
-					},
-					"brand": {
-						"$ref": "#/components/schemas/Brand"
-					},
-					"overallReview": {
-						"type": "number",
-						"format": "double"
-					},
-					"reviewCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"comments": {
-						"items": {
-							"$ref": "#/components/schemas/ProductComment"
-						},
-						"type": "array"
-					},
-					"variants": {
-						"items": {
-							"$ref": "#/components/schemas/ProductVariant"
-						},
-						"type": "array"
-					},
-					"reviews": {
-						"items": {
-							"$ref": "#/components/schemas/ProductReview"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"categoryId",
-					"brandId",
-					"name",
-					"price",
-					"sku",
-					"category",
-					"brand",
-					"summary",
-					"description",
-					"overallReview",
-					"reviewCount",
-					"imgPaths",
-					"comments",
-					"variants",
-					"reviews"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"User": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					},
-					"wishList": {
-						"items": {
-							"$ref": "#/components/schemas/Product"
-						},
-						"type": "array"
-					},
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/IOrder"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"fname",
-					"lname",
-					"email",
-					"password",
-					"token",
-					"phone",
-					"address",
-					"role",
-					"wishList",
-					"orders"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductComment": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"text": {
-						"type": "string"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productId": {
-						"type": "number",
-						"format": "double"
-					},
-					"parentCommentId": {
-						"type": "number",
-						"format": "double"
-					},
-					"user": {
-						"$ref": "#/components/schemas/User"
-					},
-					"product": {
-						"$ref": "#/components/schemas/Product"
-					},
-					"parentComment": {
-						"$ref": "#/components/schemas/ProductComment"
-					},
-					"childComments": {
-						"items": {
-							"$ref": "#/components/schemas/ProductComment"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"text",
-					"userId",
-					"productId",
-					"user",
-					"product",
-					"parentCommentId",
-					"parentComment",
-					"childComments"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Size": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Color": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"code": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"code",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductVariant": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"productId": {
-						"type": "number",
-						"format": "double"
-					},
-					"sizeId": {
-						"type": "number",
-						"format": "double"
-					},
-					"colorId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"product": {
-						"$ref": "#/components/schemas/Product"
-					},
-					"size": {
-						"$ref": "#/components/schemas/Size"
-					},
-					"color": {
-						"$ref": "#/components/schemas/Color"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"productId",
-					"sizeId",
-					"colorId",
-					"quantity",
-					"product",
-					"size",
-					"color"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ProductReview": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
 					"title": {
 						"type": "string"
 					},
@@ -1020,23 +1019,189 @@
 						"type": "number",
 						"format": "double"
 					},
-					"user": {
-						"$ref": "#/components/schemas/User"
+					"id": {
+						"type": "number",
+						"format": "double"
 					},
-					"product": {
-						"$ref": "#/components/schemas/Product"
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"user": {
+						"$ref": "#/components/schemas/IUser"
 					}
 				},
 				"required": [
-					"id",
-					"createdAt",
 					"productId",
 					"rating",
 					"userId",
-					"title",
-					"text",
-					"user",
-					"product"
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IReviewCount": {
+				"properties": {
+					"reviewCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"overallReview": {
+						"type": "number",
+						"format": "double"
+					},
+					"details": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"reviewCount",
+					"overallReview",
+					"details"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateReviewModel": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"text": {
+						"type": "string"
+					},
+					"productId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"rating": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 1,
+						"maximum": 5
+					},
+					"userId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
+				},
+				"required": [
+					"productId",
+					"rating",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IUsers": {
+				"properties": {
+					"users": {
+						"items": {
+							"$ref": "#/components/schemas/User"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"users",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserField": {
+				"enum": [
+					"fname",
+					"sale",
+					"createdAt"
+				],
+				"type": "string"
+			},
+			"ValidateUserCreateModel": {
+				"properties": {
+					"fname": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
+					"lname": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
+					"email": {
+						"type": "string",
+						"pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"phone": {
+						"type": "string",
+						"minLength": 9,
+						"pattern": "[0-9]{9,12}"
+					},
+					"address": {
+						"type": "string",
+						"minLength": 5
+					},
+					"password": {
+						"type": "string",
+						"minLength": 6
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"email",
+					"phone",
+					"address",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateUserUpdateModel": {
+				"properties": {
+					"fname": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
+					"lname": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
+					"email": {
+						"type": "string",
+						"pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					},
+					"phone": {
+						"type": "string",
+						"minLength": 9,
+						"pattern": "[0-9]{9,12}"
+					},
+					"address": {
+						"type": "string",
+						"minLength": 5
+					}
+				},
+				"required": [
+					"fname",
+					"lname",
+					"email",
+					"phone",
+					"address"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1089,8 +1254,7 @@
 				},
 				"required": [
 					"name",
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1114,8 +1278,7 @@
 				},
 				"required": [
 					"name",
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1135,8 +1298,7 @@
 					}
 				},
 				"required": [
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1161,8 +1323,7 @@
 				"required": [
 					"code",
 					"name",
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1205,8 +1366,7 @@
 					"sizeId",
 					"colorId",
 					"quantity",
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1250,33 +1410,36 @@
 				},
 				"required": [
 					"name",
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IProductCreateProps": {
+			"ValidateProductModel": {
 				"properties": {
+					"name": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
 					"sku": {
 						"type": "string"
 					},
 					"categoryId": {
-						"type": "number",
-						"format": "double"
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
 					},
 					"brandId": {
-						"type": "number",
-						"format": "double"
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
 					},
 					"imgPaths": {
 						"items": {
 							"type": "string"
 						},
-						"type": "array"
-					},
-					"name": {
-						"type": "string"
+						"type": "array",
+						"minItems": 0
 					},
 					"summary": {
 						"type": "string"
@@ -1286,75 +1449,70 @@
 					},
 					"price": {
 						"type": "number",
-						"format": "double"
+						"format": "double",
+						"minimum": 0
 					}
 				},
 				"required": [
+					"name",
 					"categoryId",
 					"brandId",
-					"name",
 					"price"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IProductUpdateProps": {
+			"ValidateVariantCreateModel": {
 				"properties": {
-					"sku": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "number",
-						"format": "double"
-					},
-					"brandId": {
-						"type": "number",
-						"format": "double"
-					},
-					"imgPaths": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"name": {
-						"type": "string"
-					},
-					"summary": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"price": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IProductVariantCreateProps": {
-				"properties": {
-					"productId": {
-						"type": "number",
-						"format": "double"
-					},
 					"sizeId": {
-						"type": "number",
-						"format": "double"
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
 					},
 					"colorId": {
-						"type": "number",
-						"format": "double"
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
 					},
 					"quantity": {
-						"type": "number",
-						"format": "double"
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"productId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
 					}
 				},
 				"required": [
-					"productId",
+					"sizeId",
+					"colorId",
+					"quantity",
+					"productId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateVariantUpdateModel": {
+				"properties": {
+					"sizeId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"colorId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"quantity": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
+				},
+				"required": [
 					"sizeId",
 					"colorId",
 					"quantity"
@@ -1362,37 +1520,223 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IProductVariantUpdateProps": {
+			"BlogCategory": {
 				"properties": {
-					"colorId": {
+					"id": {
 						"type": "number",
 						"format": "double"
 					},
-					"sizeId": {
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Blog": {
+				"properties": {
+					"id": {
 						"type": "number",
 						"format": "double"
 					},
-					"quantity": {
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "number",
+						"format": "double"
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"category": {
+						"$ref": "#/components/schemas/BlogCategory"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"categoryId",
+					"content",
+					"commentAllow",
+					"category",
+					"imgPath"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogs": {
+				"properties": {
+					"blogs": {
+						"items": {
+							"$ref": "#/components/schemas/Blog"
+						},
+						"type": "array"
+					},
+					"total": {
 						"type": "number",
 						"format": "double"
 					}
 				},
+				"required": [
+					"blogs",
+					"total"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IProductReview": {
+			"BlogField": {
+				"enum": [
+					"title",
+					"createdAt"
+				],
+				"type": "string"
+			},
+			"IBlogCategory": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"name",
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlog": {
 				"properties": {
 					"title": {
 						"type": "string"
 					},
-					"text": {
-						"type": "string"
-					},
-					"productId": {
+					"categoryId": {
 						"type": "number",
 						"format": "double"
 					},
-					"rating": {
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"category": {
+						"$ref": "#/components/schemas/IBlogCategory"
+					}
+				},
+				"required": [
+					"title",
+					"categoryId",
+					"content",
+					"commentAllow",
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateBlogModel": {
+				"properties": {
+					"title": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
+					"categoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"imgPath": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentAllow": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"title",
+					"categoryId",
+					"content",
+					"commentAllow"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogCommentCreateProps": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
+						"type": "number",
+						"format": "double"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"text",
+					"blogId",
+					"userId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IBlogComment": {
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"blogId": {
+						"type": "number",
+						"format": "double"
+					},
+					"parentCommentId": {
 						"type": "number",
 						"format": "double"
 					},
@@ -1408,59 +1752,31 @@
 						"type": "string",
 						"format": "date-time"
 					},
+					"childComments": {
+						"items": {
+							"$ref": "#/components/schemas/IBlogCommentCreateProps"
+						},
+						"type": "array"
+					},
 					"user": {
 						"$ref": "#/components/schemas/IUser"
 					}
 				},
 				"required": [
-					"productId",
-					"rating",
+					"text",
+					"blogId",
 					"userId",
-					"id",
-					"createdAt"
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IReviewCount": {
+			"IBlogCommentUpdateProps": {
 				"properties": {
-					"reviewCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"overallReview": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"reviewCount",
-					"overallReview",
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IProductReviewCreateProps": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
 					"text": {
 						"type": "string"
 					},
-					"productId": {
-						"type": "number",
-						"format": "double"
-					},
-					"rating": {
+					"blogId": {
 						"type": "number",
 						"format": "double"
 					},
@@ -1470,87 +1786,23 @@
 					}
 				},
 				"required": [
-					"productId",
-					"rating",
+					"text",
+					"blogId",
 					"userId"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IUsers": {
+			"IUserAuth": {
 				"properties": {
-					"users": {
-						"items": {
-							"$ref": "#/components/schemas/User"
-						},
-						"type": "array"
-					},
-					"total": {
+					"id": {
 						"type": "number",
 						"format": "double"
-					}
-				},
-				"required": [
-					"users",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UserField": {
-				"enum": [
-					"fname",
-					"sale",
-					"createdAt"
-				],
-				"type": "string"
-			},
-			"IUserCreateProps": {
-				"properties": {
-					"fname": {
-						"type": "string"
-					},
-					"lname": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string",
-						"pattern": "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"
-					},
-					"password": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/UserRole"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"fname",
-					"lname",
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IUserUpdateProps": {
-				"properties": {
-					"lname": {
-						"type": "string"
 					},
 					"fname": {
 						"type": "string"
 					},
-					"password": {
-						"type": "string"
-					},
-					"email": {
+					"lname": {
 						"type": "string"
 					},
 					"phone": {
@@ -1563,10 +1815,15 @@
 						"$ref": "#/components/schemas/UserRole"
 					}
 				},
+				"required": [
+					"id",
+					"fname",
+					"lname"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ILogin": {
+			"ValidateLoginModel": {
 				"properties": {
 					"email": {
 						"type": "string",
@@ -1595,240 +1852,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PaymentMethod": {
-				"enum": [
-					"cod",
-					"banktransfer",
-					"e-wallet",
-					"gateway"
-				],
-				"type": "string"
-			},
-			"IOrderDetailCreateProps": {
-				"properties": {
-					"orderId": {
-						"type": "number",
-						"format": "double"
-					},
-					"productVariantId": {
-						"type": "number",
-						"format": "double"
-					},
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"unitPrice": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"productVariantId",
-					"quantity",
-					"unitPrice"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Order": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetail"
-						},
-						"type": "array"
-					},
-					"user": {
-						"$ref": "#/components/schemas/User"
-					},
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"paymentCheck": {
-						"type": "boolean"
-					},
-					"note": {
-						"type": "string"
-					},
-					"address": {
-						"type": "string"
-					},
-					"shipping": {
-						"type": "number",
-						"format": "double"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"orderAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"userId",
-					"user",
-					"status",
-					"paymentMethod",
-					"paymentCheck",
-					"note",
-					"address",
-					"shipping",
-					"total",
-					"orderAt",
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrders": {
-				"properties": {
-					"orders": {
-						"items": {
-							"$ref": "#/components/schemas/Order"
-						},
-						"type": "array"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"orders",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Period": {
-				"enum": [
-					"today",
-					"week",
-					"month",
-					"quarter",
-					"year"
-				],
-				"type": "string"
-			},
-			"OrderField": {
-				"enum": [
-					"orderAt",
-					"total"
-				],
-				"type": "string"
-			},
-			"IOrderCreateProps": {
-				"properties": {
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetailCreateProps"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"userId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderUpdateItems": {
-				"properties": {
-					"details": {
-						"items": {
-							"$ref": "#/components/schemas/IOrderDetailCreateProps"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"details"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderUpdateProps": {
-				"properties": {
-					"status": {
-						"$ref": "#/components/schemas/Status"
-					},
-					"paymentCheck": {
-						"type": "boolean"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"address": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IPlaceOrder": {
-				"properties": {
-					"address": {
-						"type": "string"
-					},
-					"note": {
-						"type": "string"
-					},
-					"paymentMethod": {
-						"$ref": "#/components/schemas/PaymentMethod"
-					},
-					"shipping": {
-						"type": "number",
-						"format": "double"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"address",
-					"paymentMethod"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IOrderDetailQtyUpdate": {
-				"properties": {
-					"quantity": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"quantity"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"PingMessage": {
 				"properties": {
 					"message": {
@@ -1841,10 +1864,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IBlogCategoryCreateProps": {
+			"ValidateBlogCateModel": {
 				"properties": {
 					"name": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
 					}
 				},
 				"required": [
@@ -1853,28 +1877,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ISizeCreateProps": {
+			"ValidateSizeModel": {
 				"properties": {
 					"name": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
 					}
 				},
+				"required": [
+					"name"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ISizeUpdateProps": {
+			"ValidateBrandModel": {
 				"properties": {
 					"name": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IBrandCreateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
 					},
 					"imgPath": {
 						"type": "string"
@@ -1886,22 +1906,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IBrandUpdateProps": {
+			"ValidateCategoryModel": {
 				"properties": {
 					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IProductCategoryCreateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
 					},
 					"imgPath": {
 						"type": "string"
@@ -1913,43 +1922,22 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IProductCategoryUpdateProps": {
+			"ValidateColorModel": {
 				"properties": {
 					"name": {
-						"type": "string"
-					},
-					"imgPath": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IColorCreateProps": {
-				"properties": {
-					"code": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"code",
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IColorUpdateProps": {
-				"properties": {
-					"name": {
-						"type": "string"
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
 					},
 					"code": {
-						"type": "string"
+						"type": "string",
+						"maxLength": 7,
+						"pattern": "^[#]\\w{6}"
 					}
 				},
+				"required": [
+					"name",
+					"code"
+				],
 				"type": "object",
 				"additionalProperties": false
 			}
@@ -1986,1418 +1974,6 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/report/overview": {
-			"get": {
-				"operationId": "GetOverviewReport",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IOverviewReport"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get overview of sales, orders and new register of current month",
-				"tags": [
-					"Report Controller"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/report/sales": {
-			"get": {
-				"operationId": "GetSalesReport",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/ISalesReport"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get sales and number of order reports for specific time",
-				"tags": [
-					"Report Controller"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "time",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"
-						}
-					}
-				]
-			}
-		},
-		"/report/orders": {
-			"get": {
-				"operationId": "GetOrderReport",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IOrderReport"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get the number of completed orders and canceled order",
-				"tags": [
-					"Report Controller"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "time",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"
-						}
-					}
-				]
-			}
-		},
-		"/report/products": {
-			"get": {
-				"operationId": "GetTopProductsReport",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProductReports"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get list of products in descending  sales",
-				"tags": [
-					"Report Controller"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "time",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2]))"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": true,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": true,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					}
-				]
-			}
-		},
-		"/blogs": {
-			"get": {
-				"operationId": "GetBlogs",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogs"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 0
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BlogField"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "change",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/Change"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "CreateBlog",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlog"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create a new blog",
-				"tags": [
-					"Blog"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/blogs/{id}": {
-			"get": {
-				"operationId": "GetBlogById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlog"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get details for a blog by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"patch": {
-				"operationId": "UpdateBlogById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlog"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update a blog partially by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteBlogById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete a blog  by its id",
-				"tags": [
-					"Blog"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/blogs/{blogId}/comments": {
-			"get": {
-				"operationId": "GetCommentsOfBlog",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IBlogComment"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get blog comments by blogId, default number of comments is 2",
-				"tags": [
-					"Blog"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "blogId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "date",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/blogs/comments": {
-			"post": {
-				"operationId": "CreateComment",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogComment"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create new blog comment",
-				"tags": [
-					"Blog"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor",
-							"customer"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCommentCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/blogs/comments/{commentId}": {
-			"patch": {
-				"operationId": "UpdateCommentById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IBlogComment"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update a blog comment by its Id,",
-				"tags": [
-					"Blog"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor",
-							"customer"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "commentId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IBlogCommentUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteCommentById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete a blog comment by its Id,",
-				"tags": [
-					"Blog"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor",
-							"customer"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "commentId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/products": {
-			"get": {
-				"operationId": "GetProducts",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProducts"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get all products",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 0
-						}
-					},
-					{
-						"in": "query",
-						"name": "brand",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 0
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/ProductField"
-						}
-					},
-					{
-						"in": "query",
-						"name": "change",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/Change"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "min",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 0
-						}
-					},
-					{
-						"in": "query",
-						"name": "max",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 0
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "CreateProduct",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProduct"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create new product",
-				"tags": [
-					"Product"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/{id}": {
-			"get": {
-				"operationId": "GetProductById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProduct"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get product details by its id",
-				"tags": [
-					"Product"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"patch": {
-				"operationId": "UpdateProductById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProduct"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update product info",
-				"tags": [
-					"Product"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteProductById",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete product",
-				"tags": [
-					"Product"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/products/variant": {
-			"post": {
-				"operationId": "CreateProductVariant",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProductVariant"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create product variant",
-				"tags": [
-					"Product"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductVariantCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/products/variant/{variantId}": {
-			"patch": {
-				"operationId": "UpdateProductVariant",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProductVariant"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update product variant",
-				"tags": [
-					"Product"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "variantId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductVariantUpdateProps"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteProductVariant",
-				"responses": {
-					"204": {
-						"description": "No content"
-					}
-				},
-				"description": "Delete product variant",
-				"tags": [
-					"Product"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "variantId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/reviews/{productId}": {
-			"get": {
-				"operationId": "GetReviewsByProductId",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/IProductReview"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get reviews by productId",
-				"tags": [
-					"Product Review"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "productId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "size",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "cursor",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/reviews/{productId}/count": {
-			"get": {
-				"operationId": "GetReviewCountByProductId",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IReviewCount"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get reviews by productId",
-				"tags": [
-					"Product Review"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "productId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/reviews": {
-			"post": {
-				"operationId": "CreateReview",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IProductReview"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create new color",
-				"tags": [
-					"Product Review"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor",
-							"customer"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IProductReviewCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/users": {
-			"get": {
-				"operationId": "GetUsers",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUsers"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get all users",
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "role",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/UserRole"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "int32",
-							"type": "integer",
-							"minimum": 1
-						}
-					},
-					{
-						"in": "query",
-						"name": "sort",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/UserField"
-						}
-					},
-					{
-						"in": "query",
-						"name": "change",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/Change"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "CreateUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUser"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create new user with admin permission",
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IUserCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/users/{id}": {
-			"get": {
-				"operationId": "GetUserById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUser"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get user and user's order list by user id",
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor",
-							"customer"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"patch": {
-				"operationId": "UpdateUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUser"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update user with admin permission",
-				"tags": [
-					"User"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin",
-							"editor",
-							"customer"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IUserUpdateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/register": {
-			"post": {
-				"operationId": "Register",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUser"
-								}
-							}
-						}
-					}
-				},
-				"description": "Allow new users create their accounts",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/IUserCreateProps"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/login": {
-			"post": {
-				"operationId": "Login",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUser"
-								}
-							}
-						}
-					}
-				},
-				"description": "Allow customers login with their email and password",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ILogin"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/admin/login": {
-			"post": {
-				"operationId": "AdminLogin",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IUser"
-								}
-							}
-						}
-					}
-				},
-				"description": "Allow admin and editors login with their email and password",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ILogin"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/token": {
-			"get": {
-				"operationId": "RefreshToken",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IRefreshMessage"
-								}
-							}
-						}
-					}
-				},
-				"description": "Refresh expired access token",
-				"tags": [
-					"Authorization"
-				],
-				"security": [],
-				"parameters": []
-			}
-		},
 		"/orders": {
 			"get": {
 				"operationId": "GetOrders",
@@ -3528,7 +2104,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderCreateProps"
+								"$ref": "#/components/schemas/ValidateOrderCreateModel"
 							}
 						}
 					}
@@ -3553,7 +2129,7 @@
 						}
 					}
 				},
-				"description": "Get all orders of user by userId\r\nDone",
+				"description": "Get all orders of user by userId",
 				"tags": [
 					"Order"
 				],
@@ -3572,8 +2148,9 @@
 						"name": "userId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -3618,8 +2195,9 @@
 						"name": "userId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -3659,8 +2237,9 @@
 						"name": "orderId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -3691,8 +2270,9 @@
 						"name": "orderId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -3732,8 +2312,9 @@
 						"name": "userId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -3742,7 +2323,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderUpdateItems"
+								"$ref": "#/components/schemas/ValidateOrderUpdateModel"
 							}
 						}
 					}
@@ -3783,8 +2364,9 @@
 						"name": "orderId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -3834,8 +2416,9 @@
 						"name": "orderId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -3885,8 +2468,9 @@
 						"name": "orderId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -3895,7 +2479,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderDetailCreateProps"
+								"$ref": "#/components/schemas/ValidateOrderDetailModel"
 							}
 						}
 					}
@@ -3936,8 +2520,9 @@
 						"name": "itemId",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -3946,7 +2531,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IOrderDetailQtyUpdate"
+								"$ref": "#/components/schemas/ValidateUpdateQuantityModel"
 							}
 						}
 					}
@@ -3978,11 +2563,1440 @@
 						"name": "itemId",
 						"required": true,
 						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			}
+		},
+		"/report/overview": {
+			"get": {
+				"operationId": "GetOverviewReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOverviewReport"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get overview of sales, orders and new register of current month",
+				"tags": [
+					"Report Controller"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/report/sales": {
+			"get": {
+				"operationId": "GetSalesReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ISalesReport"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get sales and number of order reports for specific time",
+				"tags": [
+					"Report Controller"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$)|(^today$))"
+						}
+					}
+				]
+			}
+		},
+		"/report/orders": {
+			"get": {
+				"operationId": "GetOrderReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IOrderReport"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the number of completed orders and canceled order",
+				"tags": [
+					"Report Controller"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"
+						}
+					}
+				]
+			}
+		},
+		"/report/products": {
+			"get": {
+				"operationId": "GetTopProductsReport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProductReports"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get list of products in descending  sales",
+				"tags": [
+					"Report Controller"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "time",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"pattern": "(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			}
+		},
+		"/reviews/{productId}": {
+			"get": {
+				"operationId": "GetReviewsByProductId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IProductReview"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get reviews by productId",
+				"tags": [
+					"Product Review"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "productId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					},
+					{
+						"in": "query",
+						"name": "size",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cursor",
+						"required": true,
+						"schema": {
 							"format": "double",
 							"type": "number"
 						}
 					}
 				]
+			}
+		},
+		"/reviews/{productId}/count": {
+			"get": {
+				"operationId": "GetReviewCountByProductId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IReviewCount"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get reviews by productId",
+				"tags": [
+					"Product Review"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "productId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			}
+		},
+		"/reviews": {
+			"post": {
+				"operationId": "CreateReview",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProductReview"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new review",
+				"tags": [
+					"Product Review"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateReviewModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUsers"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all users",
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/UserRole"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/UserField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new user with admin permission",
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateUserCreateModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{id}": {
+			"get": {
+				"operationId": "GetUserById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get user and user's order list by user id",
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUser"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update user info",
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateUserUpdateModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products": {
+			"get": {
+				"operationId": "GetProducts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProducts"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all products",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					},
+					{
+						"in": "query",
+						"name": "brand",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ProductField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number",
+							"minimum": 0
+						}
+					},
+					{
+						"in": "query",
+						"name": "max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number",
+							"minimum": 0
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateProduct",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProduct"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new product",
+				"tags": [
+					"Product"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateProductModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/{id}": {
+			"get": {
+				"operationId": "GetProductById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProduct"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get product details by its id",
+				"tags": [
+					"Product"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateProductById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProduct"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update product info",
+				"tags": [
+					"Product"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateProductModel"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteProductById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete product",
+				"tags": [
+					"Product"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			}
+		},
+		"/products/variant": {
+			"post": {
+				"operationId": "CreateProductVariant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProductVariant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateVariantCreateModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/products/variant/{variantId}": {
+			"patch": {
+				"operationId": "UpdateProductVariant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IProductVariant"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "variantId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateVariantUpdateModel"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteProductVariant",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete product variant",
+				"tags": [
+					"Product"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "variantId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			}
+		},
+		"/blogs": {
+			"get": {
+				"operationId": "GetBlogs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlogs"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all blogs. Search blogs by its category, keyword. Get specific number of blogs by time in descending order",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BlogField"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					},
+					{
+						"in": "query",
+						"name": "change",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/Change"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateBlog",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlog"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new blog",
+				"tags": [
+					"Blog"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateBlogModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blogs/{id}": {
+			"get": {
+				"operationId": "GetBlogById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlog"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get details for a blog by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			},
+			"patch": {
+				"operationId": "UpdateBlogById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlog"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a blog by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateBlogModel"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteBlogById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete a blog  by its id",
+				"tags": [
+					"Blog"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			}
+		},
+		"/blogs/{blogId}/comments": {
+			"get": {
+				"operationId": "GetCommentsOfBlog",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/IBlogComment"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blog comments by blogId, default number of comments is 2",
+				"tags": [
+					"Blog"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "blogId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					},
+					{
+						"in": "query",
+						"name": "date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 1
+						}
+					}
+				]
+			}
+		},
+		"/blogs/comments": {
+			"post": {
+				"operationId": "CreateComment",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlogComment"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create new blog comment",
+				"tags": [
+					"Blog"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogCommentCreateProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blogs/comments/{commentId}": {
+			"patch": {
+				"operationId": "UpdateCommentById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBlogComment"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a blog comment by its Id",
+				"tags": [
+					"Blog"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "commentId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IBlogCommentUpdateProps"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteCommentById",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete a blog comment by its Id",
+				"tags": [
+					"Blog"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin",
+							"editor",
+							"customer"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "commentId",
+						"required": true,
+						"schema": {
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
+						}
+					}
+				]
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUserAuth"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow new users create their accounts",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateUserCreateModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUserAuth"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow customers login with their email and password",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateLoginModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/admin/login": {
+			"post": {
+				"operationId": "AdminLogin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUserAuth"
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow admin and editors login with their email and password",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ValidateLoginModel"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/token": {
+			"get": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IRefreshMessage"
+								}
+							}
+						}
+					}
+				},
+				"description": "Refresh expired access token",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/ping": {
@@ -4046,7 +4060,7 @@
 						}
 					}
 				},
-				"description": "Create new blog category",
+				"description": "Create a new blog category",
 				"tags": [
 					"Blog Category"
 				],
@@ -4064,7 +4078,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IBlogCategoryCreateProps"
+								"$ref": "#/components/schemas/ValidateBlogCateModel"
 							}
 						}
 					}
@@ -4086,7 +4100,7 @@
 						}
 					}
 				},
-				"description": "Update a blog category partially by its id",
+				"description": "Update a blog category by its id",
 				"tags": [
 					"Blog Category"
 				],
@@ -4104,8 +4118,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -4114,7 +4129,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IBlogCategoryCreateProps"
+								"$ref": "#/components/schemas/ValidateBlogCateModel"
 							}
 						}
 					}
@@ -4145,8 +4160,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -4209,7 +4225,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ISizeCreateProps"
+								"$ref": "#/components/schemas/ValidateSizeModel"
 							}
 						}
 					}
@@ -4249,8 +4265,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -4259,7 +4276,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ISizeUpdateProps"
+								"$ref": "#/components/schemas/ValidateSizeModel"
 							}
 						}
 					}
@@ -4290,8 +4307,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -4354,7 +4372,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IBrandCreateProps"
+								"$ref": "#/components/schemas/ValidateBrandModel"
 							}
 						}
 					}
@@ -4394,8 +4412,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -4404,7 +4423,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IBrandUpdateProps"
+								"$ref": "#/components/schemas/ValidateBrandModel"
 							}
 						}
 					}
@@ -4435,8 +4454,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -4499,7 +4519,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IProductCategoryCreateProps"
+								"$ref": "#/components/schemas/ValidateCategoryModel"
 							}
 						}
 					}
@@ -4539,8 +4559,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -4549,7 +4570,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IProductCategoryUpdateProps"
+								"$ref": "#/components/schemas/ValidateCategoryModel"
 							}
 						}
 					}
@@ -4562,7 +4583,7 @@
 						"description": "No content"
 					}
 				},
-				"description": "Delete croduct category",
+				"description": "Delete product category",
 				"tags": [
 					"Product Category"
 				],
@@ -4580,8 +4601,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]
@@ -4644,7 +4666,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IColorCreateProps"
+								"$ref": "#/components/schemas/ValidateColorModel"
 							}
 						}
 					}
@@ -4684,8 +4706,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				],
@@ -4694,7 +4717,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/IColorUpdateProps"
+								"$ref": "#/components/schemas/ValidateColorModel"
 							}
 						}
 					}
@@ -4725,8 +4748,9 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"format": "int32",
+							"type": "integer",
+							"minimum": 0
 						}
 					}
 				]

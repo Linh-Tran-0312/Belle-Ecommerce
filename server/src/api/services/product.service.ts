@@ -1,10 +1,8 @@
+import { Between, ILike, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { IProduct, IProductCreateProps } from "../models";
-import { ProductRepository, IProducts } from "../repositories";
+import { IProducts, ProductRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-import { ILike, Like, LessThanOrEqual, MoreThanOrEqual, Between } from "typeorm";
-import { IProductUpdateProps } from "../controllers/productController";
-import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
-import { HttpCode } from "../helpers/HttpCode";
+
 
 export enum Change {
     DESC = "DESC",
@@ -28,6 +26,18 @@ export interface IProductQuery  {
     sort?: ProductField,
     change?: Change
 }
+export interface IProductUpdateProps {
+    sku?: string;
+    categoryId?: number;
+    brandId?: number;
+    imgPaths?: string[];
+    name?: string;
+    summary?: string;
+    description?: string;
+    price?: number; 
+}
+
+
 //@Service({ id: "OrderRepository-service"})
 export class ProductService extends BaseService<IProduct, ProductRepository> implements IBaseService<IProduct>  {
     constructor() {
@@ -73,24 +83,12 @@ export class ProductService extends BaseService<IProduct, ProductRepository> imp
     }
     public async createProduct(data: IProductCreateProps): Promise<IProduct> {
         const { id } = await this.repository.create(data);
-        const newProduct: IProduct| null= await this.repository.findOne({
-            where: {
-                id: id
-            },
-            relations: ["category","brand","variants","variants.color","variants.size"]
-        });
-        if(!newProduct) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.NOT_FOUND);
+        const newProduct: IProduct = await this.getOneById(id,["category","brand","variants","variants.color","variants.size"]);
         return newProduct;
     }
     public async updateProduct(id: number, data: IProductUpdateProps ): Promise<IProduct> {
         await this.repository.update(id, data);
-        const updatedProduct: IProduct|null = await this.repository.findOne({
-            where: {
-                id: id
-            },
-            relations: ["category","brand","variants","variants.color","variants.size"]
-        });
-        if(!updatedProduct) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.NOT_FOUND);
+        const updatedProduct: IProduct =  await this.getOneById(id,["category","brand","variants","variants.color","variants.size"]);
         return updatedProduct;
     }
 

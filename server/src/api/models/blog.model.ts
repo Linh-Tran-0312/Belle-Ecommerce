@@ -8,7 +8,7 @@ export interface IBlogCreateProps {
     categoryId: number;
     imgPath?: string;
     content: string;
-    commentAllow?: boolean;   
+    commentAllow: boolean;   
 };
 
 export interface IBlog extends IBlogCreateProps, IBaseEntity {

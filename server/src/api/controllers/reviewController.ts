@@ -1,13 +1,7 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security, Controller, Query} from "tsoa";
-import { IProductReview, IProductReviewCreateProps } from "../models";
-import { ProductReviewService } from "../services";
-import { UserRole } from "../models";
-
-export interface IReviewCount {
-    reviewCount: number,
-    overallReview: number,
-    details: number[] // details[0] -> number of oneStar, details[1] -> number of twoStart,...
-}
+import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags } from "tsoa";
+import { IProductReview, IProductReviewCreateProps, UserRole } from "../models";
+import { IReviewCount, ProductReviewService } from "../services";
+import { ValidateReviewModel } from "../validations";
 
 @Route("reviews")
 @Tags('Product Review')
@@ -21,6 +15,9 @@ export class ReviewController  extends Controller {
 
     /**
      * Get reviews by productId
+    * @param {number} productId
+    * @isInt productId Product id must be an integer
+    * @minimum productId 0 Product id must be at least 0
      */
     @Get("/:productId")
     public async getReviewsByProductId(@Path() productId: number, @Query() size: number, @Query() cursor: number): Promise<IProductReview[]> {
@@ -28,17 +25,20 @@ export class ReviewController  extends Controller {
     }
     /**
      * Get reviews by productId
+    * @param {number} productId
+    * @isInt productId Product id must be an integer
+    * @minimum productId 0 Product id must be at least 0
      */
     @Get("/:productId/count")
     public async getReviewCountByProductId(@Path() productId: number): Promise<IReviewCount> {
         return this._reviewService.getReviewCountByProductId(productId);
     }
     /**
-     * Create new color
+     * Create new review
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Post("/")
-    public async createReview(@Body() data: IProductReviewCreateProps): Promise<IProductReview> {
+    public async createReview(@Body() data: ValidateReviewModel): Promise<IProductReview> {
         return this._reviewService.createReview(data)
     }
      

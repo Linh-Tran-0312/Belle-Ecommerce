@@ -1,13 +1,9 @@
-import { getRepository, Not, Equal, Brackets } from "typeorm";
-import { BaseRepository, IBaseRepository } from "./base.repository";
-import { Order, IOrder, IOrderCreateProps, Status, OrderDetail } from "../models";
-import { Service } from "typedi";
-import { PostgresError } from "../helpers/PostgresError";
-import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { Brackets, getRepository } from "typeorm";
 import { HttpCode } from "../helpers/HttpCode";
-import { Period } from "../helpers/timeHandler";
-import { time } from "console";
-import { IProductReport } from "../controllers/reportController";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { PostgresError } from "../helpers/PostgresError";
+import { IOrder, IOrderCreateProps, Order, Status } from "../models";
+import { BaseRepository } from "./base.repository";
 export interface IOrders {
     orders: Order[],
     total: number

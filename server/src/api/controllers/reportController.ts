@@ -1,33 +1,8 @@
 import { Get, Query, Route, Security, Tags } from "tsoa";
 import { UserRole } from "../models";
-import { ReportService } from "../services";
+import { ReportService, IOrderReport, IOverviewReport, IProductReports, ISalesReport  } from "../services";
 
-export interface IOverviewReport {
-    sales: number,
-    orders: number,
-    registers: number
-}
-export interface ISalesReport {
-    time: string,
-    sales: number,
-    orders: number
-}
- 
-export interface IOrderReport {
-    completedOrders: number,
-    canceledOrders: number
-}
-export interface IProductReport {
-    id: number,
-    name: string,
-    brand: string,
-    quantity: number,
-    sales: number
-}
-export interface IProductReports {
-    total: string,
-    products: IProductReport[]
-}
+
 @Route("/report")
 @Tags("Report Controller")
 export class ReportController {
@@ -47,7 +22,7 @@ export class ReportController {
       /**
      * Get sales and number of order reports for specific time
      * @param {string} time
-     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2]))
+     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2])|(^week$)|(^today$)) Time query is invalid
      */
     @Security("jwt", [UserRole.ADMIN])
      @Get("/sales")
@@ -57,7 +32,7 @@ export class ReportController {
       /**
      * Get the number of completed orders and canceled order
      * @param {string} time
-     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2]))
+     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2])|(^week$)) Time query is invalid
      */
     @Security("jwt", [UserRole.ADMIN])
     @Get("/orders")
@@ -67,13 +42,13 @@ export class ReportController {
       /**
      * Get list of products in descending  sales
      * @param {string} time
-     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2]))
+     * @pattern time (^[\d]{4}$)|(^[\d]{4}-([0][1-9]|[1][0-2])|(^week$)) Time query is invalid
      * @param {number} limit
      * @param {number} page
-     * @isInt limit
-     * @minimum limit 1
-     * @isInt page
-     * @minimum page 1
+     * @isInt limit Limit must be an integer
+     * @minimum limit 1 Limit must be at least 1
+     * @isInt page Page must be an integer
+     * @minimum page 1 Page must be at least 1
      */
     @Security("jwt", [UserRole.ADMIN])
     @Get("/products")

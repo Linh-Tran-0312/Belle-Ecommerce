@@ -3,52 +3,64 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { Not } from "typeorm";
 import { UserService } from ".";
-import { IAccessToken, IRefreshToken } from "../controllers/authController";
 import { HttpCode } from "../helpers/HttpCode";
-import { signAccessToken, signRefreshToken, ITokenPayload } from "../helpers/jwtHandler";
+import { signAccessToken, signRefreshToken } from "../helpers/jwtHandler";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { TokenError } from "../helpers/TokenError";
+import { IUserAuth, UserMapper } from "../mappers";
 import { IUser, IUserCreateProps } from "../models";
-import { IUserAuth } from "./index";
+
 dotenv.config();
 
+  export interface IRefreshToken {
+      refreshToken: string
+  }
+  export interface IAccessToken {
+      token: string;
+  }
+  export interface IRefreshMessage {
+      message : string
+  }
+  export interface IAuth {
+     refreshToken: string,
+     accessToken: string,
+     profile: IUserAuth
+  }
+ 
 export class AuthService extends UserService {
     constructor() {
         super()
     }
-    public async register(data: IUserCreateProps): Promise<IUserAuth> {       
-        //const existingUsers: IUser| any =  await this.repository.findOne({ where: { email: data.email}});
+    public async register(data: IUserCreateProps): Promise<IAuth> {       
         const existingEmail = await super.isEmailExist(data.email);
         if(!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);          
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
-        const profile = await this.repository.create(data);
+        const user = await this.repository.create(data);
      
-        const accessToken = signAccessToken({ id: profile.id, role: profile.role!}, 3600); // expire in 1 minute
-        const refreshToken = signRefreshToken({id: profile.id,role: profile.role!}, 604800000); // expire in 7 days
-        await this.repository.create({...profile, token: refreshToken});
-        delete profile.password;
-        delete profile.token;
-        const result = { accessToken, refreshToken, profile}
+        const accessToken = signAccessToken({ id: user.id, role: user.role!}, 300); // expire in 5 minute
+        const refreshToken = signRefreshToken({id: user.id,role: user.role!}, 604800000); // expire in 7 days
+        await this.repository.create({...user, token: refreshToken});
+
+        const result = { accessToken, refreshToken, profile: UserMapper.toUserAuth(user)}
         return result;
     }
 
-    public async login(email: string, password: string): Promise<IUserAuth> {
+    public async login(email: string, password: string): Promise<IAuth> {
         const existingUser: IUser|any =  await this.repository.findOne({ where: { email }});
         if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
        
         const match = await bcrypt.compare(password, existingUser.password);
         if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
       
-        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 3600); // expire in 1 minute
-        const refreshToken = signRefreshToken({id: existingUser.id,role:  existingUser.role }, 604800000); // expire in 7 days
+        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 300); // expire in 5 minute
+        const refreshToken = signRefreshToken({id: existingUser.id,role:  existingUser.role }, "7d"); // expire in 7 days
         await this.repository.create({...existingUser, token: refreshToken});
-        delete existingUser.password;
-        delete existingUser.token;
-        const result = { accessToken, refreshToken, profile: existingUser}
+ 
+        const result = { accessToken, refreshToken, profile: UserMapper.toUserAuth(existingUser)}
         return result;
     }
-    public async adminLogin(email: string, password: string): Promise<IUserAuth> {
+    public async adminLogin(email: string, password: string): Promise<IAuth> {
         
             const existingUser: IUser|any =  await this.repository.findOne({ where: { email, role: Not("customer") }});
             if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
@@ -56,11 +68,10 @@ export class AuthService extends UserService {
             const match = await bcrypt.compare(password, existingUser.password);
             if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
             const accessToken = await signAccessToken({ id: existingUser.id, role: existingUser.role}, 300); // expire in 5min
-            const refreshToken = await signRefreshToken({id: existingUser.id, role: existingUser.role}, 3600); // expire in 7 days
+            const refreshToken = await signRefreshToken({id: existingUser.id, role: existingUser.role}, "7d"); // expire in 7 days
             await this.repository.create({...existingUser, token: refreshToken});
-            delete existingUser.password;
-            delete existingUser.token;         
-            const result = { accessToken, refreshToken, profile: existingUser}     
+          
+            const result = { accessToken, refreshToken, profile:  UserMapper.toUserAuth(existingUser)}     
             return result;
      
       

@@ -1,4 +1,4 @@
-export { BlogRepository, IBlogs } from "./blog.repository";
+export { BlogRepository } from "./blog.repository";
 export { BlogCategoryRepository } from "./blogCategory.repository";
 export { BlogCommentRepository } from "./blogComment.repository";
 export { BrandRepository } from "./brand.repository";

@@ -1,56 +1,10 @@
-import { Body, Post, Route, Tags, Get, Controller, Request } from "tsoa";
-import { IUser, IUserCreateProps, UserRole } from "../models";
-import { AuthService, IUserAuth } from "../services";
 import express from "express";
+import { Body, Controller, Get, Post, Request, Route, Tags } from "tsoa";
+import { IUserAuth } from "../mappers";
+import { AuthService, IRefreshMessage } from "../services";
+import { ValidateLoginModel, ValidateUserCreateModel } from "../validations";
 
-export interface ILogin {
-  /** 
-  * @pattern ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
-  */
-  email: string,
-  password: string,
-}
-class CreateUserModel  {
 
-  fname: string;
-  lname: string;
-   /** 
-  * @pattern ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
-  */
-  email: string;
-  password: string;
-  role?: UserRole;
-   /** 
-  * @pattern [0-9]{10}
-  */
-  phone?: string;
-  address?: string;
-
-  constructor( fname: string,
-    lname: string,
-    email: string,
-    password: string,
-    role?: UserRole,
-    phone?: string,
-    address?: string) {
-    this.fname = fname;
-    this.lname = lname;
-    this.email = email;
-    this.role = role;
-    this.phone = phone;
-    this.password = password;
-    this.address = address;
-  }
-}
-export interface IRefreshToken {
-    refreshToken: string
-}
-export interface IAccessToken {
-    token: string;
-}
-interface IRefreshMessage {
-    message: string
-}
 @Route("auth")
 @Tags('Authorization')
 export class AuthController  extends Controller {
@@ -65,7 +19,7 @@ export class AuthController  extends Controller {
      * Allow new users create their accounts
      */
     @Post("/register")
-    public async register(@Body() data: IUserCreateProps): Promise<IUser> {
+    public async register(@Body() data:  ValidateUserCreateModel): Promise<IUserAuth> {
         const result = await  this._authService.register(data);
         this.setCookies({
             token: {
@@ -87,7 +41,7 @@ export class AuthController  extends Controller {
      * Allow customers login with their email and password
      */
     @Post("/login")
-    public async login(@Body() data: ILogin): Promise<IUser> {
+    public async login(@Body() data: ValidateLoginModel): Promise<IUserAuth> {
         const result = await this._authService.login(data.email, data.password);
         this.setCookies({
             token: {
@@ -109,7 +63,7 @@ export class AuthController  extends Controller {
      * Allow admin and editors login with their email and password
      */
     @Post("/admin/login")
-    public async adminLogin(@Body() data: ILogin): Promise<IUser> {       
+    public async adminLogin(@Body() data: ValidateLoginModel): Promise<IUserAuth> {       
         const result = await this._authService.adminLogin(data.email, data.password);
         this.setCookies({
             token: {

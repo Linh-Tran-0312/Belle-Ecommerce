@@ -1,11 +1,8 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
 import { IProductCategory, IProductCategoryCreateProps, UserRole } from "../models";
 import { ProductCategoryService } from "../services";
+import { ValidateCategoryModel } from "../validations";
 
-export interface IProductCategoryUpdateProps {
-    name?: string;
-    imgPath?: string;
-}
 
 @Route("product-categories")
 @Tags('Product Category')
@@ -28,19 +25,25 @@ export class ProductCategoryController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createProductCategory(@Body() data: IProductCategoryCreateProps): Promise<IProductCategory> {
+    public async createProductCategory(@Body() data: ValidateCategoryModel): Promise<IProductCategory> {
         return this._productCategoryService.create(data)
     }
     /**
     * Update product category info
+    * @param {number} id
+    * @isInt id Product category id must be an integer
+    * @minimum id 0 Product category id must be at least 0
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateProductCategoryById(@Path() id: number, @Body() data: IProductCategoryUpdateProps): Promise<IProductCategory> {
+    public async updateProductCategoryById(@Path() id: number, @Body() data: ValidateCategoryModel): Promise<IProductCategory> {
         return this._productCategoryService.update(id, data);
     }
     /**
-     * Delete croduct category
+     * Delete product category
+    * @param {number} id
+    * @isInt id Product category id must be an integer
+    * @minimum id 0 Product category id must be at least 0
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Delete("/:id")

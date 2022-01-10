@@ -1,10 +1,7 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
-import { IBlogCategory, IBlogCategoryCreateProps } from "../models";
+import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
+import { IBlogCategory, UserRole } from "../models";
 import { BlogCategoryService } from "../services";
-import { UserRole } from "../models";
-export interface IBlogCategoryUpdateProps {
-    name?: string;
-}
+import { ValidateBlogCateModel } from "../validations";
 
 @Route("blog-categories")
 @Tags('Blog Category')
@@ -23,24 +20,30 @@ export class BlogCategoryController {
         return this._blogCategoryService.getAll({});
     }
     /**
-     * Create new blog category
+     * Create a new blog category
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createBlogCategory(@Body() data: IBlogCategoryCreateProps): Promise<IBlogCategory> {
+    public async createBlogCategory(@Body() data: ValidateBlogCateModel): Promise<IBlogCategory> {
         return this._blogCategoryService.create(data)
     }
     /**
-    * Update a blog category partially by its id
+    * Update a blog category by its id
+    * @param {number} id 
+    * @isInt id Blog category id must be an integer
+    * @minimum id 0 Blog category id value must be at least 0
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateBlogCategoryById(@Path() id: number, @Body() data: IBlogCategoryCreateProps): Promise<IBlogCategory> {
+    public async updateBlogCategoryById(@Path() id: number, @Body() data: ValidateBlogCateModel): Promise<IBlogCategory> {
         return this._blogCategoryService.update(id, data);
     }
     /**
-     * Delete a blog category by its id
-     */
+    * Delete a blog category by its id
+    * @param {number} id
+    * @isInt id Blog category id must be an integer
+    * @minimum id 0 Blog category id value must be at least 0
+    */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Delete("/:id")
     public async deleteBlogCategoryById(@Path() id: number): Promise<void> {

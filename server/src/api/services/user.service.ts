@@ -1,7 +1,6 @@
  
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import { IUserUpdateProps } from "../controllers/userController";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { IUser, IUserCreateProps, UserRole} from "../models";
@@ -23,10 +22,15 @@ export interface IUserQuery {
     limit: number;
     page: number
 }
-export interface IUserAuth {
-    accessToken: string;
-    refreshToken: string;
-    profile: IUser
+ 
+export interface IUserUpdateProps {
+    lname?: string;
+    fname?: string;
+    password?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+    role?: UserRole
 }
 export class UserService extends BaseService<IUser, UserRepository> implements IBaseService<IUser>  {
     constructor() {
@@ -48,19 +52,16 @@ export class UserService extends BaseService<IUser, UserRepository> implements I
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
         const result: IUser = await this.repository.create(data);
-        const user: IUser|any = await this.repository.findOne({ where: {id: result.id}, relations: ["orders"]});
+        const user  = await this.getOneById(result.id ["orders"]);
         return user
     }
     public async updateUser(id: number,data: IUserUpdateProps): Promise<IUser> {
-        if(!!data.email) {
-            const existingUser: IUser|any =  await this.repository.findOne({ where: { email: data.email }});
-            if(!!existingUser && existingUser.id !== id) {
-                throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
-            } 
-        }
+        const existingUser: IUser|any =  await this.repository.findOne({ where: { email: data.email }});
+        if(!!existingUser && existingUser.id !== id) {
+            throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
+        } 
         const result: IUser = await this.repository.update(id,data);
-        const user: IUser|any = await this.repository.findOne({ where: {id: result.id}, relations: ["orders"]});
-        
+        const user  = await this.getOneById(result.id ["orders"]);        
         return user;
     }
 

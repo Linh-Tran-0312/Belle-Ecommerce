@@ -1,10 +1,7 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
-import { ISize, ISizeCreateProps, UserRole } from "../models";
+import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
+import { ISize, UserRole } from "../models";
 import { SizeService } from "../services";
-
-export interface ISizeUpdateProps {
-    name?: string;
-}
+import { ValidateSizeModel } from "../validations";
 
 @Route("sizes")
 @Tags('Product Size')
@@ -27,19 +24,25 @@ export class SizeController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createSize(@Body() data: ISizeCreateProps): Promise<ISize> {
+    public async createSize(@Body() data:  ValidateSizeModel): Promise<ISize> {
         return this._sizeService.create(data)
     }
     /**
     * Update Size info
+    * @param {number} id
+    * @isInt id Size id must be an integer
+    * @minimum id 0 Size id must be at least 0
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateSizeById(@Path() id: number, @Body() data: ISizeUpdateProps): Promise<ISize> {
+    public async updateSizeById(@Path() id: number, @Body() data:  ValidateSizeModel): Promise<ISize> {
         return this._sizeService.update(id, data);
     }
     /**
      * Delete Size
+    * @param {number} id
+    * @isInt id Size id must be an integer
+    * @minimum id 0 Size id must be at least 0
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Delete("/:id")
