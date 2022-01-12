@@ -1,14 +1,13 @@
 import express from "express";
 import { Body, Controller, Get, Post, Request, Route, Tags } from "tsoa";
 import { IUserAuth } from "../mappers";
-import { AuthService, IRefreshMessage } from "../services";
+import { AuthService, IRefreshMessage, IAuthService } from "../services";
 import { ValidateLoginModel, ValidateUserCreateModel } from "../validations";
-
 
 @Route("auth")
 @Tags('Authorization')
 export class AuthController  extends Controller {
-    private   _authService: AuthService ;
+    private   _authService: IAuthService ;
     private cookies = {};
    constructor() {
         super();
@@ -82,7 +81,7 @@ export class AuthController  extends Controller {
         return result.profile
       
     }
-      /**
+    /**
      * Refresh expired access token
      */
     @Get("/token")

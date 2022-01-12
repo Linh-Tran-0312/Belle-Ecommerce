@@ -1,9 +1,8 @@
 import { Body, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
 import { IUser, UserRole } from "../models";
-import { IUsers } from "../repositories";
-import { Change, IUserQuery, UserField, UserService } from "../services";
+import { Change, IUserQuery, UserField, UserService, IUsers  } from "../services";
 import { ValidateUserCreateModel, ValidateUserUpdateModel } from "../validations";
-
+import { IUserWithOrders, IUserCreateProps, IUserUpdateProps } from "../interfaces";
  
 @Route("users")
 @Tags('User')
@@ -51,16 +50,16 @@ export class UserController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Get("/:id")
-    public async getUserById(@Path() id: number): Promise<IUser> {
-        const user: any = await this._userService.getOneById(id,["orders"]);
-        return user;
+    public async getUserById(@Path() id: number): Promise<IUserWithOrders> {
+        return this._userService.getUserById(id);
+         
     }
      /**
      * Create new user with admin permission
      */
     @Security("jwt", [UserRole.ADMIN])
     @Post("/")
-    public async createUser(@Body() data:  ValidateUserCreateModel): Promise<IUser> {
+    public async createUser(@Body() data:  ValidateUserCreateModel): Promise<IUserWithOrders> {
         return this._userService.createUser(data);
     }
     /**
@@ -71,7 +70,7 @@ export class UserController {
      */
      @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
      @Patch("/:id")
-     public async updateUser(@Path() id: number,@Body() data:  ValidateUserUpdateModel): Promise<IUser> {
+     public async updateUser(@Path() id: number,@Body() data:  ValidateUserUpdateModel): Promise<IUserWithOrders> {
          
          return this._userService.updateUser(id,data);
      }

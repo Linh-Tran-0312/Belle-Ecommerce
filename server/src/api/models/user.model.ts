@@ -28,11 +28,12 @@ export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBa
     token?: string;
     phone?: string;
     address?: string;
+    role?: UserRole;
     orders?: IOrder[]
 }; 
 
 @Entity()
-export class User extends CustomBaseEntity implements IUserCreateProps {
+export class User extends CustomBaseEntity {
 
     @Column()
     fname!: string;

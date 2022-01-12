@@ -25,7 +25,7 @@ export interface IProduct extends IProductCategoryCreateProps, IBaseEntity {
 };
 
 @Entity()
-export class Product extends CustomBaseEntity implements IProductCreateProps {
+export class Product extends CustomBaseEntity  {
 
 
     @Column({nullable: true})

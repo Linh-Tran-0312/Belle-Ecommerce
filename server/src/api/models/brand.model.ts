@@ -9,7 +9,7 @@ export interface IBrandCreateProps {
 export interface IBrand extends IBrandCreateProps, IBaseEntity {};
 
 @Entity()
-export class Brand extends CustomBaseEntity implements IBrandCreateProps{
+export class Brand extends CustomBaseEntity {
 
     @Column()
     name!: string;

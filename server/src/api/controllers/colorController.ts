@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
 import { IColor, UserRole } from "../models";
-import { ColorService } from "../services";
+import { ColorService,IColorService  } from "../services";
 import { ValidateColorModel } from "../validations";
 
 @Route("colors")
 @Tags('Product Color')
 export class ColorController  extends Controller {
-    private _colorService: ColorService;
+    private _colorService: IColorService;
 
     constructor() {
         super()

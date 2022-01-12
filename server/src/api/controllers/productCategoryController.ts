@@ -1,13 +1,13 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
 import { IProductCategory, IProductCategoryCreateProps, UserRole } from "../models";
-import { ProductCategoryService } from "../services";
+import { ProductCategoryService, IProductCategoryService } from "../services";
 import { ValidateCategoryModel } from "../validations";
 
 
 @Route("product-categories")
 @Tags('Product Category')
 export class ProductCategoryController {
-    private _productCategoryService: ProductCategoryService;
+    private _productCategoryService: IProductCategoryService;
 
     constructor() {
         this._productCategoryService = new ProductCategoryService();

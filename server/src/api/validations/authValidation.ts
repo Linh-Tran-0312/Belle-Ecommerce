@@ -50,7 +50,6 @@ export class ValidateUserCreateModel extends ValidateUserUpdateModel {
     lname: string,
     email: string,
     password: string,
-
     phone: string,
     address: string,
     role?: UserRole,) {

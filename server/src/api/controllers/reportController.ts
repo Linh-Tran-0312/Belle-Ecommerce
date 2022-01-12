@@ -1,12 +1,12 @@
 import { Get, Query, Route, Security, Tags } from "tsoa";
 import { UserRole } from "../models";
-import { ReportService, IOrderReport, IOverviewReport, IProductReports, ISalesReport  } from "../services";
+import { ReportService, IOrderReport, IOverviewReport, IProductReports, ISalesReport, IReportService  } from "../services";
 
 
 @Route("/report")
 @Tags("Report Controller")
 export class ReportController {
-    private _reportService: any;
+    private _reportService: IReportService;
 
     constructor() {
         this._reportService = new ReportService();

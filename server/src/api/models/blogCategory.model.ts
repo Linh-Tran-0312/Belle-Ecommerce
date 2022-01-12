@@ -7,7 +7,7 @@ export interface IBlogCategoryCreateProps {
 export interface IBlogCategory extends IBlogCategoryCreateProps, IBaseEntity {}
 
 @Entity()
-export class BlogCategory extends CustomBaseEntity implements IBlogCategoryCreateProps {
+export class BlogCategory extends CustomBaseEntity  {
     @Column()
     name!: string;
 }

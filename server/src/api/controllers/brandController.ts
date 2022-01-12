@@ -1,13 +1,13 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
 import { IBrand, UserRole } from "../models";
-import { BrandService } from "../services";
+import { BrandService,IBrandService } from "../services";
 import { ValidateBrandModel } from "../validations";
 
 
 @Route("brands")
 @Tags('Product Brand')
 export class BrandController {
-    private _brandService: BrandService;
+    private _brandService: IBrandService;
  
     constructor() {
         this._brandService = new BrandService();

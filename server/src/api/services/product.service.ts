@@ -1,6 +1,6 @@
 import { Between, ILike, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
-import { IProduct, IProductCreateProps } from "../models";
-import { IProducts, ProductRepository } from "../repositories";
+import { IProduct, IProductCreateProps, Product } from "../models";
+import { ProductRepository,IProductRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 
 
@@ -37,9 +37,18 @@ export interface IProductUpdateProps {
     price?: number; 
 }
 
+export interface IProducts {
+    products: Product[],
+    total: number,
+}
 
+export interface IProductService extends IBaseService<Product> {
+    getProducts(query: IProductQuery): Promise<IProducts>;
+    createProduct(data: IProductCreateProps): Promise<IProduct>;
+    updateProduct(id: number, data: IProductUpdateProps ): Promise<IProduct>
+}
 //@Service({ id: "OrderRepository-service"})
-export class ProductService extends BaseService<IProduct, ProductRepository> implements IBaseService<IProduct>  {
+export class ProductService extends BaseService<Product, IProductRepository> implements IProductService  {
     constructor() {
         super(new ProductRepository())
     }

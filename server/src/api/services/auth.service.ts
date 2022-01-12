@@ -26,7 +26,12 @@ dotenv.config();
      accessToken: string,
      profile: IUserAuth
   }
- 
+export interface IAuthService {
+    register(data: IUserCreateProps): Promise<IAuth>;
+    login(email: string, password: string): Promise<IAuth>;
+    adminLogin(email: string, password: string): Promise<IAuth>;
+    refreshAccessToken(data: IRefreshToken): Promise<IAccessToken>
+}
 export class AuthService extends UserService {
     constructor() {
         super()
@@ -45,7 +50,6 @@ export class AuthService extends UserService {
         const result = { accessToken, refreshToken, profile: UserMapper.toUserAuth(user)}
         return result;
     }
-
     public async login(email: string, password: string): Promise<IAuth> {
         const existingUser: IUser|any =  await this.repository.findOne({ where: { email }});
         if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   

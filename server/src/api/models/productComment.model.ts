@@ -15,7 +15,7 @@ export interface IProductComment extends IProductCommentCreateProps, IBaseEntity
 }
 
 @Entity()
-export class ProductComment extends CustomBaseEntity implements IProductCommentCreateProps  {
+export class ProductComment extends CustomBaseEntity {
 
     @Column({type: "text"})
     text!: string;

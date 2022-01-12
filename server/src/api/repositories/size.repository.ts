@@ -1,10 +1,12 @@
  import { Service } from "typedi";
 import { getRepository } from "typeorm";
 import { ISize, ISizeCreateProps, Size } from "../models";
-import { BaseRepository } from "./base.repository";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 
-@Service({ id: "size-repository"})
-export class SizeRepository extends BaseRepository<ISize, Size, ISizeCreateProps> {
+export interface ISizeRepository extends IBaseRepository<Size> {}
+
+/* @Service({ id: "size-repository"}) */
+export class SizeRepository extends BaseRepository<Size> implements ISizeRepository{
     constructor() {
         super(getRepository(Size));
     }

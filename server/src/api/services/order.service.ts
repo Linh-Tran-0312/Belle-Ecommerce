@@ -2,10 +2,11 @@ import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { periodCal } from "../helpers/timeHandler";
 import { IOrder, IOrderCreateProps, IOrderDetailCreateProps, Order, OrderDetail, PaymentMethod, Status } from "../models";
-import { IOrders, OrderRepository } from "../repositories";
+import { OrderRepository,IOrderRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
-
+import { IOrderSearchProps } from "../interfaces";
+import { UpdateResult } from "typeorm";
 export interface IPlaceOrder {
     address: string;
     note?: string;
@@ -42,8 +43,25 @@ export interface IOrderQuery {
     change?: Change
 
 }
+export interface IOrders {
+    orders: IOrderSearchProps[],
+    total: number
+}
+
+export interface IOrderService extends IBaseService<Order> {
+    getOrders(query: IOrderQuery): Promise<IOrders>;
+    getOrderById(id: number): Promise<IOrder>;
+    createOrder(data: IOrderCreateProps): Promise<IOrder>;
+    updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder>;
+    updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<Order>;
+    placeOrder(id: number, data: IPlaceOrder): Promise<IOrder>;
+    getCurrentOrderByUserId(userId: number): Promise<IOrder|null>;
+    getAllOrdersByUserId(userId: number): Promise<IOrder[]>;
+    addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrder>
+};
+
 //@Service({ id: "OrderRepository-service"})
-export class OrderService extends BaseService<IOrder, OrderRepository> implements IBaseService<IOrder>  {
+export class OrderService extends BaseService<Order, IOrderRepository> implements IOrderService  {
     constructor() {
         super(new OrderRepository())
     }
@@ -60,9 +78,9 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
         }
         if(!!query.search) options.search = query.search;
         if(query.paymentCheck !== undefined ) options.paymentCheck = query.paymentCheck;
-        if(!!query.status !== undefined) options.status = query.status;
-        if(!!query.limit && !isNaN(query.limit)) options.limit = query.limit; 
-        if(!!query.page && !isNaN(query.page)) options.page = query.page;
+        if(query.status !== undefined) options.status = query.status;
+        options.limit = query.limit; 
+        options.page = query.page;
         if(!!query.time && query.time.trim() !== "") options.time = periodCal(query.time);
          options.sort = query.sort;
          options.change = query.change;
@@ -136,7 +154,7 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
         }
     
     }
-    public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrder> {
+    public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<Order> {
         return await this.repository.update(id, {...data, id: id});       
     }
     public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
@@ -172,7 +190,6 @@ export class OrderService extends BaseService<IOrder, OrderRepository> implement
        }
         return await this.repository.find(options)
     }
-
     public async addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrder> {
             const order: IOrder|null = await this.repository.findOne({ where : { id: id}, relations: ["details"]});
 

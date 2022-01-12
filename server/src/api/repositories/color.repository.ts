@@ -3,8 +3,10 @@ import { BaseRepository, IBaseRepository } from "./base.repository";
 import { Color, IBlogCreateProps, IColor, IColorCreateProps } from "../models";
 import { Service } from "typedi";
 
-@Service({ id: "color-repository"})
-export class ColorRepository extends BaseRepository<IColor, Color, IColorCreateProps> implements IBaseRepository<Color> {
+export interface IColorRepository extends IBaseRepository<Color> {}
+
+/* @Service({ id: "color-repository"}) */
+export class ColorRepository extends BaseRepository<Color> implements IColorRepository {
     constructor() {
         super(getRepository(Color));
     }

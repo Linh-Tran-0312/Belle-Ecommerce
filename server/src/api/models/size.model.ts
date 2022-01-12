@@ -8,7 +8,7 @@ export interface ISizeCreateProps {
 export interface ISize extends ISizeCreateProps, IBaseEntity {};
 
 @Entity()
-export class Size extends CustomBaseEntity implements ISizeCreateProps{
+export class Size extends CustomBaseEntity {
 
     @Column()
     name!: string;

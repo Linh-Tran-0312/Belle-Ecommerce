@@ -1,15 +1,15 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IProduct, IProductVariant, UserRole } from "../models";
-import { IProducts } from "../repositories";
-import { Change, IProductQuery, ProductField, ProductService, ProductVariantService } from "../services";
+import { IProduct, ProductVariant, UserRole } from "../models";
+ 
+import { Change, IProductQuery, ProductField, IProducts, ProductService,  IProductService, ProductVariantService ,IProductVariantService } from "../services";
 import { ValidateProductModel, ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
 
 
 @Route("products")
 @Tags('Product')
 export class ProductController {
-    private _productService: ProductService;
-    private _productVariantService: ProductVariantService;
+    private _productService: IProductService;
+    private _productVariantService: IProductVariantService;
     constructor() {
         this._productService = new ProductService();
         this._productVariantService = new ProductVariantService();
@@ -106,7 +106,7 @@ export class ProductController {
      */
       @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/variant")
-    public async createProductVariant(@Body() data: ValidateVariantCreateModel): Promise<IProductVariant> {
+    public async createProductVariant(@Body() data: ValidateVariantCreateModel): Promise<ProductVariant> {
         return this._productVariantService.createProductVariant(data);
     }
     /**
@@ -117,7 +117,7 @@ export class ProductController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/variant/:variantId")
-    public async updateProductVariant(@Path() variantId: number, @Body() data: ValidateVariantUpdateModel): Promise<IProductVariant> {
+    public async updateProductVariant(@Path() variantId: number, @Body() data: ValidateVariantUpdateModel): Promise<ProductVariant> {
          return this._productVariantService.updateProductVariant(variantId, data)
     }
     /**

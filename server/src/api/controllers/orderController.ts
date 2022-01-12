@@ -1,20 +1,19 @@
-import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
+import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags, Example } from "tsoa";
 import { Period } from "../helpers/timeHandler";
 import { IOrder, IOrderDetail, Status, UserRole } from "../models";
-import { IOrders } from "../repositories";
-import { Change, IOrderQuery, IOrderUpdateProps, IPlaceOrder, OrderDetailService, OrderField, OrderService } from "../services";
+import {  IOrders,Change, IOrderQuery, IOrderUpdateProps, IPlaceOrder,IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService } from "../services";
 import { ValidateOrderCreateModel, ValidateOrderDetailModel, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
-
+ 
 
 @Route("orders")
 @Tags('Order')
 export class OrderController {
-    private _orderService: OrderService;
-    private _orderDetailService: OrderDetailService;
+    private _orderService: IOrderService;
+    private _orderDetailService: IOrderDetailService;
 
     constructor() {
         this._orderService = new OrderService();
-        this._orderDetailService = new  OrderDetailService();
+        this._orderDetailService = new OrderDetailService();
     }
 
     /**
@@ -49,7 +48,7 @@ export class OrderController {
             limit: limit || 5,
             page: page || 1,
             time,
-            sort: sort ||  OrderField.ORDERAT,
+            sort: sort || OrderField.ORDERAT,
             change: change || Change.DESC
         }
         return this._orderService.getOrders(query);
@@ -62,12 +61,12 @@ export class OrderController {
     public async createOrder(@Body() data: ValidateOrderCreateModel): Promise<IOrder> {
         return this._orderService.createOrder(data);
     }
-     /**
-     * Get all orders of user by userId
-     * @param {number} userId
-    * @isInt userId User id must be an integer
-    * @minimum userId 0 User id value must be at least 0
-     */
+    /**
+    * Get all orders of user by userId
+    * @param {number} userId
+   * @isInt userId User id must be an integer
+   * @minimum userId 0 User id value must be at least 0
+    */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:userId/all")
     public async getOrdersOfUser(@Path() userId: number): Promise<IOrder[]> {
@@ -80,9 +79,9 @@ export class OrderController {
     * @isInt userId User id must be an integer
     * @minimum userId 0 User id value must be at least 0
      */
-     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
+    @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:userId/current")
-    public async getCurrentOrderOfUser(@Path() userId: number): Promise<IOrder|null> {
+    public async getCurrentOrderOfUser(@Path() userId: number): Promise<IOrder | null> {
         return this._orderService.getCurrentOrderByUserId(userId);
     }
     /**
@@ -105,7 +104,7 @@ export class OrderController {
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:userId/afterLogin")
     public async updateOrderItems(@Path() userId: number, @Body() data: ValidateOrderUpdateModel): Promise<IOrder> {
-        return this._orderService.updateOrderItems(userId,data)
+        return this._orderService.updateOrderItems(userId, data)
     }
     /**
     * Update order status
@@ -116,7 +115,7 @@ export class OrderController {
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/updateStatus")
     public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateProps): Promise<IOrder> {
-        return this._orderService.updateOrderStatus(orderId,data)
+        return this._orderService.updateOrderStatus(orderId, data)
     }
     /**
     * Submit current order  
@@ -124,18 +123,18 @@ export class OrderController {
     * @isInt orderId Order id must be an integer
     * @minimum orderId 0 Order id value must be at least 0
     */
-     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
-     @Patch("/:orderId/place")
-     public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrder> {
-         return this._orderService.placeOrder(orderId,data)
-     }
+    @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
+    @Patch("/:orderId/place")
+    public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrder> {
+        return this._orderService.placeOrder(orderId, data)
+    }
     /**
      * Delete order of user
     * @param {number} orderId
     * @isInt orderId Order id must be an integer
     * @minimum orderId 0 Order id value must be at least 0
      */
-     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
+    @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Delete("/:orderId")
     public async deleteOrderById(@Path() orderId: number): Promise<void> {
         return this._orderService.delete(orderId);
@@ -150,34 +149,34 @@ export class OrderController {
     * @isInt orderId Order id must be an integer
     * @minimum orderId 0 Order id value must be at least 0
      */
-     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
+    @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Post("/:orderId/items")
-    public async addItemToOrder(@Path() orderId: number,@Body() data: ValidateOrderDetailModel): Promise<IOrder> {
-       return this._orderService.addItemToOrder(orderId, data)
-    } 
+    public async addItemToOrder(@Path() orderId: number, @Body() data: ValidateOrderDetailModel): Promise<IOrder> {
+        return this._orderService.addItemToOrder(orderId, data)
+    }
     /**
     * Update order item (quantity)
      * @param {number} itemId
     * @isInt itemId Item id must be an integer
     * @minimum itemId 0 Item id value must be at least 0
     */
-     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
+    @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/items/:itemId")
     public async updateItemQuantity(@Path() itemId: number, @Body() data: ValidateUpdateQuantityModel): Promise<IOrderDetail> {
-        return this._orderDetailService.updateItemQuantity(itemId,data.quantity)
-    } 
+        return this._orderDetailService.updateItemQuantity(itemId, data.quantity)
+    }
     /**
     * Delete order items
     * @param {number} itemId
     * @isInt itemId Item id must be an integer
     * @minimum itemId 0 Item id value must be at least 0
     */
-     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
+    @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Delete("/items/:itemId")
     public async deleteItem(@Path() itemId: number): Promise<void> {
-    return this._orderDetailService.delete(itemId)
-    } 
-    
- 
- 
+        return this._orderDetailService.delete(itemId)
+    }
+
+
+
 }

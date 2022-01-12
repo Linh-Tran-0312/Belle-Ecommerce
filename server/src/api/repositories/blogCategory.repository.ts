@@ -1,10 +1,12 @@
 import { getRepository } from "typeorm";
-import { BaseRepository } from "./base.repository";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 import { BlogCategory, IBlogCategoryCreateProps, IBlogCategory } from "../models";
 import { Service } from "typedi";
 
+export interface IBlogCategoryRepository extends IBaseRepository<BlogCategory> {}
+
 //@Service({ id: "blogCategory-repository"})
-export class BlogCategoryRepository extends BaseRepository<IBlogCategory, BlogCategory, IBlogCategoryCreateProps> {
+export class BlogCategoryRepository extends BaseRepository<BlogCategory> implements IBlogCategoryRepository{
     constructor() {
         super(getRepository(BlogCategory));
     }

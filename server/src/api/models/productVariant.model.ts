@@ -15,7 +15,7 @@ export interface IProductVariant extends IProductVariantCreateProps, IBaseEntity
 };
 
 @Entity()
-export class ProductVariant extends CustomBaseEntity implements IProductVariantCreateProps{
+export class ProductVariant extends CustomBaseEntity {
 
     @Column()
     productId!: number;

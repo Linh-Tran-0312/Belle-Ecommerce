@@ -9,7 +9,7 @@ export interface IColorCreateProps {
 export interface IColor extends IColorCreateProps, IBaseEntity {};
 
 @Entity()
-export class Color  extends CustomBaseEntity implements IColorCreateProps {
+export class Color  extends CustomBaseEntity  {
 
     @Column()
     code!: string

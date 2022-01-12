@@ -1,4 +1,3 @@
-import { IOrderDetailCreateProps } from "../models";
 
 export class ValidateOrderDetailModel {
     /**

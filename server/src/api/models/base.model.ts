@@ -2,7 +2,7 @@ import { CreateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 
 export interface IBaseEntity {
     id: number;
-    createdAt?: Date;
+    createdAt: Date;
 }
 
 export class CustomBaseEntity implements IBaseEntity{
@@ -10,6 +10,6 @@ export class CustomBaseEntity implements IBaseEntity{
     id!: number;
 
     @CreateDateColumn({ type: "timestamptz"})
-    createdAt?: Date;
+    createdAt!: Date;
 
 }

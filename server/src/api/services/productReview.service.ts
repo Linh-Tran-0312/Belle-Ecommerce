@@ -1,23 +1,36 @@
-import { IProductReview, IProductReviewCreateProps, ProductReview, Status } from "../models";
-import { ProductReviewRepository, OrderDetailRepository } from "../repositories";
+import { IProductReview,  ProductReview, Status } from "../models";
+import { ProductReviewRepository, OrderDetailRepository,IProductReviewRepository,IOrderDetailRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { LessThan } from "typeorm";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
 import { UserMapper, IUserName } from "../mappers";
+import { IReviewCreateProps, IReview } from "../interfaces";
 export interface IReviewCount {
     reviewCount: number,
     overallReview: number,
     details: number[] // details[0] -> number of oneStar, details[1] -> number of twoStart,...
 }
+
+export interface IReviewWithUser extends Omit<ProductReview, "user"> {
+    user: IUserName
+} 
+
+export interface IReviewService extends IBaseService<ProductReview> {
+    getReviewsByProductId(productId: number, size: number, cursor: number): Promise<IReview[]>;
+    getReviewCountByProductId(productId: number): Promise<IReviewCount>;
+    createReview(data: IReviewCreateProps): Promise<IReview>
+}
 //@Service({ id: "OrderRepository-service"})
-export class ProductReviewService extends BaseService<IProductReview, ProductReviewRepository> implements IBaseService<IProductReview>  {
-    private orderDetailRepository: OrderDetailRepository;
+export class ProductReviewService extends BaseService<ProductReview, IProductReviewRepository> implements IReviewService {
+    
+    private orderDetailRepository: IOrderDetailRepository;
+
     constructor() {
         super(new ProductReviewRepository())
         this.orderDetailRepository = new OrderDetailRepository();
     }
-    public async getReviewsByProductId(productId: number, size: number, cursor: number): Promise<IProductReview[]> {
+    public async getReviewsByProductId(productId: number, size: number, cursor: number): Promise<IReview[]> {
         const options: any = {
             relations: ["user"],
             where: {productId},
@@ -25,12 +38,12 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
             take: size
         }
         if(cursor !== 0) options.where.id = LessThan(cursor);
-        const result = await this.repository.find(options)
-        result.forEach(review => {
+        const reviews = await this.repository.find(options)
+        reviews.forEach(review => {
             const user = UserMapper.toUserName(review.user!);
             review.user = user; 
         })
-        return result
+        return reviews
     }
 
     public async getReviewCountByProductId(productId: number): Promise<IReviewCount> {
@@ -55,7 +68,7 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
         return result;
     }
 
-    public async createReview(data: IProductReviewCreateProps): Promise<IProductReview> {
+    public async createReview(data: IReviewCreateProps): Promise<IReview> {
           
         // Check if this user has bought this product
         const isBought = await this.orderDetailRepository.findOne({
@@ -71,20 +84,20 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
             }
         })
         if(!isBought) throw new OperationalError(OperationalErrorMessage.NO_REVIEW_PERMISSION, HttpCode.BAD_REQUEST);
-        let existingReview = await this.repository.findOne({
+        let existingReview: ProductReview|null = await this.repository.findOne({
             where: {
                 productId: data.productId,
                 userId: data.userId
             }
         })
         
-        let review: IProductReview|null;
+        let review: IProductReview| null;
         if(!existingReview) {
             existingReview = await this.repository.create(data);
       
         } else {
-            existingReview.title = data.title;
-            existingReview.text = data.text;
+            existingReview.title = data.title!;
+            existingReview.text = data.text!;
             existingReview.rating = data.rating;
             await this.repository.create(existingReview)
         }
@@ -92,13 +105,13 @@ export class ProductReviewService extends BaseService<IProductReview, ProductRev
         review = await this.repository.findOne({
             relations: ["user"],
             where: {
-                id: existingReview.id
+                id: existingReview?.id
             }
         })
         if(!review) throw new OperationalError(OperationalErrorMessage.NOT_FOUND, HttpCode.BAD_REQUEST);
         const user = UserMapper.toUserName(review.user!);
-        review.user = user; 
+       const result: IReview = {...review, user: user} 
               
-        return review;
+        return result;
     }
 }

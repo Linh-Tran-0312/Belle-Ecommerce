@@ -26,13 +26,18 @@ export interface IOrderCreateProps {
 }
 
 export interface IOrder extends Omit<IOrderCreateProps, "details">, IBaseEntity {
-    status?: Status;
-    total?: number;
+    status: Status;
+    total: number;
+    paymentMethod: PaymentMethod,
+    paymentCheck: boolean,
+    address: string,
+    shipping: number,
+    orderAt: Date,
     details?: IOrderDetail[];
 };
 
 @Entity()
-export class Order  extends CustomBaseEntity implements IOrderCreateProps {
+export class Order  extends CustomBaseEntity {
 
     @Column()
     userId!: number;
@@ -44,7 +49,7 @@ export class Order  extends CustomBaseEntity implements IOrderCreateProps {
     @Column({type: "enum",
     enum: Status,
     default: Status.ORDERING})
-    status!: Status;
+    status!: Status ;
 
     @Column({type: "enum",
     enum: PaymentMethod,

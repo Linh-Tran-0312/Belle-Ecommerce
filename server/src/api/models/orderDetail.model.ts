@@ -13,7 +13,7 @@ export interface IOrderDetailCreateProps {
 export interface IOrderDetail extends IOrderDetailCreateProps, IBaseEntity {};
 
 @Entity()
-export class OrderDetail extends CustomBaseEntity implements IOrderDetailCreateProps {
+export class OrderDetail extends CustomBaseEntity  {
 
     @Column()
     orderId!: number;

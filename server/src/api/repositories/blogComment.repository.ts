@@ -1,11 +1,18 @@
 import { getRepository } from "typeorm";
 import { BlogComment, IBlogComment, IBlogCommentCreateProps } from "../models";
-import { BaseRepository } from "./base.repository";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 import { PostgresError } from "../helpers/PostgresError";
-export class BlogCommentRepository extends BaseRepository<IBlogComment, BlogComment, IBlogCommentCreateProps> {
+
+export interface IBlogCommentRepository extends IBaseRepository<BlogComment> {
+    getCommentsWithUser(blogId: number, options: any): Promise<IBlogComment[]>
+}
+
+export class BlogCommentRepository extends BaseRepository<BlogComment> implements IBlogCommentRepository {
+
     constructor() {
         super(getRepository(BlogComment));
     }
+
    public async  getCommentsWithUser(blogId: number, options: any): Promise<IBlogComment[]> {
        try {
            let query =  this.entity.createQueryBuilder("comment")

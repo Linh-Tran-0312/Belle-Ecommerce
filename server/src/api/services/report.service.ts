@@ -3,7 +3,7 @@ import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { daysInMonth, displayTime, getDay, getMonth, Period, periodCal, regYear, regYearMonth, timeCal } from "../helpers/timeHandler";
 import { IOrder, Status } from "../models";
-import { OrderRepository, UserRepository } from "../repositories";
+import { OrderRepository, UserRepository,IOrderRepository, IUserRepository } from "../repositories";
 
 export interface IOverviewReport {
     sales: number,
@@ -15,7 +15,6 @@ export interface ISalesReport {
     sales: number,
     orders: number
 }
- 
 export interface IOrderReport {
     completedOrders: number,
     canceledOrders: number
@@ -32,9 +31,16 @@ export interface IProductReports {
     products: IProductReport[]
 }
 
-export class ReportService {
-    private userRepo: UserRepository;
-    private orderRepo: OrderRepository;
+export interface IReportService {
+    getOverviewReport(): Promise<IOverviewReport>;
+    getSalesReport(timeStr: string): Promise<ISalesReport[]>;
+    getOrderReport(timeStr: string): Promise<IOrderReport>;
+    getTopProductsReport(timeStr: string, queryStr: {page: number, limit: number}): Promise<IProductReports>
+}
+
+export class ReportService implements IReportService{
+    private userRepo: IUserRepository;
+    private orderRepo: IOrderRepository;
 
     constructor() {
         this.userRepo = new UserRepository();
@@ -75,7 +81,7 @@ export class ReportService {
 
         return result;
     }
-    public async getSalesReport(timeStr: string): Promise<ISalesReport> {
+    public async getSalesReport(timeStr: string): Promise<ISalesReport[]> {
 
         let orders: any;
         let result: any;

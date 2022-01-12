@@ -1,42 +1,42 @@
 import { UpdateResult, Repository, FindManyOptions, FindOneOptions } from "typeorm";
 import { CustomBaseEntity, IBaseEntity } from "../models/base.model";
 import { PostgresError } from "../helpers/PostgresError";
+
 export interface IBaseRepository<T> {
     create(data: T | any): Promise<T>;
-     update( id: number | string,data: T | any): Promise<T | UpdateResult>;
+    update(id: number | string, data: T | any): Promise<T | any>;
     delete(id: number | string): void;
-
-    find(options: any): Promise<T[]>;
-    findOne(options: any): Promise<T | null>;
-    findAndCount(options: any): Promise<any>
+    find(options: FindManyOptions): Promise<T[] | any[]>;
+    findOne(options: FindOneOptions): Promise<T | null>;
+    findAndCount(options: FindManyOptions): Promise<any>
 }
 
-export abstract class BaseRepository<Props extends IBaseEntity, Class extends CustomBaseEntity & Props,CreateProps> implements IBaseRepository<IBaseEntity>
+export abstract class BaseRepository<T> implements IBaseRepository<T>
 {
-    protected entity: Repository<Class>;
+    protected entity: Repository<T>;
 
-    protected constructor(entity: Repository<Class>) {
+    protected constructor(entity: Repository<T>) {
         this.entity = entity;
     }
 
-    public async create(data: CreateProps | any): Promise<Props> {
+    public async create(data: T | any): Promise<T> {
         try {
-            return this.entity.save({...data});
+            return this.entity.save({ ...data });
         } catch (err: any) {
             throw new PostgresError(err.message, err);
         }
     }
-    public async update(id: number | string, data: CreateProps | any): Promise<Props> {
+    public async update(id: number | string, data: T | any): Promise<T> {
         try {
-           const updatedItem: any = await this.entity
+            const updatedItem: any = await this.entity
                 .createQueryBuilder()
                 .update()
-                .set({...data})
+                .set({ ...data })
                 .where("id = :id", { id })
                 .returning("*")
                 .updateEntity(true)
                 .execute();
-              
+
             return updatedItem.raw[0];
         } catch (err: any) {
             throw new PostgresError(err.message, err);
@@ -49,16 +49,16 @@ export abstract class BaseRepository<Props extends IBaseEntity, Class extends Cu
             throw new PostgresError(err.message, err);
         }
     }
-    public async find(options :FindManyOptions): Promise<Props[]> {
+    public async find(options: FindManyOptions): Promise<T[] | any[]> {
         try {
             return this.entity.find(options);
         } catch (err: any) {
             throw new PostgresError(err.message, err);
         }
     }
-    public async findOne(options: FindOneOptions): Promise<Props | null> {
+    public async findOne(options: FindOneOptions): Promise<T | null> {
         try {
-            const item: Props | any = await this.entity.findOne(options);
+            const item: T | any = await this.entity.findOne(options);
             if (!item) return null
             return item;
         } catch (err: any) {

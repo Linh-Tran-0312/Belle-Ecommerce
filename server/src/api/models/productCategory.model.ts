@@ -9,7 +9,7 @@ export interface IProductCategoryCreateProps {
 export interface IProductCategory extends IProductCategoryCreateProps, IBaseEntity {};
 
 @Entity()
-export class ProductCategory extends CustomBaseEntity implements IProductCategoryCreateProps{
+export class ProductCategory extends CustomBaseEntity {
 
     @Column()
     name!: string;

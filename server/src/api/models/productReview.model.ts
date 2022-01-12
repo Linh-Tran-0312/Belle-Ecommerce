@@ -3,8 +3,8 @@ import { IUser, Product, User } from "./";
 import { CustomBaseEntity, IBaseEntity } from "./base.model";
 
 export interface IProductReviewCreateProps {
-    title?: string;
-    text?: string;
+    title: string;
+    text: string;
     productId: number;
     rating: number;
     userId: number;
@@ -15,7 +15,7 @@ export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {
 };
 
 @Entity()
-export class ProductReview  extends CustomBaseEntity implements IProductReviewCreateProps{
+export class ProductReview  extends CustomBaseEntity {
 
     @Column({nullable: true})
     title!: string;

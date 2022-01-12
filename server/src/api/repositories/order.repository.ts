@@ -3,31 +3,25 @@ import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { PostgresError } from "../helpers/PostgresError";
 import { IOrder, IOrderCreateProps, Order, Status } from "../models";
-import { BaseRepository } from "./base.repository";
-export interface IOrders {
-    orders: Order[],
-    total: number
+import { BaseRepository, IBaseRepository } from "./base.repository";
+import { IOrders } from "../services";
+
+export interface IOrderRepository extends IBaseRepository<Order> {
+    getOrders(options: any): Promise<IOrders>;
+    getOrderById(id: number): Promise<IOrder>;
+    getTotalSalesAndOrdersByTime(trunc: string, time: any): Promise<any>;
+    getOrderProportionByTime(time: any): Promise<any>;
+    getTopProductByTime(time: any, query: any): Promise<any>
 }
+
+
 /* 
 @Service({ id: "order-repository"}) */
-export class OrderRepository extends BaseRepository<IOrder, Order, IOrderCreateProps> {
+export class OrderRepository extends BaseRepository<Order> implements IOrderRepository {
     constructor() {
         super(getRepository(Order));
     }
-    public async findAndCount(options: any): Promise<IOrders> {
-        try {
-            let result: IOrders = {
-                orders: [],
-                total: 0
-            }
-            const [orders, count] = await this.entity.findAndCount(options);
-            result.orders = orders;
-            result.total = count;
-            return result;
-        } catch (err: any) {
-            throw new PostgresError(err.message, err);
-        }
-    }
+
     public async getOrders(options: any): Promise<IOrders> {
         try {
             const orderQuery = this.entity.createQueryBuilder("order")

@@ -16,7 +16,7 @@ export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {
 };
 
 @Entity()
-export class BlogComment extends CustomBaseEntity implements IBlogCommentCreateProps {
+export class BlogComment extends CustomBaseEntity  {
 
     @Column()
     text!: string;

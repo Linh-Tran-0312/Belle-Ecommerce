@@ -2,7 +2,7 @@ import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags } from 
 import { IProductReview, IProductReviewCreateProps, UserRole } from "../models";
 import { IReviewCount, ProductReviewService } from "../services";
 import { ValidateReviewModel } from "../validations";
-
+import { IReview } from "../interfaces";
 @Route("reviews")
 @Tags('Product Review')
 export class ReviewController  extends Controller {
@@ -20,7 +20,7 @@ export class ReviewController  extends Controller {
     * @minimum productId 0 Product id must be at least 0
      */
     @Get("/:productId")
-    public async getReviewsByProductId(@Path() productId: number, @Query() size: number, @Query() cursor: number): Promise<IProductReview[]> {
+    public async getReviewsByProductId(@Path() productId: number, @Query() size: number, @Query() cursor: number): Promise<IReview[]> {
         return this._reviewService.getReviewsByProductId(productId, size, cursor);
     }
     /**
@@ -38,7 +38,7 @@ export class ReviewController  extends Controller {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Post("/")
-    public async createReview(@Body() data: ValidateReviewModel): Promise<IProductReview> {
+    public async createReview(@Body() data: ValidateReviewModel): Promise<IReview> {
         return this._reviewService.createReview(data)
     }
      

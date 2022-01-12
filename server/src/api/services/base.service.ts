@@ -1,18 +1,18 @@
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { IBaseRepository } from "../repositories/base.repository";
-import { IBaseEntity } from "../models/base.model";
+import { IBaseEntity, CustomBaseEntity } from "../models/base.model";
 import { HttpCode } from "../helpers/HttpCode";
 
-export interface IBaseService<T extends IBaseEntity> {
-    create(data: T): Promise<T>;
+export interface IBaseService<T extends CustomBaseEntity> {
+    create(data: T|any): Promise<T>;
     delete(id: number | string): Promise<void>;
     update(id: number | string, data: T | any): Promise<T | any>
 
     getAll(options: any): Promise<T[]>;
-    getOneById(id: number | string, relations?: string[] ): Promise<T | null>;
+    getOneById(id: number | string, relations?: string[] ): Promise<T>;
 }
 
-export abstract class BaseService<T extends IBaseEntity, R extends IBaseRepository<T>> implements IBaseService<T> {
+export abstract class BaseService<T extends  CustomBaseEntity, R extends IBaseRepository<T>> implements IBaseService<T> {
     protected repository: R;
     constructor(repository: R) {
         this.repository = repository;

@@ -1,4 +1,5 @@
-import { IUser, UserRole } from "../models";
+import { IUserWithOrders } from "../interfaces";
+import { IUser, UserRole, User } from "../models";
 
 export interface IUserAuth {
     id: number,
@@ -32,6 +33,20 @@ export class UserMapper {
             fname: user.fname,
             lname: user.lname
         })
+    }
+
+    public static toUserBasicProps(user: User): IUserWithOrders {
+          return {
+            id: user.id,
+            fname: user.fname,
+            lname: user.lname,
+            phone: user.phone!,
+            email: user.email,
+            address: user.address!,
+            role: user.role,
+            createdAt: user.createdAt,
+            orders: [] 
+          }
     }
 
 }

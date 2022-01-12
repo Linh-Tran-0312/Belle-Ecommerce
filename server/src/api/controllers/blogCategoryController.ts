@@ -1,12 +1,12 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
 import { IBlogCategory, UserRole } from "../models";
-import { BlogCategoryService } from "../services";
+import { BlogCategoryService, IBlogCategoryService } from "../services";
 import { ValidateBlogCateModel } from "../validations";
 
 @Route("blog-categories")
 @Tags('Blog Category')
 export class BlogCategoryController {
-    private _blogCategoryService: BlogCategoryService;
+    private _blogCategoryService: IBlogCategoryService;
 
     constructor() {
         this._blogCategoryService = new BlogCategoryService();

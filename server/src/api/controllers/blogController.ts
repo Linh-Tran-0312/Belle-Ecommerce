@@ -1,7 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IBlog, IBlogComment, IBlogCommentCreateProps, UserRole } from "../models";
+import { IBlog, Blog, IBlogComment, IBlogCommentCreateProps, UserRole } from "../models";
  
-import { BlogCommentService, BlogField, BlogService,IBlogs , Change, IBlogCommentQuery, IBlogQuery } from "../services";
+import { BlogCommentService,IBlogCommentService, BlogField, BlogService,IBlogService,IBlogs , Change, IBlogCommentQuery, IBlogQuery } from "../services";
 import { ValidateBlogModel } from "../validations";
 
 
@@ -14,8 +14,8 @@ export interface IBlogCommentUpdateProps {
 @Route("blogs")
 @Tags('Blog')
 export class BlogController {
-    private _blogService: BlogService;
-    private _blogCommentService: BlogCommentService;
+    private _blogService: IBlogService;
+    private _blogCommentService: IBlogCommentService;
 
     constructor() {
         this._blogService = new BlogService();
@@ -69,7 +69,7 @@ export class BlogController {
     * @minimum id 0 Blog id must be at least 0
     */
     @Get("/:id")
-    public async getBlogById(@Path() id: number): Promise<IBlog> {
+    public async getBlogById(@Path() id: number): Promise<Blog> {
         return this._blogService.getOneById(id, ["category"]);
     }
     /**
