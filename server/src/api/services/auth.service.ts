@@ -12,20 +12,21 @@ import { IUser, IUserCreateProps } from "../models";
 
 dotenv.config();
 
-  export interface IRefreshToken {
-      refreshToken: string
-  }
-  export interface IAccessToken {
-      token: string;
-  }
-  export interface IRefreshMessage {
-      message : string
-  }
-  export interface IAuth {
-     refreshToken: string,
-     accessToken: string,
-     profile: IUserAuth
-  }
+export interface IRefreshToken {
+    refreshToken: string
+}
+export interface IAccessToken {
+    token: string;
+}
+interface Token extends IRefreshToken, IAccessToken { }
+export interface IRefreshMessage {
+    message: string
+}
+export interface IAuth {
+    refreshToken: string,
+    accessToken: string,
+    profile: IUserAuth
+}
 export interface IAuthService {
     register(data: IUserCreateProps): Promise<IAuth>;
     login(email: string, password: string): Promise<IAuth>;
@@ -36,71 +37,62 @@ export class AuthService extends UserService {
     constructor() {
         super()
     }
-    public async register(data: IUserCreateProps): Promise<IAuth> {       
+    private async generateToken(id: number, role: string, timeAccess: number | string, timeRefresh: number | string): Promise<Token> {
+        const accessToken = signAccessToken({ id, role }, timeAccess);
+        const refreshToken = signRefreshToken({ id, role }, timeRefresh);
+        return { refreshToken, token: accessToken };
+    }
+    public async register(data: IUserCreateProps): Promise<IAuth> {
         const existingEmail = await super.isEmailExist(data.email);
-        if(!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);          
+        if (!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
         const user = await this.repository.create(data);
-     
-        const accessToken = signAccessToken({ id: user.id, role: user.role!}, 300); // expire in 5 minute
-        const refreshToken = signRefreshToken({id: user.id,role: user.role!}, 604800000); // expire in 7 days
-        await this.repository.create({...user, token: refreshToken});
-
-        const result = { accessToken, refreshToken, profile: UserMapper.toUserAuth(user)}
+        const { token, refreshToken } = await this.generateToken(user.id, user.role, 300, "7d");
+        await this.repository.create({ ...user, token: refreshToken });
+        const result = { accessToken: token, refreshToken, profile: UserMapper.toUserAuth(user) }
         return result;
     }
     public async login(email: string, password: string): Promise<IAuth> {
-        const existingUser: IUser|any =  await this.repository.findOne({ where: { email }});
-        if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
-       
+        const existingUser: IUser | any = await this.repository.findOne({ where: { email } });
+        if (!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);
         const match = await bcrypt.compare(password, existingUser.password);
-        if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-      
-        const accessToken = signAccessToken({ id: existingUser.id, role: existingUser.role}, 300); // expire in 5 minute
-        const refreshToken = signRefreshToken({id: existingUser.id,role:  existingUser.role }, "7d"); // expire in 7 days
-        await this.repository.create({...existingUser, token: refreshToken});
- 
-        const result = { accessToken, refreshToken, profile: UserMapper.toUserAuth(existingUser)}
+        if (!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
+        const { token, refreshToken } = await this.generateToken(existingUser.id, existingUser.role, 300, "7d");
+        await this.repository.create({ ...existingUser, token: refreshToken });
+        const result = { accessToken: token, refreshToken, profile: UserMapper.toUserAuth(existingUser) }
         return result;
     }
     public async adminLogin(email: string, password: string): Promise<IAuth> {
-        
-            const existingUser: IUser|any =  await this.repository.findOne({ where: { email, role: Not("customer") }});
-            if(!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);   
-           
-            const match = await bcrypt.compare(password, existingUser.password);
-            if(!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-            const accessToken = await signAccessToken({ id: existingUser.id, role: existingUser.role}, 300); // expire in 5min
-            const refreshToken = await signRefreshToken({id: existingUser.id, role: existingUser.role}, "7d"); // expire in 7 days
-            await this.repository.create({...existingUser, token: refreshToken});
-          
-            const result = { accessToken, refreshToken, profile:  UserMapper.toUserAuth(existingUser)}     
-            return result;
-     
-      
+
+        const existingUser: IUser | any = await this.repository.findOne({ where: { email, role: Not("customer") } });
+        if (!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);
+        const match = await bcrypt.compare(password, existingUser.password);
+        if (!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
+        const { token, refreshToken } = await this.generateToken(existingUser.id, existingUser.role, 300, "7d");
+        await this.repository.create({ ...existingUser, token: refreshToken });
+        const result = { accessToken: token, refreshToken, profile: UserMapper.toUserAuth(existingUser) }
+        return result;
     }
     public async refreshAccessToken(data: IRefreshToken): Promise<IAccessToken> {
-        const {refreshToken } = data;
+        const { refreshToken } = data;
         let token = "";
-        if(!refreshToken) throw new TokenError(OperationalErrorMessage.NO_TOKEN)
-        await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async(err , decoded ) => {
-            if(err) {
-                const payload: any = jwt.verify(refreshToken ,process.env.REFRESH_TOKEN_SECRET!, {ignoreExpiration: true});
+        if (!refreshToken) throw new TokenError(OperationalErrorMessage.NO_TOKEN)
+        await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async (err, decoded) => {
+            if (err) {
+                const payload: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, { ignoreExpiration: true });
                 throw new TokenError(OperationalErrorMessage.INVALID_TOKEN, payload.role);
-            } 
-          
-            const user =  await this.repository.findOne({ where: { id : decoded?.id}});
-            if(refreshToken === user?.token )
-            {
-                token = signAccessToken({ id: decoded?.id, role: user?.role!}, 60);
+            }
+
+            const user = await this.repository.findOne({ where: { id: decoded?.id } });
+            if (refreshToken === user?.token) {
+                token = signAccessToken({ id: decoded?.id, role: user?.role! }, 60);
             } else {
                 throw new TokenError(OperationalErrorMessage.INVALID_TOKEN, decoded?.role);
             }
-         })
+        })
 
-         return { token }
-    }  
+        return { token }
+    }
 }
 
- 

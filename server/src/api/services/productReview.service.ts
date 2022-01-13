@@ -5,13 +5,29 @@ import { LessThan } from "typeorm";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
 import { UserMapper, IUserName } from "../mappers";
-import { IReviewCreateProps, IReview } from "../interfaces";
+
 export interface IReviewCount {
     reviewCount: number,
     overallReview: number,
     details: number[] // details[0] -> number of oneStar, details[1] -> number of twoStart,...
 }
 
+export interface IReview {
+    title: string;
+    text: string;
+    productId: number;
+    rating: number;
+    userId: number; 
+    user: IUserName
+}
+
+export interface IReviewCreateProps {
+    title?: string;
+    text?: string;
+    productId: number;
+    rating: number;
+    userId: number;
+}
 export interface IReviewWithUser extends Omit<ProductReview, "user"> {
     user: IUserName
 } 

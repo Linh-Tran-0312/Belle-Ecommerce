@@ -1,8 +1,8 @@
 import { Body, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
 import { IUser, UserRole } from "../models";
-import { Change, IUserQuery, UserField, UserService, IUsers  } from "../services";
+import { Change, IUserQuery, UserField, UserService, IUsers , IUserWithOrders, } from "../services";
 import { ValidateUserCreateModel, ValidateUserUpdateModel } from "../validations";
-import { IUserWithOrders, IUserCreateProps, IUserUpdateProps } from "../interfaces";
+
  
 @Route("users")
 @Tags('User')

@@ -68,5 +68,5 @@ export class User extends CustomBaseEntity {
     wishList!: Product[];
 
     @OneToMany(() => Order, order => order.user)
-    orders!: Array<IOrder>
+    orders!: Array<Order>
 }

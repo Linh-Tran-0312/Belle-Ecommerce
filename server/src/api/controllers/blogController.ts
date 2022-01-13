@@ -59,7 +59,7 @@ export class BlogController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createBlog(@Body() data: ValidateBlogModel): Promise<IBlog> {
+    public async createBlog(@Body() data: ValidateBlogModel): Promise<Blog> {
         return this._blogService.createBlog(data)
     }
     /**
@@ -80,7 +80,7 @@ export class BlogController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateBlogById(@Path() id: number, @Body() data: ValidateBlogModel): Promise<IBlog> {
+    public async updateBlogById(@Path() id: number, @Body() data: ValidateBlogModel): Promise<Blog> {
         return this._blogService.updateBlog(id, data);
     }
     /**

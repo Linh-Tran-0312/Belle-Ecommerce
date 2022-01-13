@@ -1,6 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IProduct, ProductVariant, UserRole } from "../models";
- 
+import { IProductInfo } from "../mappers";
+import { Product, ProductVariant, UserRole } from "../models";
+ import { IVariantInfo } from "../mappers";
 import { Change, IProductQuery, ProductField, IProducts, ProductService,  IProductService, ProductVariantService ,IProductVariantService } from "../services";
 import { ValidateProductModel, ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
 
@@ -68,15 +69,15 @@ export class ProductController {
     * @minimum id 0 Product id must be at least 0
      */
      @Get("/:id")
-     public async getProductById(@Path() id: number): Promise<IProduct> {
-         return this._productService.getOneById(id, ["category","brand","variants","variants.color","variants.size"]);
+     public async getProductById(@Path() id: number): Promise<IProductInfo> {
+         return this._productService.getProductById(id);
      }
     /**
      * Create new product
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createProduct(@Body() data: ValidateProductModel): Promise<IProduct> {
+    public async createProduct(@Body() data: ValidateProductModel): Promise<IProductInfo> {
         return this._productService.createProduct(data)
     }
     /**
@@ -87,7 +88,7 @@ export class ProductController {
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateProductById(@Path() id: number, @Body() data: ValidateProductModel): Promise<IProduct> {
+    public async updateProductById(@Path() id: number, @Body() data: ValidateProductModel): Promise<IProductInfo> {
         return this._productService.updateProduct(id, data);
     }
     /**
@@ -106,7 +107,7 @@ export class ProductController {
      */
       @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/variant")
-    public async createProductVariant(@Body() data: ValidateVariantCreateModel): Promise<ProductVariant> {
+    public async createProductVariant(@Body() data: ValidateVariantCreateModel): Promise<IVariantInfo> {
         return this._productVariantService.createProductVariant(data);
     }
     /**
@@ -117,7 +118,7 @@ export class ProductController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/variant/:variantId")
-    public async updateProductVariant(@Path() variantId: number, @Body() data: ValidateVariantUpdateModel): Promise<ProductVariant> {
+    public async updateProductVariant(@Path() variantId: number, @Body() data: ValidateVariantUpdateModel): Promise<IVariantInfo> {
          return this._productVariantService.updateProductVariant(variantId, data)
     }
     /**

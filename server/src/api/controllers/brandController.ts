@@ -1,5 +1,5 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
-import { IBrand, UserRole } from "../models";
+import { IBrand, UserRole, Brand } from "../models";
 import { BrandService,IBrandService } from "../services";
 import { ValidateBrandModel } from "../validations";
 
@@ -17,7 +17,7 @@ export class BrandController {
      * Get all brands 
      */
     @Get("/")
-    public async getBrands(): Promise<IBrand[]> {
+    public async getBrands(): Promise<Brand[]> {
         return this._brandService.getAll({});
     }
     /**
@@ -25,7 +25,7 @@ export class BrandController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createBrand(@Body() data: ValidateBrandModel): Promise<IBrand> {
+    public async createBrand(@Body() data: ValidateBrandModel): Promise<Brand> {
         return this._brandService.create(data)
     }
     /**
@@ -36,7 +36,7 @@ export class BrandController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateBrandById(@Path() id: number, @Body() data: ValidateBrandModel): Promise<IBrand> {
+    public async updateBrandById(@Path() id: number, @Body() data: ValidateBrandModel): Promise<Brand> {
         return this._brandService.update(id, data);
     }
     /**

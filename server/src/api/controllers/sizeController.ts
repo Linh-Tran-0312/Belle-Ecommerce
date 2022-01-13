@@ -1,5 +1,5 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
-import { ISize, UserRole } from "../models";
+import { Size, UserRole } from "../models";
 import { SizeService } from "../services";
 import { ValidateSizeModel } from "../validations";
 
@@ -16,7 +16,7 @@ export class SizeController {
      * Get all Sizes 
      */
     @Get("/")
-    public async getSizes(): Promise<ISize[]> {
+    public async getSizes(): Promise<Size[]> {
         return this._sizeService.getAll({});
     }
     /**
@@ -24,7 +24,7 @@ export class SizeController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createSize(@Body() data:  ValidateSizeModel): Promise<ISize> {
+    public async createSize(@Body() data:  ValidateSizeModel): Promise<Size> {
         return this._sizeService.create(data)
     }
     /**
@@ -35,7 +35,7 @@ export class SizeController {
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateSizeById(@Path() id: number, @Body() data:  ValidateSizeModel): Promise<ISize> {
+    public async updateSizeById(@Path() id: number, @Body() data:  ValidateSizeModel): Promise<Size> {
         return this._sizeService.update(id, data);
     }
     /**

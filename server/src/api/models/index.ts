@@ -3,7 +3,7 @@ export { BlogCategory, IBlogCategory, IBlogCategoryCreateProps} from "./blogCate
 export { BlogComment,  IBlogComment, IBlogCommentCreateProps} from "./blogComment.model";
 export { Brand, IBrandCreateProps ,IBrand } from "./brand.model";
 export { Color, IColorCreateProps, IColor } from "./color.model";
-export { Order, IOrder, IOrderCreateProps, Status,  PaymentMethod} from "./order.model";
+export { Order,  IOrderCreateProps, Status,  PaymentMethod} from "./order.model";
 export { OrderDetail, IOrderDetail, IOrderDetailCreateProps } from "./orderDetail.model";
 export { Product, IProduct, IProductCreateProps } from "./product.model";
 export { ProductCategory, IProductCategoryCreateProps, IProductCategory } from "./productCategory.model";

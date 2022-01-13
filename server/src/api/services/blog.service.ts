@@ -1,6 +1,6 @@
 import { Service } from "typedi";
 import { ILike } from "typeorm";
-import { Blog, IBlog, IBlogCreateProps } from "../models";
+import { Blog } from "../models";
 import { BlogRepository, IBlogRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
@@ -18,6 +18,13 @@ export interface IBlogQuery {
     change?: Change,
     search?: string
 }
+export interface IBlogCreateProps {
+    title: string;
+    categoryId: number;
+    imgPath?: string;
+    content: string;
+    commentAllow: boolean;   
+};
 export interface IBlogs {
     blogs: Blog[],
     total: number
@@ -26,7 +33,7 @@ export interface IBlogs {
 export interface IBlogService extends IBaseService<Blog> {
     getBlogs(query: IBlogQuery): Promise<IBlogs>;
     createBlog(data: IBlogCreateProps): Promise<Blog>;
-    updateBlog(id: number, data: IBlogCreateProps): Promise<IBlog>
+    updateBlog(id: number, data: IBlogCreateProps): Promise<Blog>
 
 };
 
@@ -63,9 +70,9 @@ export class BlogService extends BaseService<Blog, IBlogRepository> implements I
         const newBlog = await this.getOneById(id, ["category"]);
         return newBlog
     }
-    public async updateBlog(id: number, data: IBlogCreateProps): Promise<IBlog> {
+    public async updateBlog(id: number, data: IBlogCreateProps): Promise<Blog> {
         await this.repository.update(id, data);
-        const updatedBlog: IBlog = await this.getOneById(id, ["category"]);
+        const updatedBlog = await this.getOneById(id, ["category"]);
         return updatedBlog;
     }
 }

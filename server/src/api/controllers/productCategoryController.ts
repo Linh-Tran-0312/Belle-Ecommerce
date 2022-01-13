@@ -1,5 +1,5 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
-import { IProductCategory, IProductCategoryCreateProps, UserRole } from "../models";
+import { ProductCategory, IProductCategoryCreateProps, UserRole } from "../models";
 import { ProductCategoryService, IProductCategoryService } from "../services";
 import { ValidateCategoryModel } from "../validations";
 
@@ -17,7 +17,7 @@ export class ProductCategoryController {
      * Get all product categories
      */
     @Get("/")
-    public async getProductCategorys(): Promise<IProductCategory[]> {
+    public async getProductCategorys(): Promise<ProductCategory[]> {
         return this._productCategoryService.getAll({});
     }
     /**
@@ -25,7 +25,7 @@ export class ProductCategoryController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createProductCategory(@Body() data: ValidateCategoryModel): Promise<IProductCategory> {
+    public async createProductCategory(@Body() data: ValidateCategoryModel): Promise<ProductCategory> {
         return this._productCategoryService.create(data)
     }
     /**
@@ -36,7 +36,7 @@ export class ProductCategoryController {
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateProductCategoryById(@Path() id: number, @Body() data: ValidateCategoryModel): Promise<IProductCategory> {
+    public async updateProductCategoryById(@Path() id: number, @Body() data: ValidateCategoryModel): Promise<ProductCategory> {
         return this._productCategoryService.update(id, data);
     }
     /**

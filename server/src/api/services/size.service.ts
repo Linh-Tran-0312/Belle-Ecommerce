@@ -2,6 +2,10 @@ import { ISize, Size } from "../models";
 import { SizeRepository, ISizeRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 
+
+export interface ISizeName {
+    name: string
+}
 export interface ISizeService extends IBaseService<Size> { };
 
 

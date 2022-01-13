@@ -1,4 +1,4 @@
-import { IUserWithOrders } from "../interfaces";
+import { IUserWithOrders } from "../services";
 import { IUser, UserRole, User } from "../models";
 
 export interface IUserAuth {

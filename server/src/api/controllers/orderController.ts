@@ -1,7 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags, Example } from "tsoa";
 import { Period } from "../helpers/timeHandler";
-import { IOrder, IOrderDetail, Status, UserRole } from "../models";
-import {  IOrders,Change, IOrderQuery, IOrderUpdateProps, IPlaceOrder,IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService } from "../services";
+import { IOrderDetail, Status, UserRole } from "../models";
+import {  IOrders,Change, IOrderQuery, IOrderUpdateProps, IPlaceOrder,IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService, IOrderInfo, IOrderBasicProps } from "../services";
 import { ValidateOrderCreateModel, ValidateOrderDetailModel, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
  
 
@@ -58,7 +58,7 @@ export class OrderController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Post("/")
-    public async createOrder(@Body() data: ValidateOrderCreateModel): Promise<IOrder> {
+    public async createOrder(@Body() data: ValidateOrderCreateModel): Promise<IOrderInfo> {
         return this._orderService.createOrder(data);
     }
     /**
@@ -69,7 +69,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:userId/all")
-    public async getOrdersOfUser(@Path() userId: number): Promise<IOrder[]> {
+    public async getOrdersOfUser(@Path() userId: number): Promise<IOrderBasicProps[]> {
         return this._orderService.getAllOrdersByUserId(userId);
     }
     /**
@@ -81,7 +81,7 @@ export class OrderController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:userId/current")
-    public async getCurrentOrderOfUser(@Path() userId: number): Promise<IOrder | null> {
+    public async getCurrentOrderOfUser(@Path() userId: number): Promise<IOrderInfo | null> {
         return this._orderService.getCurrentOrderByUserId(userId);
     }
     /**
@@ -92,19 +92,19 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Get("/:orderId")
-    public async getOrderById(@Path() orderId: number): Promise<IOrder> {
+    public async getOrderById(@Path() orderId: number): Promise<IOrderInfo> {
         return this._orderService.getOrderById(orderId)
     }
     /**
-    * Update order (add items when use login if there are cart items saved in local storage)
+    * Update order (add items to existing cart or create new cart when users login if there are items in their carts)
     * @param {number} userId
     * @isInt userId User id must be an integer
     * @minimum userId 0 User id value must be at least 0
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:userId/afterLogin")
-    public async updateOrderItems(@Path() userId: number, @Body() data: ValidateOrderUpdateModel): Promise<IOrder> {
-        return this._orderService.updateOrderItems(userId, data)
+    public async updateOrderItems(@Path() userId: number, @Body() data: ValidateOrderUpdateModel): Promise<IOrderInfo> {
+        return this._orderService.updateOrderItems(userId, data.details)
     }
     /**
     * Update order status
@@ -114,7 +114,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/updateStatus")
-    public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateProps): Promise<IOrder> {
+    public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateProps): Promise<IOrderInfo> {
         return this._orderService.updateOrderStatus(orderId, data)
     }
     /**
@@ -125,7 +125,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/place")
-    public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrder> {
+    public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrderInfo> {
         return this._orderService.placeOrder(orderId, data)
     }
     /**
@@ -151,7 +151,7 @@ export class OrderController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Post("/:orderId/items")
-    public async addItemToOrder(@Path() orderId: number, @Body() data: ValidateOrderDetailModel): Promise<IOrder> {
+    public async addItemToOrder(@Path() orderId: number, @Body() data: ValidateOrderDetailModel): Promise<IOrderInfo> {
         return this._orderService.addItemToOrder(orderId, data)
     }
     /**

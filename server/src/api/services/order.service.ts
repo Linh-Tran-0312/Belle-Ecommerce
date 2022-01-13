@@ -1,32 +1,11 @@
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { periodCal } from "../helpers/timeHandler";
-import { IOrder, IOrderCreateProps, IOrderDetailCreateProps, Order, OrderDetail, PaymentMethod, Status } from "../models";
+import { Order, OrderDetail, PaymentMethod, Status } from "../models";
 import { OrderRepository,IOrderRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-import { Change } from "./index";
-import { IOrderSearchProps } from "../interfaces";
-import { UpdateResult } from "typeorm";
-export interface IPlaceOrder {
-    address: string;
-    note?: string;
-    paymentMethod: PaymentMethod;
-    shipping?: number;
-    total?: number;
-}
-export interface IOrderUpdateProps {
-    status?: Status;
-    paymentCheck?: boolean;
-    paymentMethod?: PaymentMethod;
-    address?: string,
-}
+import { Change, IUserName, IUserAuth, IOrderDetailCreateProps, IItemDetails } from "./index";
 
-export interface IOrderDetailQtyUpdate {
-    quantity: number
-}
-export interface IOrderUpdateItems {
-    details: IOrderDetailCreateProps[];
-}
 
 export enum OrderField {
     ORDERAT = "orderAt",
@@ -43,6 +22,44 @@ export interface IOrderQuery {
     change?: Change
 
 }
+
+export interface IPlaceOrder {
+    address: string;
+    note?: string;
+    paymentMethod: PaymentMethod;
+    shipping?: number;
+    total?: number;
+}
+export interface IOrderCreateProps {
+    userId: number;
+    details?: IOrderDetailCreateProps[];
+}
+export interface IOrderUpdateProps {
+    status?: Status;
+    paymentCheck?: boolean;
+    paymentMethod?: PaymentMethod;
+    address?: string,
+}
+
+
+export interface IOrderBasicProps {
+    id: number,
+    status: Status,
+    paymentMethod: PaymentMethod,
+    paymentCheck: boolean,
+    address: string,
+    total:number,
+    shipping?: number,
+    note?:string,
+    orderAt: Date,
+}
+export interface IOrderInfo  extends IOrderBasicProps{
+    user: IUserAuth;
+    details: IItemDetails[];
+}
+export interface IOrderSearchProps extends IOrderBasicProps {
+    user: IUserName
+}
 export interface IOrders {
     orders: IOrderSearchProps[],
     total: number
@@ -50,14 +67,14 @@ export interface IOrders {
 
 export interface IOrderService extends IBaseService<Order> {
     getOrders(query: IOrderQuery): Promise<IOrders>;
-    getOrderById(id: number): Promise<IOrder>;
-    createOrder(data: IOrderCreateProps): Promise<IOrder>;
-    updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder>;
-    updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<Order>;
-    placeOrder(id: number, data: IPlaceOrder): Promise<IOrder>;
-    getCurrentOrderByUserId(userId: number): Promise<IOrder|null>;
-    getAllOrdersByUserId(userId: number): Promise<IOrder[]>;
-    addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrder>
+    getOrderById(id: number): Promise<IOrderInfo>;
+    createOrder(data: IOrderCreateProps): Promise<IOrderInfo>;
+    updateOrderItems(id: number, details: IOrderDetailCreateProps[] ): Promise<IOrderInfo>;
+    updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrderInfo>;
+    placeOrder(id: number, data: IPlaceOrder): Promise<IOrderInfo>;
+    getCurrentOrderByUserId(userId: number): Promise<IOrderInfo|null>;
+    getAllOrdersByUserId(userId: number): Promise<IOrderBasicProps[]>;
+    addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrderInfo>
 };
 
 //@Service({ id: "OrderRepository-service"})
@@ -88,10 +105,10 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         return this.repository.getOrders(options)
         
     }
-    public async getOrderById(id: number): Promise<IOrder> {
+    public async getOrderById(id: number): Promise<IOrderInfo> {
         return await this.repository.getOrderById(id);
     }
-    public async createOrder(data: IOrderCreateProps): Promise<IOrder> {
+    public async createOrder(data: IOrderCreateProps): Promise<IOrderInfo> {
         try {
             let order = new Order();
             order.userId = data.userId;
@@ -111,9 +128,9 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         }
        
     }
-    public async updateOrderItems(id: number, data: IOrderUpdateItems ): Promise<IOrder> {
+    public async updateOrderItems(id: number, details: IOrderDetailCreateProps[]): Promise<IOrderInfo> {
         try {
-            let currentOrder: IOrder | any = await  this.repository.findOne({
+            let currentOrder: Order|null = await  this.repository.findOne({
                 relations: ["details"],
                 where: {
                 userId: id,
@@ -123,24 +140,24 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
                 currentOrder = new Order();
                 currentOrder.userId = id;
                 currentOrder.details = [];
-                data.details.forEach(detail => {
+                details.forEach(detail => {
                     const item = new OrderDetail();
                     item.productVariantId = detail.productVariantId;
                     item.unitPrice = detail.unitPrice;
                     item.quantity = detail.quantity;
-                    currentOrder.details.push(item);
+                    currentOrder?.details.push(item);
                 })
             } else {
-                data.details.forEach(detail => {
-                    const index = currentOrder.details.findIndex((item: { productVariantId: number; }) => item.productVariantId === detail.productVariantId);
+                details.forEach(detail => {
+                    const index  = currentOrder?.details?.findIndex((item: { productVariantId: number; }) => item.productVariantId === detail.productVariantId)  ?? -1;
                     if(index === -1) {
                         const newItem = new OrderDetail();
                         newItem.productVariantId = detail.productVariantId;
                         newItem.quantity = detail.quantity;
                         newItem.unitPrice = detail.unitPrice;
-                        currentOrder.details.push(newItem);
+                        currentOrder?.details.push(newItem);
                     } else {
-                        currentOrder.details[index].quantity += detail.quantity;
+                        currentOrder!.details[index].quantity += detail.quantity
                     }
                     
                  })
@@ -154,21 +171,13 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         }
     
     }
-    public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<Order> {
+    public async updateOrderStatus(id: number, data: IOrderUpdateProps): Promise<IOrderInfo> {
         return await this.repository.update(id, {...data, id: id});       
     }
-    public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrder> {
-        try {
-             
-            const order: IOrder| any = this.repository.update(id, {...data, status: Status.ORDERED, orderAt:  new Date(Date.now()).toISOString()});
-           
-            return order
-        } catch (error) {
-            throw error
-        }
-          
+    public async placeOrder(id: number, data: IPlaceOrder): Promise<IOrderInfo> {
+        return await this.repository.update(id, {...data, status: Status.ORDERED, orderAt:  new Date(Date.now()).toISOString()});
     }
-    public async getCurrentOrderByUserId(userId: number): Promise<IOrder|null> {
+    public async getCurrentOrderByUserId(userId: number): Promise<IOrderInfo|null> {
             const options = {
                 select: ["id"],
                 where: {
@@ -181,7 +190,7 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         return await this.repository.getOrderById(order.id);
     
     }
-    public async getAllOrdersByUserId(userId: number): Promise<IOrder[]> {
+    public async getAllOrdersByUserId(userId: number): Promise<IOrderBasicProps[]> {
        const options: any= {
            where: {
                userId
@@ -190,8 +199,8 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
        }
         return await this.repository.find(options)
     }
-    public async addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrder> {
-            const order: IOrder|null = await this.repository.findOne({ where : { id: id}, relations: ["details"]});
+    public async addItemToOrder(id: number, data: IOrderDetailCreateProps): Promise<IOrderInfo> {
+            const order = await this.repository.findOne({ where : { id: id}, relations: ["details"]});
 
             if(order !== null) 
             {

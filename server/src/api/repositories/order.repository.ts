@@ -2,13 +2,13 @@ import { Brackets, getRepository } from "typeorm";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { PostgresError } from "../helpers/PostgresError";
-import { IOrder, IOrderCreateProps, Order, Status } from "../models";
+import {  IOrderCreateProps, Order, Status } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 import { IOrders } from "../services";
 
 export interface IOrderRepository extends IBaseRepository<Order> {
     getOrders(options: any): Promise<IOrders>;
-    getOrderById(id: number): Promise<IOrder>;
+    getOrderById(id: number): Promise<any>;
     getTotalSalesAndOrdersByTime(trunc: string, time: any): Promise<any>;
     getOrderProportionByTime(time: any): Promise<any>;
     getTopProductByTime(time: any, query: any): Promise<any>
@@ -59,7 +59,7 @@ export class OrderRepository extends BaseRepository<Order> implements IOrderRepo
         }
 
     }
-    public async getOrderById(id: number): Promise<IOrder> {
+    public async getOrderById(id: number): Promise<any> {
         try {
             
             const result: any = await this.entity.createQueryBuilder("order")

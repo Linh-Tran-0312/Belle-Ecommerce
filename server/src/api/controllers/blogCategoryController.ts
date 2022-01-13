@@ -1,5 +1,5 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
-import { IBlogCategory, UserRole } from "../models";
+import { IBlogCategory, UserRole, BlogCategory } from "../models";
 import { BlogCategoryService, IBlogCategoryService } from "../services";
 import { ValidateBlogCateModel } from "../validations";
 
@@ -16,7 +16,7 @@ export class BlogCategoryController {
      * Get all blog categories 
      */
     @Get("/")
-    public async getBlogCategory(): Promise<IBlogCategory[]> {
+    public async getBlogCategory(): Promise<BlogCategory[]> {
         return this._blogCategoryService.getAll({});
     }
     /**
@@ -24,7 +24,7 @@ export class BlogCategoryController {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createBlogCategory(@Body() data: ValidateBlogCateModel): Promise<IBlogCategory> {
+    public async createBlogCategory(@Body() data: ValidateBlogCateModel): Promise<BlogCategory> {
         return this._blogCategoryService.create(data)
     }
     /**
@@ -35,7 +35,7 @@ export class BlogCategoryController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateBlogCategoryById(@Path() id: number, @Body() data: ValidateBlogCateModel): Promise<IBlogCategory> {
+    public async updateBlogCategoryById(@Path() id: number, @Body() data: ValidateBlogCateModel): Promise<BlogCategory> {
         return this._blogCategoryService.update(id, data);
     }
     /**

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
-import { IColor, UserRole } from "../models";
+import { Color, UserRole } from "../models";
 import { ColorService,IColorService  } from "../services";
 import { ValidateColorModel } from "../validations";
 
@@ -17,7 +17,7 @@ export class ColorController  extends Controller {
      * Get all colors 
      */
     @Get("/")
-    public async getColors(): Promise<IColor[]> {
+    public async getColors(): Promise<Color[]> {
         return this._colorService.getAll({});
     }
     /**
@@ -25,7 +25,7 @@ export class ColorController  extends Controller {
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Post("/")
-    public async createColor(@Body() data:  ValidateColorModel): Promise<IColor> {
+    public async createColor(@Body() data:  ValidateColorModel): Promise<Color> {
         return this._colorService.create(data)
     }
     /**
@@ -36,7 +36,7 @@ export class ColorController  extends Controller {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
     @Patch("/:id")
-    public async updateColorById(@Path() id: number, @Body() data:  ValidateColorModel): Promise<IColor> {
+    public async updateColorById(@Path() id: number, @Body() data:  ValidateColorModel): Promise<Color> {
         return this._colorService.update(id, data);
     }
     /**

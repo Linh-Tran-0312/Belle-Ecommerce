@@ -22,7 +22,6 @@ export enum PaymentMethod {
 export interface IOrderCreateProps {
     userId: number;
     details?: IOrderDetailCreateProps[];
-
 }
 
 export interface IOrder extends Omit<IOrderCreateProps, "details">, IBaseEntity {
@@ -75,6 +74,6 @@ export class Order  extends CustomBaseEntity {
     orderAt!: Date;
 
     @OneToMany(() => OrderDetail, orderDetail => orderDetail.order, { cascade: true})
-    details!: Array<IOrderDetail>;
+    details!: Array<OrderDetail>;
 
 }

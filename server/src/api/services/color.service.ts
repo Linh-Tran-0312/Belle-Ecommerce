@@ -2,6 +2,9 @@ import { Color } from "../models";
 import { ColorRepository,IColorRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 
+export interface IColorName {
+    name: string
+}
 export interface IColorService extends IBaseService<Color> {};
 
 //@Service({ id: "OrderRepository-service"})

@@ -2,7 +2,7 @@ import { Between, ILike, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { IProduct, IProductCreateProps, Product } from "../models";
 import { ProductRepository,IProductRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-
+import { ProductMapper, IProductSearchProps, IProductInfo, IVariantInfo } from "../mappers";
 
 export enum Change {
     DESC = "DESC",
@@ -38,14 +38,15 @@ export interface IProductUpdateProps {
 }
 
 export interface IProducts {
-    products: Product[],
+    products: IProductSearchProps[],
     total: number,
 }
 
 export interface IProductService extends IBaseService<Product> {
     getProducts(query: IProductQuery): Promise<IProducts>;
-    createProduct(data: IProductCreateProps): Promise<IProduct>;
-    updateProduct(id: number, data: IProductUpdateProps ): Promise<IProduct>
+    getProductById(id: number): Promise<IProductInfo>
+    createProduct(data: IProductCreateProps): Promise<IProductInfo>;
+    updateProduct(id: number, data: IProductUpdateProps ): Promise<IProductInfo>
 }
 //@Service({ id: "OrderRepository-service"})
 export class ProductService extends BaseService<Product, IProductRepository> implements IProductService  {
@@ -87,18 +88,21 @@ export class ProductService extends BaseService<Product, IProductRepository> imp
             options.order[`${query.sort}`] = query.change;
             if(query.limit) options.take = query.limit;
             if(query.page) options.skip = options.take*(query.page - 1);
-           const result: IProducts = await this.repository.findAndCount(options);
-           return result 
+            const [products, total] = await this.repository.findAndCount(options);
+            const productSearch = products?.map(product => ProductMapper.toProductSearchProps(product)) 
+           return { products: productSearch, total}
     }
-    public async createProduct(data: IProductCreateProps): Promise<IProduct> {
+    public async getProductById(id: number): Promise<IProductInfo> {
+        const product = await this.getOneById(id,["category","brand","variants","variants.color","variants.size"]);
+        return ProductMapper.toProductInfo(product);
+    }
+    public async createProduct(data: IProductCreateProps): Promise<IProductInfo> {
         const { id } = await this.repository.create(data);
-        const newProduct: IProduct = await this.getOneById(id,["category","brand","variants","variants.color","variants.size"]);
-        return newProduct;
+       return await this.getProductById(id);
     }
-    public async updateProduct(id: number, data: IProductUpdateProps ): Promise<IProduct> {
+    public async updateProduct(id: number, data: IProductUpdateProps): Promise<IProductInfo> {
         await this.repository.update(id, data);
-        const updatedProduct: IProduct =  await this.getOneById(id,["category","brand","variants","variants.color","variants.size"]);
-        return updatedProduct;
+        return await this.getProductById(id);
     }
 
 }

@@ -1,12 +1,13 @@
 import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags } from "tsoa";
 import { IProductReview, IProductReviewCreateProps, UserRole } from "../models";
-import { IReviewCount, ProductReviewService } from "../services";
+import { IReviewCount, IReviewService,ProductReviewService, IReview } from "../services";
 import { ValidateReviewModel } from "../validations";
-import { IReview } from "../interfaces";
+ 
+
 @Route("reviews")
 @Tags('Product Review')
 export class ReviewController  extends Controller {
-    private _reviewService: ProductReviewService;
+    private _reviewService: IReviewService;
 
     constructor() {
         super()

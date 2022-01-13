@@ -6,8 +6,8 @@ import { OperationalError, OperationalErrorMessage } from "../helpers/Operationa
 import { IUser, UserRole, User } from "../models";
 import { UserRepository ,IUserRepository} from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
-import { Change } from "./index";
-import { IUserSearchProps, IUserCreateProps, IUserUpdateProps, IUserWithOrders, IOrderBasicProps } from "../interfaces";
+import { Change, IOrderBasicProps } from "./index";
+ 
 import { OrderMapper, UserMapper } from "../mappers";
 dotenv.config();
 
@@ -23,6 +23,58 @@ export interface IUserQuery {
     change?: Change;
     limit: number;
     page: number
+}
+export interface IUserUpdateProps {
+    fname: string;
+    lname: string;
+    email: string;
+    role?: UserRole;
+    phone: string;
+    address: string;
+}
+  
+export interface IUserCreateProps extends IUserUpdateProps {
+password: string;
+}
+
+export interface IUserAuth {
+    id: number,
+    fname: string,
+    lname: string,
+    phone: string,
+   address: string,
+   role: UserRole
+}
+// basic user info nested in other relations
+export interface IUserName {
+    id: number,
+    fname: string,
+    lname: string,
+}
+// data returned when admin searching
+export interface IUserSearchProps {
+    id: number,
+    fname: string,
+    lname: string,
+    phone: string,
+    address: string,
+    email: string,
+    role: UserRole,
+    createdAt: Date,
+    sale: number
+}
+
+// data returned when create or update user
+export interface IUserWithOrders {
+    id: number,
+    fname: string,
+    lname: string,
+    phone: string,
+    address: string,
+    email: string,
+    role: UserRole,
+    createdAt: Date,
+    orders?: IOrderBasicProps[]
 }
 
 
@@ -63,11 +115,6 @@ export class UserService extends BaseService<User, IUserRepository> implements I
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
         const result: IUser = await this.repository.create(data);
-        /*let user = await this.getOneById(result.id,["orders"]);
-        let orders: IOrderBasicProps[];
-        user.orders?.forEach(o => orders.push(OrderMapper.toBasicProps(o)));
-        let newUser: IUserWithOrders = UserMapper.toUserBasicProps(user) */
-
         return await this.getUserById(result.id);
         
     }
