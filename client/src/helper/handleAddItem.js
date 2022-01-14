@@ -13,13 +13,13 @@
         };
         item.quantity = quantity;
         item.unitPrice = product.price;
-        item.productVariant.id = productVariantId;
-        item.productVariant.product.name = product.name;
-        item.productVariant.product.imgPaths = product.imgPaths;
-        item.productVariant.product.brand.name = product.brand.name;
+        item.productVariantId = productVariantId;
+        item.product.name = product.name;
+        item.product.imgPaths = product.imgPaths;
+        item.product.brand = product.brand.name;
         const variant = product.variants.find(x => x.id === productVariantId);
-        item.productVariant.size = variant.size;
-        item.productVariant.color = variant.color;  
+        item.product.size = variant.size.name;
+        item.product.color = variant.color.name;  
 
     return item;
 }

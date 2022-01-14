@@ -112,7 +112,7 @@ export default function ProductAdmin() {
 
     useEffect(() => {
 
-        setProduct({ ...productDetail })
+        setProduct({ ...productDetail, brandId: productDetail?.brand?.id, categoryId: productDetail?.category?.id  })
 
     }, [productDetail]);
 
@@ -187,7 +187,7 @@ export default function ProductAdmin() {
         setVariant(initVariant);
     }
     const handleSelectVariant = (variant) => {
-        setVariant({ ...variant });
+        setVariant({ ...variant, sizeId: variant?.size?.id, colorId: variant?.color?.id });
         setShowVariant(true);
     }
     const handleVariantChange = e => {

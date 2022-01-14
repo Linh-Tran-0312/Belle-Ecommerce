@@ -94,7 +94,7 @@ const models: TsoaRoute.Models = {
             "quantity": {"dataType":"double","required":true},
             "unitPrice": {"dataType":"double","required":true},
             "productVariantId": {"dataType":"double","required":true},
-            "product": {"dataType":"nestedObjectLiteral","nestedProperties":{"size":{"dataType":"string","required":true},"color":{"dataType":"string","required":true},"brand":{"dataType":"string","required":true},"imgPaths":{"dataType":"array","array":{"dataType":"string"},"required":true},"id":{"dataType":"double","required":true}},"required":true},
+            "product": {"dataType":"nestedObjectLiteral","nestedProperties":{"size":{"dataType":"string","required":true},"color":{"dataType":"string","required":true},"brand":{"dataType":"string","required":true},"imgPaths":{"dataType":"array","array":{"dataType":"string"},"required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
         },
         "additionalProperties": false,
     },

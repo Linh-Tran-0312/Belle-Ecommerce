@@ -10,6 +10,7 @@ export interface IItemDetails {
     productVariantId: number,
     product: {
       id: number,
+      name: string,
       imgPaths: string[],
       brand: string,
       color: string,

@@ -37,7 +37,7 @@ const Item = ({item}) => {
         {   
             dispatch(orderActions.deleteItem(item.orderId, item.id))
         } else {
-            dispatch(orderActions.deleteItemFromCart(item.productVariant.id))
+            dispatch(orderActions.deleteItemFromCart(item.productVariantId))
 
         }
     }
@@ -47,18 +47,18 @@ const Item = ({item}) => {
         <Box mb={2}>
             <Grid container>
                 <Grid item xs={4}>
-                    <img src={item.productVariant.product.imgPaths[0]} className={classes.img} alt="" />
+                    <img src={item.product.imgPaths[0]} className={classes.img} alt="" />
                 </Grid>
                 <Grid item xs={6}>
-                    <Link to="/product" className="link"><Typography variant="body2" noWrap>{item.productVariant.product.name}</Typography></Link>
-                    <Typography variant="caption" gutterBottom>{item.productVariant.color.name} | {item.productVariant.size.name}</Typography>
+                    <Link to="/product" className="link"><Typography variant="body2" noWrap>{item.product.name}</Typography></Link>
+                    <Typography variant="caption" gutterBottom>{item.product.color} | {item.product.size}</Typography>
                     <Box>
                         <Grid container direction="row" alignItems="center">
                             <Grid item xs={3}>
                                 <Typography variant="subtitle2">Qty</Typography>
                             </Grid>
                             <Grid item xs={9}>
-                                <QtyButton width={80} height={27}  updateCart={true} quantity={item.quantity} itemId={item?.id} variantId={item.productVariant.id}/>
+                                <QtyButton width={80} height={27}  updateCart={true} quantity={item.quantity} itemId={item?.id} variantId={item.productVariantId}/>
                             </Grid>
                         </Grid>
                     </Box>

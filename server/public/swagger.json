@@ -221,6 +221,9 @@
 								},
 								"type": "array"
 							},
+							"name": {
+								"type": "string"
+							},
 							"id": {
 								"type": "number",
 								"format": "double"
@@ -231,6 +234,7 @@
 							"color",
 							"brand",
 							"imgPaths",
+							"name",
 							"id"
 						],
 						"type": "object"

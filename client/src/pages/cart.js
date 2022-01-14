@@ -103,18 +103,18 @@ export default () => {
                                                 <StyledTableCell component="th" scope="row">
                                                     <Grid container spacing={1}>
                                                         <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                            <img src={item.productVariant.product.imgPaths[0]} className={classes.itemImg} alt="" />
+                                                            <img src={item.product.imgPaths[0]} className={classes.itemImg} alt="" />
                                                         </Grid>
                                                         <Grid item sm={8} xs={12}>
-                                                            <Link to="/product" className="link"><Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>{item.productVariant.product.name}</Typography></Link>
-                                                            <Typography variant="caption" display="block" gutterBottom>Color: {item.productVariant.color.name}</Typography>
-                                                            <Typography variant="caption" display="block" gutterBottom>Size: {item.productVariant.size.name}</Typography>
+                                                            <Link to="/product" className="link"><Typography variant="body2" gutterBottom classes={{ body2: classes.bodyXs }}>{item.product.name}</Typography></Link>
+                                                            <Typography variant="caption" display="block" gutterBottom>Color: {item.product.color}</Typography>
+                                                            <Typography variant="caption" display="block" gutterBottom>Size: {item.product.size}</Typography>
                                                         </Grid>
                                                     </Grid>
                                                 </StyledTableCell>
                                                 <StyledTableCell align="right" classes={{ body: classes.priceCol }} >{item.unitPrice.toLocaleString()} VND</StyledTableCell>
                                                 <StyledTableCell align="right">
-                                                    <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity} itemId={item?.id} variantId={item.productVariant.id} />
+                                                    <QtyButton width={80} height={27} updateCart={true} quantity={item.quantity} itemId={item?.id} variantId={item.productVariantId} />
                                                 </StyledTableCell>
                                                 <StyledTableCell align="right">
                                                     <Grid container>
@@ -122,7 +122,7 @@ export default () => {
                                                             <Typography variant="subtitle2">{(item.unitPrice * item.quantity).toLocaleString()} VND</Typography>
                                                         </Grid>
                                                         <Grid item sm={4} xs={12} container direction="row" justifyContent="center" alignItems="center">
-                                                            <IconButton size="small" onClick={() => handleDeleteItem(item.productVariant.id, item.id)}><DeleteForeverIcon /></IconButton>
+                                                            <IconButton size="small" onClick={() => handleDeleteItem(item.productVariantId, item.id)}><DeleteForeverIcon /></IconButton>
                                                         </Grid>
                                                     </Grid>
                                                 </StyledTableCell>
