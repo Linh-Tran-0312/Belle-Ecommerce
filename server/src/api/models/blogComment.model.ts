@@ -1,19 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity } from "./base.model";
 import { Blog } from "./blog.model";
-import { IUser, User } from "./user.model";
+import { User } from "./user.model";
 
-export interface IBlogCommentCreateProps {
-    text: string;
-    blogId: number;
-    parentCommentId?: number;
-    userId: number;
-}
-export interface IBlogComment extends IBlogCommentCreateProps, IBaseEntity {
-    childComments?: IBlogCommentCreateProps[];
-    user?:IUser;
-
-};
 
 @Entity()
 export class BlogComment extends CustomBaseEntity  {
@@ -43,5 +32,5 @@ export class BlogComment extends CustomBaseEntity  {
     user!: User;
 
     @OneToMany(() => BlogComment, blogComment => blogComment.parentComment)
-    childComments!: Array<IBlogComment>;
+    childComments!: Array<BlogComment>;
 }

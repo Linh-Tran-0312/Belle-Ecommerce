@@ -30,6 +30,7 @@ const useStyle = makeStyles(() => ({
     }
 }))
 const Item = ({item}) => {
+    console.log(item)
     const dispatch = useDispatch();
 
     const handleDeleteItem = (e) => {

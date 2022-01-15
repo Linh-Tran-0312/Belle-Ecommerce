@@ -1,6 +1,6 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
-import { IBrand, UserRole, Brand } from "../models";
-import { BrandService,IBrandService } from "../services";
+import { Brand, UserRole } from "../models";
+import { BrandService, IBrandService } from "../services";
 import { ValidateBrandModel } from "../validations";
 
 

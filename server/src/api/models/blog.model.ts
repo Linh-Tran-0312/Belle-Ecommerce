@@ -1,20 +1,8 @@
 
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { CustomBaseEntity , IBaseEntity } from "./base.model";
-import { BlogCategory, IBlogCategory, } from "./blogCategory.model";
-
-export interface IBlogCreateProps {
-    title: string;
-    categoryId: number;
-    imgPath?: string;
-    content: string;
-    commentAllow: boolean;   
-};
-
-export interface IBlog extends IBlogCreateProps, IBaseEntity {
-    category?: IBlogCategory;
-};
-
+import { CustomBaseEntity } from "./base.model";
+import { BlogCategory } from "./blogCategory.model";
+ 
 @Entity()
 export class Blog extends CustomBaseEntity  {
 

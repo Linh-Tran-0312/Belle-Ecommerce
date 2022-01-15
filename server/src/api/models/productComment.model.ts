@@ -1,19 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { IUser, Product, User } from "./";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
-
-export interface IProductCommentCreateProps {
-    text: string;
-    userId: number;
-    productId: number;
-    parentCommentId?: number;
-    user?: IUser;
-}
-
-export interface IProductComment extends IProductCommentCreateProps, IBaseEntity {
-    childComment?: IProductCommentCreateProps[];
-}
-
+import { Product, User } from "./";
+import { CustomBaseEntity } from "./base.model";
+ 
 @Entity()
 export class ProductComment extends CustomBaseEntity {
 

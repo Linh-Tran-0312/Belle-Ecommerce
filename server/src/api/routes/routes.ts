@@ -155,43 +155,21 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "IOrderUpdateProps": {
+    "ValidateOrderBasicProps": {
         "dataType": "refObject",
         "properties": {
-            "status": {"ref":"Status"},
-            "paymentCheck": {"dataType":"boolean"},
-            "paymentMethod": {"ref":"PaymentMethod"},
-            "address": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "IPlaceOrder": {
-        "dataType": "refObject",
-        "properties": {
-            "address": {"dataType":"string","required":true},
-            "note": {"dataType":"string"},
+            "address": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Address must not be emplty","value":"^(?!\\s*$).+"}}},
             "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean"},
+            "note": {"dataType":"string"},
             "shipping": {"dataType":"double"},
-            "total": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderDetail": {
-        "dataType": "refObject",
-        "properties": {
-            "orderId": {"dataType":"double"},
-            "productVariantId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "unitPrice": {"dataType":"double","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
     "ValidateUpdateQuantityModel": {
         "dataType": "refObject",
         "properties": {
-            "quantity": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+            "quantity": {"dataType":"integer","required":true},
         },
         "additionalProperties": false,
     },
@@ -473,69 +451,178 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "IBlogCommentCreateProps": {
+    "BlogComment": {
         "dataType": "refObject",
         "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Pick_IOrderCreateProps.Exclude_keyofIOrderCreateProps.details__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"double","required":true}},"validators":{}},
-    },
-    "IOrder": {
-        "dataType": "refObject",
-        "properties": {
-            "userId": {"dataType":"double","required":true},
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
-            "status": {"ref":"Status","required":true},
-            "total": {"dataType":"double","required":true},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "address": {"dataType":"string","required":true},
-            "shipping": {"dataType":"double","required":true},
-            "orderAt": {"dataType":"datetime","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderDetail"}},
+            "text": {"dataType":"string","required":true},
+            "blogId": {"dataType":"double","required":true},
+            "blog": {"ref":"Blog","required":true},
+            "parentCommentId": {"dataType":"double","required":true},
+            "parentComment": {"ref":"BlogComment","required":true},
+            "userId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"BlogComment"},"required":true},
         },
         "additionalProperties": false,
     },
-    "Pick_IUserCreateProps.Exclude_keyofIUserCreateProps.password-or-email__": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string"},"email":{"dataType":"string"},"token":{"dataType":"string"},"phone":{"dataType":"string"},"address":{"dataType":"string"},"role":{"ref":"UserRole"},"orders":{"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},"fname":{"dataType":"string","required":true},"lname":{"dataType":"string","required":true},"id":{"dataType":"double","required":true},"createdAt":{"dataType":"datetime","required":true}},"validators":{}},
-    },
-    "IUser": {
+    "ProductCategory": {
         "dataType": "refObject",
         "properties": {
-            "password": {"dataType":"string"},
-            "email": {"dataType":"string"},
-            "token": {"dataType":"string"},
-            "phone": {"dataType":"string"},
-            "address": {"dataType":"string"},
-            "role": {"ref":"UserRole"},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrder"}},
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+            "imgPath": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Brand": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+            "imgPath": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "User": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
             "fname": {"dataType":"string","required":true},
             "lname": {"dataType":"string","required":true},
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
+            "email": {"dataType":"string","required":true},
+            "token": {"dataType":"string","required":true},
+            "phone": {"dataType":"string","required":true},
+            "password": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole","required":true},
+            "wishList": {"dataType":"array","array":{"dataType":"refObject","ref":"Product"},"required":true},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"Order"},"required":true},
         },
         "additionalProperties": false,
     },
-    "IBlogComment": {
+    "Product": {
         "dataType": "refObject",
         "properties": {
-            "text": {"dataType":"string","required":true},
-            "blogId": {"dataType":"double","required":true},
-            "parentCommentId": {"dataType":"double"},
-            "userId": {"dataType":"double","required":true},
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
-            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"IBlogCommentCreateProps"}},
-            "user": {"ref":"IUser"},
+            "sku": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"double","required":true},
+            "category": {"ref":"ProductCategory","required":true},
+            "brandId": {"dataType":"double","required":true},
+            "brand": {"ref":"Brand","required":true},
+            "name": {"dataType":"string","required":true},
+            "summary": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "reviewCount": {"dataType":"double","required":true},
+            "price": {"dataType":"double","required":true},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "comments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+            "variants": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductVariant"},"required":true},
+            "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductReview"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductComment": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "text": {"dataType":"string","required":true},
+            "userId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "productId": {"dataType":"double","required":true},
+            "product": {"ref":"Product","required":true},
+            "parentCommentId": {"dataType":"double","required":true},
+            "parentComment": {"ref":"ProductComment","required":true},
+            "childComments": {"dataType":"array","array":{"dataType":"refObject","ref":"ProductComment"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Size": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Color": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "code": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductVariant": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "productId": {"dataType":"double","required":true},
+            "product": {"ref":"Product","required":true},
+            "sizeId": {"dataType":"double","required":true},
+            "size": {"ref":"Size","required":true},
+            "colorId": {"dataType":"double","required":true},
+            "color": {"ref":"Color","required":true},
+            "quantity": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductReview": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "title": {"dataType":"string","required":true},
+            "text": {"dataType":"string","required":true},
+            "rating": {"dataType":"double","required":true},
+            "userId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "productId": {"dataType":"double","required":true},
+            "product": {"ref":"Product","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Order": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "userId": {"dataType":"double","required":true},
+            "user": {"ref":"User","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "note": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "shipping": {"dataType":"double","required":true},
+            "total": {"dataType":"double","required":true},
+            "orderAt": {"dataType":"datetime","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderDetail"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "OrderDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "orderId": {"dataType":"double","required":true},
+            "order": {"ref":"Order","required":true},
+            "productVariantId": {"dataType":"double","required":true},
+            "productVariant": {"ref":"ProductVariant","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -577,29 +664,10 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "Size": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
     "ValidateSizeModel": {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Size must not be empty","value":"^(?!\\s*$).+"}}},
-        },
-        "additionalProperties": false,
-    },
-    "Brand": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-            "imgPath": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -611,31 +679,11 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "ProductCategory": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-            "imgPath": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
     "ValidateCategoryModel": {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Category must not be empty","value":"^(?!\\s*$).+"}}},
             "imgPath": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "Color": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "code": {"dataType":"string","required":true},
-            "name": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -783,7 +831,7 @@ export function RegisterRoutes(app: any) {
             function (request: any, response: any, next: any) {
             const args = {
                     orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"IOrderUpdateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderBasicProps"},
             };
 
             let validatedArgs: any[] = [];
@@ -804,7 +852,7 @@ export function RegisterRoutes(app: any) {
             function (request: any, response: any, next: any) {
             const args = {
                     orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"IPlaceOrder"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderBasicProps"},
             };
 
             let validatedArgs: any[] = [];
@@ -861,10 +909,11 @@ export function RegisterRoutes(app: any) {
             const promise = controller.addItemToOrder.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.patch('/orders/items/:itemId',
+        app.patch('/orders/:orderId/items/:itemId',
             authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
                     itemId: {"in":"path","name":"itemId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Item id must be an integer"},"minimum":{"errorMsg":"Item id value must be at least 0","value":0}}},
                     data: {"in":"body","name":"data","required":true,"ref":"ValidateUpdateQuantityModel"},
             };
@@ -882,10 +931,11 @@ export function RegisterRoutes(app: any) {
             const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.delete('/orders/items/:itemId',
+        app.delete('/orders/:orderId/items/:itemId',
             authenticateMiddleware([{"jwt":["admin","customer","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
+                    orderId: {"in":"path","name":"orderId","required":true,"dataType":"double"},
                     itemId: {"in":"path","name":"itemId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Item id must be an integer"},"minimum":{"errorMsg":"Item id value must be at least 0","value":0}}},
             };
 
@@ -1426,7 +1476,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentCreateProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"BlogComment"},
             };
 
             let validatedArgs: any[] = [];

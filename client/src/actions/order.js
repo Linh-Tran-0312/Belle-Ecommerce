@@ -39,8 +39,7 @@ const orderActions = {
     },
     deleteItem: (orderId, itemId) =>  async(dispatch) => {
         try {
-             await api.deleteItem(itemId);
-             const { data } = await api.getOrderById(orderId);
+            const { data } = await api.deleteItem(orderId, itemId);
             dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
         } catch (error) {
             errorHandler(error,dispatch)
@@ -48,8 +47,7 @@ const orderActions = {
     },
     updateItemQuantity: (orderId, itemId, formData) => async(dispatch) => {
         try {
-            const res = await api.updateItemQuantity(itemId, formData);
-            const { data } = await api.getOrderById(orderId);
+            const { data }   = await api.updateItemQuantity(orderId, itemId, formData);    
             dispatch({ type: ACTION.UPDATE_ORDER, payload: data})
         } catch (error) {
             errorHandler(error,dispatch)

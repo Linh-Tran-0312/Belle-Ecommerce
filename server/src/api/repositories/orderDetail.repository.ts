@@ -1,7 +1,6 @@
  import { getRepository } from "typeorm";
+import { OrderDetail } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-import { OrderDetail, IOrderDetail, IOrderDetailCreateProps } from "../models";
-import { Service } from "typedi";
 
 export interface IOrderDetailRepository extends IBaseRepository<OrderDetail> {}
 

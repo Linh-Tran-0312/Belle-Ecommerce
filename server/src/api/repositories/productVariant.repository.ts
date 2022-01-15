@@ -1,7 +1,7 @@
-import { getRepository } from "typeorm";
-import { BaseRepository, IBaseRepository } from "./base.repository";
-import { ProductVariant, IProductVariant, IProductVariantCreateProps } from "../models";
 import { Service } from "typedi";
+import { getRepository } from "typeorm";
+import { ProductVariant } from "../models";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 
 export interface IProductVariantRepository extends IBaseRepository<ProductVariant> {}
 

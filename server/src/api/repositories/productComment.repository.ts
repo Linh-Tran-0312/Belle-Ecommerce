@@ -1,7 +1,6 @@
  import { getRepository } from "typeorm";
+import { ProductComment } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-import { ProductComment, IProductComment, IProductCommentCreateProps } from "../models";
-import { Service } from "typedi";
  
 
 export interface IProductCommentRepository extends IBaseRepository<ProductComment> {}

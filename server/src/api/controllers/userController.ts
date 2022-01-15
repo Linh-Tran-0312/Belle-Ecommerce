@@ -1,13 +1,13 @@
 import { Body, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IUser, UserRole } from "../models";
-import { Change, IUserQuery, UserField, UserService, IUsers , IUserWithOrders, } from "../services";
+import { UserRole } from "../models";
+import { Change, IUserQuery, IUsers, IUserWithOrders, UserField, UserService, IUserService } from "../services";
 import { ValidateUserCreateModel, ValidateUserUpdateModel } from "../validations";
 
  
 @Route("users")
 @Tags('User')
 export class UserController {
-    private _userService: UserService;
+    private _userService: IUserService;
 
     constructor() {
         this._userService = new UserService();

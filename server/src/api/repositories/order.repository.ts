@@ -2,9 +2,9 @@ import { Brackets, getRepository } from "typeorm";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { PostgresError } from "../helpers/PostgresError";
-import {  IOrderCreateProps, Order, Status } from "../models";
-import { BaseRepository, IBaseRepository } from "./base.repository";
+import { Order, Status } from "../models";
 import { IOrders } from "../services";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 
 export interface IOrderRepository extends IBaseRepository<Order> {
     getOrders(options: any): Promise<IOrders>;

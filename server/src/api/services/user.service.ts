@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
-import { IUser, UserRole, User } from "../models";
+import { UserRole, User } from "../models";
 import { UserRepository ,IUserRepository} from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change, IOrderBasicProps } from "./index";
- 
+import { ValidateUserCreateModel, ValidateUserUpdateModel} from "../validations"
 import { OrderMapper, UserMapper } from "../mappers";
 dotenv.config();
 
@@ -23,18 +23,6 @@ export interface IUserQuery {
     change?: Change;
     limit: number;
     page: number
-}
-export interface IUserUpdateProps {
-    fname: string;
-    lname: string;
-    email: string;
-    role?: UserRole;
-    phone: string;
-    address: string;
-}
-  
-export interface IUserCreateProps extends IUserUpdateProps {
-password: string;
 }
 
 export interface IUserAuth {
@@ -86,8 +74,8 @@ export interface IUserService extends IBaseService<User> {
     isEmailExist(email: any): Promise<boolean>;
     getUsers(query: IUserQuery): Promise<IUsers>;
     getUserById(id: number): Promise<IUserWithOrders>;
-    createUser(data: IUserCreateProps): Promise<IUserWithOrders>;
-    updateUser(id: number, data: IUserUpdateProps): Promise<IUserWithOrders> 
+    createUser(data: ValidateUserCreateModel): Promise<IUserWithOrders>;
+    updateUser(id: number, data: ValidateUserUpdateModel): Promise<IUserWithOrders> 
 }
 export class UserService extends BaseService<User, IUserRepository> implements IUserService   {
     constructor() {
@@ -109,21 +97,21 @@ export class UserService extends BaseService<User, IUserRepository> implements I
         user.orders?.forEach(o =>  result?.orders?.push(OrderMapper.toBasicProps(o)));
         return result;
     }
-    public async createUser(data: IUserCreateProps): Promise<IUserWithOrders> {
-        const existingUsers: IUser | any = await this.isEmailExist(data.email);
+    public async createUser(data: ValidateUserCreateModel): Promise<IUserWithOrders> {
+        const existingUsers = await this.isEmailExist(data.email);
         if (!!existingUsers) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
         const hashPassword = await bcrypt.hash(data.password, 10);
         data.password = hashPassword;
-        const result: IUser = await this.repository.create(data);
+        const result = await this.repository.create(data);
         return await this.getUserById(result.id);
         
     }
-    public async updateUser(id: number, data: IUserUpdateProps): Promise<IUserWithOrders> {
-        const existingUser: IUser | any = await this.repository.findOne({ where: { email: data.email } });
+    public async updateUser(id: number, data: ValidateUserUpdateModel): Promise<IUserWithOrders> {
+        const existingUser = await this.repository.findOne({ where: { email: data.email } });
         if (!!existingUser && existingUser.id !== id) {
             throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
         }
-        const result: IUser = await this.repository.update(id, data);
+        const result = await this.repository.update(id, data);
         return await this.getUserById(result.id);
     }
 

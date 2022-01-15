@@ -1,12 +1,12 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
 import { Size, UserRole } from "../models";
-import { SizeService } from "../services";
+import { SizeService, ISizeService  } from "../services";
 import { ValidateSizeModel } from "../validations";
 
 @Route("sizes")
 @Tags('Product Size')
 export class SizeController {
-    private _sizeService: SizeService;
+    private _sizeService: ISizeService;
 
     constructor() {
         this._sizeService = new SizeService();

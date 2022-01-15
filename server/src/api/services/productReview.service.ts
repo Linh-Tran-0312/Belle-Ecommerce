@@ -1,10 +1,11 @@
-import { IProductReview,  ProductReview, Status } from "../models";
-import { ProductReviewRepository, OrderDetailRepository,IProductReviewRepository,IOrderDetailRepository } from "../repositories";
-import { BaseService, IBaseService } from "./base.service";
 import { LessThan } from "typeorm";
-import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { HttpCode } from "../helpers/HttpCode";
-import { UserMapper, IUserName } from "../mappers";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { IUserName, UserMapper } from "../mappers";
+import { ProductReview, Status } from "../models";
+import { IOrderDetailRepository, IProductReviewRepository, OrderDetailRepository, ProductReviewRepository } from "../repositories";
+import { ValidateReviewModel } from "../validations";
+import { BaseService, IBaseService } from "./base.service";
 
 export interface IReviewCount {
     reviewCount: number,
@@ -21,13 +22,13 @@ export interface IReview {
     user: IUserName
 }
 
-export interface IReviewCreateProps {
+/* export interface IReviewCreateProps {
     title?: string;
     text?: string;
     productId: number;
     rating: number;
     userId: number;
-}
+} */
 export interface IReviewWithUser extends Omit<ProductReview, "user"> {
     user: IUserName
 } 
@@ -35,7 +36,7 @@ export interface IReviewWithUser extends Omit<ProductReview, "user"> {
 export interface IReviewService extends IBaseService<ProductReview> {
     getReviewsByProductId(productId: number, size: number, cursor: number): Promise<IReview[]>;
     getReviewCountByProductId(productId: number): Promise<IReviewCount>;
-    createReview(data: IReviewCreateProps): Promise<IReview>
+    createReview(data:  ValidateReviewModel): Promise<IReview>
 }
 //@Service({ id: "OrderRepository-service"})
 export class ProductReviewService extends BaseService<ProductReview, IProductReviewRepository> implements IReviewService {
@@ -84,7 +85,7 @@ export class ProductReviewService extends BaseService<ProductReview, IProductRev
         return result;
     }
 
-    public async createReview(data: IReviewCreateProps): Promise<IReview> {
+    public async createReview(data:  ValidateReviewModel): Promise<IReview> {
           
         // Check if this user has bought this product
         const isBought = await this.orderDetailRepository.findOne({
@@ -107,7 +108,7 @@ export class ProductReviewService extends BaseService<ProductReview, IProductRev
             }
         })
         
-        let review: IProductReview| null;
+        let review: ProductReview| null;
         if(!existingReview) {
             existingReview = await this.repository.create(data);
       

@@ -1,5 +1,5 @@
-import { ISize, Size } from "../models";
-import { SizeRepository, ISizeRepository } from "../repositories";
+import { Size } from "../models";
+import { ISizeRepository, SizeRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 
 

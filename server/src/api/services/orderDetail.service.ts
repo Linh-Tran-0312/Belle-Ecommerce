@@ -18,27 +18,19 @@ export interface IItemDetails {
     }
   }
   
-export interface IOrderDetailCreateProps {
-    orderId?: number;
-    productVariantId: number;
-    quantity: number;
-    unitPrice: number;
-}
-
-export interface IOrderDetailService extends IBaseService<OrderDetail> {
-    updateItemQuantity(id: number, quantity: number): Promise<OrderDetail>
-}
+export interface IOrderDetailService extends IBaseService<OrderDetail> {}
+     
 
 //@Service({ id: "OrderDetailRepository-service"})
 export class OrderDetailService extends BaseService<OrderDetail, IOrderDetailRepository> implements IOrderDetailService   {
     constructor() {
         super(new OrderDetailRepository())
     }
-    public async updateItemQuantity(id: number, quantity: number): Promise<OrderDetail> {
+/*     public async updateItemQuantity(id: number, quantity: number): Promise<OrderDetail> {
         const item = await this.getOneById(id);
         if(item) {
             item.quantity += quantity;
         }
         return await this.repository.create(item);
-    }
+    } */
 }

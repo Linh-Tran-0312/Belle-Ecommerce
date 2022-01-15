@@ -1,8 +1,8 @@
-import { getRepository, Brackets } from "typeorm";
-import { BaseRepository, IBaseRepository  } from "./base.repository";
-import { User, IUser, IUserCreateProps, UserRole, Status } from "../models";
-import { IUserQuery, IUsers } from "../services";
+import { Brackets, getRepository } from "typeorm";
 import { PostgresError } from "../helpers/PostgresError";
+import { Status, User, UserRole } from "../models";
+import { IUserQuery, IUsers } from "../services";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 
 export interface IUserRepository extends IBaseRepository<User> {
     getUsers(query: IUserQuery): Promise<IUsers>

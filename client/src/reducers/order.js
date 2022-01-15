@@ -13,7 +13,7 @@ const initState = {
 export default (state = initState, { type, payload}) => produce(state, (draft) => {
     switch(type) {
         case ACTION.ADD_ITEM: 
-              const indexAdd =  draft.items.findIndex(i => i.productVariant.id === payload.productVariant.id);
+              const indexAdd =  draft.items.findIndex(i => i.productVariantId === payload.productVariantId);
               if(indexAdd !== -1) 
               {
                     draft.items[indexAdd].quantity += payload.quantity;
@@ -23,13 +23,13 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
           draft.subTotal = draft.subTotal + payload.quantity*payload.unitPrice
             break;
         case ACTION.DELETE_ITEM:
-              const indexDel = draft.items.findIndex(i => i.productVariant.id == payload);
+              const indexDel = draft.items.findIndex(i => i.productVariantId == payload);
               draft.subTotal = draft.subTotal - draft.items[indexDel].unitPrice*draft.items[indexDel].quantity;
-              draft.items = draft.items.filter(i => i.productVariant.id !== payload)
+              draft.items = draft.items.filter(i => i.productVariantId !== payload)
             break;
         case ACTION.UPDATE_ITEM_QUANTITY: 
                 draft.items = draft.items.map(i => {
-                    if(i.productVariant.id === payload.productVariantId) {
+                    if(i.productVariantId === payload.productVariantId) {
                           i.quantity = payload.quantity;
                          return i;
                     } else return i;

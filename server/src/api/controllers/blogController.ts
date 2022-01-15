@@ -1,8 +1,8 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IBlog, Blog, IBlogComment, IBlogCommentCreateProps, UserRole } from "../models";
- 
-import { BlogCommentService,IBlogCommentService, BlogField, BlogService,IBlogService,IBlogs , Change, IBlogCommentQuery, IBlogQuery } from "../services";
+import { Blog, BlogComment,  UserRole } from "../models";
+import { BlogCommentService, BlogField, BlogService, Change, IBlogCommentQuery, IBlogCommentService, IBlogQuery, IBlogs, IBlogService } from "../services";
 import { ValidateBlogModel } from "../validations";
+ 
 
 
 export interface IBlogCommentUpdateProps {
@@ -98,7 +98,7 @@ export class BlogController {
     // Comment Blog Controller
 
     /**
-    * Get blog comments by blogId, default number of comments is 2
+    * This API is incomplete
     * @param {number} blogId
     * @isInt blogId
     * @minimum blogId 0
@@ -107,7 +107,7 @@ export class BlogController {
     * @minimum limit 1
     */
     @Get("/:blogId/comments")
-    public async getCommentsOfBlog(@Path() blogId: number, @Query() date?: string, @Query() limit?: number): Promise<IBlogComment[]> {
+    public async getCommentsOfBlog(@Path() blogId: number, @Query() date?: string, @Query() limit?: number): Promise<BlogComment[]> {
 
         const query: IBlogCommentQuery = {
             limit: 0,
@@ -122,26 +122,26 @@ export class BlogController {
         return this._blogCommentService.getCommentsOfBlog(blogId, query);
     }
     /**
-     * Create new blog comment
+     * Create new blog comment. This API is incomplete
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Post("/comments")
-    public async createComment(@Body() data: IBlogCommentCreateProps): Promise<IBlogComment> {
+    public async createComment(@Body() data: BlogComment): Promise<BlogComment> {
         return this._blogCommentService.create(data)
     }
     /**
-     * Update a blog comment by its Id
+     * Update a blog comment by its Id. This API is incomplete
     * @param {number} commentId
     * @isInt commentId
     * @minimum commentId 0
      */
     @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
     @Patch("/comments/:commentId")
-    public async updateCommentById(@Path() commentId: number, @Body() data: IBlogCommentUpdateProps): Promise<IBlogComment> {
+    public async updateCommentById(@Path() commentId: number, @Body() data: IBlogCommentUpdateProps): Promise<BlogComment> {
         return this._blogCommentService.update(commentId, data)
     }
     /**
-     * Delete a blog comment by its Id
+     * Delete a blog comment by its Id. This API is incomplete
     * @param {number} commentId
     * @isInt commentId
     * @minimum commentId 0

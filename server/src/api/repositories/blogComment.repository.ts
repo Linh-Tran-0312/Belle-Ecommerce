@@ -1,10 +1,10 @@
 import { getRepository } from "typeorm";
-import { BlogComment, IBlogComment, IBlogCommentCreateProps } from "../models";
-import { BaseRepository, IBaseRepository } from "./base.repository";
 import { PostgresError } from "../helpers/PostgresError";
+import { BlogComment } from "../models";
+import { BaseRepository, IBaseRepository } from "./base.repository";
 
 export interface IBlogCommentRepository extends IBaseRepository<BlogComment> {
-    getCommentsWithUser(blogId: number, options: any): Promise<IBlogComment[]>
+    getCommentsWithUser(blogId: number, options: any): Promise<BlogComment[]>
 }
 
 export class BlogCommentRepository extends BaseRepository<BlogComment> implements IBlogCommentRepository {
@@ -13,7 +13,7 @@ export class BlogCommentRepository extends BaseRepository<BlogComment> implement
         super(getRepository(BlogComment));
     }
 
-   public async  getCommentsWithUser(blogId: number, options: any): Promise<IBlogComment[]> {
+   public async  getCommentsWithUser(blogId: number, options: any): Promise<BlogComment[]> {
        try {
            let query =  this.entity.createQueryBuilder("comment")
            .leftJoinAndSelect("comment.user", "user")
@@ -31,7 +31,7 @@ export class BlogCommentRepository extends BaseRepository<BlogComment> implement
            if(options.limit > 0) query =  query.limit(options.limit);
            if(!!options.date) query =  query.andWhere("comment.createdAt < :date", {date: new Date(options.date)})
             
-            const comments: IBlogComment[] = await query.getMany();
+            const comments: BlogComment[] = await query.getMany();
             
             if(!comments) return [];
             return comments;

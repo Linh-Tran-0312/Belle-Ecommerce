@@ -1,10 +1,7 @@
- import { Service } from "typedi";
-import { getRepository } from "typeorm";
-import { IProduct, IProductCreateProps, Product } from "../models";
-import { BaseRepository } from "./base.repository";
-import { PostgresError } from "../helpers/PostgresError";
+ import { getRepository } from "typeorm";
 import { IBaseRepository } from ".";
-import { IProductCategoryRepository } from "./category.repository";
+import { Product } from "../models";
+import { BaseRepository } from "./base.repository";
 
 export interface IProductRepository extends IBaseRepository<Product> {}
 

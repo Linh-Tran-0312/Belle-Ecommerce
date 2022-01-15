@@ -1,15 +1,7 @@
  export default (product, { productVariantId, quantity}) => {
+     console.log(product)
         let item = {
-          productVariant: {
-                product: {
-                    imgPaths: [],
-                    brand: {}
-                },
-                size: {
-                    name: ""
-                },
-                color: {  name: ""}
-            }  
+            product: {}
         };
         item.quantity = quantity;
         item.unitPrice = product.price;

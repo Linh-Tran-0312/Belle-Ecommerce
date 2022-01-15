@@ -1,5 +1,5 @@
 import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
-import { IBlogCategory, UserRole, BlogCategory } from "../models";
+import { BlogCategory, UserRole } from "../models";
 import { BlogCategoryService, IBlogCategoryService } from "../services";
 import { ValidateBlogCateModel } from "../validations";
 

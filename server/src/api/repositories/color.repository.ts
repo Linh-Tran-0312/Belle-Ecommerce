@@ -1,7 +1,6 @@
  import { getRepository } from "typeorm";
+import { Color } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-import { Color, IBlogCreateProps, IColor, IColorCreateProps } from "../models";
-import { Service } from "typedi";
 
 export interface IColorRepository extends IBaseRepository<Color> {}
 

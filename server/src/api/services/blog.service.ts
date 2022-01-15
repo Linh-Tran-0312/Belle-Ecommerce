@@ -4,7 +4,7 @@ import { Blog } from "../models";
 import { BlogRepository, IBlogRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
 import { Change } from "./index";
-
+import { ValidateBlogModel } from "../validations";
 export enum BlogField {
     NAME = "title",
     DATE = "createdAt"
@@ -18,13 +18,7 @@ export interface IBlogQuery {
     change?: Change,
     search?: string
 }
-export interface IBlogCreateProps {
-    title: string;
-    categoryId: number;
-    imgPath?: string;
-    content: string;
-    commentAllow: boolean;   
-};
+
 export interface IBlogs {
     blogs: Blog[],
     total: number
@@ -32,8 +26,8 @@ export interface IBlogs {
 
 export interface IBlogService extends IBaseService<Blog> {
     getBlogs(query: IBlogQuery): Promise<IBlogs>;
-    createBlog(data: IBlogCreateProps): Promise<Blog>;
-    updateBlog(id: number, data: IBlogCreateProps): Promise<Blog>
+    createBlog(data: ValidateBlogModel ): Promise<Blog>;
+    updateBlog(id: number, data: ValidateBlogModel ): Promise<Blog>
 
 };
 
@@ -65,12 +59,12 @@ export class BlogService extends BaseService<Blog, IBlogRepository> implements I
         result.total = count;
         return result
     }
-    public async createBlog(data: IBlogCreateProps): Promise<Blog> {
+    public async createBlog(data: ValidateBlogModel): Promise<Blog> {
         const { id } = await this.repository.create(data);
         const newBlog = await this.getOneById(id, ["category"]);
         return newBlog
     }
-    public async updateBlog(id: number, data: IBlogCreateProps): Promise<Blog> {
+    public async updateBlog(id: number, data: ValidateBlogModel): Promise<Blog> {
         await this.repository.update(id, data);
         const updatedBlog = await this.getOneById(id, ["category"]);
         return updatedBlog;

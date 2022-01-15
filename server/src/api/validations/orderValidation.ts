@@ -1,4 +1,5 @@
 
+import { PaymentMethod } from "../models";
 export class ValidateOrderDetailModel {
     /**
      * @isInt
@@ -27,6 +28,24 @@ export class ValidateOrderDetailModel {
         this.orderId = orderId
     }
 }
+export class ValidateOrderBasicProps {
+     /**
+    * @pattern ^(?!\s*$).+ Address must not be emplty
+    */
+    address: string;
+    paymentMethod: PaymentMethod;
+    paymentCheck?: boolean;
+    note?: string;
+    shipping?: number;
+
+    constructor(address: string, method: PaymentMethod, check?: boolean, note?: string, shipping?: number) {
+        this.address = address;
+        this.paymentCheck = check;
+        this.paymentMethod = method;
+        this.note = note;
+        this.shipping = shipping;
+    }
+}
 export class ValidateOrderUpdateModel {
     details: ValidateOrderDetailModel[];
     constructor(details: ValidateOrderDetailModel[]) {
@@ -50,7 +69,6 @@ export class ValidateOrderCreateModel extends ValidateOrderUpdateModel {
 export class ValidateUpdateQuantityModel {
     /**
      * @isInt
-     * @minimum 0
      */
     quantity: number;
 

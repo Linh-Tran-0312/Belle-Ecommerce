@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IProductReview, IProductReviewCreateProps, UserRole } from "../models";
-import { IReviewCount, IReviewService,ProductReviewService, IReview } from "../services";
+import { UserRole } from "../models";
+import { IReview, IReviewCount, IReviewService, ProductReviewService } from "../services";
 import { ValidateReviewModel } from "../validations";
  
 

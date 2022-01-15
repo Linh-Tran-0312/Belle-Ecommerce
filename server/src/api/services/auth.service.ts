@@ -8,8 +8,7 @@ import { signAccessToken, signRefreshToken } from "../helpers/jwtHandler";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { TokenError } from "../helpers/TokenError";
 import { IUserAuth, UserMapper } from "../mappers";
-import { IUser, IUserCreateProps } from "../models";
-
+import { ValidateUserCreateModel } from "../validations";
 dotenv.config();
 
 export interface IRefreshToken {
@@ -28,7 +27,7 @@ export interface IAuth {
     profile: IUserAuth
 }
 export interface IAuthService {
-    register(data: IUserCreateProps): Promise<IAuth>;
+    register(data: ValidateUserCreateModel): Promise<IAuth>;
     login(email: string, password: string): Promise<IAuth>;
     adminLogin(email: string, password: string): Promise<IAuth>;
     refreshAccessToken(data: IRefreshToken): Promise<IAccessToken>
@@ -42,7 +41,7 @@ export class AuthService extends UserService {
         const refreshToken = signRefreshToken({ id, role }, timeRefresh);
         return { refreshToken, token: accessToken };
     }
-    public async register(data: IUserCreateProps): Promise<IAuth> {
+    public async register(data:  ValidateUserCreateModel): Promise<IAuth> {
         const existingEmail = await super.isEmailExist(data.email);
         if (!!existingEmail) throw new OperationalError(OperationalErrorMessage.EMAIL_INUSE, HttpCode.BAD_REQUEST);
         const hashPassword = await bcrypt.hash(data.password, 10);
@@ -54,7 +53,7 @@ export class AuthService extends UserService {
         return result;
     }
     public async login(email: string, password: string): Promise<IAuth> {
-        const existingUser: IUser | any = await this.repository.findOne({ where: { email } });
+        const existingUser = await this.repository.findOne({ where: { email } });
         if (!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);
         const match = await bcrypt.compare(password, existingUser.password);
         if (!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
@@ -65,7 +64,7 @@ export class AuthService extends UserService {
     }
     public async adminLogin(email: string, password: string): Promise<IAuth> {
 
-        const existingUser: IUser | any = await this.repository.findOne({ where: { email, role: Not("customer") } });
+        const existingUser  = await this.repository.findOne({ where: { email, role: Not("customer") } });
         if (!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);
         const match = await bcrypt.compare(password, existingUser.password);
         if (!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);

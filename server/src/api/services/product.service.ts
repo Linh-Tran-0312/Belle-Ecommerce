@@ -1,9 +1,9 @@
 import { Between, ILike, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
-import { IProduct, IProductCreateProps, Product } from "../models";
-import { ProductRepository, IProductRepository } from "../repositories";
+import { IProductInfo, IProductSearchProps, ProductMapper } from "../mappers";
+import { Product } from "../models";
+import { IProductRepository, ProductRepository } from "../repositories";
+import { ValidateProductModel } from "../validations";
 import { BaseService, IBaseService } from "./base.service";
-import { ProductMapper, IProductSearchProps, IProductInfo, IVariantInfo } from "../mappers";
-
 export enum Change {
     DESC = "DESC",
     ASC = "ASC"
@@ -26,16 +26,6 @@ export interface IProductQuery {
     sort?: ProductField,
     change?: Change
 }
-export interface IProductUpdateProps {
-    sku?: string;
-    categoryId?: number;
-    brandId?: number;
-    imgPaths?: string[];
-    name?: string;
-    summary?: string;
-    description?: string;
-    price?: number;
-}
 
 export interface IProducts {
     products: IProductSearchProps[],
@@ -45,8 +35,8 @@ export interface IProducts {
 export interface IProductService extends IBaseService<Product> {
     getProducts(query: IProductQuery): Promise<IProducts>;
     getProductById(id: number): Promise<IProductInfo>
-    createProduct(data: IProductCreateProps): Promise<IProductInfo>;
-    updateProduct(id: number, data: IProductUpdateProps): Promise<IProductInfo>
+    createProduct(data: ValidateProductModel): Promise<IProductInfo>;
+    updateProduct(id: number, data:ValidateProductModel): Promise<IProductInfo>
 }
 //@Service({ id: "OrderRepository-service"})
 export class ProductService extends BaseService<Product, IProductRepository> implements IProductService {
@@ -101,11 +91,11 @@ export class ProductService extends BaseService<Product, IProductRepository> imp
         const product = await this.getOneById(id, ["category", "brand", "variants", "variants.color", "variants.size"]);
         return ProductMapper.toProductInfo(product);
     }
-    public async createProduct(data: IProductCreateProps): Promise<IProductInfo> {
+    public async createProduct(data: ValidateProductModel): Promise<IProductInfo> {
         const { id } = await this.repository.create(data);
         return await this.getProductById(id);
     }
-    public async updateProduct(id: number, data: IProductUpdateProps): Promise<IProductInfo> {
+    public async updateProduct(id: number, data: ValidateProductModel): Promise<IProductInfo> {
         await this.repository.update(id, data);
         return await this.getProductById(id);
     }

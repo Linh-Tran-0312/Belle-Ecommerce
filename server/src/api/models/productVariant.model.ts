@@ -1,19 +1,9 @@
 
-import { Column, Entity, JoinColumn, ManyToOne, EventSubscriber } from "typeorm";
-import { Color, Product, Size, ISize, IColor } from "./";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Color, Product, Size } from "./";
+import { CustomBaseEntity } from "./base.model";
 
-export interface IProductVariantCreateProps {
-    productId: number;
-    sizeId: number;
-    colorId: number;
-    quantity: number;
-}
-export interface IProductVariant extends IProductVariantCreateProps, IBaseEntity {
-    size?: ISize;
-    color?: IColor;
-};
-
+ 
 @Entity()
 export class ProductVariant extends CustomBaseEntity {
 

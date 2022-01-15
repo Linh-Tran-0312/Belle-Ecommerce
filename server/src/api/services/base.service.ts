@@ -1,7 +1,7 @@
-import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
-import { IBaseRepository } from "../repositories/base.repository";
-import { IBaseEntity, CustomBaseEntity } from "../models/base.model";
 import { HttpCode } from "../helpers/HttpCode";
+import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
+import { CustomBaseEntity } from "../models/base.model";
+import { IBaseRepository } from "../repositories/base.repository";
 
 export interface IBaseService<T extends CustomBaseEntity> {
     create(data: T|any): Promise<T>;

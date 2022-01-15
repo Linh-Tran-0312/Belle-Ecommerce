@@ -1,7 +1,6 @@
 import { getRepository } from "typeorm";
+import { BlogCategory } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-import { BlogCategory, IBlogCategoryCreateProps, IBlogCategory } from "../models";
-import { Service } from "typedi";
 
 export interface IBlogCategoryRepository extends IBaseRepository<BlogCategory> {}
 

@@ -1,32 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { Brand, ProductCategory, ProductComment, ProductReview, ProductVariant } from './';
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
-import { IBrand } from "./brand.model";
-import { IProductCategory, IProductCategoryCreateProps } from "./productCategory.model";
-import { IProductVariant } from "./productVariant.model";
+import { CustomBaseEntity } from "./base.model";
 
-export interface IProductCreateProps {
-    sku?: string;
-    categoryId: number;
-    brandId: number;
-    imgPaths?: string[];
-    name: string;
-    summary?: string;
-    description?: string;
-    price: number;   
-}
-
-export interface IProduct extends IProductCategoryCreateProps, IBaseEntity {
-    category?: IProductCategory;
-    brand?: IBrand;
-    overallReview?: number;
-    reviewCount?: number;
-    variants?: IProductVariant[];
-};
 
 @Entity()
 export class Product extends CustomBaseEntity  {
-
 
     @Column({nullable: true})
     sku!: string;

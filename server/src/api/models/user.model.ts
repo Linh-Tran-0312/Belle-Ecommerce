@@ -1,8 +1,8 @@
 
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from "typeorm";
 import { Product } from ".";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
-import { IOrder, Order } from "./order.model";
+import { CustomBaseEntity } from "./base.model";
+import { Order } from "./order.model";
 
 export enum UserRole {
     ALL = "all",
@@ -11,26 +11,7 @@ export enum UserRole {
     CUSTOMER = 'customer'
 };
 
-export interface IUserCreateProps {
-    fname: string;
-    lname: string;
-    email: string;
-    password: string;
-    role?: UserRole;
-    phone?: string,
-    address?: string
-
-}
-
-export interface IUser extends Omit<IUserCreateProps, "password" | "email">, IBaseEntity {
-    password?: string;
-    email?: string;
-    token?: string;
-    phone?: string;
-    address?: string;
-    role?: UserRole;
-    orders?: IOrder[]
-}; 
+ 
 
 @Entity()
 export class User extends CustomBaseEntity {

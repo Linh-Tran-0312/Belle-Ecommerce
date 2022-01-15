@@ -1,19 +1,17 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags, Example } from "tsoa";
 import { Period } from "../helpers/timeHandler";
-import { IOrderDetail, Status, UserRole } from "../models";
-import {  IOrders,Change, IOrderQuery, IOrderUpdateProps, IPlaceOrder,IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService, IOrderInfo, IOrderBasicProps } from "../services";
-import { ValidateOrderCreateModel, ValidateOrderDetailModel, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
+import {  Status, UserRole } from "../models";
+import {  IOrders,Change, IOrderQuery, IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService, IOrderInfo, IOrderBasicProps } from "../services";
+import { ValidateOrderCreateModel, ValidateOrderDetailModel,ValidateOrderBasicProps, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
  
 
 @Route("orders")
 @Tags('Order')
 export class OrderController {
     private _orderService: IOrderService;
-    private _orderDetailService: IOrderDetailService;
 
     constructor() {
         this._orderService = new OrderService();
-        this._orderDetailService = new OrderDetailService();
     }
 
     /**
@@ -114,7 +112,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/updateStatus")
-    public async updateOrderStatus(@Path() orderId: number, @Body() data: IOrderUpdateProps): Promise<IOrderInfo> {
+    public async updateOrderStatus(@Path() orderId: number, @Body() data: ValidateOrderBasicProps): Promise<IOrderInfo> {
         return this._orderService.updateOrderStatus(orderId, data)
     }
     /**
@@ -125,7 +123,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/place")
-    public async placeOrder(@Path() orderId: number, @Body() data: IPlaceOrder): Promise<IOrderInfo> {
+    public async placeOrder(@Path() orderId: number, @Body() data: ValidateOrderBasicProps): Promise<IOrderInfo> {
         return this._orderService.placeOrder(orderId, data)
     }
     /**
@@ -161,9 +159,9 @@ export class OrderController {
     * @minimum itemId 0 Item id value must be at least 0
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
-    @Patch("/items/:itemId")
-    public async updateItemQuantity(@Path() itemId: number, @Body() data: ValidateUpdateQuantityModel): Promise<IOrderDetail> {
-        return this._orderDetailService.updateItemQuantity(itemId, data.quantity)
+    @Patch("/:orderId/items/:itemId")
+    public async updateItemQuantity(@Path() orderId: number, @Path() itemId: number, @Body() data: ValidateUpdateQuantityModel): Promise<IOrderInfo> {
+        return this._orderService.updateItemQuantity(orderId, itemId, data.quantity)
     }
     /**
     * Delete order items
@@ -172,9 +170,9 @@ export class OrderController {
     * @minimum itemId 0 Item id value must be at least 0
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
-    @Delete("/items/:itemId")
-    public async deleteItem(@Path() itemId: number): Promise<void> {
-        return this._orderDetailService.delete(itemId)
+    @Delete("/:orderId/items/:itemId")
+    public async deleteItem(@Path() orderId: number, @Path() itemId: number): Promise<IOrderInfo> {
+        return this._orderService.deleteItem(orderId,itemId)
     }
 
 

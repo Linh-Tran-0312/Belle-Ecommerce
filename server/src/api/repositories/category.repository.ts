@@ -1,7 +1,6 @@
  import { getRepository } from "typeorm";
+import { ProductCategory } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-import { ProductCategory, IProductCategory, IProductCategoryCreateProps } from "../models";
-import { Service } from "typedi";
 
 export interface IProductCategoryRepository extends IBaseRepository<ProductCategory> {}
 

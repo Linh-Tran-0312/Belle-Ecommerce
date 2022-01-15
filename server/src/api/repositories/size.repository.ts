@@ -1,6 +1,5 @@
- import { Service } from "typedi";
-import { getRepository } from "typeorm";
-import { ISize, ISizeCreateProps, Size } from "../models";
+ import { getRepository } from "typeorm";
+import { Size } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
 
 export interface ISizeRepository extends IBaseRepository<Size> {}

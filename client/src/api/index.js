@@ -75,8 +75,8 @@ const api = {
     getCurrentOrderByUserId: (userId) =>  API.get(`/orders/${userId}/current`),
     addItemToOrder: (id, formData) => API.post(`/orders/${id}/items`, formData),
     createOrder: (formData) => API.post("/orders", formData),
-    deleteItem: (itemId) => API.delete(`/orders/items/${itemId}`),
-    updateItemQuantity: (itemId, formData) => API.patch(`/orders/items/${itemId}`, formData),
+    deleteItem: (orderId,itemId) => API.delete(`/orders/${orderId}/items/${itemId}`),
+    updateItemQuantity: (orderId, itemId, formData) => API.patch(`/orders/${orderId}/items/${itemId}`, formData),
     placeOrder: (orderId, formData) => API.patch(`/orders/${orderId}/place`, formData),
     //update cart after login
     updateOrderAfterLogin: (userId,formData) => API.patch(`/orders/${userId}/afterLogin`, formData),

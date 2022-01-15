@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { IOrderDetailCreateProps } from ".";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
-import { IOrderDetail, OrderDetail } from "./orderDetail.model";
+import { CustomBaseEntity } from "./base.model";
+import { OrderDetail } from "./orderDetail.model";
 import { User } from "./user.model";
 
 export enum Status {
@@ -19,21 +18,6 @@ export enum PaymentMethod {
 }
 
 
-export interface IOrderCreateProps {
-    userId: number;
-    details?: IOrderDetailCreateProps[];
-}
-
-export interface IOrder extends Omit<IOrderCreateProps, "details">, IBaseEntity {
-    status: Status;
-    total: number;
-    paymentMethod: PaymentMethod,
-    paymentCheck: boolean,
-    address: string,
-    shipping: number,
-    orderAt: Date,
-    details?: IOrderDetail[];
-};
 
 @Entity()
 export class Order  extends CustomBaseEntity {

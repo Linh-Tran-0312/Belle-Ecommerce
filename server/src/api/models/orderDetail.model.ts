@@ -1,16 +1,8 @@
 
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Order, ProductVariant } from "./";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
+import { CustomBaseEntity } from "./base.model";
 
-export interface IOrderDetailCreateProps {
-    orderId?: number;
-    productVariantId: number;
-    quantity: number;
-    unitPrice: number;
-}
-
-export interface IOrderDetail extends IOrderDetailCreateProps, IBaseEntity {};
 
 @Entity()
 export class OrderDetail extends CustomBaseEntity  {

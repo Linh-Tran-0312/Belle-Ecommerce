@@ -1,19 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { IUser, Product, User } from "./";
-import { CustomBaseEntity, IBaseEntity } from "./base.model";
+import { Product, User } from "./";
+import { CustomBaseEntity } from "./base.model";
 
-export interface IProductReviewCreateProps {
-    title: string;
-    text: string;
-    productId: number;
-    rating: number;
-    userId: number;
-}
-
-export interface IProductReview extends IProductReviewCreateProps, IBaseEntity {
-    user?: IUser;
-};
-
+ 
 @Entity()
 export class ProductReview  extends CustomBaseEntity {
 

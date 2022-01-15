@@ -1,6 +1,6 @@
-import { Body, Delete, Get, Patch, Path, Post, Route, Tags, Security } from "tsoa";
-import { ProductCategory, IProductCategoryCreateProps, UserRole } from "../models";
-import { ProductCategoryService, IProductCategoryService } from "../services";
+import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tsoa";
+import { ProductCategory, UserRole } from "../models";
+import { IProductCategoryService, ProductCategoryService } from "../services";
 import { ValidateCategoryModel } from "../validations";
 
 

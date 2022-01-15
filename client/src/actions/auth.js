@@ -15,7 +15,7 @@ const authActions = {
                 dispatch({ type: ACTION.USER_AUTH, payload: data});
                 let details = [];
                 items.forEach(item => {
-                    details.push({ productVariantId: item.productVariant.id, unitPrice: item.unitPrice, quantity: item.quantity})
+                    details.push({ productVariantId: item.productVariantId, unitPrice: item.unitPrice, quantity: item.quantity})
                 })
                 const orderRes = await api.updateOrderAfterLogin(data.id, { details });
                 dispatch({ type: ACTION.GET_ORDER_AFTER_LOGIN, payload: orderRes.data}); 
@@ -44,7 +44,7 @@ const authActions = {
             dispatch({ type: ACTION.USER_AUTH, payload: userRes.data});
            let details = [];
            items.forEach(item => {
-               details.push({ productVariantId: item.productVariant.id, unitPrice: item.unitPrice, quantity: item.quantity})
+               details.push({ productVariantId: item.productVariantId, unitPrice: item.unitPrice, quantity: item.quantity})
            })
             const orderRes = await api.updateOrderAfterLogin(userRes.data.id, { details });
             dispatch({ type: ACTION.GET_ORDER_AFTER_LOGIN, payload: orderRes.data});

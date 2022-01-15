@@ -1,5 +1,5 @@
 import { IUserWithOrders } from "../services";
-import { IUser, UserRole, User } from "../models";
+import { UserRole, User } from "../models";
 
 export interface IUserAuth {
     id: number,
@@ -16,7 +16,7 @@ export interface IUserName {
 }
 export class UserMapper {
 
-    public static toUserAuth(user: IUser): IUserAuth {
+    public static toUserAuth(user: User): IUserAuth {
         return ({
             id: user.id,
             fname: user.fname,
@@ -27,7 +27,7 @@ export class UserMapper {
         })
     }
 
-    public static toUserName(user: IUser): IUserName {
+    public static toUserName(user: User): IUserName {
         return ({
             id: user.id,
             fname: user.fname,

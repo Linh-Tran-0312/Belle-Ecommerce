@@ -1,8 +1,7 @@
 import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
-import { IProductInfo } from "../mappers";
-import { Product, ProductVariant, UserRole } from "../models";
- import { IVariantInfo } from "../mappers";
-import { Change, IProductQuery, ProductField, IProducts, ProductService,  IProductService, ProductVariantService ,IProductVariantService } from "../services";
+import { IProductInfo, IVariantInfo } from "../mappers";
+import { UserRole } from "../models";
+import { Change, IProductQuery, IProducts, IProductService, IProductVariantService, ProductField, ProductService, ProductVariantService } from "../services";
 import { ValidateProductModel, ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
 
 
