@@ -1,6 +1,7 @@
 import { Size } from "../models";
 import { ISizeRepository, SizeRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
+import { Service } from "typedi";
 
 
 export interface ISizeName {
@@ -9,9 +10,11 @@ export interface ISizeName {
 export interface ISizeService extends IBaseService<Size> { };
 
 
-//@Service({ id: "OrderRepository-service"})
+@Service()
 export class SizeService extends BaseService<Size, ISizeRepository> implements ISizeService {
-    constructor() {
-        super(new SizeRepository())
+    constructor(
+        sizeRepo: SizeRepository
+    ) {
+        super(sizeRepo)
     }
 }

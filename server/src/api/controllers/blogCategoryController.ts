@@ -2,14 +2,18 @@ import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tso
 import { BlogCategory, UserRole } from "../models";
 import { BlogCategoryService, IBlogCategoryService } from "../services";
 import { ValidateBlogCateModel } from "../validations";
+import { Service } from "typedi";
 
+@Service()
 @Route("blog-categories")
 @Tags('Blog Category')
 export class BlogCategoryController {
     private _blogCategoryService: IBlogCategoryService;
 
-    constructor() {
-        this._blogCategoryService = new BlogCategoryService();
+    constructor(
+        blogCategoryService: BlogCategoryService
+    ) {
+        this._blogCategoryService = blogCategoryService;
     }
 
     /**

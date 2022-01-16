@@ -214,11 +214,11 @@ export default () => {
                                         {items.map((item) => (
                                             <TableRow key={item.id}>
                                         <StyledTableCell component="th" scope="row">
-                                            <Typography variant="subtitle2">  {`${item?.productVariant?.product?.name} (${item?.productVariant?.product?.brand?.name}) `} </Typography>
-                                            <Typography variant="caption">{item?.productVariant?.color?.name}</Typography>
+                                            <Typography variant="subtitle2">  {`${item?.product?.name} (${item?.product?.brand}) `} </Typography>
+                                            <Typography variant="caption">{item?.product?.color}</Typography>
                                         </StyledTableCell>
                                         <StyledTableCell align="center" >{item?.unitPrice?.toLocaleString()}</StyledTableCell>
-                                        <StyledTableCell align="center">{item?.productVariant?.size?.name}</StyledTableCell>
+                                        <StyledTableCell align="center">{item?.product?.size}</StyledTableCell>
                                         <StyledTableCell align="center">{item?.quantity}</StyledTableCell>
                                         <StyledTableCell align="center">{(item?.unitPrice * item?.quantity).toLocaleString()}</StyledTableCell>
                                             </TableRow>

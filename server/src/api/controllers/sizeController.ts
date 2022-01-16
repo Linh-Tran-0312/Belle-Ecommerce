@@ -2,14 +2,18 @@ import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tso
 import { Size, UserRole } from "../models";
 import { SizeService, ISizeService  } from "../services";
 import { ValidateSizeModel } from "../validations";
+import { Service } from "typedi";
 
+@Service()
 @Route("sizes")
 @Tags('Product Size')
 export class SizeController {
     private _sizeService: ISizeService;
 
-    constructor() {
-        this._sizeService = new SizeService();
+    constructor(
+        sizeService: SizeService
+    ) {
+        this._sizeService = sizeService;
     }
 
     /**

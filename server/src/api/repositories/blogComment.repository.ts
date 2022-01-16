@@ -2,11 +2,11 @@ import { getRepository } from "typeorm";
 import { PostgresError } from "../helpers/PostgresError";
 import { BlogComment } from "../models";
 import { BaseRepository, IBaseRepository } from "./base.repository";
-
+import { Service } from "typedi";
 export interface IBlogCommentRepository extends IBaseRepository<BlogComment> {
     getCommentsWithUser(blogId: number, options: any): Promise<BlogComment[]>
 }
-
+@Service()
 export class BlogCommentRepository extends BaseRepository<BlogComment> implements IBlogCommentRepository {
 
     constructor() {

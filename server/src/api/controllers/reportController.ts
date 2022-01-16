@@ -1,15 +1,18 @@
 import { Get, Query, Route, Security, Tags } from "tsoa";
 import { UserRole } from "../models";
 import { ReportService, IOrderReport, IOverviewReport, IProductReports, ISalesReport, IReportService  } from "../services";
+import { Service } from "typedi";
 
-
+@Service()
 @Route("/report")
 @Tags("Report Controller")
 export class ReportController {
     private _reportService: IReportService;
 
-    constructor() {
-        this._reportService = new ReportService();
+    constructor(
+        reportService: ReportService
+    ) {
+        this._reportService = reportService;
     }
     /**
      * Get overview of sales, orders and new register of current month

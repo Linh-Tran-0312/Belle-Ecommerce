@@ -4,6 +4,8 @@ import { Product } from "../models";
 import { IProductRepository, ProductRepository } from "../repositories";
 import { ValidateProductModel } from "../validations";
 import { BaseService, IBaseService } from "./base.service";
+import { Service } from "typedi";
+ 
 export enum Change {
     DESC = "DESC",
     ASC = "ASC"
@@ -38,10 +40,12 @@ export interface IProductService extends IBaseService<Product> {
     createProduct(data: ValidateProductModel): Promise<IProductInfo>;
     updateProduct(id: number, data:ValidateProductModel): Promise<IProductInfo>
 }
-//@Service({ id: "OrderRepository-service"})
+@Service()
 export class ProductService extends BaseService<Product, IProductRepository> implements IProductService {
-    constructor() {
-        super(new ProductRepository())
+    constructor(
+        productRepository: ProductRepository
+    ) {
+        super(productRepository)
     }
     public async getProducts(query: IProductQuery): Promise<IProducts> {
         let options: any = {
@@ -96,7 +100,7 @@ export class ProductService extends BaseService<Product, IProductRepository> imp
         return await this.getProductById(id);
     }
     public async updateProduct(id: number, data: ValidateProductModel): Promise<IProductInfo> {
-        await this.repository.update(id, data);
+        await this.repository.update(id,data);
         return await this.getProductById(id);
     }
 

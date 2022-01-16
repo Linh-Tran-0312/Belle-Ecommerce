@@ -8,7 +8,7 @@ import { IOrderDetailRepository, IOrderRepository, OrderDetailRepository, OrderR
 import { ValidateOrderBasicProps, ValidateOrderCreateModel, ValidateOrderDetailModel } from "../validations";
 import { BaseService, IBaseService } from "./base.service";
 import { Change, IItemDetails, IUserAuth, IUserName } from "./index";
-
+import { Service } from "typedi";
 export enum OrderField {
     ORDERAT = "orderAt",
     TOTAL = "total",
@@ -63,32 +63,18 @@ export interface IOrderService extends IBaseService<Order> {
     deleteItem(orderId: number,itemId: number): Promise<IOrderInfo>
 };
 
-//@Service({ id: "OrderRepository-service"})
+@Service()
 export class OrderService extends BaseService<Order, IOrderRepository> implements IOrderService {
     private detailRepository: IOrderDetailRepository
-    constructor() {
-        super(new OrderRepository());
-        this.detailRepository = new OrderDetailRepository()
+    constructor(
+        orderRepository: OrderRepository,
+        detailRepository: OrderDetailRepository
+    ) {
+        super(orderRepository);
+        this.detailRepository = detailRepository
     }
     public async getOrders(query: IOrderQuery): Promise<IOrders> {
-        /*    const options: any = {
-               search: "",
-               paymentCheck: "",
-               status: "",
-               limit: 5,
-               page: 1,
-               time: "" ,
-               sort: OrderField.ORDERAT,
-               change: Change.DESC
-           }
-           if(!!query.search) options.search = query.search;
-           if(query.paymentCheck !== undefined ) options.paymentCheck = query.paymentCheck;
-           if(query.status !== undefined) options.status = query.status;
-           options.limit = query.limit; 
-           options.page = query.page;
-           if(!!query.time && query.time.trim() !== "") options.time = periodCal(query.time);
-            options.sort = query.sort;
-            options.change = query.change; */
+
         const options: any = {
             relations: ["user"],
             where: {},
@@ -281,9 +267,10 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         return await this.getOrderById(id);
     }
     public async updateItemQuantity(orderId: number, itemId: number, quantity: number): Promise<IOrderInfo> {
-        const item = await this.detailRepository.findOne({where: {itemId}});
+        const item = await this.detailRepository.findOne({where: {id: itemId}});
         if(item) {
             item.quantity += quantity;
+            await this.detailRepository.update(itemId,{...item})
         }
         return await this.getOrderById(orderId);
     }

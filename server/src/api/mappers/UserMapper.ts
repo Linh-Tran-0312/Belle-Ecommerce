@@ -5,6 +5,7 @@ export interface IUserAuth {
     id: number,
     fname: string,
     lname: string,
+    email: string,
     phone?: string,
    address?: string,
    role?: UserRole
@@ -21,6 +22,7 @@ export class UserMapper {
             id: user.id,
             fname: user.fname,
             lname: user.lname,
+            email: user.email,
             phone: user.phone,
             address: user.address,
             role: user.role

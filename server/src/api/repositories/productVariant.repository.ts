@@ -5,7 +5,7 @@ import { BaseRepository, IBaseRepository } from "./base.repository";
 
 export interface IProductVariantRepository extends IBaseRepository<ProductVariant> {}
 
-@Service({ id: "productVariant-repository"})
+@Service()
 export class ProductVariantRepository extends BaseRepository<ProductVariant> implements IProductVariantRepository {
     constructor() {
         super(getRepository(ProductVariant));

@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from '@tsoa/runtime';
+import { iocContainer } from './../ioc';
 import { OrderController } from './../controllers/orderController';
 import { ReportController } from './../controllers/reportController';
 import { ReviewController } from './../controllers/reviewController';
@@ -719,7 +720,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.getOrders.apply(controller, validatedArgs as any);
@@ -739,7 +740,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.createOrder.apply(controller, validatedArgs as any);
@@ -759,7 +760,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.getOrdersOfUser.apply(controller, validatedArgs as any);
@@ -779,7 +780,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.getCurrentOrderOfUser.apply(controller, validatedArgs as any);
@@ -799,7 +800,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.getOrderById.apply(controller, validatedArgs as any);
@@ -820,7 +821,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.updateOrderItems.apply(controller, validatedArgs as any);
@@ -841,7 +842,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.updateOrderStatus.apply(controller, validatedArgs as any);
@@ -862,7 +863,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.placeOrder.apply(controller, validatedArgs as any);
@@ -882,7 +883,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.deleteOrderById.apply(controller, validatedArgs as any);
@@ -903,7 +904,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.addItemToOrder.apply(controller, validatedArgs as any);
@@ -925,7 +926,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.updateItemQuantity.apply(controller, validatedArgs as any);
@@ -946,7 +947,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new OrderController();
+            const controller = iocContainer.get<OrderController>(OrderController);
 
 
             const promise = controller.deleteItem.apply(controller, validatedArgs as any);
@@ -965,7 +966,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReportController();
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
             const promise = controller.getOverviewReport.apply(controller, validatedArgs as any);
@@ -985,7 +986,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReportController();
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
             const promise = controller.getSalesReport.apply(controller, validatedArgs as any);
@@ -1005,7 +1006,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReportController();
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
             const promise = controller.getOrderReport.apply(controller, validatedArgs as any);
@@ -1027,7 +1028,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReportController();
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
             const promise = controller.getTopProductsReport.apply(controller, validatedArgs as any);
@@ -1048,7 +1049,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReviewController();
+            const controller = iocContainer.get<ReviewController>(ReviewController);
 
 
             const promise = controller.getReviewsByProductId.apply(controller, validatedArgs as any);
@@ -1067,7 +1068,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReviewController();
+            const controller = iocContainer.get<ReviewController>(ReviewController);
 
 
             const promise = controller.getReviewCountByProductId.apply(controller, validatedArgs as any);
@@ -1087,7 +1088,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ReviewController();
+            const controller = iocContainer.get<ReviewController>(ReviewController);
 
 
             const promise = controller.createReview.apply(controller, validatedArgs as any);
@@ -1112,7 +1113,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new UserController();
+            const controller = iocContainer.get<UserController>(UserController);
 
 
             const promise = controller.getUsers.apply(controller, validatedArgs as any);
@@ -1132,7 +1133,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new UserController();
+            const controller = iocContainer.get<UserController>(UserController);
 
 
             const promise = controller.getUserById.apply(controller, validatedArgs as any);
@@ -1152,7 +1153,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new UserController();
+            const controller = iocContainer.get<UserController>(UserController);
 
 
             const promise = controller.createUser.apply(controller, validatedArgs as any);
@@ -1173,7 +1174,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new UserController();
+            const controller = iocContainer.get<UserController>(UserController);
 
 
             const promise = controller.updateUser.apply(controller, validatedArgs as any);
@@ -1200,7 +1201,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.getProducts.apply(controller, validatedArgs as any);
@@ -1219,7 +1220,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.getProductById.apply(controller, validatedArgs as any);
@@ -1239,7 +1240,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.createProduct.apply(controller, validatedArgs as any);
@@ -1260,7 +1261,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.updateProductById.apply(controller, validatedArgs as any);
@@ -1280,7 +1281,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.deleteProductById.apply(controller, validatedArgs as any);
@@ -1300,7 +1301,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.createProductVariant.apply(controller, validatedArgs as any);
@@ -1321,7 +1322,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.updateProductVariant.apply(controller, validatedArgs as any);
@@ -1341,7 +1342,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductController();
+            const controller = iocContainer.get<ProductController>(ProductController);
 
 
             const promise = controller.deleteProductVariant.apply(controller, validatedArgs as any);
@@ -1365,7 +1366,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.getBlogs.apply(controller, validatedArgs as any);
@@ -1385,7 +1386,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.createBlog.apply(controller, validatedArgs as any);
@@ -1404,7 +1405,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.getBlogById.apply(controller, validatedArgs as any);
@@ -1425,7 +1426,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.updateBlogById.apply(controller, validatedArgs as any);
@@ -1445,7 +1446,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.deleteBlogById.apply(controller, validatedArgs as any);
@@ -1466,7 +1467,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.getCommentsOfBlog.apply(controller, validatedArgs as any);
@@ -1486,7 +1487,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.createComment.apply(controller, validatedArgs as any);
@@ -1507,7 +1508,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.updateCommentById.apply(controller, validatedArgs as any);
@@ -1527,7 +1528,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogController();
+            const controller = iocContainer.get<BlogController>(BlogController);
 
 
             const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
@@ -1546,7 +1547,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new AuthController();
+            const controller = iocContainer.get<AuthController>(AuthController);
 
 
             const promise = controller.register.apply(controller, validatedArgs as any);
@@ -1565,7 +1566,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new AuthController();
+            const controller = iocContainer.get<AuthController>(AuthController);
 
 
             const promise = controller.login.apply(controller, validatedArgs as any);
@@ -1584,7 +1585,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new AuthController();
+            const controller = iocContainer.get<AuthController>(AuthController);
 
 
             const promise = controller.adminLogin.apply(controller, validatedArgs as any);
@@ -1603,7 +1604,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new AuthController();
+            const controller = iocContainer.get<AuthController>(AuthController);
 
 
             const promise = controller.RefreshToken.apply(controller, validatedArgs as any);
@@ -1621,7 +1622,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new PingController();
+            const controller = iocContainer.get<PingController>(PingController);
 
 
             const promise = controller.getMessage.apply(controller, validatedArgs as any);
@@ -1639,7 +1640,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogCategoryController();
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
 
 
             const promise = controller.getBlogCategory.apply(controller, validatedArgs as any);
@@ -1659,7 +1660,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogCategoryController();
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
 
 
             const promise = controller.createBlogCategory.apply(controller, validatedArgs as any);
@@ -1680,7 +1681,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogCategoryController();
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
 
 
             const promise = controller.updateBlogCategoryById.apply(controller, validatedArgs as any);
@@ -1700,7 +1701,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BlogCategoryController();
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
 
 
             const promise = controller.deleteBlogCategoryById.apply(controller, validatedArgs as any);
@@ -1718,7 +1719,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new SizeController();
+            const controller = iocContainer.get<SizeController>(SizeController);
 
 
             const promise = controller.getSizes.apply(controller, validatedArgs as any);
@@ -1738,7 +1739,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new SizeController();
+            const controller = iocContainer.get<SizeController>(SizeController);
 
 
             const promise = controller.createSize.apply(controller, validatedArgs as any);
@@ -1759,7 +1760,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new SizeController();
+            const controller = iocContainer.get<SizeController>(SizeController);
 
 
             const promise = controller.updateSizeById.apply(controller, validatedArgs as any);
@@ -1779,7 +1780,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new SizeController();
+            const controller = iocContainer.get<SizeController>(SizeController);
 
 
             const promise = controller.deleteSizeById.apply(controller, validatedArgs as any);
@@ -1797,7 +1798,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BrandController();
+            const controller = iocContainer.get<BrandController>(BrandController);
 
 
             const promise = controller.getBrands.apply(controller, validatedArgs as any);
@@ -1817,7 +1818,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BrandController();
+            const controller = iocContainer.get<BrandController>(BrandController);
 
 
             const promise = controller.createBrand.apply(controller, validatedArgs as any);
@@ -1838,7 +1839,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BrandController();
+            const controller = iocContainer.get<BrandController>(BrandController);
 
 
             const promise = controller.updateBrandById.apply(controller, validatedArgs as any);
@@ -1858,7 +1859,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new BrandController();
+            const controller = iocContainer.get<BrandController>(BrandController);
 
 
             const promise = controller.deleteBrandById.apply(controller, validatedArgs as any);
@@ -1876,7 +1877,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductCategoryController();
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
             const promise = controller.getProductCategorys.apply(controller, validatedArgs as any);
@@ -1896,7 +1897,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductCategoryController();
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
             const promise = controller.createProductCategory.apply(controller, validatedArgs as any);
@@ -1917,7 +1918,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductCategoryController();
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
             const promise = controller.updateProductCategoryById.apply(controller, validatedArgs as any);
@@ -1937,7 +1938,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ProductCategoryController();
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
             const promise = controller.deleteProductCategoryById.apply(controller, validatedArgs as any);
@@ -1955,7 +1956,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ColorController();
+            const controller = iocContainer.get<ColorController>(ColorController);
 
 
             const promise = controller.getColors.apply(controller, validatedArgs as any);
@@ -1975,7 +1976,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ColorController();
+            const controller = iocContainer.get<ColorController>(ColorController);
 
 
             const promise = controller.createColor.apply(controller, validatedArgs as any);
@@ -1996,7 +1997,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ColorController();
+            const controller = iocContainer.get<ColorController>(ColorController);
 
 
             const promise = controller.updateColorById.apply(controller, validatedArgs as any);
@@ -2016,7 +2017,7 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = new ColorController();
+            const controller = iocContainer.get<ColorController>(ColorController);
 
 
             const promise = controller.deleteColorById.apply(controller, validatedArgs as any);

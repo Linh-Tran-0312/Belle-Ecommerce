@@ -9,6 +9,9 @@ import { OperationalError, OperationalErrorMessage } from "../helpers/Operationa
 import { TokenError } from "../helpers/TokenError";
 import { IUserAuth, UserMapper } from "../mappers";
 import { ValidateUserCreateModel } from "../validations";
+import { Service } from "typedi";
+import { IUserRepository, UserRepository } from "../repositories";
+
 dotenv.config();
 
 export interface IRefreshToken {
@@ -32,9 +35,13 @@ export interface IAuthService {
     adminLogin(email: string, password: string): Promise<IAuth>;
     refreshAccessToken(data: IRefreshToken): Promise<IAccessToken>
 }
-export class AuthService extends UserService {
-    constructor() {
-        super()
+@Service()
+export class AuthService extends UserService{
+
+    constructor(
+        userRepo: UserRepository
+    ) {
+        super(userRepo)
     }
     private async generateToken(id: number, role: string, timeAccess: number | string, timeRefresh: number | string): Promise<Token> {
         const accessToken = signAccessToken({ id, role }, timeAccess);

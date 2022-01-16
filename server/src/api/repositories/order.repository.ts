@@ -5,23 +5,22 @@ import { PostgresError } from "../helpers/PostgresError";
 import { Order, Status } from "../models";
 import { IOrders } from "../services";
 import { BaseRepository, IBaseRepository } from "./base.repository";
+import { Service } from "typedi";
 
 export interface IOrderRepository extends IBaseRepository<Order> {
-    getOrders(options: any): Promise<IOrders>;
-    getOrderById(id: number): Promise<any>;
     getTotalSalesAndOrdersByTime(trunc: string, time: any): Promise<any>;
     getOrderProportionByTime(time: any): Promise<any>;
     getTopProductByTime(time: any, query: any): Promise<any>
 }
 
 
-/* 
-@Service({ id: "order-repository"}) */
+
+@Service()
 export class OrderRepository extends BaseRepository<Order> implements IOrderRepository {
     constructor() {
         super(getRepository(Order));
     }
-
+/* 
     public async getOrders(options: any): Promise<IOrders> {
         try {
             const orderQuery = this.entity.createQueryBuilder("order")
@@ -87,7 +86,7 @@ export class OrderRepository extends BaseRepository<Order> implements IOrderRepo
         } catch (err: any) {
             throw new PostgresError(err.message, err);
         }
-    }
+    } */
     public async getTotalSalesAndOrdersByTime(trunc: string, time: any): Promise<any> { 
         try {
             const report = await this.entity.createQueryBuilder("order")

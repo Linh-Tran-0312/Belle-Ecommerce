@@ -1,16 +1,15 @@
  
 import { createConnection } from "typeorm";
 import { DbConfig }from './config';
-import app, { ExpressApp } from "./app";
-import { Application } from "express";
-
+import { ExpressApp } from "./app";
+import { ConnectionOptions } from "typeorm";
 
 class Server {
 
   app: ExpressApp;
   DbConfig: any;
 
-  constructor(dbConfig: any){
+  constructor(dbConfig: ConnectionOptions){
     this.app = new ExpressApp();
     this.DbConfig = dbConfig;
   };
@@ -32,14 +31,4 @@ const server = new Server(DbConfig);
 
 server.start(PORT);
 
-/* const App = new ExpressApp(); */
-
-/* createConnection(DbConfig).then((_connection) => {
-app.listen(PORT,() => {
-  console.log("Server is running on port", PORT);
-});
-}).catch((err) => {
-  console.log("Unable to connect to db", err);
-  process.exit(1);
-})  */
 

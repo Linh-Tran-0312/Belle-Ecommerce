@@ -1,6 +1,7 @@
 import { OrderDetail } from "../models";
 import { OrderDetailRepository,IOrderDetailRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
+import { Service } from "typedi";
 
 export interface IItemDetails {
     id: number,
@@ -21,16 +22,12 @@ export interface IItemDetails {
 export interface IOrderDetailService extends IBaseService<OrderDetail> {}
      
 
-//@Service({ id: "OrderDetailRepository-service"})
+@Service()
 export class OrderDetailService extends BaseService<OrderDetail, IOrderDetailRepository> implements IOrderDetailService   {
-    constructor() {
-        super(new OrderDetailRepository())
+    constructor(
+        detailRepository: OrderDetailRepository
+    ) {
+        super(detailRepository)
     }
-/*     public async updateItemQuantity(id: number, quantity: number): Promise<OrderDetail> {
-        const item = await this.getOneById(id);
-        if(item) {
-            item.quantity += quantity;
-        }
-        return await this.repository.create(item);
-    } */
+
 }

@@ -111,9 +111,12 @@ export default function ProductAdmin() {
     }, []);
 
     useEffect(() => {
-
-        setProduct({ ...productDetail, brandId: productDetail?.brand?.id, categoryId: productDetail?.category?.id  })
-
+        setProduct({ 
+             brandId: productDetail?.brand?.id, 
+             categoryId: productDetail?.category?.id,
+            ...productDetail
+        })
+        console.log(productDetail)
     }, [productDetail]);
 
     useEffect(() => {

@@ -1,7 +1,6 @@
 import { ConnectionOptions } from 'typeorm';
 import * as Entity from '../api/models';
-import OrderSubscriber from '../api/subscribers/orderSubscriber';
-import OrderDetailSubscriber from '../api/subscribers/orderDetailSubscriber';
+import { OrderDetailSubscriber, OrderSubscriber, ProductSubscriber } from "../api/subscribers";
 import  dotenv  from "dotenv";
 dotenv.config();
 
@@ -28,7 +27,7 @@ export const DbConfig: ConnectionOptions= {
                 Entity.ProductReview,
                 Entity.User
             ],
-    subscribers:[OrderSubscriber,OrderDetailSubscriber],
+    subscribers:[OrderSubscriber,OrderDetailSubscriber, ProductSubscriber],
     synchronize: true,
 };
 

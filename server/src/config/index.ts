@@ -1,3 +1,2 @@
 export { DbConfig } from "./DatabaseConfig";
-export { morganConfig, logger } from "./Logger";
-export { Swagger } from "./Swagger";
+export { morganConfig, Logger} from "./Logger";

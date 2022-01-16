@@ -9,6 +9,8 @@ import { BaseService, IBaseService } from "./base.service";
 import { Change, IOrderBasicProps } from "./index";
 import { ValidateUserCreateModel, ValidateUserUpdateModel} from "../validations"
 import { OrderMapper, UserMapper } from "../mappers";
+import { Service } from "typedi";
+
 dotenv.config();
 
 export enum UserField {
@@ -77,9 +79,12 @@ export interface IUserService extends IBaseService<User> {
     createUser(data: ValidateUserCreateModel): Promise<IUserWithOrders>;
     updateUser(id: number, data: ValidateUserUpdateModel): Promise<IUserWithOrders> 
 }
+@Service()
 export class UserService extends BaseService<User, IUserRepository> implements IUserService   {
-    constructor() {
-        super(new UserRepository())
+    constructor(
+        userRepo: UserRepository
+    ) {
+        super(userRepo)
     }
 
     public async isEmailExist(email: any): Promise<boolean> {

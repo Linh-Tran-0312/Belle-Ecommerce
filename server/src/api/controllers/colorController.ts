@@ -2,15 +2,19 @@ import { Body, Controller, Delete, Get, Patch, Path, Post, Route, Security, Tags
 import { Color, UserRole } from "../models";
 import { ColorService,IColorService  } from "../services";
 import { ValidateColorModel } from "../validations";
+import { Service } from "typedi";
 
+@Service()
 @Route("colors")
 @Tags('Product Color')
 export class ColorController  extends Controller {
     private _colorService: IColorService;
 
-    constructor() {
+    constructor(
+        colorService: ColorService
+    ) {
         super()
-        this._colorService = new ColorService();
+        this._colorService = colorService;
     }
 
     /**

@@ -3,12 +3,13 @@ import { PostgresError } from "../helpers/PostgresError";
 import { Status, User, UserRole } from "../models";
 import { IUserQuery, IUsers } from "../services";
 import { BaseRepository, IBaseRepository } from "./base.repository";
+import { Service } from "typedi";
 
 export interface IUserRepository extends IBaseRepository<User> {
     getUsers(query: IUserQuery): Promise<IUsers>
 }
 
-//@Service({ id: "user-repository"})
+@Service()
 export class UserRepository extends BaseRepository<User>  {
     constructor() {
         super(getRepository(User));

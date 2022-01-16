@@ -2,16 +2,19 @@ import { Body, Controller, Get, Path, Post, Query, Route, Security, Tags } from 
 import { UserRole } from "../models";
 import { IReview, IReviewCount, IReviewService, ProductReviewService } from "../services";
 import { ValidateReviewModel } from "../validations";
- 
+import { Service } from "typedi";
 
+@Service()
 @Route("reviews")
 @Tags('Product Review')
 export class ReviewController  extends Controller {
     private _reviewService: IReviewService;
 
-    constructor() {
+    constructor(
+        reviewService: ProductReviewService
+    ) {
         super()
-        this._reviewService = new ProductReviewService();
+        this._reviewService = reviewService;
     }
 
     /**

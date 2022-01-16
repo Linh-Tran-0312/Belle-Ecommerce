@@ -18,6 +18,7 @@
       "routesDir": "./src/api/routes",
       "middleware": "express",
       "middlewareTemplate": "./src/api/middlewares/custom-template.ts.hbs",
-      "authenticationModule": "./src/api/middlewares/AuthHandler.ts"
+      "authenticationModule": "./src/api/middlewares/AuthHandler.ts",
+      "iocModule": "./src/api/ioc.ts"
     }
   }

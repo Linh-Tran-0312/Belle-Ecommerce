@@ -2,7 +2,7 @@ import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } fr
 import { Blog, BlogComment,  UserRole } from "../models";
 import { BlogCommentService, BlogField, BlogService, Change, IBlogCommentQuery, IBlogCommentService, IBlogQuery, IBlogs, IBlogService } from "../services";
 import { ValidateBlogModel } from "../validations";
- 
+import { Service} from "typedi";
 
 
 export interface IBlogCommentUpdateProps {
@@ -11,15 +11,19 @@ export interface IBlogCommentUpdateProps {
     userId: number;
 }
 
+@Service()
 @Route("blogs")
 @Tags('Blog')
 export class BlogController {
     private _blogService: IBlogService;
     private _blogCommentService: IBlogCommentService;
 
-    constructor() {
-        this._blogService = new BlogService();
-        this._blogCommentService = new BlogCommentService();
+    constructor(
+        blogService: BlogService,
+        blogCommentService: BlogCommentService
+    ) {
+        this._blogService = blogService;
+        this._blogCommentService = blogCommentService;
     }
 
     /**

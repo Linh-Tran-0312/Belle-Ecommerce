@@ -5,9 +5,11 @@ import { BaseService, IBaseService } from "./base.service";
 
 export interface IBlogCategoryService extends IBaseService<BlogCategory> {}
 
-@Service({ id: "blogCategory-service"})
+@Service()
 export class BlogCategoryService extends BaseService<BlogCategory, IBlogCategoryRepository> implements IBlogCategoryService   {
-    constructor() {
-        super(new BlogCategoryRepository())
+    constructor(
+        blogCategoryRepository: BlogCategoryRepository
+    ) {
+        super(blogCategoryRepository)
     }
 }

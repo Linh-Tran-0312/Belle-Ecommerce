@@ -1,4 +1,4 @@
-import { Service } from "typedi";
+import { Service, Inject } from "typedi";
 import { ILike } from "typeorm";
 import { Blog } from "../models";
 import { BlogRepository, IBlogRepository } from "../repositories";
@@ -31,10 +31,12 @@ export interface IBlogService extends IBaseService<Blog> {
 
 };
 
-@Service({ id: "blog-service" })
+@Service()
 export class BlogService extends BaseService<Blog, IBlogRepository> implements IBlogService {
-    constructor() {
-        super(new BlogRepository())
+    constructor(
+        blogRepository: BlogRepository
+    ) {
+        super(blogRepository)
     }
 
     public async getBlogs(query: IBlogQuery): Promise<IBlogs> {

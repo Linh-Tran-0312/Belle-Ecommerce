@@ -2,15 +2,18 @@ import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tso
 import { Brand, UserRole } from "../models";
 import { BrandService, IBrandService } from "../services";
 import { ValidateBrandModel } from "../validations";
+import { Service } from "typedi";
 
-
+@Service()
 @Route("brands")
 @Tags('Product Brand')
 export class BrandController {
     private _brandService: IBrandService;
  
-    constructor() {
-        this._brandService = new BrandService();
+    constructor(
+        brandService: BrandService
+    ) {
+        this._brandService = brandService;
     }
 
     /**

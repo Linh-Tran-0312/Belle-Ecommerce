@@ -2,15 +2,18 @@ import { Body, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa
 import { UserRole } from "../models";
 import { Change, IUserQuery, IUsers, IUserWithOrders, UserField, UserService, IUserService } from "../services";
 import { ValidateUserCreateModel, ValidateUserUpdateModel } from "../validations";
+import { Service } from "typedi";
 
- 
+@Service()
 @Route("users")
 @Tags('User')
 export class UserController {
     private _userService: IUserService;
 
-    constructor() {
-        this._userService = new UserService();
+    constructor(
+        userService: UserService
+    ) {
+        this._userService = userService;
     }
     /**
      * Get all users

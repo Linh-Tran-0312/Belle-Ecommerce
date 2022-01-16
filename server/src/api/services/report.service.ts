@@ -4,6 +4,7 @@ import { OperationalError, OperationalErrorMessage } from "../helpers/Operationa
 import { daysInMonth, displayTime, getDay, getMonth, Period, periodCal, regYear, regYearMonth, timeCal } from "../helpers/timeHandler";
 import { Order, Status } from "../models";
 import { OrderRepository, UserRepository, IOrderRepository, IUserRepository } from "../repositories";
+import { Service } from "typedi";
 
 export interface IOverviewReport {
     sales: number,
@@ -38,13 +39,17 @@ export interface IReportService {
     getTopProductsReport(timeStr: string, queryStr: { page: number, limit: number }): Promise<IProductReports>
 }
 
+@Service()
 export class ReportService implements IReportService {
     private userRepo: IUserRepository;
     private orderRepo: IOrderRepository;
 
-    constructor() {
-        this.userRepo = new UserRepository();
-        this.orderRepo = new OrderRepository();
+    constructor(
+     userRepo: UserRepository,
+     orderRepo: OrderRepository
+    ) {
+        this.userRepo = userRepo;
+        this.orderRepo = orderRepo;
     }
 
     public async getOverviewReport(): Promise<IOverviewReport> {

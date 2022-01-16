@@ -3,16 +3,20 @@ import { IProductInfo, IVariantInfo } from "../mappers";
 import { UserRole } from "../models";
 import { Change, IProductQuery, IProducts, IProductService, IProductVariantService, ProductField, ProductService, ProductVariantService } from "../services";
 import { ValidateProductModel, ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
+import { Service } from "typedi";
 
-
+@Service()
 @Route("products")
 @Tags('Product')
 export class ProductController {
     private _productService: IProductService;
     private _productVariantService: IProductVariantService;
-    constructor() {
-        this._productService = new ProductService();
-        this._productVariantService = new ProductVariantService();
+    constructor(
+        productService: ProductService,
+        productVariantService: ProductVariantService
+    ) {
+        this._productService =  productService;
+        this._productVariantService = productVariantService;
     }
 
     /**

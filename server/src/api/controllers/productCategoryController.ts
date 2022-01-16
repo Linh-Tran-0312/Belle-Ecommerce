@@ -2,15 +2,18 @@ import { Body, Delete, Get, Patch, Path, Post, Route, Security, Tags } from "tso
 import { ProductCategory, UserRole } from "../models";
 import { IProductCategoryService, ProductCategoryService } from "../services";
 import { ValidateCategoryModel } from "../validations";
+import { Service } from "typedi";
 
-
+@Service()
 @Route("product-categories")
 @Tags('Product Category')
 export class ProductCategoryController {
     private _productCategoryService: IProductCategoryService;
 
-    constructor() {
-        this._productCategoryService = new ProductCategoryService();
+    constructor(
+        productCategoryService: ProductCategoryService
+    ) {
+        this._productCategoryService = productCategoryService;
     }
 
     /**

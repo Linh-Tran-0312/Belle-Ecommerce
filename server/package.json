@@ -47,7 +47,8 @@
     "ts-node": "^10.2.1",
     "tsoa": "^3.14.1",
     "typedi": "^0.10.0",
-    "typeorm": "^0.2.37"
+    "typeorm": "^0.2.37",
+    "winston": "^3.4.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",

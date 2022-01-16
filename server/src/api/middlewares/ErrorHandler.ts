@@ -5,6 +5,7 @@ import { PostgresError } from "../helpers/PostgresError";
 import { PostgresErrorCode } from "../helpers/PostgresCode";
 import { TokenError } from "../helpers/TokenError";
 import { ValidateError } from "tsoa";
+import { Logger } from  "../../config";
 interface IError {
     status?: number;
     message?: string;
@@ -25,6 +26,10 @@ const getErrorBody = (err: unknown) => {
 export function errorHandler(err: IError, _req: express.Request, res: express.Response, next: express.NextFunction) {
     if(res.headersSent) return next(err);
     const body = getErrorBody(err);
-    console.log(err)
+    if(body.status === HttpCode.INTERNAL_SERVER_ERROR) {
+        Logger.error(err)
+    } else {
+        Logger.warn(body.message)
+    }
     res.status(body.status).json(body)
 }

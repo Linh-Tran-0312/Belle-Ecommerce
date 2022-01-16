@@ -4,15 +4,19 @@ import { ProductVariant } from "../models";
 import { IProductVariantRepository, ProductVariantRepository } from "../repositories";
 import { ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
 import { BaseService, IBaseService } from "./base.service";
+import { Service } from "typedi";
 
 export interface IProductVariantService extends IBaseService<ProductVariant> {
     createProductVariant(data: ValidateVariantCreateModel): Promise<IVariantInfo>;
     updateProductVariant(id: number, data:ValidateVariantUpdateModel ): Promise<IVariantInfo>
-}
-//@Service({ id: "OrderRepository-service"})
+};
+
+@Service()
 export class ProductVariantService extends BaseService<ProductVariant, IProductVariantRepository> implements IProductVariantService  {
-    constructor() {
-        super(new ProductVariantRepository())
+    constructor(
+        productVariantRepo: ProductVariantRepository
+    ) {
+        super(productVariantRepo)
     }
 
     public async getVariantById(id: number): Promise<IVariantInfo> {

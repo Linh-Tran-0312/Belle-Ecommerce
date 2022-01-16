@@ -12,10 +12,12 @@ export interface IBlogCommentService extends IBaseService<BlogComment> {
     getCommentsOfBlog(blogId: number, query: IBlogCommentQuery): Promise<BlogComment[]>
 }
 
-@Service({ id: "blogComment-service"})
+@Service()
 export class BlogCommentService extends BaseService<BlogComment, IBlogCommentRepository> implements IBlogCommentService  {
-    constructor() {
-        super(new BlogCommentRepository())
+    constructor(
+        blogCommentRepository: BlogCommentRepository
+    ) {
+        super(blogCommentRepository)
     }
     async getCommentsOfBlog(blogId: number, query: IBlogCommentQuery): Promise<BlogComment[]> {
         const result = await this.repository.getCommentsWithUser(blogId, query);

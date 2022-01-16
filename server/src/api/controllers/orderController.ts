@@ -3,15 +3,18 @@ import { Period } from "../helpers/timeHandler";
 import {  Status, UserRole } from "../models";
 import {  IOrders,Change, IOrderQuery, IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService, IOrderInfo, IOrderBasicProps } from "../services";
 import { ValidateOrderCreateModel, ValidateOrderDetailModel,ValidateOrderBasicProps, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
- 
+import { Service } from "typedi";
 
+@Service()
 @Route("orders")
 @Tags('Order')
 export class OrderController {
     private _orderService: IOrderService;
 
-    constructor() {
-        this._orderService = new OrderService();
+    constructor(
+        orderService: OrderService
+    ) {
+        this._orderService = orderService;
     }
 
     /**

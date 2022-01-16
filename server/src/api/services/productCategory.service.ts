@@ -1,12 +1,15 @@
 import { ProductCategory } from "../models";
-import { ProductCategoryRepository,IProductCategoryRepository } from "../repositories";
+import { ProductCategoryRepository,IProductCategoryRepository, ProductRepository } from "../repositories";
 import { BaseService, IBaseService } from "./base.service";
+import { Service } from "typedi";
 
 export interface IProductCategoryService extends IBaseService<ProductCategory> {}
     
-//@Service({ id: "OrderRepository-service"})
+@Service()
 export class ProductCategoryService extends BaseService<ProductCategory, IProductCategoryRepository> implements IProductCategoryService  {
-    constructor() {
-        super(new ProductCategoryRepository())
+    constructor(
+        productCategoryRepository: ProductCategoryRepository
+    ) {
+        super(productCategoryRepository)
     }
 }
