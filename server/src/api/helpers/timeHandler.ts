@@ -11,7 +11,7 @@ export enum Period {
 export const periodCal = (period: string) => {
     const now = new Date();
     const time: any = {
-        start: null,
+        start: now,
         end: now
     }
     switch(period) {
@@ -23,6 +23,7 @@ export const periodCal = (period: string) => {
             while (time.start.getDay() != 1) {
                 time.start.setDate(time.start.getDate() - 1);
             }
+            time.start.setHours(0,0,0);
             break;
         case Period.MONTH:
             time.start =  new Date(now.getFullYear(),now.getMonth(),1,0,0,0);
@@ -32,7 +33,7 @@ export const periodCal = (period: string) => {
             break;
             // default get whole year
         default:
-            time.start =  new Date(now.getFullYear(),1,1,0,0,0);
+            time.start =  new Date(now.getFullYear(),0,1,0,0,0);
             break;
         
     }

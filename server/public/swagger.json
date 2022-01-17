@@ -1128,6 +1128,11 @@
 			},
 			"ValidateProductModel": {
 				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
 					"name": {
 						"type": "string",
 						"pattern": "^(?!\\s*$).+"
@@ -1165,6 +1170,7 @@
 					}
 				},
 				"required": [
+					"id",
 					"name",
 					"categoryId",
 					"brandId",

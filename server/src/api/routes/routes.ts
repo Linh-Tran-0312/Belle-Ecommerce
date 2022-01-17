@@ -376,6 +376,7 @@ const models: TsoaRoute.Models = {
     "ValidateProductModel": {
         "dataType": "refObject",
         "properties": {
+            "id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
             "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
             "sku": {"dataType":"string"},
             "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},

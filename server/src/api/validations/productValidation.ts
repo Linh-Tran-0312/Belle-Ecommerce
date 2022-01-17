@@ -58,6 +58,11 @@ export class ValidateSizeModel  {
 }
 
 export class ValidateProductModel {
+     /**
+    * @isInt Product id must be an integer
+    * @minimum 0 Product id value must be at least 0
+    */
+    id: number;
     /**
     * @pattern ^(?!\s*$).+ Product name must not be empty
     */
@@ -86,6 +91,7 @@ export class ValidateProductModel {
     price: number;
 
     constructor(
+        id: number,
         categoryId: number,
         brandId: number,
         summary: string,
@@ -95,6 +101,7 @@ export class ValidateProductModel {
         description?: string,
         imgPaths?: Array<string>,
     ) {
+        this.id = id
         this.name = name;
         this.sku = sku;
         this.categoryId = categoryId;

@@ -87,10 +87,10 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         if (query.status !== undefined) whereCondition.status = query.status;
         if (!!query.time) {
             const time = periodCal(query.time);
+            console.log(time);
             whereCondition.orderAt = MoreThan(time.start);
         }
-        options.sort = query.sort;
-        options.change = query.change;
+        options.order[`${query.sort}`] = query.change;
         options.take = query.limit;
         options.skip = options.take * (query.page! - 1);
         if (query.search) {
