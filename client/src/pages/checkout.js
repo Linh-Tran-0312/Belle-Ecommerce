@@ -106,8 +106,7 @@ const initState = {
     address: "",
     paymentMethod: "cod",
     note: "",
-    shipping: 0,
-    total: 0,
+    shipping: 0
 }
 export default () => {
     const classes = useStyle();
@@ -120,7 +119,7 @@ export default () => {
     const loading = useSelector(state => state.order.loading);
     const orderSuccess =  useSelector(state => state.order.orderSuccess);
     const shipping = shipCal(subTotal);
-    const [ state, setState ] = useState({...initState, shipping: shipping, total: subTotal + shipping});
+    const [ state, setState ] = useState({...initState, shipping: shipping});
   
     const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
     useEffect(() => {
@@ -132,7 +131,7 @@ export default () => {
     },[location])
     
     useEffect(() => {
-       setState({...state,shipping: shipCal(subTotal), total: subTotal + shipCal(subTotal) })
+       setState({...state,shipping: shipCal(subTotal) })
     },[subTotal]);
 
     useEffect(() => {
@@ -225,12 +224,12 @@ export default () => {
                                         ))}
                                         <TableRow  >
                                             <StyledTableCell colSpan={4} component="th" align="right" scope="row">Shipping</StyledTableCell>
-                                            <StyledTableCell align="center">{state.shipping.toLocaleString()}</StyledTableCell>
+                                            <StyledTableCell align="center">{state?.shipping?.toLocaleString()}</StyledTableCell>
 
                                         </TableRow>
                                         <TableRow>
                                             <StyledTableCell colSpan={4} component="th" align="right" scope="row">Total</StyledTableCell>
-                                            <StyledTableCell align="center">{state.total.toLocaleString()}</StyledTableCell>
+                                            <StyledTableCell align="center">{subTotal?.toLocaleString()}</StyledTableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>

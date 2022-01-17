@@ -5,6 +5,7 @@ import { enqueueSnackbar } from "./notification";
 import errorHandler from "../helper/errorHandler";
 const formProduct = (formData) => {
   const body = {
+    id: formData.id,
     name: formData.name,
     categoryId: formData.categoryId,
     brandId: formData.brandId,

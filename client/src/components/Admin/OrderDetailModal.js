@@ -172,7 +172,7 @@ export default function SimpleModal({ id, role }) {
         </Grid>
         </div>)
         return (<div style={modalStyle} className={classes.paper}>
-            <Typography variant="subtitle2">Mã đơn hàng: {detail?.id}</Typography>
+            <Typography variant="subtitle2">Mã đơn hàng: {detail?.id?.toString().padStart(7,"0")}</Typography>
             <Typography variant="subtitle2">Ngày đặt hàng: {displayDDMMYYYY(detail?.orderAt)}</Typography>
 
             <Box my={2}>

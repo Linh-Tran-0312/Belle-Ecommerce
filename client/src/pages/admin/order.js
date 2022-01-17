@@ -207,7 +207,7 @@ export default function Orders() {
                     <TableBody>
                         {orders.map((row) => (
                             <TableRow key={row?.id}>
-                                <TableCell>{row?.id}</TableCell>
+                                <TableCell>{row?.id?.toString().padStart(7,"0")}</TableCell>
                                 <TableCell>{displayDDMMYYYY(row?.orderAt)}</TableCell>
                                 <TableCell>{`${row?.user?.lname} ${row?.user?.fname}`}</TableCell>
                                 <TableCell>{row?.address}</TableCell>

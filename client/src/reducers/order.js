@@ -61,7 +61,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.detailLoading = false;
             break;
         case ACTION.USER_ORDER_LOADING: 
-            draft.loading = true;
+            draft.loading = payload;
             break;
         case ACTION.USER_GET_ORDER_DETAIL_LOADING:
             draft.detailLoading = payload;

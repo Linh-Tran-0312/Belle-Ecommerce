@@ -187,7 +187,7 @@ export default () => {
                                                     {`${index + 1}`}
                                                 </TableCell>
                                                 <TableCell  >{!row.orderAt ? displayMonDDYYYY(row.orderAt) : displayMonDDYYYY(row.createdAt)}</TableCell>
-                                                <TableCell  >{row.id}</TableCell>
+                                                <TableCell  >{row.id?.toString().padStart(7,"0")}</TableCell>
                                                 <TableCell  ><OrderStatus status={row.status} /></TableCell>
                                                 <TableCell  >{row.total.toLocaleString()}</TableCell>
                                                 <TableCell  ><OrderDetail id={row.id} role="user" /></TableCell>

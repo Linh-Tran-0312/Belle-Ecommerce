@@ -73,7 +73,7 @@ const orderActions = {
     },
     placeOrder: (orderId, formData) => async(dispatch) => {
         try {
-            dispatch({ type: ACTION.USER_ORDER_LOADING});
+            dispatch({ type: ACTION.USER_ORDER_LOADING, payload: true});
             const {data} = await api.placeOrder(orderId, formData);
             dispatch({ type: ACTION.PLACE_ORDER_SUCCESS})
         } catch (error) {
@@ -81,6 +81,7 @@ const orderActions = {
         }
     },
     clearOrder: () => async(dispatch) => {
+        dispatch({ type: ACTION.USER_ORDER_LOADING, payload: false});
         dispatch({ type: ACTION.CLEAR_ORDER });
     
     }

@@ -45,7 +45,6 @@ export default (props) => {
     const [ isSignIn, setIsSignIn] = useState(true);
     const [ state, setState ] = useState(initState);
 
-    console.log(props?.location?.state?.from || "/drf");
     useEffect(() => {
         if(query.get('page') === "signin" || query.get('page') === null) {
        setIsSignIn(true)
