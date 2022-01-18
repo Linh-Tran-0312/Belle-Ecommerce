@@ -15,14 +15,14 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             break;
         case ACTION.USER_AUTH:
         if(payload?.id) {
-            localStorage.setItem("user",JSON.stringify(payload))
+           // localStorage.setItem("user",JSON.stringify(payload))
             draft.user = payload;          
             draft.error = "";
         }    
         break;
         case ACTION.UPDATE_PROFILE: 
         if(payload?.id) {
-            localStorage.setItem("user",JSON.stringify(payload))
+           // localStorage.setItem("user",JSON.stringify(payload))
             draft.user = payload;
             draft.loading = false;
             draft.error = "";
@@ -34,7 +34,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.error = "";
             break;
         case ACTION.USER_LOGOUT:
-            localStorage.removeItem("user");
+           // localStorage.removeItem("user");
             draft.user = {};
             draft.orders = [];
             break;
@@ -46,8 +46,8 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.error = payload;
             break;
         case ACTION.CLEAR_PROFILE_LOCAL:
-            localStorage.removeItem("user");
-            localStorage.removeItem("admin");
+           // localStorage.removeItem("user");
+            //localStorage.removeItem("admin");
             break;
         default:
             break;

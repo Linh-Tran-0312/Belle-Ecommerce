@@ -13,7 +13,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
 import adminAuthActions from '../../actions/adminAuth';
 import blogActions from "../../actions/adminBlog";
@@ -128,7 +128,9 @@ export default function AdminPage() {
   const [ page, setPage ] = useState(AdminPath.DASHBOARD);
   const [ title, setTitle] = useState("DASHBOARD");
   const query = useQuery();
- const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
+
+  const admin = useSelector(state => state.adminAuth.admin)
+ //const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
 
   useEffect(() => {
     dispatch(productActions.getProductBrands());
@@ -136,6 +138,7 @@ export default function AdminPage() {
     dispatch(productActions.getProductColors());
     dispatch(productActions.getProductSizes());
     dispatch(blogActions.getBlogCategories());
+    dispatch(adminAuthActions.getProfile());
   },[])
   useEffect(() => {
 
@@ -148,7 +151,7 @@ export default function AdminPage() {
       }
       topPage?.current?.scrollIntoView();
    
-    setAdmin(JSON.parse(localStorage.getItem('admin')));
+    //setAdmin(JSON.parse(localStorage.getItem('admin')));
   },[location]);
 
   const handleDrawerOpen = () => {

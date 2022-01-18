@@ -107,7 +107,7 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
           >
-           { loading ? <CircularProgress color="primary" size={23}/> : "Sign In"} 
+           { loading ? <CircularProgress color="primary" size={25}/> : "Sign In"} 
           </Button>
         </form>
       </div>

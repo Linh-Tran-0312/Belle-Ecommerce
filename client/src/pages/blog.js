@@ -36,7 +36,7 @@ export default () => {
     }
     if(!blog?.id) return <Loader />
     return (
-        <Layout>
+        <>
             <div className="breadCrumbs">
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
@@ -112,6 +112,6 @@ export default () => {
                         </Grid>
                     </Grid>
                 </Box>
-        </Layout>
+        </>
     )
 }

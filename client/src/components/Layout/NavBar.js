@@ -189,9 +189,11 @@ export default function NarBar() {
                     {
                         !page && <CartPopover />
                     }
-                    <IconButton color="inherit">
-                        <AccountCircleOutlinedIcon />
-                    </IconButton>
+                     <RouterLink to="/user" className={logoLink} >
+                            <IconButton color="inherit">
+                                <AccountCircleOutlinedIcon />
+                            </IconButton>
+                        </RouterLink>
                 </div>
             </Toolbar>
         );

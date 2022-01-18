@@ -14,6 +14,7 @@ const userRoutes = [
         component: lazy(() => import("../../pages/checkout"))
     }
 ];
+ 
 const adminRoutes = [
     {
         path: "/admin",
@@ -22,6 +23,13 @@ const adminRoutes = [
         component: lazy(() => import("../../pages/admin/index"))
     }
 ];
+
+const adminPublicRoute = {
+    path: "/admin/login",
+    exact: true,
+    label: "Admin Auth",
+    component: lazy(() => import("../../pages/admin/login"))
+}
 const publicRoutes = [
     {
         path: "/",
@@ -72,12 +80,6 @@ const publicRoutes = [
         component: lazy(() => import("../../pages/auth"))
     },
     {
-        path: "/admin/login",
-        exact: true,
-        label: "Admin Auth",
-        component: lazy(() => import("../../pages/admin/login"))
-    },
-    {
         path: "*",
         exact: true,
         label: "Error Page",
@@ -90,5 +92,5 @@ const publicRoutes = [
         component: lazy(() => import("../../pages/404page"))
     }
 ]
-
-export default { userRoutes, adminRoutes, publicRoutes}
+ 
+export default { userRoutes, adminRoutes, publicRoutes,adminPublicRoute }

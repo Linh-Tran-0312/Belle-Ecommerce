@@ -36,6 +36,7 @@ API.interceptors.response.use((response) => {
             console.log("No token provided")
             store.dispatch({ type: ACTION.ADMIN_LOGOUT});
             store.dispatch({ type: ACTION.USER_LOGOUT});
+            store.dispatch({ type: ACTION.CLEAR_ORDER})
         }   
       return Promise.reject(error);
        

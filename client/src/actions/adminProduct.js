@@ -255,6 +255,7 @@ const productActions = {
     try {
       dispatch({ type: ACTION.PRODUCT_LOADING, payload: true});
       const body = formProduct(formData);
+      delete body.id;
       const { data } = await api.createProduct(body);
       dispatch(enqueueSnackbar(MSG.C_PRODUCT, SnackBar.SUCCESS))
       dispatch({ type: ACTION.CREATE_PRODUCT, payload: data })

@@ -1,4 +1,4 @@
-import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Box, Container, Grid, Typography } from '@material-ui/core';
 import { convertFromRaw } from "draft-js";
 import { Parallax } from "react-parallax";
 import { useSelector } from 'react-redux';
@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import '../App.css';
 import Banner from '../components/Banner/Banner';
 import CollectionSwiper from '../components/CategorySwiper';
-import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
 import { displayMonDDYYYY } from '../helper/handleTime';
 
@@ -16,68 +15,15 @@ const insideStyles = {
     justifyContent: 'center',
     alignItems: 'center'
 };
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: '0px 5px',
-        display: 'flex',
-        alignItems: 'center',
 
-        [theme.breakpoints.down('sm')]: {
-            height: 35,
-        },
-    },
-    input: {
-       
-        flex: 1,
-        height: 40,
-        borderRadius: 0,
-        boxShadow: 'none',
-        border: '1px solid rgb(168, 165, 165)',
-        paddingLeft: 20,
-        backgroundColor: "white"
-    },
-    iconButton: {
-        padding: 10,
-    },
-    label: {
-        fontFamily: "Poppins,Helvetica,Tahoma,Arial,sans-serif",
-        fontSize: "1.29231em",
-        fontWeight: 400,
-        letterSpacing: "0.03em",
-        "& span": {
-            display: "block",
-            fontSize: 13,
-            texAlign: "left",
-        },
-    },
-    subscribeBox : {
-        backgroundColor: "#f9f9f9",
-        borderTop: "1px solid #e8e9eb"
-    },
-    icons : {
-         
-        [theme.breakpoints.up("md")] : {
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: 'center'
-        },
-        [theme.breakpoints.down("md")] : {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: 'center'
-        },
-    }
-
-}))
 const HomePage = () => {
-    const classes = useStyles()
-    const productCategories = useSelector(state => state.home).productCategories;
-    const newArrivals = useSelector(state => state.home).newArrivals;
-    const latestBlogs = useSelector(state => state.home).latestBlogs;
+
+    const productCategories = useSelector(state => state.home.productCategories);
+    const newArrivals = useSelector(state => state.home.newArrivals);
+    const latestBlogs = useSelector(state => state.home.latestBlogs);
 
     return (
-        <>
-            <Layout>
+        <>    
                 <Banner />
                 <Box textAlign="center" mt={5} style={{ marginTop: 80 }}>
                     <Box my={4}>
@@ -159,8 +105,7 @@ const HomePage = () => {
                     </Container>
                     </Box>
                     
-                </Box>
-            </Layout>
+                </Box>           
         </>
     )
 }

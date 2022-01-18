@@ -11,12 +11,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../App.css';
 import BlackButton from '../components/BlackButton';
-import Layout from '../components/Layout';
 import Map from '../components/Map';
 const ContactPage = () => {
-    return(
- 
-        <Layout>
+    return( 
+        <>
              <div className="breadCrumbs" style={{ marginBottom: 0}}>
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
@@ -109,7 +107,7 @@ const ContactPage = () => {
                 </Grid>
             </Grid>
             </Box>
-           </Layout>
+        </>
     )
         
 }

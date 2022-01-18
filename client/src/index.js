@@ -6,7 +6,6 @@ import thunk from "redux-thunk";
 import { Provider } from "react-redux";
 import { appReducer } from './reducers';
 
-import { SnackbarProvider } from 'notistack';
 export const store = createStore(appReducer, compose(applyMiddleware(thunk)));
 
 

@@ -219,9 +219,17 @@ export default () => {
                     </Grid>
                 </Grid>
             </Box>
-            <Box my={5}  >
-                <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
-            </Box>
+            <Box px={2} pt={4} pb={3}>
+                <Grid container direction="row" justifyContent="space-between" >
+                        <Grid item>
+                            <Typography variant="subtitle2">Show { users.length > 5 ? "5" : users.length} of {userTotal} users</Typography>
+                        </Grid>
+                        <Grid item>
+                        <Pagination count={pageCount} page={filter.page} onChange={handleChangePage} />
+                        </Grid>
+                    </Grid>                  
+                </Box>
+
             <Divider />
             {
                 showUser && (

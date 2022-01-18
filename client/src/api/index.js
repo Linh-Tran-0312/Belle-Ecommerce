@@ -61,9 +61,12 @@ const api = {
     updateUser: (id, formData) => API.patch(`/users/${id}`, formData),
 
     //------------------------AUTHORIZATION API----------------------------
-    register: (formData) => API.post("/auth/register", formData),
-    login: (formData) => API.post("/auth/login", formData),
+    register: (formData) => API.post("/auth/user/register", formData),
+    login: (formData) => API.post("/auth/user/login", formData),
     adminLogin: (formData) => API.post("/auth/admin/login", formData),
+    logout: () => API.get("/auth/logout"),
+    getAdminProfile: () => API.get("/auth/admin"),
+    getUserProfile: () => API.get("/auth/user"),
 
     //------------------------ORDER API----------------------------
     getOrders: (queryString) => API.get(`/orders?${queryString}`),

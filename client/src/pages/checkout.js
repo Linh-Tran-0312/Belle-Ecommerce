@@ -113,22 +113,23 @@ export default () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const location = useLocation();
-    const items = useSelector(state => state.order).items;
-    const orderId = useSelector(state => state.order).orderId;
-    const subTotal = useSelector(state => state.order).subTotal;
+
+    const items = useSelector(state => state.order.items);
+    const orderId = useSelector(state => state.order.orderId);
+    const subTotal = useSelector(state => state.order.subTotal);
     const loading = useSelector(state => state.order.loading);
     const orderSuccess =  useSelector(state => state.order.orderSuccess);
+    const user = useSelector(state => state.userAuth.user);
+    
     const shipping = shipCal(subTotal);
     const [ state, setState ] = useState({...initState, shipping: shipping});
-  
-    const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
+    
+    //const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
+
     useEffect(() => {
         setState({...state, address: user?.address})
     },[user])
 
-    useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem('user')))
-    },[location])
     
     useEffect(() => {
        setState({...state,shipping: shipCal(subTotal) })
@@ -151,7 +152,7 @@ export default () => {
     }
     if(items?.length == 0 ) return <Redirect to="/cart" />
     return (
-        <Layout>
+        <>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
@@ -311,6 +312,6 @@ export default () => {
                   </Grid>
                   </form>
             </Box>
-        </Layout>
+        </>
     )
 }

@@ -9,7 +9,7 @@ import Layout from "../components/Layout";
 export default () => {
  
     return (
-        <Layout>
+        <>
             <Box sx={{ display: 'flex', flexDirection: 'column',justifyContent: 'center', alignItems: 'center', width: '100%', height: '90vh'}}>
                 <p className="fontRoSlab" style={{ fontSize: '5vw', fontWeight: 'bold'}}>404 PAGE NOT FOUND</p>
                 <Box my={1}>
@@ -20,6 +20,6 @@ export default () => {
                 </Box>
             </Box>
 
-        </Layout>
+        </>
     )
 }

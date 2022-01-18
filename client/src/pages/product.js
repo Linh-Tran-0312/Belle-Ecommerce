@@ -15,14 +15,13 @@ import StarIcon from '@material-ui/icons/Star';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useParams , useHistory} from "react-router-dom";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import orderActions from "../actions/order";
 import shopActions from "../actions/shop";
 import '../App.css';
 import BlackButton from '../components/BlackButton';
 import Comment from '../components/Comment';
 import CommentForm from '../components/CommentForm';
-import Layout from "../components/Layout";
 import Loader from '../components/Loader';
 import ProductImage from "../components/ProductImage";
 import QtyButton from '../components/QtyButton';
@@ -94,10 +93,10 @@ const ProductPage = () => {
     const [ item, setItem ] = useState("");
     const [ qty, setQty ] = useState(1);
 
-   // const user = useSelector(state => state.userAuth).user;
-   const user = JSON.parse(localStorage.getItem('user'));
-    const orderId = useSelector(state => state.order).orderId;
-     const product = useSelector(state => state.shop).product;
+    const user = useSelector(state => state.userAuth.user);
+   //const user = JSON.parse(localStorage.getItem('user'));
+    const orderId = useSelector(state => state.order.orderId);
+     const product = useSelector(state => state.shop.product);
 
      const reviews = useSelector(state => state.shop.reviews);
      const reviewCount = useSelector(state => state.shop.reviewCount);
@@ -158,7 +157,7 @@ const ProductPage = () => {
     }
     if(!product?.id) return <Loader />
     return (
-        <Layout>
+        <>
            {/*  Breadcrumbs section */}
             <div className="breadCrumbs">
                 <Box px={3} py={1}>
@@ -382,7 +381,7 @@ const ProductPage = () => {
                    </Container>
                 </TabPanel>
             </Container>
-        </Layout>
+        </>
     )
 }
 

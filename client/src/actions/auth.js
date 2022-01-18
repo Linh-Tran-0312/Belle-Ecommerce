@@ -66,9 +66,23 @@ const authActions = {
     },
   
     logout: (history) => async(dispatch) => {
-         dispatch({type: ACTION.USER_LOGOUT})
-         dispatch({type: ACTION.CLEAR_ORDER});
-         history.push("/");
+        try {
+            await api.logout();
+            dispatch({type: ACTION.USER_LOGOUT})
+            dispatch({type: ACTION.CLEAR_ORDER});
+            history.push("/");
+        } catch (error) {
+            
+        }
+        
+    },
+    getProfile: () => async(dispatch) => {
+        try {
+            const { data } = await api.getUserProfile();
+            dispatch({type: ACTION.USER_INIT, payload: data})
+        } catch (error) {
+            
+        }
     },
     updateProfile: (userId, formData) => async(dispatch) => {
         try {

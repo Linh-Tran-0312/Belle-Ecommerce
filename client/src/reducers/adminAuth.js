@@ -14,7 +14,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             break;
         case ACTION.ADMIN_AUTH: 
         if(payload?.id) {
-            localStorage.setItem("admin",JSON.stringify(payload))
+           // localStorage.setItem("admin",JSON.stringify(payload))
             draft.admin = payload;
   
         } 
@@ -25,7 +25,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
             draft.admin = {};
             draft.error =  "";
             draft.loading = false;
-            localStorage.removeItem("admin");
+            //localStorage.removeItem("admin");
             break;
         case ACTION.ADMIN_AUTH_LOADING: 
             draft.error =  "";

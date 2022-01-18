@@ -138,7 +138,7 @@ const BlogsPage = () => {
         setPageCount(value);
     };
     return (
-        <Layout>
+        <>
             <div className="breadCrumbs">
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
@@ -241,7 +241,7 @@ const BlogsPage = () => {
                     </Grid>
                 </Grid>
             </Box>
-        </Layout>
+        </>
     )
 }
 export default BlogsPage;

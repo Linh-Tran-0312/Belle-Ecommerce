@@ -66,7 +66,7 @@ export default (props) => {
        }
    }
     return (
-        <Layout>
+        <>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
@@ -124,6 +124,6 @@ export default (props) => {
 
             </Container>
 
-        </Layout>
+        </>
     )
 }

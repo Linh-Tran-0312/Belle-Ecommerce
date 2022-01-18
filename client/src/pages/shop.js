@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import shopActions from "../actions/shop";
 import Banner from '../components/Banner/Banner';
-import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
 import { useQuery } from "../helper/customHook";
 import handlePriceRange from "../helper/handlePriceRange";
@@ -119,13 +118,11 @@ const ShopPage = () => {
     const dispatch = useDispatch();
     const location = useLocation()
     const query = useQuery();
-    const categories = useSelector(state => state.home).productCategories;
-    const brands = useSelector(state => state.home).productBrands;
-    const products = useSelector(state => state.shop).products;
-    const total = useSelector(state => state.shop).total;  
+    const categories = useSelector(state => state.home.productCategories);
+    const brands = useSelector(state => state.home.productBrands);
+    const products = useSelector(state => state.shop.products);
+    const total = useSelector(state => state.shop.total);  
   
-
-
     const [pageCount, setPageCount] = React.useState(1);
     const [filter, setFilter] = useState(initFilter);
     const [price, setPrice] = React.useState([0, 10000000]);
@@ -166,8 +163,7 @@ const ShopPage = () => {
         setFilter({...filter, page: value});
     };
     return (
-        <>
-            <Layout>
+            <>
                 <Banner />
                 <Box my={5} textAlign="center">
                     <Box my={5} textAlign="center">
@@ -319,9 +315,7 @@ const ShopPage = () => {
                     </Box>
                   
                 </Box>
-            </Layout>
-
-        </>
+            </>
     )
 
 }

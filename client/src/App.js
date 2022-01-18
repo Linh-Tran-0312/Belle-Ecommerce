@@ -5,6 +5,7 @@ import { SnackbarProvider } from 'notistack';
 import React, { Suspense, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import homeActions from "./actions/home";
+import userAuthActions from "./actions/auth";
 import './App.css';
 import Loader from "./components/Loader";
 import Routes from "./components/Route";
@@ -29,6 +30,7 @@ const App = () => {
         dispatch(homeActions.getNewArrivals());
         dispatch(homeActions.getLatestBlogs());
         dispatch(homeActions.getBlogCategories());
+        dispatch(userAuthActions.getProfile())
     }, [])
 
     return (<SnackbarProvider

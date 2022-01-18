@@ -16,7 +16,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import authActions from '../actions/auth';
 import "../App.css";
 import OrderDetail from "../components/Admin/OrderDetailModal";
-import Layout from "../components/Layout";
 import OrderStatus from '../components/OrderStatus';
 import { displayMonDDYYYY } from "../helper/handleTime";
 function TabPanel(props) {
@@ -64,19 +63,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default () => {
-    //const userDetail = useSelector(state => state.auth).user;
-    const orders = useSelector(state => state.userAuth).orders;
+
+    const orders = useSelector(state => state.userAuth.orders);
     const history = useHistory();
     const location = useLocation();
     const classes = useStyles();
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+    const [profile, setProfile] = useState({});
+    const user = useSelector(state => state.userAuth.user);
     const dispatch = useDispatch();
     useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem('user')));
+        setProfile(user);
         if (user?.id) {
             dispatch(authActions.getOrdersByUserId(user.id))
         }
-    }, [location]);
+    }, [location, user]);
+
     const [value, setValue] = useState(0);
 
     const handleChangeTab = (event, newValue) => {
@@ -84,12 +85,12 @@ export default () => {
     };
 
     const handleChange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value })
+        setProfile({ ...user, [e.target.name]: e.target.value })
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (user.id) {
-            dispatch(authActions.updateProfile(user.id, { ...user }));
+        if (profile?.id) {
+            dispatch(authActions.updateProfile(profile?.id, { ...user }));
         }
     }
     const handleLogout = (e) => {
@@ -97,7 +98,7 @@ export default () => {
     }
 
     return (
-        <Layout>
+        <>
             <div className="breadCrumbs" style={{ marginBottom: 0 }}>
                 <div className="pageTitle">
                     <Box textAlign="center" py={1}>
@@ -105,7 +106,7 @@ export default () => {
                     </Box>
                 </div>
             </div>
-            <Box maxWidth={1} my={5} mx={5}>
+            <Box maxWidth={1} my={5} >
                 <div className={classes.root}>
                     <AppBar position="static" color="transparent">
                         <Tabs
@@ -131,20 +132,20 @@ export default () => {
                         </Box>
                         <form onSubmit={handleSubmit}>
                             <Grid container spacing={2}>
-                                <Grid item xs={6}>
-                                    <TextField fullWidth name="fname" required value={user.fname} onChange={handleChange} label="First Name" />
+                                <Grid item sm={6} xs={12}>
+                                    <TextField fullWidth name="fname" required value={profile?.fname} onChange={handleChange} label="First Name" />
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <TextField fullWidth name="lname" required value={user.lname} onChange={handleChange} label="Last Name" />
+                                <Grid item sm={6} xs={12}>
+                                    <TextField fullWidth name="lname" required value={profile?.lname} onChange={handleChange} label="Last Name" />
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <TextField fullWidth name="email" required value={user.email} disabled onChange={handleChange} label="Email" />
+                                <Grid item sm={6} xs={12}>
+                                    <TextField fullWidth name="email" required value={profile?.email} disabled onChange={handleChange} label="Email" />
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <TextField fullWidth name="phone" required value={user.phone} onChange={handleChange} label="Phone Number" />
+                                <Grid item sm={6} xs={12}>
+                                    <TextField fullWidth name="phone" required value={profile?.phone} onChange={handleChange} label="Phone Number" />
                                 </Grid>
                                 <Grid item xs={12} >
-                                    <TextField fullWidth name="address" required value={user.address} onChange={handleChange} label="Address" />
+                                    <TextField fullWidth name="address" required value={profile?.address} onChange={handleChange} label="Address" />
                                 </Grid>
                                 <Grid item container spacing={2} >
                                     <Grid item xs={6}>
@@ -209,6 +210,6 @@ export default () => {
 
                 </div>
             </Box>
-        </Layout>
+        </>
     )
 }
