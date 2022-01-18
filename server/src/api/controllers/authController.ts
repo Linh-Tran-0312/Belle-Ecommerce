@@ -1,9 +1,10 @@
 import express from "express";
-import { Body, Controller, Get, Post, Request, Route, Tags } from "tsoa";
+import { Body, Controller, Get, Post, Request, Route, Tags,Res, TsoaResponse } from "tsoa";
 import { IUserAuth } from "../mappers";
 import { AuthService, IRefreshMessage, IAuthService } from "../services";
 import { ValidateLoginModel, ValidateUserCreateModel } from "../validations";
 import { Service } from "typedi";
+import { UserRole } from "../models";
 
 @Service()
 @Route("auth")
@@ -19,10 +20,19 @@ export class AuthController extends Controller {
     this._authService = authService;
   }
 
+   /**
+   * Allow user get their profile if token in cookie is still valid
+   */
+  @Get("/user")
+  public async getUserProfile(@Request() req: express.Request): Promise<IUserAuth|null> {
+        const token = req.cookies.token;
+        const profile = await this._authService.getProfile([UserRole.CUSTOMER], token);
+        return profile
+  }
   /**
    * Allow new users create their accounts
    */
-  @Post("/register")
+  @Post("/user/register")
   public async register(@Body() data: ValidateUserCreateModel): Promise<IUserAuth> {
     const result = await this._authService.register(data);
     this.setCookies({
@@ -44,7 +54,7 @@ export class AuthController extends Controller {
   /**
    * Allow customers login with their email and password
    */
-  @Post("/login")
+  @Post("/user/login")
   public async login(@Body() data: ValidateLoginModel): Promise<IUserAuth> {
     const result = await this._authService.login(data.email, data.password);
     this.setCookies({
@@ -62,6 +72,17 @@ export class AuthController extends Controller {
       }
     });
     return result.profile
+  }
+
+  /**
+   * Allow admin and editor get their profile if token in cookie is still valid
+   */
+  @Get("/admin")
+  public async getAdminProfile(@Request() req: express.Request ): Promise<IUserAuth|null> {
+        const token = req.cookies.token;
+        const profile = await this._authService.getProfile([UserRole.ADMIN, UserRole.EDITOR], token);
+         return profile;
+        
   }
   /**
  * Allow admin and editors login with their email and password
@@ -84,7 +105,6 @@ export class AuthController extends Controller {
       }
     });
     return result.profile
-
   }
   /**
    * Refresh expired access token
@@ -103,7 +123,27 @@ export class AuthController extends Controller {
     })
     return { message: "Refresh access token successfully" }
   }
-
+  /**
+ * Allow users logout (clear tokens in cookies)
+ */
+   @Get("logout")
+   public async logout(): Promise<void> {
+     this.setCookies({
+       token: {
+         value: "",
+         options: {
+           httpOnly: true
+         }
+       },
+       refreshToken: {
+         value: "",
+         options: {
+           httpOnly: true
+         }
+       }
+     });
+      
+   }
   private setCookies(cookies: any) {
     this.cookies = cookies;
   }

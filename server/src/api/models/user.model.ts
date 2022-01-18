@@ -5,14 +5,12 @@ import { CustomBaseEntity } from "./base.model";
 import { Order } from "./order.model";
 
 export enum UserRole {
-    ALL = "all",
     ADMIN = 'admin',
     EDITOR = 'editor',
     CUSTOMER = 'customer'
 };
 
  
-
 @Entity()
 export class User extends CustomBaseEntity {
 

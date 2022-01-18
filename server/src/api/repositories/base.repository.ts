@@ -1,5 +1,4 @@
-import { UpdateResult, Repository, FindManyOptions, FindOneOptions } from "typeorm";
-import { CustomBaseEntity, IBaseEntity } from "../models/base.model";
+import { FindManyOptions, FindOneOptions, Repository } from "typeorm";
 import { PostgresError } from "../helpers/PostgresError";
 
 export interface IBaseRepository<T> {

@@ -1,5 +1,5 @@
 
-import { PaymentMethod } from "../models";
+import { PaymentMethod, Status } from "../models";
 export class ValidateOrderDetailModel {
     /**
      * @isInt
@@ -28,9 +28,14 @@ export class ValidateOrderDetailModel {
         this.orderId = orderId
     }
 }
-export class ValidateOrderBasicProps {
+export class ValidateOrderStatusModel {
+    paymentMethod!: PaymentMethod;
+    paymentCheck!: boolean;
+    status!: Status 
+}
+export class ValidateOrderPlacementModel{
      /**
-    * @pattern ^(?!\s*$).+ Address must not be emplty
+    * @pattern ^(?!\s*$).+ Address must not be empty
     */
     address: string;
     paymentMethod: PaymentMethod;

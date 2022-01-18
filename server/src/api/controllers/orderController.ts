@@ -1,9 +1,9 @@
-import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags, Example } from "tsoa";
-import { Period } from "../helpers/timeHandler";
-import {  Status, UserRole } from "../models";
-import {  IOrders,Change, IOrderQuery, IOrderDetailService,  OrderDetailService, OrderField, OrderService,IOrderService, IOrderInfo, IOrderBasicProps } from "../services";
-import { ValidateOrderCreateModel, ValidateOrderDetailModel,ValidateOrderBasicProps, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
+import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } from "tsoa";
 import { Service } from "typedi";
+import { Period } from "../helpers/timeHandler";
+import { Status, UserRole } from "../models";
+import { Change, IOrderBasicProps, IOrderInfo, IOrderQuery, IOrders, IOrderService, OrderField, OrderService } from "../services";
+import { ValidateOrderPlacementModel,ValidateOrderStatusModel, ValidateOrderCreateModel, ValidateOrderDetailModel, ValidateOrderUpdateModel, ValidateUpdateQuantityModel } from "../validations";
 
 @Service()
 @Route("orders")
@@ -115,7 +115,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/updateStatus")
-    public async updateOrderStatus(@Path() orderId: number, @Body() data: ValidateOrderBasicProps): Promise<IOrderInfo> {
+    public async updateOrderStatus(@Path() orderId: number, @Body() data: ValidateOrderStatusModel): Promise<IOrderInfo> {
         return this._orderService.updateOrderStatus(orderId, data)
     }
     /**
@@ -126,7 +126,7 @@ export class OrderController {
     */
     @Security("jwt", [UserRole.ADMIN, UserRole.CUSTOMER, UserRole.EDITOR])
     @Patch("/:orderId/place")
-    public async placeOrder(@Path() orderId: number, @Body() data: ValidateOrderBasicProps): Promise<IOrderInfo> {
+    public async placeOrder(@Path() orderId: number, @Body() data: ValidateOrderPlacementModel): Promise<IOrderInfo> {
         return this._orderService.placeOrder(orderId, data)
     }
     /**

@@ -1,5 +1,5 @@
 export { ValidateLoginModel, ValidateUserCreateModel,ValidateUserUpdateModel } from "./authValidation";
 export { ValidateBlogCateModel, ValidateBlogModel } from "./blogValidation";
 export { ValidateReviewModel } from "./reviewValidation";
-export { ValidateOrderCreateModel, ValidateOrderDetailModel, ValidateOrderBasicProps, ValidateOrderUpdateModel,ValidateUpdateQuantityModel } from "./orderValidation";
-export { ValidateSizeModel, ValidateProductModel, ValidateBrandModel, ValidateColorModel, ValidateVariantCreateModel,ValidateVariantUpdateModel, ValidateCategoryModel } from "./productValidation";
+export { ValidateOrderCreateModel, ValidateOrderDetailModel,ValidateOrderStatusModel,ValidateOrderPlacementModel, ValidateOrderUpdateModel,ValidateUpdateQuantityModel } from "./orderValidation";
+export { ValidateSizeModel, ValidateProductCreateModel, ValidateProductUpdateModel, ValidateBrandModel, ValidateColorModel, ValidateVariantCreateModel,ValidateVariantUpdateModel, ValidateCategoryModel } from "./productValidation";

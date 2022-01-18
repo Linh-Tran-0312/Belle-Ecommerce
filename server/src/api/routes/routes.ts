@@ -73,7 +73,7 @@ const models: TsoaRoute.Models = {
     },
     "UserRole": {
         "dataType": "refEnum",
-        "enums": ["all","admin","editor","customer"],
+        "enums": ["admin","editor","customer"],
     },
     "IUserAuth": {
         "dataType": "refObject",
@@ -156,10 +156,19 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "ValidateOrderBasicProps": {
+    "ValidateOrderStatusModel": {
         "dataType": "refObject",
         "properties": {
-            "address": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Address must not be emplty","value":"^(?!\\s*$).+"}}},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "status": {"ref":"Status","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderPlacementModel": {
+        "dataType": "refObject",
+        "properties": {
+            "address": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Address must not be empty","value":"^(?!\\s*$).+"}}},
             "paymentMethod": {"ref":"PaymentMethod","required":true},
             "paymentCheck": {"dataType":"boolean"},
             "note": {"dataType":"string"},
@@ -373,10 +382,9 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "ValidateProductModel": {
+    "ValidateProductCreateModel": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
             "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
             "sku": {"dataType":"string"},
             "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
@@ -385,6 +393,21 @@ const models: TsoaRoute.Models = {
             "summary": {"dataType":"string"},
             "description": {"dataType":"string"},
             "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateProductUpdateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
+            "sku": {"dataType":"string"},
+            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
+            "brandId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id value must be at least 0","value":0}}},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"validators":{"minItems":{"value":0}}},
+            "summary": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
+            "id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
         },
         "additionalProperties": false,
     },
@@ -833,7 +856,7 @@ export function RegisterRoutes(app: any) {
             function (request: any, response: any, next: any) {
             const args = {
                     orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderBasicProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderStatusModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -854,7 +877,7 @@ export function RegisterRoutes(app: any) {
             function (request: any, response: any, next: any) {
             const args = {
                     orderId: {"in":"path","name":"orderId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Order id must be an integer"},"minimum":{"errorMsg":"Order id value must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderBasicProps"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateOrderPlacementModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1231,7 +1254,7 @@ export function RegisterRoutes(app: any) {
             authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateProductModel"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateProductCreateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1252,7 +1275,7 @@ export function RegisterRoutes(app: any) {
             function (request: any, response: any, next: any) {
             const args = {
                     id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateProductModel"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateProductUpdateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1535,7 +1558,26 @@ export function RegisterRoutes(app: any) {
             const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.post('/auth/register',
+        app.get('/auth/user',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.getUserProfile.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/auth/user/register',
             function (request: any, response: any, next: any) {
             const args = {
                     data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
@@ -1554,7 +1596,7 @@ export function RegisterRoutes(app: any) {
             const promise = controller.register.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.post('/auth/login',
+        app.post('/auth/user/login',
             function (request: any, response: any, next: any) {
             const args = {
                     data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
@@ -1571,6 +1613,25 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.login.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/auth/admin',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.getAdminProfile.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.post('/auth/admin/login',
@@ -1609,6 +1670,24 @@ export function RegisterRoutes(app: any) {
 
 
             const promise = controller.RefreshToken.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/auth/logout',
+            function (request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.logout.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.get('/ping',

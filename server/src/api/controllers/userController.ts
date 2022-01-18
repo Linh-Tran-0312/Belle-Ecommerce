@@ -37,7 +37,7 @@ export class UserController {
     ): Promise<IUsers> {
         const query: IUserQuery = {
             search: search?.trim(),
-            role: role || UserRole.ALL,
+            role,
             sort: sort || UserField.CREATEDAT,
             change: change || Change.DESC,
             limit: limit || 5,

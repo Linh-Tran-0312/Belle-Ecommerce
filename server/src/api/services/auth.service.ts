@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { Service } from "typedi";
 import { Not } from "typeorm";
 import { UserService } from ".";
 import { HttpCode } from "../helpers/HttpCode";
@@ -8,9 +9,8 @@ import { signAccessToken, signRefreshToken } from "../helpers/jwtHandler";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { TokenError } from "../helpers/TokenError";
 import { IUserAuth, UserMapper } from "../mappers";
+import { UserRepository } from "../repositories";
 import { ValidateUserCreateModel } from "../validations";
-import { Service } from "typedi";
-import { IUserRepository, UserRepository } from "../repositories";
 
 dotenv.config();
 
@@ -30,6 +30,7 @@ export interface IAuth {
     profile: IUserAuth
 }
 export interface IAuthService {
+    getProfile(role: string[], token: string): Promise<IUserAuth|null>;
     register(data: ValidateUserCreateModel): Promise<IAuth>;
     login(email: string, password: string): Promise<IAuth>;
     adminLogin(email: string, password: string): Promise<IAuth>;
@@ -42,6 +43,19 @@ export class AuthService extends UserService{
         userRepo: UserRepository
     ) {
         super(userRepo)
+    }
+    public async  getProfile(role: string[], token: string): Promise<IUserAuth| null> {
+       let profile: IUserAuth|null = null;
+        await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!,  { ignoreExpiration: true },async (err, decoded) => {
+            if (err) {
+               profile = null;
+            } else {
+                const user = await this.repository.findOne({ where: { id: decoded?.id } });
+                profile =  user && role.includes(user.role) ?  UserMapper.toUserAuth(user) : null ;
+            }           
+        })
+        return profile;
+
     }
     private async generateToken(id: number, role: string, timeAccess: number | string, timeRefresh: number | string): Promise<Token> {
         const accessToken = signAccessToken({ id, role }, timeAccess);

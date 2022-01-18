@@ -2,7 +2,7 @@ import { Body, Delete, Get, Patch, Path, Post, Query, Route, Security, Tags } fr
 import { IProductInfo, IVariantInfo } from "../mappers";
 import { UserRole } from "../models";
 import { Change, IProductQuery, IProducts, IProductService, IProductVariantService, ProductField, ProductService, ProductVariantService } from "../services";
-import { ValidateProductModel, ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
+import {  ValidateProductCreateModel, ValidateProductUpdateModel,  ValidateVariantCreateModel, ValidateVariantUpdateModel } from "../validations";
 import { Service } from "typedi";
 
 @Service()
@@ -80,7 +80,7 @@ export class ProductController {
      */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Post("/")
-    public async createProduct(@Body() data: ValidateProductModel): Promise<IProductInfo> {
+    public async createProduct(@Body() data: ValidateProductCreateModel): Promise<IProductInfo> {
         return this._productService.createProduct(data)
     }
     /**
@@ -91,7 +91,7 @@ export class ProductController {
     */
      @Security("jwt", [UserRole.ADMIN,UserRole.EDITOR])
     @Patch("/:id")
-    public async updateProductById(@Path() id: number, @Body() data: ValidateProductModel): Promise<IProductInfo> {
+    public async updateProductById(@Path() id: number, @Body() data: ValidateProductUpdateModel): Promise<IProductInfo> {
         return this._productService.updateProduct(id, data);
     }
     /**

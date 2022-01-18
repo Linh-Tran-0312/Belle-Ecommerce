@@ -57,12 +57,8 @@ export class ValidateSizeModel  {
     }
 }
 
-export class ValidateProductModel {
-     /**
-    * @isInt Product id must be an integer
-    * @minimum 0 Product id value must be at least 0
-    */
-    id: number;
+export class ValidateProductCreateModel {
+ 
     /**
     * @pattern ^(?!\s*$).+ Product name must not be empty
     */
@@ -91,7 +87,6 @@ export class ValidateProductModel {
     price: number;
 
     constructor(
-        id: number,
         categoryId: number,
         brandId: number,
         summary: string,
@@ -101,7 +96,6 @@ export class ValidateProductModel {
         description?: string,
         imgPaths?: Array<string>,
     ) {
-        this.id = id
         this.name = name;
         this.sku = sku;
         this.categoryId = categoryId;
@@ -112,6 +106,34 @@ export class ValidateProductModel {
         this.price = price;
     }
 
+}
+export class ValidateProductUpdateModel extends ValidateProductCreateModel {
+    /**
+    * @isInt Product id must be an integer
+    * @minimum 0 Product id value must be at least 0
+    */
+     id!: number;
+
+     constructor(
+        categoryId: number,
+        brandId: number,
+        summary: string,
+        price: number,
+        name: string,
+        sku?: string,
+        description?: string,
+        imgPaths?: Array<string>,
+    ) {
+        super(  categoryId,
+            brandId,
+            summary,
+            price,
+            name,
+            sku,
+            description,
+            imgPaths)
+               
+    }
 }
 export class ValidateVariantUpdateModel {
     /**

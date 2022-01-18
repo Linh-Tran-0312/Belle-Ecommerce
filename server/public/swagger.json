@@ -142,7 +142,6 @@
 			},
 			"UserRole": {
 				"enum": [
-					"all",
 					"admin",
 					"editor",
 					"customer"
@@ -421,7 +420,27 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ValidateOrderBasicProps": {
+			"ValidateOrderStatusModel": {
+				"properties": {
+					"paymentMethod": {
+						"$ref": "#/components/schemas/PaymentMethod"
+					},
+					"paymentCheck": {
+						"type": "boolean"
+					},
+					"status": {
+						"$ref": "#/components/schemas/Status"
+					}
+				},
+				"required": [
+					"paymentMethod",
+					"paymentCheck",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateOrderPlacementModel": {
 				"properties": {
 					"address": {
 						"type": "string",
@@ -1126,13 +1145,8 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ValidateProductModel": {
+			"ValidateProductCreateModel": {
 				"properties": {
-					"id": {
-						"type": "integer",
-						"format": "int32",
-						"minimum": 0
-					},
 					"name": {
 						"type": "string",
 						"pattern": "^(?!\\s*$).+"
@@ -1170,11 +1184,63 @@
 					}
 				},
 				"required": [
-					"id",
 					"name",
 					"categoryId",
 					"brandId",
 					"price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidateProductUpdateModel": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"pattern": "^(?!\\s*$).+"
+					},
+					"sku": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"brandId": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					},
+					"imgPaths": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"minItems": 0
+					},
+					"summary": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double",
+						"minimum": 0
+					},
+					"id": {
+						"type": "integer",
+						"format": "int32",
+						"minimum": 0
+					}
+				},
+				"required": [
+					"name",
+					"categoryId",
+					"brandId",
+					"price",
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -2506,7 +2572,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ValidateOrderBasicProps"
+								"$ref": "#/components/schemas/ValidateOrderStatusModel"
 							}
 						}
 					}
@@ -2558,7 +2624,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ValidateOrderBasicProps"
+								"$ref": "#/components/schemas/ValidateOrderPlacementModel"
 							}
 						}
 					}
@@ -3376,7 +3442,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ValidateProductModel"
+								"$ref": "#/components/schemas/ValidateProductCreateModel"
 							}
 						}
 					}
@@ -3459,7 +3525,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ValidateProductModel"
+								"$ref": "#/components/schemas/ValidateProductUpdateModel"
 							}
 						}
 					}
@@ -4033,7 +4099,35 @@
 				]
 			}
 		},
-		"/auth/register": {
+		"/auth/user": {
+			"get": {
+				"operationId": "GetUserProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IUserAuth"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow user get their profile if token in cookie is still valid",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/user/register": {
 			"post": {
 				"operationId": "Register",
 				"responses": {
@@ -4066,7 +4160,7 @@
 				}
 			}
 		},
-		"/auth/login": {
+		"/auth/user/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {
@@ -4097,6 +4191,34 @@
 						}
 					}
 				}
+			}
+		},
+		"/auth/admin": {
+			"get": {
+				"operationId": "GetAdminProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IUserAuth"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Allow admin and editor get their profile if token in cookie is still valid",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/auth/admin/login": {
@@ -4148,6 +4270,22 @@
 					}
 				},
 				"description": "Refresh expired access token",
+				"tags": [
+					"Authorization"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/logout": {
+			"get": {
+				"operationId": "Logout",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Allow users logout (clear tokens in cookies)",
 				"tags": [
 					"Authorization"
 				],

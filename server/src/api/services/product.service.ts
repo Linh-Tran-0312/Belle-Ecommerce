@@ -2,7 +2,7 @@ import { Between, ILike, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { IProductInfo, IProductSearchProps, ProductMapper } from "../mappers";
 import { Product } from "../models";
 import { IProductRepository, ProductRepository } from "../repositories";
-import { ValidateProductModel } from "../validations";
+import { ValidateProductCreateModel, ValidateProductUpdateModel,  } from "../validations";
 import { BaseService, IBaseService } from "./base.service";
 import { Service } from "typedi";
  
@@ -37,8 +37,8 @@ export interface IProducts {
 export interface IProductService extends IBaseService<Product> {
     getProducts(query: IProductQuery): Promise<IProducts>;
     getProductById(id: number): Promise<IProductInfo>
-    createProduct(data: ValidateProductModel): Promise<IProductInfo>;
-    updateProduct(id: number, data:ValidateProductModel): Promise<IProductInfo>
+    createProduct(data: ValidateProductCreateModel): Promise<IProductInfo>;
+    updateProduct(id: number, data: ValidateProductUpdateModel): Promise<IProductInfo>
 }
 @Service()
 export class ProductService extends BaseService<Product, IProductRepository> implements IProductService {
@@ -95,11 +95,11 @@ export class ProductService extends BaseService<Product, IProductRepository> imp
         const product = await this.getOneById(id, ["category", "brand", "variants", "variants.color", "variants.size"]);
         return ProductMapper.toProductInfo(product);
     }
-    public async createProduct(data: ValidateProductModel): Promise<IProductInfo> {
+    public async createProduct(data: ValidateProductCreateModel): Promise<IProductInfo> {
         const { id } = await this.repository.create(data);
         return await this.getProductById(id);
     }
-    public async updateProduct(id: number, data: ValidateProductModel): Promise<IProductInfo> {
+    public async updateProduct(id: number, data: ValidateProductUpdateModel): Promise<IProductInfo> {
         await this.repository.update(id,data);
         return await this.getProductById(id);
     }

@@ -1,11 +1,11 @@
-import { MoreThan, Not } from "typeorm";
+import { MoreThan, Not, ILike } from "typeorm";
 import { HttpCode } from "../helpers/HttpCode";
 import { OperationalError, OperationalErrorMessage } from "../helpers/OperationalError";
 import { periodCal } from "../helpers/timeHandler";
 import { OrderMapper, UserMapper } from "../mappers";
 import { Order, OrderDetail, PaymentMethod, Status } from "../models";
 import { IOrderDetailRepository, IOrderRepository, OrderDetailRepository, OrderRepository } from "../repositories";
-import { ValidateOrderBasicProps, ValidateOrderCreateModel, ValidateOrderDetailModel } from "../validations";
+import { ValidateOrderPlacementModel, ValidateOrderCreateModel, ValidateOrderDetailModel,ValidateOrderStatusModel } from "../validations";
 import { BaseService, IBaseService } from "./base.service";
 import { Change, IItemDetails, IUserAuth, IUserName } from "./index";
 import { Service } from "typedi";
@@ -54,8 +54,8 @@ export interface IOrderService extends IBaseService<Order> {
     getOrderById(id: number): Promise<IOrderInfo>;
     createOrder(data: ValidateOrderCreateModel): Promise<IOrderInfo>;
     updateOrderItems(id: number, details: ValidateOrderDetailModel[]): Promise<IOrderInfo>;
-    updateOrderStatus(id: number, data: ValidateOrderBasicProps): Promise<IOrderInfo>;
-    placeOrder(id: number, data: ValidateOrderBasicProps): Promise<IOrderInfo>;
+    updateOrderStatus(id: number, data: ValidateOrderStatusModel): Promise<IOrderInfo>;
+    placeOrder(id: number, data: ValidateOrderPlacementModel): Promise<IOrderInfo>;
     getCurrentOrderByUserId(userId: number): Promise<IOrderInfo | null>;
     getAllOrdersByUserId(userId: number): Promise<IOrderBasicProps[]>;
     addItemToOrder(id: number, data:  ValidateOrderDetailModel): Promise<IOrderInfo>;
@@ -87,31 +87,33 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         if (query.status !== undefined) whereCondition.status = query.status;
         if (!!query.time) {
             const time = periodCal(query.time);
-            console.log(time);
             whereCondition.orderAt = MoreThan(time.start);
         }
         options.order[`${query.sort}`] = query.change;
         options.take = query.limit;
         options.skip = options.take * (query.page! - 1);
         if (query.search) {
+            const id = parseInt(query.search) ? parseInt(query.search) : -1
             options.where = [
                 {
-                    address: `%${options.search}%`, ...whereCondition
+                    address: ILike(`%${query.search}%`), ...whereCondition
                 }, {
                     user: {
-                        fname: `%${options.search}%`
+                        fname: ILike(`%${query.search}%`)
                     },
                     ...whereCondition
                 }, {
                     user: {
-                        lname: `%${options.search}%`
+                        lname: ILike(`%${query.search}%`)
                     },
                     ...whereCondition
                 }, {
                     user: {
-                        phone: `%${options.search}%`
+                        phone: ILike(`%${query.search}%`)
                     },
                     ...whereCondition
+                },{
+                    id: id, ...whereCondition
                 }
             ]
         } else {
@@ -233,11 +235,11 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
         }
 
     }
-    public async updateOrderStatus(id: number, data: ValidateOrderBasicProps): Promise<IOrderInfo> {
+    public async updateOrderStatus(id: number, data: ValidateOrderStatusModel): Promise<IOrderInfo> {
         await this.repository.update(id, { ...data, id: id });
         return await this.getOrderById(id);
     }
-    public async placeOrder(id: number, data: ValidateOrderBasicProps): Promise<IOrderInfo> {
+    public async placeOrder(id: number, data: ValidateOrderPlacementModel): Promise<IOrderInfo> {
          await this.repository.update(id, { ...data, status: Status.ORDERED, orderAt: new Date(Date.now()).toISOString() });
         return await this.getOrderById(id);
     }
