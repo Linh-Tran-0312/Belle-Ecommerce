@@ -1,26 +1,25 @@
-import express, { Application } from "express";
-import "reflect-metadata";
-
-import cookieParser from "cookie-parser"
-import morgan from "morgan";
-import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+import express, { Application } from "express";
+import { types } from 'pg';
+import "reflect-metadata";
 import swaggerUi from "swagger-ui-express";
-import { RegisterRoutes } from "./api/routes/routes";
-import { errorHandler } from "./api/middlewares/ErrorHandler";
-import { morganConfig, Logger } from "./config";
-import "./api/controllers/pingController";
-import "./api/controllers/blogController";
-import "./api/controllers/blogCategoryController";
 import './api/controllers/authController';
-import "./api/controllers/userController";
-import "./api/controllers/sizeController";
+import "./api/controllers/blogCategoryController";
+import "./api/controllers/blogController";
 import './api/controllers/brandController';
 import "./api/controllers/colorController";
+import "./api/controllers/orderController";
+import "./api/controllers/pingController";
 import "./api/controllers/productCategoryController";
 import "./api/controllers/productController";
-import "./api/controllers/orderController";
-import { types } from 'pg';
+import "./api/controllers/sizeController";
+import "./api/controllers/userController";
+import { errorHandler } from "./api/middlewares/ErrorHandler";
+import { RegisterRoutes } from "./api/routes/routes";
+import { Logger, morganConfig } from "./config";
+
 dotenv.config();
 
 export class ExpressApp {

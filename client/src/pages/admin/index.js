@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
+import Loader from "../../components/Loader";
 import Typography from '@material-ui/core/Typography';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -129,6 +130,7 @@ export default function AdminPage() {
   const [ title, setTitle] = useState("DASHBOARD");
   const query = useQuery();
 
+  const loading =  useSelector(state => state.adminAuth.loading);
   const admin = useSelector(state => state.adminAuth.admin)
  //const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
 
@@ -138,7 +140,7 @@ export default function AdminPage() {
     dispatch(productActions.getProductColors());
     dispatch(productActions.getProductSizes());
     dispatch(blogActions.getBlogCategories());
-    dispatch(adminAuthActions.getProfile());
+
   },[])
   useEffect(() => {
 
@@ -150,7 +152,7 @@ export default function AdminPage() {
         setTitle(temp);
       }
       topPage?.current?.scrollIntoView();
-   
+      dispatch(adminAuthActions.getProfile())
     //setAdmin(JSON.parse(localStorage.getItem('admin')));
   },[location]);
 
@@ -199,6 +201,7 @@ const handleLogout = (e) => {
           return <Dashboard/>
     }
  }
+  if(loading) return <Loader />
  if(!admin?.id) return <Redirect to="/admin/login" />
   return (
     <div className={classes.root} >

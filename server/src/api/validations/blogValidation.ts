@@ -4,10 +4,10 @@ export class ValidateBlogCateModel {
     /**
      * @pattern ^(?!\s*$).+ Blog category must not be empty
      */
-    public name: string;
-    constructor(name: string) {
+    public name!: string;
+/*     constructor(name: string) {
         this.name = name
-    }
+    } */
 }
 
 export class ValidateBlogModel {

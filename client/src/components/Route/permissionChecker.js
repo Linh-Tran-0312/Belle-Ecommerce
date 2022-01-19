@@ -1,5 +1,6 @@
+import { ACTION } from "../../constants/index.js";
 import { store } from "../../index.js";
-
+import api from "../../api"
 export const isAdminAuthenticated = () => {
 
    // let data = JSON.parse(localStorage.getItem("admin"));
@@ -10,16 +11,21 @@ export const isAdminAuthenticated = () => {
     }
     return false
 } 
-export const isUserAuthenticated = () => {
-   
-    //let data =  JSON.parse(localStorage.getItem("user"));
-    const { userAuth} = store.getState();
-   
-    if(userAuth?.user?.id)
-    {
-         return true
+const getUser = async() => {
+    const user = {};
+    try {
+         const { data } = await api.getUserProfile();
+         store.dispatch({ type: ACTION.USER_INIT, payload: data})
+         user = data;
+     } catch (error) {
+       
     }
-    return false
+    return user
+}
+export const isUserAuthenticated = async() => {
+    const user = await getUser()
+    if(user?.id) return true;
+    return false;
 }
 
   

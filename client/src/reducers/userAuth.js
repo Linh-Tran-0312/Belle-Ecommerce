@@ -12,6 +12,7 @@ export default (state = initState, { type, payload}) => produce(state, (draft) =
     switch(type) {
         case ACTION.USER_INIT:
             draft.user = payload;
+            draft.loading = false;
             break;
         case ACTION.USER_AUTH:
         if(payload?.id) {

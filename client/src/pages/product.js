@@ -137,7 +137,6 @@ const ProductPage = () => {
             } 
             // when user has logged in
             else {
-                console.log(orderId);
                 // when use has not had any pending carts before
                 if(orderId === "") {  
                     dispatch(orderActions.createOrder({userId: user.id, details: [{ productVariantId: item, quantity: qty, unitPrice: product.price}]}))

@@ -116,7 +116,6 @@ export default function ProductAdmin() {
              categoryId: productDetail?.category?.id,
             ...productDetail
         })
-        console.log(productDetail)
     }, [productDetail]);
 
     useEffect(() => {
@@ -464,7 +463,7 @@ export default function ProductAdmin() {
                                                             <CardActionArea>
                                                                 <CardMedia
                                                                     className={classes.media}
-                                                                    image={item}
+                                                                    image={item ? item : "/"}
                                                                     title="Product Image"
                                                                 />
                                                             </CardActionArea>

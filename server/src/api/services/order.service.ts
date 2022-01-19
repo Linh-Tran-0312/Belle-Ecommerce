@@ -278,6 +278,17 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
     }
     public async deleteItem(orderId: number,itemId: number): Promise<IOrderInfo> {
        await this.detailRepository.delete(itemId);
+
+       const details = await this.detailRepository.find({
+        
+           where: {orderId}});
+
+      let sum: number = 0;
+        details.forEach(function(item: OrderDetail) {
+           sum =  sum + item.quantity * item.unitPrice
+        });
+       await this.repository.update(orderId, { total: sum })
+     
        return await this.getOrderById(orderId)
     }
 }

@@ -30,10 +30,11 @@ const adminAuthActions = {
     },
     getProfile: () => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.ADMIN_AUTH_LOADING, payload: true})
             const { data } = await api.getAdminProfile();
             dispatch({type: ACTION.ADMIN_INIT, payload: data})
         } catch (error) {
-            
+            dispatch({ type: ACTION.ADMIN_AUTH_LOADING, payload: false})
         }
     }
 }

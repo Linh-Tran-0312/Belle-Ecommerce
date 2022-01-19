@@ -79,7 +79,7 @@ export default function CartPopover() {
     const subTotal = useSelector(state => state.order).subTotal;
     const items = useSelector(state => state.order).items;
     const dispatch = useDispatch();
-    const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
+    const user = useSelector(state => state.userAuth.user)
   
     const classes = useStyle();
     const [anchorEl, setAnchorEl] = useState(null);

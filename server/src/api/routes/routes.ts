@@ -2,75 +2,22 @@
 /* eslint-disable */
 import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from '@tsoa/runtime';
 import { iocContainer } from './../ioc';
+import { AuthController } from './../controllers/authController';
+import { BlogCategoryController } from './../controllers/blogCategoryController';
+import { BlogController } from './../controllers/blogController';
+import { BrandController } from './../controllers/brandController';
+import { ColorController } from './../controllers/colorController';
 import { OrderController } from './../controllers/orderController';
+import { PingController } from './../controllers/pingController';
+import { ProductCategoryController } from './../controllers/productCategoryController';
+import { ProductController } from './../controllers/productController';
+import { SizeController } from './../controllers/sizeController';
+import { UserController } from './../controllers/userController';
 import { ReportController } from './../controllers/reportController';
 import { ReviewController } from './../controllers/reviewController';
-import { UserController } from './../controllers/userController';
-import { ProductController } from './../controllers/productController';
-import { BlogController } from './../controllers/blogController';
-import { AuthController } from './../controllers/authController';
-import { PingController } from './../controllers/pingController';
-import { BlogCategoryController } from './../controllers/blogCategoryController';
-import { SizeController } from './../controllers/sizeController';
-import { BrandController } from './../controllers/brandController';
-import { ProductCategoryController } from './../controllers/productCategoryController';
-import { ColorController } from './../controllers/colorController';
 import { expressAuthentication } from './../middlewares/AuthHandler';
 
 const models: TsoaRoute.Models = {
-    "IUserName": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Status": {
-        "dataType": "refEnum",
-        "enums": ["ordering","ordered","delivery","canceled","completed"],
-    },
-    "PaymentMethod": {
-        "dataType": "refEnum",
-        "enums": ["cod","banktransfer","e-wallet","gateway"],
-    },
-    "IOrderSearchProps": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "status": {"ref":"Status","required":true},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "address": {"dataType":"string","required":true},
-            "total": {"dataType":"double","required":true},
-            "shipping": {"dataType":"double"},
-            "note": {"dataType":"string"},
-            "orderAt": {"dataType":"datetime","required":true},
-            "user": {"ref":"IUserName","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOrders": {
-        "dataType": "refObject",
-        "properties": {
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderSearchProps"},"required":true},
-            "total": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "Period": {
-        "dataType": "refEnum",
-        "enums": ["today","week","month","quarter","year"],
-    },
-    "OrderField": {
-        "dataType": "refEnum",
-        "enums": ["orderAt","total"],
-    },
-    "Change": {
-        "dataType": "refEnum",
-        "enums": ["DESC","ASC"],
-    },
     "UserRole": {
         "dataType": "refEnum",
         "enums": ["admin","editor","customer"],
@@ -81,224 +28,10 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"double","required":true},
             "fname": {"dataType":"string","required":true},
             "lname": {"dataType":"string","required":true},
-            "phone": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IItemDetails": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "orderId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "unitPrice": {"dataType":"double","required":true},
-            "productVariantId": {"dataType":"double","required":true},
-            "product": {"dataType":"nestedObjectLiteral","nestedProperties":{"size":{"dataType":"string","required":true},"color":{"dataType":"string","required":true},"brand":{"dataType":"string","required":true},"imgPaths":{"dataType":"array","array":{"dataType":"string"},"required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderInfo": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "status": {"ref":"Status","required":true},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "address": {"dataType":"string","required":true},
-            "total": {"dataType":"double","required":true},
-            "shipping": {"dataType":"double"},
-            "note": {"dataType":"string"},
-            "orderAt": {"dataType":"datetime","required":true},
-            "user": {"ref":"IUserAuth","required":true},
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IItemDetails"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateOrderDetailModel": {
-        "dataType": "refObject",
-        "properties": {
-            "orderId": {"dataType":"integer","validators":{"minimum":{"value":0}}},
-            "productVariantId": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
-            "quantity": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
-            "unitPrice": {"dataType":"double","required":true,"validators":{"minimum":{"value":0}}},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateOrderCreateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"ValidateOrderDetailModel"},"required":true},
-            "userId": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderBasicProps": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "status": {"ref":"Status","required":true},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "address": {"dataType":"string","required":true},
-            "total": {"dataType":"double","required":true},
-            "shipping": {"dataType":"double"},
-            "note": {"dataType":"string"},
-            "orderAt": {"dataType":"datetime","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateOrderUpdateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"ValidateOrderDetailModel"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateOrderStatusModel": {
-        "dataType": "refObject",
-        "properties": {
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean","required":true},
-            "status": {"ref":"Status","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateOrderPlacementModel": {
-        "dataType": "refObject",
-        "properties": {
-            "address": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Address must not be empty","value":"^(?!\\s*$).+"}}},
-            "paymentMethod": {"ref":"PaymentMethod","required":true},
-            "paymentCheck": {"dataType":"boolean"},
-            "note": {"dataType":"string"},
-            "shipping": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateUpdateQuantityModel": {
-        "dataType": "refObject",
-        "properties": {
-            "quantity": {"dataType":"integer","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOverviewReport": {
-        "dataType": "refObject",
-        "properties": {
-            "sales": {"dataType":"double","required":true},
-            "orders": {"dataType":"double","required":true},
-            "registers": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ISalesReport": {
-        "dataType": "refObject",
-        "properties": {
-            "time": {"dataType":"string","required":true},
-            "sales": {"dataType":"double","required":true},
-            "orders": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IOrderReport": {
-        "dataType": "refObject",
-        "properties": {
-            "completedOrders": {"dataType":"double","required":true},
-            "canceledOrders": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IProductReport": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "name": {"dataType":"string","required":true},
-            "brand": {"dataType":"string","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "sales": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IProductReports": {
-        "dataType": "refObject",
-        "properties": {
-            "total": {"dataType":"double","required":true},
-            "products": {"dataType":"array","array":{"dataType":"refObject","ref":"IProductReport"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IReview": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string","required":true},
-            "text": {"dataType":"string","required":true},
-            "productId": {"dataType":"double","required":true},
-            "rating": {"dataType":"double","required":true},
-            "userId": {"dataType":"double","required":true},
-            "user": {"ref":"IUserName","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IReviewCount": {
-        "dataType": "refObject",
-        "properties": {
-            "reviewCount": {"dataType":"double","required":true},
-            "overallReview": {"dataType":"double","required":true},
-            "details": {"dataType":"array","array":{"dataType":"double"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateReviewModel": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string"},
-            "text": {"dataType":"string"},
-            "productId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
-            "rating": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Rating must be an integer"},"minimum":{"errorMsg":"Min rating must be 1","value":1},"maximum":{"errorMsg":"Max rating must be 5","value":5}}},
-            "userId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
-        },
-        "additionalProperties": false,
-    },
-    "IUserSearchProps": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "phone": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "sale": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IUsers": {
-        "dataType": "refObject",
-        "properties": {
-            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"IUserSearchProps"},"required":true},
-            "total": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "UserField": {
-        "dataType": "refEnum",
-        "enums": ["fname","sale","createdAt"],
-    },
-    "IUserWithOrders": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "fname": {"dataType":"string","required":true},
-            "lname": {"dataType":"string","required":true},
-            "phone": {"dataType":"string","required":true},
-            "address": {"dataType":"string","required":true},
-            "email": {"dataType":"string","required":true},
-            "role": {"ref":"UserRole","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderBasicProps"}},
+            "phone": {"dataType":"string"},
+            "address": {"dataType":"string"},
+            "role": {"ref":"UserRole"},
         },
         "additionalProperties": false,
     },
@@ -315,118 +48,18 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "ValidateUserUpdateModel": {
+    "ValidateLoginModel": {
         "dataType": "refObject",
         "properties": {
-            "fname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"First name must not be empty","value":"^(?!\\s*$).+"}}},
-            "lname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Last name must not be empty","value":"^(?!\\s*$).+"}}},
             "email": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Email is invalid","value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
-            "role": {"ref":"UserRole"},
-            "phone": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Phone number is invalid","value":9},"pattern":{"errorMsg":"Phone number is invalid","value":"[0-9]{9,12}"}}},
-            "address": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Address is invalid","value":5}}},
+            "password": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
-    "IProductSearchProps": {
+    "IRefreshMessage": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "sku": {"dataType":"string","required":true},
-            "name": {"dataType":"string","required":true},
-            "overallReview": {"dataType":"double","required":true},
-            "price": {"dataType":"double","required":true},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "brand": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-            "category": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IProducts": {
-        "dataType": "refObject",
-        "properties": {
-            "products": {"dataType":"array","array":{"dataType":"refObject","ref":"IProductSearchProps"},"required":true},
-            "total": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ProductField": {
-        "dataType": "refEnum",
-        "enums": ["price","name","overallReview","createdAt"],
-    },
-    "IVariantInfo": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "productId": {"dataType":"double","required":true},
-            "quantity": {"dataType":"double","required":true},
-            "color": {"dataType":"nestedObjectLiteral","nestedProperties":{"code":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-            "size": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IProductInfo": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "sku": {"dataType":"string","required":true},
-            "name": {"dataType":"string","required":true},
-            "overallReview": {"dataType":"double","required":true},
-            "price": {"dataType":"double","required":true},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "brand": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-            "category": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
-            "summary": {"dataType":"string","required":true},
-            "variants": {"dataType":"array","array":{"dataType":"refObject","ref":"IVariantInfo"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateProductCreateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
-            "sku": {"dataType":"string"},
-            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
-            "brandId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id value must be at least 0","value":0}}},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"validators":{"minItems":{"value":0}}},
-            "summary": {"dataType":"string"},
-            "description": {"dataType":"string"},
-            "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateProductUpdateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
-            "sku": {"dataType":"string"},
-            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
-            "brandId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id value must be at least 0","value":0}}},
-            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"validators":{"minItems":{"value":0}}},
-            "summary": {"dataType":"string"},
-            "description": {"dataType":"string"},
-            "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
-            "id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateVariantCreateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "sizeId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id value must be at least 0","value":0}}},
-            "colorId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id value must be at least 0","value":0}}},
-            "quantity": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Quantity must be an integer"},"minimum":{"errorMsg":"Quantity value must be at least 0","value":0}}},
-            "productId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateVariantUpdateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "sizeId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id value must be at least 0","value":0}}},
-            "colorId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id value must be at least 0","value":0}}},
-            "quantity": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Quantity must be an integer"},"minimum":{"errorMsg":"Quantity value must be at least 0","value":0}}},
+            "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -436,6 +69,13 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"double","required":true},
             "createdAt": {"dataType":"datetime","required":true},
             "name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateBlogCateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Blog category must not be empty","value":"^(?!\\s*$).+"}}},
         },
         "additionalProperties": false,
     },
@@ -464,6 +104,10 @@ const models: TsoaRoute.Models = {
     "BlogField": {
         "dataType": "refEnum",
         "enums": ["title","createdAt"],
+    },
+    "Change": {
+        "dataType": "refEnum",
+        "enums": ["DESC","ASC"],
     },
     "ValidateBlogModel": {
         "dataType": "refObject",
@@ -618,6 +262,14 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "Status": {
+        "dataType": "refEnum",
+        "enums": ["ordering","ordered","delivery","canceled","completed"],
+    },
+    "PaymentMethod": {
+        "dataType": "refEnum",
+        "enums": ["cod","banktransfer","e-wallet","gateway"],
+    },
     "Order": {
         "dataType": "refObject",
         "properties": {
@@ -660,54 +312,10 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
-    "ValidateLoginModel": {
-        "dataType": "refObject",
-        "properties": {
-            "email": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Email is invalid","value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
-            "password": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "IRefreshMessage": {
-        "dataType": "refObject",
-        "properties": {
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "PingMessage": {
-        "dataType": "refObject",
-        "properties": {
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateBlogCateModel": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Blog category must not be empty","value":"^(?!\\s*$).+"}}},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateSizeModel": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Size must not be empty","value":"^(?!\\s*$).+"}}},
-        },
-        "additionalProperties": false,
-    },
     "ValidateBrandModel": {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Brand must not be empty","value":"^(?!\\s*$).+"}}},
-            "imgPath": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    "ValidateCategoryModel": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Category must not be empty","value":"^(?!\\s*$).+"}}},
             "imgPath": {"dataType":"string"},
         },
         "additionalProperties": false,
@@ -720,9 +328,957 @@ const models: TsoaRoute.Models = {
         },
         "additionalProperties": false,
     },
+    "IUserName": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrderSearchProps": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "address": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "shipping": {"dataType":"double"},
+            "note": {"dataType":"string"},
+            "orderAt": {"dataType":"datetime","required":true},
+            "user": {"ref":"IUserName","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrders": {
+        "dataType": "refObject",
+        "properties": {
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderSearchProps"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "Period": {
+        "dataType": "refEnum",
+        "enums": ["today","week","month","quarter","year"],
+    },
+    "OrderField": {
+        "dataType": "refEnum",
+        "enums": ["orderAt","total"],
+    },
+    "IItemDetails": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "orderId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "unitPrice": {"dataType":"double","required":true},
+            "productVariantId": {"dataType":"double","required":true},
+            "product": {"dataType":"nestedObjectLiteral","nestedProperties":{"size":{"dataType":"string","required":true},"color":{"dataType":"string","required":true},"brand":{"dataType":"string","required":true},"imgPaths":{"dataType":"array","array":{"dataType":"string"},"required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrderInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "address": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "shipping": {"dataType":"double"},
+            "note": {"dataType":"string"},
+            "orderAt": {"dataType":"datetime","required":true},
+            "user": {"ref":"IUserAuth","required":true},
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"IItemDetails"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderDetailModel": {
+        "dataType": "refObject",
+        "properties": {
+            "orderId": {"dataType":"integer","validators":{"minimum":{"value":0}}},
+            "productVariantId": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+            "quantity": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+            "unitPrice": {"dataType":"double","required":true,"validators":{"minimum":{"value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderCreateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"ValidateOrderDetailModel"},"required":true},
+            "userId": {"dataType":"integer","required":true,"validators":{"minimum":{"value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "IOrderBasicProps": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "status": {"ref":"Status","required":true},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "address": {"dataType":"string","required":true},
+            "total": {"dataType":"double","required":true},
+            "shipping": {"dataType":"double"},
+            "note": {"dataType":"string"},
+            "orderAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderUpdateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "details": {"dataType":"array","array":{"dataType":"refObject","ref":"ValidateOrderDetailModel"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderStatusModel": {
+        "dataType": "refObject",
+        "properties": {
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean","required":true},
+            "status": {"ref":"Status","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateOrderPlacementModel": {
+        "dataType": "refObject",
+        "properties": {
+            "address": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Address must not be empty","value":"^(?!\\s*$).+"}}},
+            "paymentMethod": {"ref":"PaymentMethod","required":true},
+            "paymentCheck": {"dataType":"boolean"},
+            "note": {"dataType":"string"},
+            "shipping": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateUpdateQuantityModel": {
+        "dataType": "refObject",
+        "properties": {
+            "quantity": {"dataType":"integer","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "PingMessage": {
+        "dataType": "refObject",
+        "properties": {
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateCategoryModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Category must not be empty","value":"^(?!\\s*$).+"}}},
+            "imgPath": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    "IProductSearchProps": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "sku": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "price": {"dataType":"double","required":true},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "brand": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+            "category": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IProducts": {
+        "dataType": "refObject",
+        "properties": {
+            "products": {"dataType":"array","array":{"dataType":"refObject","ref":"IProductSearchProps"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ProductField": {
+        "dataType": "refEnum",
+        "enums": ["price","name","overallReview","createdAt"],
+    },
+    "IVariantInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "productId": {"dataType":"double","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "color": {"dataType":"nestedObjectLiteral","nestedProperties":{"code":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+            "size": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IProductInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "sku": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "price": {"dataType":"double","required":true},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "brand": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+            "category": {"dataType":"nestedObjectLiteral","nestedProperties":{"name":{"dataType":"string","required":true},"id":{"dataType":"double","required":true}},"required":true},
+            "summary": {"dataType":"string","required":true},
+            "variants": {"dataType":"array","array":{"dataType":"refObject","ref":"IVariantInfo"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateProductCreateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
+            "sku": {"dataType":"string"},
+            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
+            "brandId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id value must be at least 0","value":0}}},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"validators":{"minItems":{"value":0}}},
+            "summary": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateProductUpdateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Product name must not be empty","value":"^(?!\\s*$).+"}}},
+            "sku": {"dataType":"string"},
+            "categoryId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Category id must be an integer"},"minimum":{"errorMsg":"Category id value must be at least 0","value":0}}},
+            "brandId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id value must be at least 0","value":0}}},
+            "imgPaths": {"dataType":"array","array":{"dataType":"string"},"validators":{"minItems":{"value":0}}},
+            "summary": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "price": {"dataType":"double","required":true,"validators":{"minimum":{"errorMsg":"Price value must be at least 0","value":0}}},
+            "id": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateVariantCreateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "sizeId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id value must be at least 0","value":0}}},
+            "colorId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id value must be at least 0","value":0}}},
+            "quantity": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Quantity must be an integer"},"minimum":{"errorMsg":"Quantity value must be at least 0","value":0}}},
+            "productId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateVariantUpdateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "sizeId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Size id must be an integer"},"minimum":{"errorMsg":"Size id value must be at least 0","value":0}}},
+            "colorId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id value must be at least 0","value":0}}},
+            "quantity": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Quantity must be an integer"},"minimum":{"errorMsg":"Quantity value must be at least 0","value":0}}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateSizeModel": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Size must not be empty","value":"^(?!\\s*$).+"}}},
+        },
+        "additionalProperties": false,
+    },
+    "IUserSearchProps": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "phone": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "sale": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IUsers": {
+        "dataType": "refObject",
+        "properties": {
+            "users": {"dataType":"array","array":{"dataType":"refObject","ref":"IUserSearchProps"},"required":true},
+            "total": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "UserField": {
+        "dataType": "refEnum",
+        "enums": ["fname","sale","createdAt"],
+    },
+    "IUserWithOrders": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "fname": {"dataType":"string","required":true},
+            "lname": {"dataType":"string","required":true},
+            "phone": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "email": {"dataType":"string","required":true},
+            "role": {"ref":"UserRole","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"IOrderBasicProps"}},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateUserUpdateModel": {
+        "dataType": "refObject",
+        "properties": {
+            "fname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"First name must not be empty","value":"^(?!\\s*$).+"}}},
+            "lname": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Last name must not be empty","value":"^(?!\\s*$).+"}}},
+            "email": {"dataType":"string","required":true,"validators":{"pattern":{"errorMsg":"Email is invalid","value":"^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$"}}},
+            "role": {"ref":"UserRole"},
+            "phone": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Phone number is invalid","value":9},"pattern":{"errorMsg":"Phone number is invalid","value":"[0-9]{9,12}"}}},
+            "address": {"dataType":"string","required":true,"validators":{"minLength":{"errorMsg":"Address is invalid","value":5}}},
+        },
+        "additionalProperties": false,
+    },
+    "IOverviewReport": {
+        "dataType": "refObject",
+        "properties": {
+            "sales": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+            "registers": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ISalesReport": {
+        "dataType": "refObject",
+        "properties": {
+            "time": {"dataType":"string","required":true},
+            "sales": {"dataType":"double","required":true},
+            "orders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IOrderReport": {
+        "dataType": "refObject",
+        "properties": {
+            "completedOrders": {"dataType":"double","required":true},
+            "canceledOrders": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IProductReport": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "brand": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "sales": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IProductReports": {
+        "dataType": "refObject",
+        "properties": {
+            "total": {"dataType":"double","required":true},
+            "products": {"dataType":"array","array":{"dataType":"refObject","ref":"IProductReport"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IReview": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string","required":true},
+            "text": {"dataType":"string","required":true},
+            "productId": {"dataType":"double","required":true},
+            "rating": {"dataType":"double","required":true},
+            "userId": {"dataType":"double","required":true},
+            "user": {"ref":"IUserName","required":true},
+        },
+        "additionalProperties": false,
+    },
+    "IReviewCount": {
+        "dataType": "refObject",
+        "properties": {
+            "reviewCount": {"dataType":"double","required":true},
+            "overallReview": {"dataType":"double","required":true},
+            "details": {"dataType":"array","array":{"dataType":"double"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    "ValidateReviewModel": {
+        "dataType": "refObject",
+        "properties": {
+            "title": {"dataType":"string"},
+            "text": {"dataType":"string"},
+            "productId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id value must be at least 0","value":0}}},
+            "rating": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"Rating must be an integer"},"minimum":{"errorMsg":"Min rating must be 1","value":1},"maximum":{"errorMsg":"Max rating must be 5","value":5}}},
+            "userId": {"dataType":"integer","required":true,"validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+        },
+        "additionalProperties": false,
+    },
 };
 
 export function RegisterRoutes(app: any) {
+        app.get('/auth/user',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.getUserProfile.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/auth/user/register',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.register.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/auth/user/login',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.login.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/auth/admin',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.getAdminProfile.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/auth/admin/login',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.adminLogin.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/auth/token',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.RefreshToken.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/auth/logout',
+            function (request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<AuthController>(AuthController);
+
+
+            const promise = controller.logout.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/blog-categories',
+            function (request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
+
+
+            const promise = controller.getBlogCategory.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/blog-categories',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogCateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
+
+
+            const promise = controller.createBlogCategory.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/blog-categories/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogCateModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
+
+
+            const promise = controller.updateBlogCategoryById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/blog-categories/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
+
+
+            const promise = controller.deleteBlogCategoryById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/blogs',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
+                    sort: {"in":"query","name":"sort","ref":"BlogField"},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    change: {"in":"query","name":"change","ref":"Change"},
+                    search: {"in":"query","name":"search","dataType":"string"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.getBlogs.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/blogs',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.createBlog.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/blogs/:id',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.getBlogById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/blogs/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.updateBlogById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/blogs/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.deleteBlogById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/blogs/:blogId/comments',
+            function (request: any, response: any, next: any) {
+            const args = {
+                    blogId: {"in":"path","name":"blogId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"blogId"},"minimum":{"value":0}}},
+                    date: {"in":"query","name":"date","dataType":"string"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.getCommentsOfBlog.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/blogs/comments',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"BlogComment"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.createComment.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/blogs/comments/:commentId',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"commentId"},"minimum":{"value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentUpdateProps"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.updateCommentById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/blogs/comments/:commentId',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"commentId"},"minimum":{"value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BlogController>(BlogController);
+
+
+            const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/brands',
+            function (request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BrandController>(BrandController);
+
+
+            const promise = controller.getBrands.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/brands',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBrandModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BrandController>(BrandController);
+
+
+            const promise = controller.createBrand.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/brands/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBrandModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BrandController>(BrandController);
+
+
+            const promise = controller.updateBrandById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/brands/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<BrandController>(BrandController);
+
+
+            const promise = controller.deleteBrandById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.get('/colors',
+            function (request: any, response: any, next: any) {
+            const args = {
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<ColorController>(ColorController);
+
+
+            const promise = controller.getColors.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.post('/colors',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateColorModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<ColorController>(ColorController);
+
+
+            const promise = controller.createColor.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.patch('/colors/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateColorModel"},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<ColorController>(ColorController);
+
+
+            const promise = controller.updateColorById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+        app.delete('/colors/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+            function (request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id must be at least 0","value":0}}},
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<ColorController>(ColorController);
+
+
+            const promise = controller.deleteColorById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
         app.get('/orders',
             authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
@@ -977,8 +1533,7 @@ export function RegisterRoutes(app: any) {
             const promise = controller.deleteItem.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/report/overview',
-            authenticateMiddleware([{"jwt":["admin"]}]),
+        app.get('/ping',
             function (request: any, response: any, next: any) {
             const args = {
             };
@@ -990,17 +1545,15 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ReportController>(ReportController);
+            const controller = iocContainer.get<PingController>(PingController);
 
 
-            const promise = controller.getOverviewReport.apply(controller, validatedArgs as any);
+            const promise = controller.getMessage.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/report/sales',
-            authenticateMiddleware([{"jwt":["admin"]}]),
+        app.get('/product-categories',
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$)|(^today$))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1010,17 +1563,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ReportController>(ReportController);
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
-            const promise = controller.getSalesReport.apply(controller, validatedArgs as any);
+            const promise = controller.getProductCategorys.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/report/orders',
-            authenticateMiddleware([{"jwt":["admin"]}]),
+        app.post('/product-categories',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateCategoryModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1030,19 +1583,18 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ReportController>(ReportController);
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
-            const promise = controller.getOrderReport.apply(controller, validatedArgs as any);
+            const promise = controller.createProductCategory.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/report/products',
-            authenticateMiddleware([{"jwt":["admin"]}]),
+        app.patch('/product-categories/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"}}},
-                    page: {"in":"query","name":"page","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
-                    limit: {"in":"query","name":"limit","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateCategoryModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1052,18 +1604,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ReportController>(ReportController);
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
-            const promise = controller.getTopProductsReport.apply(controller, validatedArgs as any);
+            const promise = controller.updateProductCategoryById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/reviews/:productId',
+        app.delete('/product-categories/:id',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    productId: {"in":"path","name":"productId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
-                    size: {"in":"query","name":"size","required":true,"dataType":"double"},
-                    cursor: {"in":"query","name":"cursor","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1073,135 +1624,10 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ReviewController>(ReviewController);
+            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
 
 
-            const promise = controller.getReviewsByProductId.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/reviews/:productId/count',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    productId: {"in":"path","name":"productId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<ReviewController>(ReviewController);
-
-
-            const promise = controller.getReviewCountByProductId.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/reviews',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateReviewModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<ReviewController>(ReviewController);
-
-
-            const promise = controller.createReview.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/users',
-            authenticateMiddleware([{"jwt":["admin"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    search: {"in":"query","name":"search","dataType":"string"},
-                    role: {"in":"query","name":"role","ref":"UserRole"},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
-                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
-                    sort: {"in":"query","name":"sort","ref":"UserField"},
-                    change: {"in":"query","name":"change","ref":"Change"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<UserController>(UserController);
-
-
-            const promise = controller.getUsers.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/users/:id',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<UserController>(UserController);
-
-
-            const promise = controller.getUserById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/users',
-            authenticateMiddleware([{"jwt":["admin"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<UserController>(UserController);
-
-
-            const promise = controller.createUser.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/users/:id',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserUpdateModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<UserController>(UserController);
-
-
-            const promise = controller.updateUser.apply(controller, validatedArgs as any);
+            const promise = controller.deleteProductCategoryById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
         app.get('/products',
@@ -1372,421 +1798,6 @@ export function RegisterRoutes(app: any) {
             const promise = controller.deleteProductVariant.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/blogs',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    category: {"in":"query","name":"category","dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
-                    sort: {"in":"query","name":"sort","ref":"BlogField"},
-                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
-                    change: {"in":"query","name":"change","ref":"Change"},
-                    search: {"in":"query","name":"search","dataType":"string"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.getBlogs.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/blogs',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.createBlog.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/blogs/:id',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.getBlogById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/blogs/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.updateBlogById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/blogs/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog id must be an integer"},"minimum":{"errorMsg":"Blog id must be at least 0","value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.deleteBlogById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/blogs/:blogId/comments',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    blogId: {"in":"path","name":"blogId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"blogId"},"minimum":{"value":0}}},
-                    date: {"in":"query","name":"date","dataType":"string"},
-                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"limit"},"minimum":{"value":1}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.getCommentsOfBlog.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/blogs/comments',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"BlogComment"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.createComment.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/blogs/comments/:commentId',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"commentId"},"minimum":{"value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"IBlogCommentUpdateProps"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.updateCommentById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/blogs/comments/:commentId',
-            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    commentId: {"in":"path","name":"commentId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"commentId"},"minimum":{"value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogController>(BlogController);
-
-
-            const promise = controller.deleteCommentById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/auth/user',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.getUserProfile.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/auth/user/register',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.register.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/auth/user/login',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.login.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/auth/admin',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.getAdminProfile.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/auth/admin/login',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateLoginModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.adminLogin.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/auth/token',
-            function (request: any, response: any, next: any) {
-            const args = {
-                    req: {"in":"request","name":"req","required":true,"dataType":"object"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.RefreshToken.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/auth/logout',
-            function (request: any, response: any, next: any) {
-            const args = {
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<AuthController>(AuthController);
-
-
-            const promise = controller.logout.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/ping',
-            function (request: any, response: any, next: any) {
-            const args = {
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<PingController>(PingController);
-
-
-            const promise = controller.getMessage.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.get('/blog-categories',
-            function (request: any, response: any, next: any) {
-            const args = {
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
-
-
-            const promise = controller.getBlogCategory.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.post('/blog-categories',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogCateModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
-
-
-            const promise = controller.createBlogCategory.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.patch('/blog-categories/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBlogCateModel"},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
-
-
-            const promise = controller.updateBlogCategoryById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/blog-categories/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Blog category id must be an integer"},"minimum":{"errorMsg":"Blog category id value must be at least 0","value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<BlogCategoryController>(BlogCategoryController);
-
-
-            const promise = controller.deleteBlogCategoryById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
         app.get('/sizes',
             function (request: any, response: any, next: any) {
             const args = {
@@ -1866,9 +1877,16 @@ export function RegisterRoutes(app: any) {
             const promise = controller.deleteSizeById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/brands',
+        app.get('/users',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
+                    search: {"in":"query","name":"search","dataType":"string"},
+                    role: {"in":"query","name":"role","ref":"UserRole"},
+                    limit: {"in":"query","name":"limit","dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
+                    page: {"in":"query","name":"page","dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    sort: {"in":"query","name":"sort","ref":"UserField"},
+                    change: {"in":"query","name":"change","ref":"Change"},
             };
 
             let validatedArgs: any[] = [];
@@ -1878,17 +1896,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<BrandController>(BrandController);
+            const controller = iocContainer.get<UserController>(UserController);
 
 
-            const promise = controller.getBrands.apply(controller, validatedArgs as any);
+            const promise = controller.getUsers.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.post('/brands',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.get('/users/:id',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBrandModel"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1898,18 +1916,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<BrandController>(BrandController);
+            const controller = iocContainer.get<UserController>(UserController);
 
 
-            const promise = controller.createBrand.apply(controller, validatedArgs as any);
+            const promise = controller.getUserById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.patch('/brands/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.post('/users',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateBrandModel"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserCreateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1919,17 +1936,18 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<BrandController>(BrandController);
+            const controller = iocContainer.get<UserController>(UserController);
 
 
-            const promise = controller.updateBrandById.apply(controller, validatedArgs as any);
+            const promise = controller.createUser.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.delete('/brands/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.patch('/users/:id',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Brand id must be an integer"},"minimum":{"errorMsg":"Brand id must be at least 0","value":0}}},
+                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"User id must be an integer"},"minimum":{"errorMsg":"User id value must be at least 0","value":0}}},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateUserUpdateModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -1939,13 +1957,14 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<BrandController>(BrandController);
+            const controller = iocContainer.get<UserController>(UserController);
 
 
-            const promise = controller.deleteBrandById.apply(controller, validatedArgs as any);
+            const promise = controller.updateUser.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/product-categories',
+        app.get('/report/overview',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
             };
@@ -1957,17 +1976,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
-            const promise = controller.getProductCategorys.apply(controller, validatedArgs as any);
+            const promise = controller.getOverviewReport.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.post('/product-categories',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.get('/report/sales',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateCategoryModel"},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$)|(^today$))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1977,18 +1996,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
-            const promise = controller.createProductCategory.apply(controller, validatedArgs as any);
+            const promise = controller.getSalesReport.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.patch('/product-categories/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.get('/report/orders',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateCategoryModel"},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"}}},
             };
 
             let validatedArgs: any[] = [];
@@ -1998,17 +2016,19 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
-            const promise = controller.updateProductCategoryById.apply(controller, validatedArgs as any);
+            const promise = controller.getOrderReport.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.delete('/product-categories/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.get('/report/products',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product category id must be an integer"},"minimum":{"errorMsg":"Product category id must be at least 0","value":0}}},
+                    time: {"in":"query","name":"time","required":true,"dataType":"string","validators":{"pattern":{"errorMsg":"Time query is invalid","value":"(^[\\d]{4}$)|(^[\\d]{4}-([0][1-9]|[1][0-2])|(^week$))"}}},
+                    page: {"in":"query","name":"page","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Page must be an integer"},"minimum":{"errorMsg":"Page must be at least 1","value":1}}},
+                    limit: {"in":"query","name":"limit","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Limit must be an integer"},"minimum":{"errorMsg":"Limit must be at least 1","value":1}}},
             };
 
             let validatedArgs: any[] = [];
@@ -2018,15 +2038,18 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ProductCategoryController>(ProductCategoryController);
+            const controller = iocContainer.get<ReportController>(ReportController);
 
 
-            const promise = controller.deleteProductCategoryById.apply(controller, validatedArgs as any);
+            const promise = controller.getTopProductsReport.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.get('/colors',
+        app.get('/reviews/:productId',
             function (request: any, response: any, next: any) {
             const args = {
+                    productId: {"in":"path","name":"productId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
+                    size: {"in":"query","name":"size","required":true,"dataType":"double"},
+                    cursor: {"in":"query","name":"cursor","required":true,"dataType":"double"},
             };
 
             let validatedArgs: any[] = [];
@@ -2036,17 +2059,16 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ColorController>(ColorController);
+            const controller = iocContainer.get<ReviewController>(ReviewController);
 
 
-            const promise = controller.getColors.apply(controller, validatedArgs as any);
+            const promise = controller.getReviewsByProductId.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.post('/colors',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.get('/reviews/:productId/count',
             function (request: any, response: any, next: any) {
             const args = {
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateColorModel"},
+                    productId: {"in":"path","name":"productId","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Product id must be an integer"},"minimum":{"errorMsg":"Product id must be at least 0","value":0}}},
             };
 
             let validatedArgs: any[] = [];
@@ -2056,18 +2078,17 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ColorController>(ColorController);
+            const controller = iocContainer.get<ReviewController>(ReviewController);
 
 
-            const promise = controller.createColor.apply(controller, validatedArgs as any);
+            const promise = controller.getReviewCountByProductId.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
-        app.patch('/colors/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
+        app.post('/reviews',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id must be at least 0","value":0}}},
-                    data: {"in":"body","name":"data","required":true,"ref":"ValidateColorModel"},
+                    data: {"in":"body","name":"data","required":true,"ref":"ValidateReviewModel"},
             };
 
             let validatedArgs: any[] = [];
@@ -2077,30 +2098,10 @@ export function RegisterRoutes(app: any) {
                 return next(err);
             }
 
-            const controller = iocContainer.get<ColorController>(ColorController);
+            const controller = iocContainer.get<ReviewController>(ReviewController);
 
 
-            const promise = controller.updateColorById.apply(controller, validatedArgs as any);
-            promiseHandler(controller, promise, response, next);
-        });
-        app.delete('/colors/:id',
-            authenticateMiddleware([{"jwt":["admin","editor"]}]),
-            function (request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"integer","validators":{"isInt":{"errorMsg":"Color id must be an integer"},"minimum":{"errorMsg":"Color id must be at least 0","value":0}}},
-            };
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request);
-            } catch (err) {
-                return next(err);
-            }
-
-            const controller = iocContainer.get<ColorController>(ColorController);
-
-
-            const promise = controller.deleteColorById.apply(controller, validatedArgs as any);
+            const promise = controller.createReview.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
 

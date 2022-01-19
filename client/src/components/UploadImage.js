@@ -15,8 +15,8 @@ const UploadImage = ({ getURL }) => {
             const data = new FormData();
             if (image !== "") {
                 data.append("file", image);
-                data.append("upload_preset", "ldupxrel");
-                data.append("cloud_name", "linh-cloudinary-img");
+                data.append("upload_preset", process.env.REACT_APP_CLOUDINARY_PRESET);
+                data.append("cloud_name", process.env.REACT_APP_CLOUDINARY_NAME);
                 fetch(process.env.REACT_APP_CLOUDINARY_URL, {
                     method: "post",
                     body: data

@@ -1,5 +1,4 @@
  export default (product, { productVariantId, quantity}) => {
-     console.log(product)
         let item = {
             product: {}
         };

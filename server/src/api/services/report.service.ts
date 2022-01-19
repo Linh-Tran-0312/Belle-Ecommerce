@@ -93,10 +93,7 @@ export class ReportService implements IReportService {
 
         if (timeStr === Period.WEEK) {
             const time = timeCal(timeStr);
-            console.log(displayTime(time.start));
-            console.log(displayTime(time.end));
             orders = await this.orderRepo.getTotalSalesAndOrdersByTime("day", time);
-            console.log(orders);
             result = Array(7).fill({
                 time: "",
                 sales: 0,

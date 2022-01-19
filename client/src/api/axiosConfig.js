@@ -13,8 +13,14 @@ const refreshToken =  () => {
         }      
     })  
 }
+let baseURL = "";
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+   baseURL = process.env.REACT_APP_LOCAL_URL;
+} else {
+    baseURL = process.env.REACT_APP_HEROKU_URL;
+}
 let config = { 
-    baseURL: process.env.REACT_APP_BASE_URL,
+    baseURL,
     timeout: 300000,
     }
 const API = axios.create(config);
@@ -33,7 +39,6 @@ API.interceptors.response.use((response) => {
        return API(originalReq)
     }  else {
         if( message === "No token provided") {
-            console.log("No token provided")
             store.dispatch({ type: ACTION.ADMIN_LOGOUT});
             store.dispatch({ type: ACTION.USER_LOGOUT});
             store.dispatch({ type: ACTION.CLEAR_ORDER})

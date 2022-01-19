@@ -20,8 +20,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T>
 
     public async create(data: T | any): Promise<T> {
         try {
-            return this.entity.save({ ...data });
+            return await this.entity.save({ ...data });
         } catch (err: any) {
+            
             throw new PostgresError(err.message, err);
         }
     }
@@ -45,12 +46,13 @@ export abstract class BaseRepository<T> implements IBaseRepository<T>
         try {
             await this.entity.delete(id);
         } catch (err: any) {
+             
             throw new PostgresError(err.message, err);
         }
     }
     public async find(options: FindManyOptions): Promise<T[] | any[]> {
         try {
-            return this.entity.find(options);
+            return await this.entity.find(options);
         } catch (err: any) {
             throw new PostgresError(err.message, err);
         }

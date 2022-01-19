@@ -78,10 +78,11 @@ const authActions = {
     },
     getProfile: () => async(dispatch) => {
         try {
+            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: true})
             const { data } = await api.getUserProfile();
             dispatch({type: ACTION.USER_INIT, payload: data})
         } catch (error) {
-            
+            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: false})
         }
     },
     updateProfile: (userId, formData) => async(dispatch) => {

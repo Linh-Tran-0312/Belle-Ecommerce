@@ -1,6 +1,6 @@
  
 import { createConnection } from "typeorm";
-import { DbConfig }from './config';
+import { LocalConfig, DeployConfig }from './config';
 import { ExpressApp } from "./app";
 import { ConnectionOptions } from "typeorm";
 
@@ -26,9 +26,11 @@ class Server {
 
 }
 const PORT = process.env.PORT || 8000;
- 
-const server = new Server(DbConfig);
+const env = process.env.NODE_ENV || "development";
+const dbConfig = env === "development" ? LocalConfig : DeployConfig;
 
+
+const server = new Server(dbConfig);
 server.start(PORT);
 
 
