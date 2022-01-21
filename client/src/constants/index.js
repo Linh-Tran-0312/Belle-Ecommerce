@@ -34,10 +34,10 @@ export const ORDER_STATUS = {
     COMPLETED: "completed",
     CANCELED: "canceled"
 }
-export const DEL_STATUS = {
-    BEFORE: "before",
-    DELETING: "deleting",
-    AFTER: "after "
+export const EVENT = {
+    // Event Bus
+    USER_LOGOUT: "USER_LOGOUT_EVENT",
+    ADMIN_LOGOUT: "USER_LOGOUT_EVENT",
 }
 export const MSG = {
     STH_WRONG: "Sorry, something went wrong. Please try again !",
@@ -104,6 +104,8 @@ export const ACTION = {
     ADMIN_LOGOUT: "ADMIN_LOGOUT",
     ADMIN_AUTH_ERROR: "ADMIN_AUTH_ERROR",
     ADMIN_AUTH_LOADING: "ADMIN_AUTH_LOADING",
+    ADMIN_PROFILE_LOADING: "ADMIN_PROFILE_LOADING",
+    ADMIN_PROFILE_ERROR: "ADMIN_PROFILE_ERROR",
 
     //------------------BLOG ACTION----------------------------
     //Error Action
@@ -269,9 +271,7 @@ export const ACTION = {
     CLOSE_SNACKBAR:'CLOSE_SNACKBAR',
     REMOVE_SNACKBAR:'REMOVE_SNACKBAR',
 
-    CLEAR_PROFILE_LOCAL: "CLEAR_PROFILE_LOCAL"
-
-
-
+    CLEAR_LOCAL_USER: "CLEAR_LOCAL_USER",
+    CLEAR_LOCAL_ADMIN: "CLEAR_LOCAL_ADMIN",
 
 }

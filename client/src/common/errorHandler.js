@@ -17,7 +17,7 @@ export const handleValidationError = (error) => {
 const errorHandler = (error, dispatch) => {
     if (error.response) {
         if(error.response?.data.message === "jwt expired") {
-            dispatch(enqueueSnackbar("The authentication token has expired, please login again.", SnackBar.ERROR));
+            //dispatch(enqueueSnackbar("The authentication token has expired, please login again.", SnackBar.ERROR));
         }
         else if(error?.response?.data?.message === "Invalid token" ||error?.response?.data?.message === "No token provided"  ) {
             console.log(error?.response?.data?.message)

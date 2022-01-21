@@ -1,7 +1,7 @@
 import api from "../api";
 import { ACTION, MSG, SnackBar } from "../constants";
 import { enqueueSnackbar } from "./notification";
-import errorHandler, { handleValidationError} from "../helper/errorHandler";
+import errorHandler, { handleValidationError} from "../common/errorHandler";
 const authActions = {
     register: (formData, history, prePath, items) => async(dispatch) => {
         try {
@@ -78,11 +78,11 @@ const authActions = {
     },
     getProfile: () => async(dispatch) => {
         try {
-            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: true})
+            
             const { data } = await api.getUserProfile();
             dispatch({type: ACTION.USER_INIT, payload: data})
         } catch (error) {
-            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: false})
+            dispatch({ type: ACTION.USER_PROFILE_LOADING, payload: false})
         }
     },
     updateProfile: (userId, formData) => async(dispatch) => {

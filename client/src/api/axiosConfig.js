@@ -1,16 +1,13 @@
 import axios from "axios";
 import {store }from "../index";
-import { ACTION } from "../constants";
+import { EVENT } from "../constants";
+import eventBus from "../common/eventBus";
 
 const refreshToken =  () => {
     return  API.get("/auth/token").then((res) => { 
         console.log(res.data.message);
-    }).catch(err => {
-       if(err?.response?.data?.role === "admin" || err?.response?.data?.role === "editor" ) {
-            store.dispatch({ type: ACTION.ADMIN_LOGOUT})
-        } else {
-            store.dispatch({ type: ACTION.USER_LOGOUT})
-        }      
+    }).catch(err => {  
+        
     })  
 }
 let baseURL = "";
@@ -38,10 +35,16 @@ API.interceptors.response.use((response) => {
         await refreshToken();
        return API(originalReq)
     }  else {
-        if( message === "No token provided") {
-            store.dispatch({ type: ACTION.ADMIN_LOGOUT});
-            store.dispatch({ type: ACTION.USER_LOGOUT});
-            store.dispatch({ type: ACTION.CLEAR_ORDER})
+        if(message === "Invalid token") {
+            const {userAuth, adminAuth} = store.getState();
+            if(adminAuth.admin?.id) {
+                eventBus.dispatch(EVENT.ADMIN_LOGOUT)
+ 
+            }
+            if(userAuth.user?.id) {
+                eventBus.dispatch(EVENT.USER_LOGOUT)
+ 
+            }
         }   
       return Promise.reject(error);
        

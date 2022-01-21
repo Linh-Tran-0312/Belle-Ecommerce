@@ -122,14 +122,8 @@ export default () => {
     const user = useSelector(state => state.userAuth.user);
     
     const shipping = shipCal(subTotal);
-    const [ state, setState ] = useState({...initState, shipping: shipping});
-    
-    //const [ user, setUser ] = useState(JSON.parse(localStorage.getItem('user')));
-
-    useEffect(() => {
-        setState({...state, address: user?.address})
-    },[user])
-
+    const [ state, setState ] = useState({...initState, shipping: shipping,address: user?.address});
+    const [ info, setInfo ] = useState({lname: user?.lname, fname: user?.fname, email: user?.email, phone: user?.phone})
     
     useEffect(() => {
        setState({...state,shipping: shipCal(subTotal) })
@@ -166,28 +160,33 @@ export default () => {
                     <Grid item lg={6} md={6} sm={12}>
                         <Box sx={{ padding: { xs: 2, sm : 3 }}}  border={1} borderColor="grey.500">
                             <h3 variant="h6" className="fontRoSlab">BILLING DETAILS</h3>
-                            <Box my={2} >
+                     <Box my={2} >
                                 <Grid container spacing={2}>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="First Name" value={user.fname}  disabled variant="outlined" fullWidth required />
+                                    <Typography variant="subtitle2" gutterBottom>First name</Typography>                             
+                                        <StyledTextField   value={info.fname}  disabled variant="outlined" fullWidth required />
                                     </Grid>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Last Name" value={user.lname}  disabled  variant="outlined" fullWidth required />
+                                    <Typography variant="subtitle2" gutterBottom>Last name</Typography>                             
+                                        <StyledTextField   value={info.lname}  disabled  variant="outlined" fullWidth required />
                                     </Grid>
                               </Grid>
-                            </Box>
+                            </Box> 
                             <Box my={2}>
                                 <Grid container spacing={2}>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Email" variant="outlined" value={user.email}  disabled  fullWidth required />
+                                    <Typography variant="subtitle2" gutterBottom>Email</Typography>                             
+                                    <StyledTextField  variant="outlined" value={info.phone} disabled  fullWidth required />
                                     </Grid>
                                     <Grid item lg={6} md={4} sm={6} xs={12}>
-                                        <StyledTextField label="Telephone" variant="outlined" value={user.phone} disabled  fullWidth required />
+                                    <Typography variant="subtitle2" gutterBottom>Phone number</Typography>                             
+                                        <StyledTextField  variant="outlined" value={info.phone} disabled  fullWidth required />
                                     </Grid>
                                 </Grid>
-                            </Box>
-                            <Box my={2}>                              
-                                    <StyledTextField label="Address" variant="outlined" onChange={handleChange} value={state.address} name="address" fullWidth required />                                
+                            </Box> 
+                            <Box my={2}> 
+                            <Typography variant="subtitle2" gutterBottom>Address*</Typography>                             
+                                    <StyledTextField variant="outlined" onChange={handleChange} value={state.address} name="address" fullWidth required />                                
                             </Box>
                         
                             <Typography variant="caption">Your note:</Typography>
@@ -230,7 +229,7 @@ export default () => {
                                         </TableRow>
                                         <TableRow>
                                             <StyledTableCell colSpan={4} component="th" align="right" scope="row">Total</StyledTableCell>
-                                            <StyledTableCell align="center">{subTotal?.toLocaleString()}</StyledTableCell>
+                                            <StyledTableCell align="center">{(subTotal + state?.shipping)?.toLocaleString()}</StyledTableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>

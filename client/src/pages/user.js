@@ -68,14 +68,13 @@ export default () => {
     const history = useHistory();
     const location = useLocation();
     const classes = useStyles();
-    const [profile, setProfile] = useState({});
     const user = useSelector(state => state.userAuth.user);
+    const [profile, setProfile] = useState({ lname: user?.lname, fname: user?.fname, email: user?.email, phone: user?.phone, address: user?.address});
     const dispatch = useDispatch();
     useEffect(() => {
-        setProfile(user);
         if (user?.id) {
             dispatch(authActions.getOrdersByUserId(user.id))
-        }
+        } 
     }, [location, user]);
 
     const [value, setValue] = useState(0);
@@ -89,8 +88,8 @@ export default () => {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (profile?.id) {
-            dispatch(authActions.updateProfile(profile?.id, { ...user }));
+        if (user?.id) {
+            dispatch(authActions.updateProfile(user.id, { ...profile }));
         }
     }
     const handleLogout = (e) => {

@@ -2,7 +2,7 @@ import { ACTION, Query, MSG, SnackBar } from "../constants";
 import  api from "../api";
 import handleFilter from "../helper/handleFilter";
 import { enqueueSnackbar } from "./notification";
-import errorHandler from "../helper/errorHandler";
+import errorHandler from "../common/errorHandler";
 const shopActions = {
     getProducts: (filter) => async(dispatch) => {
         try {

@@ -6,7 +6,6 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import authActions from '../actions/auth';
 import "../App.css";
 import BlackButton from "../components/BlackButton";
-import Layout from "../components/Layout";
 import { useQuery } from "../helper/customHook";
 const StyledTextField = withStyles((theme) => ({
     root: {
@@ -51,6 +50,7 @@ export default (props) => {
         } else {
        setIsSignIn(false)
         }
+  
     },[location]);
 
     const handleChange = (e) => {

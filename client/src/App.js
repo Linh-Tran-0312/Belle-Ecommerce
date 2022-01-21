@@ -3,20 +3,21 @@ import Slide from '@material-ui/core/Slide';
 import CloseIcon from '@material-ui/icons/Close';
 import { SnackbarProvider } from 'notistack';
 import React, { Suspense, useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import adminAuthActions from './actions/adminAuth';
 import userAuthActions from "./actions/auth";
 import homeActions from "./actions/home";
 import './App.css';
 import Loader from "./components/Loader";
 import Routes from "./components/Route";
 import { useNotifier } from "./helper/customHook";
-
 const SuspenseWrapper = ({ children }) => {
     useNotifier();
     return <Suspense fallback={<Loader />}>
         {children}
     </Suspense>
 }
+
 const App = () => {
 
     const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const App = () => {
         notistackRef.current.closeSnackbar(key);
     }
 
+
     useEffect(() => {
         dispatch(homeActions.getProductCategories());
         dispatch(homeActions.getProductBrands());
@@ -32,7 +34,9 @@ const App = () => {
         dispatch(homeActions.getLatestBlogs());
         dispatch(homeActions.getBlogCategories());
         dispatch(userAuthActions.getProfile());
+        dispatch(adminAuthActions.getProfile());
     }, [])
+
 
     return (<SnackbarProvider
         anchorOrigin={{

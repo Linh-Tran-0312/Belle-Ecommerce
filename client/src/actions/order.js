@@ -3,7 +3,7 @@ import  api from "../api";
 import handleFilter from "../helper/handleFilter";
 import handleAddItem from "../helper/handleAddItem";
 import { enqueueSnackbar } from "./notification";
-import errorHandler from "../helper/errorHandler";
+import errorHandler from "../common/errorHandler";
 const orderActions = {
     // When user has not logged in
     addItemToCart: (product, { productVariantId, quantity}) => async(dispatch) => {

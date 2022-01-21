@@ -1,7 +1,7 @@
 import api from "../api";
 import { ACTION, Query, MSG, SnackBar } from "../constants";
 import handleFilter from "../helper/handleFilter";
-import errorHandler from "../helper/errorHandler";
+import errorHandler from "../common/errorHandler";
 import { enqueueSnackbar } from "./notification";
 const formUser = (formData) => {
     const body = {

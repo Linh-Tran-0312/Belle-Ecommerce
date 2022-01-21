@@ -1,15 +1,16 @@
+
 import { useSelector } from "react-redux";
-import { Route, Redirect } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import Loader from "../Loader";
-import { isAdminAuthenticated } from "./permissionChecker"
+
 const AdminRoute= ({ component: Component, ...rest}) => {
-/*     const loading = useSelector(state => state.adminAuth.loading);
-    if(loading) return <Loader/> 
-    !isAdminAuthenticated() ? <Redirect to="/admin/login"/> : 
-    */
+    const loading = useSelector(state => state.adminAuth.profileLoading);
+    const admin = useSelector(state => state.adminAuth.admin);
+    if(loading) return <Loader/>
+    if(!admin?.id) return  <Redirect to={{ pathname: "/admin/login", state: {from: rest.path}}}/>
     return (
         <Route {...rest} 
-                render={(props) => <Component {...props} /> } />
+                render={(props) => <Component {...props}/> } />
     )
 }
 

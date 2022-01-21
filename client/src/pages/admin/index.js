@@ -7,7 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import Loader from "../../components/Loader";
 import Typography from '@material-ui/core/Typography';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -15,12 +14,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import adminAuthActions from '../../actions/adminAuth';
 import blogActions from "../../actions/adminBlog";
 import productActions from "../../actions/adminProduct";
+import eventBus from "../../common/eventBus";
 import { Menu } from '../../components/Admin/Menu';
-import { AdminPath } from '../../constants';
+import { AdminPath, EVENT } from '../../constants';
 import { useQuery } from '../../helper/customHook';
 import Blog from "./blog";
 import BlogCategory from './blog_category';
@@ -96,8 +96,8 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-      height: '100vh',
-    overflow: 'auto',  
+    height: '100vh',
+    overflow: 'auto',
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -113,10 +113,10 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
   logo: {
-    [theme.breakpoints.down('sm')] : {
-        height: 25
+    [theme.breakpoints.down('sm')]: {
+      height: 25
     }
-},
+  },
 }));
 
 export default function AdminPage() {
@@ -126,13 +126,11 @@ export default function AdminPage() {
   const history = useHistory();
   const topPage = useRef()
   const [open, setOpen] = useState(true);
-  const [ page, setPage ] = useState(AdminPath.DASHBOARD);
-  const [ title, setTitle] = useState("DASHBOARD");
+  const [page, setPage] = useState(AdminPath.DASHBOARD);
+  const [title, setTitle] = useState("DASHBOARD");
   const query = useQuery();
 
-  const loading =  useSelector(state => state.adminAuth.loading);
   const admin = useSelector(state => state.adminAuth.admin)
- //const [ admin, setAdmin ] = useState(JSON.parse(localStorage.getItem('admin')));
 
   useEffect(() => {
     dispatch(productActions.getProductBrands());
@@ -141,20 +139,23 @@ export default function AdminPage() {
     dispatch(productActions.getProductSizes());
     dispatch(blogActions.getBlogCategories());
 
-  },[])
+    eventBus.on(EVENT.ADMIN_LOGOUT, () => {
+      if (admin?.id) {
+        dispatch(adminAuthActions.logout(history))
+      }
+
+    })
+  }, [])
   useEffect(() => {
 
-      const pathName = query.get("section")
-      if(Object.keys(AdminPath).find(path => AdminPath[path] == pathName))
-      {
-        setPage(pathName);
-        const temp = pathName.replace(/\-/g," ").toUpperCase();
-        setTitle(temp);
-      }
-      topPage?.current?.scrollIntoView();
-      dispatch(adminAuthActions.getProfile())
-    //setAdmin(JSON.parse(localStorage.getItem('admin')));
-  },[location]);
+    const pathName = query.get("section")
+    if (Object.keys(AdminPath).find(path => AdminPath[path] == pathName)) {
+      setPage(pathName);
+      const temp = pathName.replace(/\-/g, " ").toUpperCase();
+      setTitle(temp);
+    }
+    topPage?.current?.scrollIntoView();
+  }, [location]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -162,47 +163,49 @@ export default function AdminPage() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-const handleLogout = (e) => {
-  dispatch(adminAuthActions.logout(history))
-}
- const renderPage = (page) => {
-     switch(page) {
-        case AdminPath.DASHBOARD: 
-        return <Dashboard/>
-        case AdminPath.ORDERS:
-          if(admin.role === "admin") {
-            return <Order/>;
-          } else {
-            return <Product />;
-          }
-        case AdminPath.PRODUCT_LIST:
-            return <Product />
-        case AdminPath.PRODUCT_CATEGORY:
-            return <ProductCategory />;
-        case AdminPath.PRODUCT_BRAND:
-            return <ProductBrand />;
-        case AdminPath.PRODUCT_COLOR:
-            return <ProductColor />;
-        case AdminPath.PRODUCT_SIZE:
-            return <ProductSize />;
-        case AdminPath.BLOG_LIST:
-            return <Blog/>;
-        case AdminPath.BLOG_CATEGORY:
-            return <BlogCategory />;
-        case AdminPath.CUSTOMERS:
-          return <Customer />;
-        case AdminPath.REPORTS:
-          if(admin.role === "admin") {
-            return <Report />;
-          } else {
-            return <Product />;
-          }
-        default:
-          return <Dashboard/>
+  const handleLogout = (e) => {
+    dispatch(adminAuthActions.logout(history))
+  }
+
+
+
+  const renderPage = (page) => {
+    switch (page) {
+      case AdminPath.DASHBOARD:
+        return <Dashboard />
+      case AdminPath.ORDERS:
+        if (admin.role === "admin") {
+          return <Order />;
+        } else {
+          return <Product />;
+        }
+      case AdminPath.PRODUCT_LIST:
+        return <Product />
+      case AdminPath.PRODUCT_CATEGORY:
+        return <ProductCategory />;
+      case AdminPath.PRODUCT_BRAND:
+        return <ProductBrand />;
+      case AdminPath.PRODUCT_COLOR:
+        return <ProductColor />;
+      case AdminPath.PRODUCT_SIZE:
+        return <ProductSize />;
+      case AdminPath.BLOG_LIST:
+        return <Blog />;
+      case AdminPath.BLOG_CATEGORY:
+        return <BlogCategory />;
+      case AdminPath.CUSTOMERS:
+        return <Customer />;
+      case AdminPath.REPORTS:
+        if (admin.role === "admin") {
+          return <Report />;
+        } else {
+          return <Product />;
+        }
+      default:
+        return <Dashboard />
     }
- }
-  if(loading) return <Loader />
- if(!admin?.id) return <Redirect to="/admin/login" />
+  }
+
   return (
     <div className={classes.root} >
       <CssBaseline />
@@ -223,8 +226,8 @@ const handleLogout = (e) => {
           <Typography>
             Xin Chao {admin.fname}
           </Typography>
-          <IconButton color="inherit" onClick={handleLogout}>       
-              <ExitToAppIcon />
+          <IconButton color="inherit" onClick={handleLogout}>
+            <ExitToAppIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -236,28 +239,28 @@ const handleLogout = (e) => {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-        <img src={window.location.origin + '/logo.svg'} alt="logo" className={classes.logo} />
+          <img src={window.location.origin + '/logo.svg'} alt="logo" className={classes.logo} />
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
         <Divider />
         <List>
-        <Menu page={page} role={admin.role}/>    
+          <Menu page={page} role={admin.role} />
         </List>
         <Divider />
-       
+
       </Drawer>
       <main className={classes.content}>
-      <div className={classes.appBarSpacer} ref={topPage}/>
-      <Container maxWidth="lg" className={classes.container}>
-        <Box component={Paper} p={2} >
-          {
-          renderPage(page)
-          }
-        </Box>     
-     </Container>
-     </main>
+        <div className={classes.appBarSpacer} ref={topPage} />
+        <Container maxWidth="lg" className={classes.container}>
+          <Box component={Paper} p={2} >
+            {
+              renderPage(page)
+            }
+          </Box>
+        </Container>
+      </main>
     </div>
   );
 }

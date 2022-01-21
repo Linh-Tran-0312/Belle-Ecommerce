@@ -73,17 +73,60 @@ const Item = ({item}) => {
         </Box>
     )
 }
-
-export default function CartPopover() {
-
+const ItemList = () => {
+    const classes = useStyle();
     const subTotal = useSelector(state => state.order).subTotal;
     const items = useSelector(state => state.order).items;
+
+    return (
+        <Box>
+        <Box>
+            {
+                items.length > 0 ? (
+                    items.map((item, index) => <Item key={index} item={item}/>)
+                ) : (
+                    <Typography variant="body2">Your cart is empty now</Typography>
+                )
+            }
+        </Box>
+        <hr />
+        <Grid container direction="row" justifyContent="space-between">
+            <Grid item xs={6}>
+                <Typography variant="body2">CART SUBTOTAL:</Typography>
+            </Grid>
+            <Grid item xs={6}>
+                <Box textAlign="right">
+                    <Typography variant="body1">{subTotal.toLocaleString()} VND</Typography>
+                </Box>
+            </Grid>
+        </Grid>
+        <hr />
+        <Grid container direction="row" justifyContent="center" spacing={1}>
+            <Grid item xs={6} container direction="row" justifyContent="center" >
+               
+                <BlackButton width={'100%'}> <Link to="/cart"className={classes.link}><Typography variant="caption" color="inherit">view cart</Typography></Link></BlackButton>
+                
+
+            </Grid>
+            <Grid item xs={6} container direction="row" justifyContent="center">
+                <BlackButton width={'100%'}><Link to="/checkout"className={classes.link}><Typography variant="caption" color="inherit">check out</Typography></Link></BlackButton>
+            </Grid>
+        </Grid>
+    </Box>
+    )
+}
+export default function CartPopover() {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.userAuth.user)
-  
+    const items = useSelector(state => state.order).items;
     const classes = useStyle();
     const [anchorEl, setAnchorEl] = useState(null);
 
+        const user = useSelector(state => state.userAuth.user)
+    useEffect(() => {
+        if(user?.id) {
+            dispatch(orderActions.getCurrentOrder(user.id));
+        }
+    },[user])
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -91,11 +134,7 @@ export default function CartPopover() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    useEffect(() => {
-        if(user?.id) {
-            dispatch(orderActions.getCurrentOrder(user.id));
-        }
-    },[])
+
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
@@ -128,40 +167,7 @@ export default function CartPopover() {
                 classes={{ paper: classes.cart }}
 
             >
-                <Box>
-                    <Box>
-                        {
-                            items.length > 0 ? (
-                                items.map((item, index) => <Item key={index} item={item}/>)
-                            ) : (
-                                <Typography variant="body2">Your cart is empty now</Typography>
-                            )
-                        }
-                    </Box>
-                    <hr />
-                    <Grid container direction="row" justifyContent="space-between">
-                        <Grid item xs={6}>
-                            <Typography variant="body2">CART SUBTOTAL:</Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box textAlign="right">
-                                <Typography variant="body1">{subTotal.toLocaleString()} VND</Typography>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    <hr />
-                    <Grid container direction="row" justifyContent="center" spacing={1}>
-                        <Grid item xs={6} container direction="row" justifyContent="center" >
-                           
-                            <BlackButton width={'100%'}> <Link to="/cart"className={classes.link}><Typography variant="caption" color="inherit">view cart</Typography></Link></BlackButton>
-                            
-
-                        </Grid>
-                        <Grid item xs={6} container direction="row" justifyContent="center">
-                            <BlackButton width={'100%'}><Link to="/checkout"className={classes.link}><Typography variant="caption" color="inherit">check out</Typography></Link></BlackButton>
-                        </Grid>
-                    </Grid>
-                </Box>
+             <ItemList />
             </Popover>
         </div>
     );
