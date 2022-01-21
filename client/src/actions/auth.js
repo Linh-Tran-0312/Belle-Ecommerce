@@ -87,12 +87,13 @@ const authActions = {
     },
     updateProfile: (userId, formData) => async(dispatch) => {
         try {
-            dispatch({ type: ACTION.USER_PROFILE_LOADING})
+            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: true})
             const { fname, lname, email, address, phone } = formData
             const { data } = await api.updateUser(userId, { fname, lname, email, address, phone });
             dispatch({ type: ACTION.UPDATE_PROFILE, payload: data});
-            dispatch(enqueueSnackbar(MSG.U_PROFILE, SnackBar.SUCCESS))
+            dispatch(enqueueSnackbar(MSG.U_PROFILE, SnackBar.DEFAULT))
         } catch (error) {
+            dispatch({ type: ACTION.USER_AUTH_LOADING, payload: false})
             errorHandler(error,dispatch)
         } 
     },

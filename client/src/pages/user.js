@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography, CircularProgress } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,6 +17,7 @@ import authActions from '../actions/auth';
 import "../App.css";
 import OrderDetail from "../components/Admin/OrderDetailModal";
 import OrderStatus from '../components/OrderStatus';
+import BlackButton from '../components/BlackButton';
 import { displayMonDDYYYY } from "../helper/handleTime";
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -69,14 +70,17 @@ export default () => {
     const location = useLocation();
     const classes = useStyles();
     const user = useSelector(state => state.userAuth.user);
-    const [profile, setProfile] = useState({ lname: user?.lname, fname: user?.fname, email: user?.email, phone: user?.phone, address: user?.address});
+    const loading = useSelector(state => state.userAuth.loading);
+    const [profile, setProfile] = useState();
     const dispatch = useDispatch();
     useEffect(() => {
         if (user?.id) {
             dispatch(authActions.getOrdersByUserId(user.id))
         } 
     }, [location, user]);
-
+    useEffect(() => {
+        setProfile({ lname: user?.lname, fname: user?.fname, email: user?.email, phone: user?.phone, address: user?.address})
+    },[])
     const [value, setValue] = useState(0);
 
     const handleChangeTab = (event, newValue) => {
@@ -84,7 +88,7 @@ export default () => {
     };
 
     const handleChange = (e) => {
-        setProfile({ ...user, [e.target.name]: e.target.value })
+        setProfile({ ...profile, [e.target.name]: e.target.value })
     }
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -148,10 +152,10 @@ export default () => {
                                 </Grid>
                                 <Grid item container spacing={2} >
                                     <Grid item xs={6}>
-                                        <Button fullWidth variant="contained" color="primary" type="submit" startIcon={<SaveIcon />} >Save</Button>
+                                        <BlackButton  width="100%" type="submit" >{ loading ? <CircularProgress style={{color: "white"}} size={25}/> : "SAVE"}</BlackButton>
                                     </Grid>
                                     <Grid item xs={6}>
-                                        <Button fullWidth variant="contained" color="default" onClick={handleLogout} startIcon={<ExitToAppIcon />} >Log out</Button>
+                                        <Button fullWidth variant="contained" color="default" onClick={handleLogout} startIcon={<ExitToAppIcon />} style={{ borderRadius: 0 }}>Log out</Button>
                                     </Grid>
                                 </Grid>
                             </Grid>

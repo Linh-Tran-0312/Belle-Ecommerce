@@ -725,6 +725,7 @@ const models: TsoaRoute.Models = {
 
 export function RegisterRoutes(app: any) {
         app.get('/auth/user',
+            authenticateMiddleware([{"jwt":["admin","editor","customer"]}]),
             function (request: any, response: any, next: any) {
             const args = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},
@@ -782,6 +783,7 @@ export function RegisterRoutes(app: any) {
             promiseHandler(controller, promise, response, next);
         });
         app.get('/auth/admin',
+            authenticateMiddleware([{"jwt":["admin","editor"]}]),
             function (request: any, response: any, next: any) {
             const args = {
                     req: {"in":"request","name":"req","required":true,"dataType":"object"},

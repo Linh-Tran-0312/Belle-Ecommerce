@@ -1,4 +1,4 @@
-import { Box, Container, TextField, Typography } from '@material-ui/core';
+import { Box, Container, TextField, Typography, CircularProgress, } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,6 +41,7 @@ export default (props) => {
     const dispatch = useDispatch()
     const message = useSelector(state => state.userAuth).error;
     const orderItems = useSelector(state => state.order.items);
+    const loading = useSelector(state => state.userAuth.loading);
     const [ isSignIn, setIsSignIn] = useState(true);
     const [ state, setState ] = useState(initState);
 
@@ -107,7 +108,7 @@ export default (props) => {
                     }
                      <Typography color="error" variant="subtitle2">{message}</Typography>
                     <Box my={3} sx={{ display: 'flex', justifyContent: 'center'}}>
-                        <BlackButton type="submit" >{ isSignIn ? "SIGN IN" : "REGISTER"}</BlackButton>
+                        <BlackButton type="submit" width="100%" >{ loading ? <CircularProgress style={{color: "white"}} size={25}/>  : isSignIn ? "SIGN IN" : "REGISTER"}</BlackButton>
                     </Box>
                     </form>
                     <Box sx={{ display: 'flex', justifyContent: 'center'}}>

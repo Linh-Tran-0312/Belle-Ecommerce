@@ -2357,7 +2357,7 @@
 						}
 					}
 				},
-				"description": "Refresh expired access token",
+				"description": "Refresh expired access token, access token will be expired after 5 minutes, refresh token is 7 days",
 				"tags": [
 					"Authorization"
 				],

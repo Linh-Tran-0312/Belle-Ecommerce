@@ -18,7 +18,6 @@ import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import orderActions from "../actions/order";
 import "../App.css";
 import BlackButton from "../components/BlackButton";
-import Layout from "../components/Layout";
 import SuccessOrderModal from "../components/SuccessOrderModal";
 import shipCal from "../helper/shipCalculator";
 const StyledRadio = withStyles({

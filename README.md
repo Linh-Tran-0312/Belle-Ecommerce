@@ -112,10 +112,11 @@ Verify the deployment by navigating to your server address in your preferred bro
 # Resources
 - [Main template was cloned and customized from Belle Ecommerce template](https://themeforest.net/item/belle-multipurpose-bootstrap-4-html-template/24652217)
 - [Admin panel was used and customized from MUI Admin Dashboard](https://mui.com/getting-started/templates/dashboard/)
-- [Design Document (usecase diagram, database schemma,...](https://drive.google.com/drive/folders/16uBzaj-2AzskFsXk6JPjNgA9m5l_tfud?usp=sharing)
+- [Design Document (usecase diagram, database schemma,...)](https://drive.google.com/drive/folders/16uBzaj-2AzskFsXk6JPjNgA9m5l_tfud?usp=sharing)
 
 # References
 - [Building REST API with Express, TypeScript and Swagger](https://rsbh.dev/blog/rest-api-with-express-typescript)
 - [Using Axios interceptors for refreshing your API token.](https://thedutchlab.com/blog/using-axios-interceptors-for-refreshing-your-api-token)
 - [Better logs for ExpressJS using Winston and Morgan with Typescript](https://dev.to/vassalloandrea/better-logs-for-expressjs-using-winston-and-morgan-with-typescript-516n)
+- [Handle JWT Token expiration with response status](https://www.bezkoder.com/handle-jwt-token-expiration-react/)
  

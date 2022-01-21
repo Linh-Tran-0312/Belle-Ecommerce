@@ -105,7 +105,7 @@ export class AuthController extends Controller {
     return result.profile
   }
   /**
-   * Refresh expired access token
+   * Refresh expired access token, access token will be expired after 5 minutes, refresh token is 7 days
    */
   @Get("/token")
   public async RefreshToken(@Request() req: express.Request): Promise<IRefreshMessage> {

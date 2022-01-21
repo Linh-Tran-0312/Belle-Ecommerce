@@ -106,7 +106,7 @@ export class AuthService extends UserService{
 
             const user = await this.repository.findOne({ where: { id: decoded?.id } });
             if (refreshToken === user?.token) {
-                token = signAccessToken({ id: decoded?.id, role: user?.role! }, 60);
+                token = signAccessToken({ id: decoded?.id, role: user?.role! }, 300);
             } else {
                 throw new TokenError(OperationalErrorMessage.INVALID_TOKEN, decoded?.role);
             }
