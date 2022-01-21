@@ -227,8 +227,8 @@ export class OrderService extends BaseService<Order, IOrderRepository> implement
                 })
             }
 
-            await this.repository.create(currentOrder);
-            return this.getOrderById(id);
+            currentOrder = await this.repository.create(currentOrder);
+            return this.getOrderById(currentOrder.id);
 
         } catch (error) {
             throw error;

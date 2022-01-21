@@ -24,7 +24,7 @@ const getErrorBody = (err: unknown) => {
         } 
         return { message: OperationalErrorMessage.QUERY_ERROR, status: HttpCode.INTERNAL_SERVER_ERROR }
     }
-    if (err instanceof TokenError) return { message: err.message, role: err.role, status: HttpCode.BAD_REQUEST }
+    if (err instanceof TokenError) return { message: err.message, role: err.role, status: HttpCode.UNAUTHORIZED }
     return { message: OperationalErrorMessage.UNKNOWN_ERROR, status: HttpCode.INTERNAL_SERVER_ERROR, }
 }
 

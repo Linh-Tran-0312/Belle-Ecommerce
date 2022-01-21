@@ -78,7 +78,7 @@ export class AuthService extends UserService{
         if (!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);
         const match = await bcrypt.compare(password, existingUser.password);
         if (!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-        const { token, refreshToken } = await this.generateToken(existingUser.id, existingUser.role, 300, "7d");
+        const { token, refreshToken } = await this.generateToken(existingUser.id, existingUser.role,   300, "7d");
         await this.repository.create({ ...existingUser, token: refreshToken });
         const result = { accessToken: token, refreshToken, profile: UserMapper.toUserAuth(existingUser) }
         return result;
@@ -89,7 +89,7 @@ export class AuthService extends UserService{
         if (!existingUser) throw new OperationalError(OperationalErrorMessage.EMAIL_NOTFOUND, HttpCode.BAD_REQUEST);
         const match = await bcrypt.compare(password, existingUser.password);
         if (!match) throw new OperationalError(OperationalErrorMessage.PASSWORD_WRONG, HttpCode.UNAUTHORIZED);
-        const { token, refreshToken } = await this.generateToken(existingUser.id, existingUser.role, 300, "7d");
+        const { token, refreshToken } = await this.generateToken(existingUser.id, existingUser.role,  300, "7d");
         await this.repository.create({ ...existingUser, token: refreshToken });
         const result = { accessToken: token, refreshToken, profile: UserMapper.toUserAuth(existingUser) }
         return result;
@@ -97,7 +97,7 @@ export class AuthService extends UserService{
     public async refreshAccessToken(data: IRefreshToken): Promise<IAccessToken> {
         const { refreshToken } = data;
         let token = "";
-        if (!refreshToken) throw new TokenError(OperationalErrorMessage.NO_TOKEN)
+        if (!refreshToken) throw new TokenError(OperationalErrorMessage.INVALID_TOKEN)
         await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async (err, decoded) => {
             if (err) {
                 const payload: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, { ignoreExpiration: true });

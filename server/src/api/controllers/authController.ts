@@ -1,10 +1,18 @@
 import express from "express";
-import { Body, Controller, Get, Post, Request, Route, Tags,Res, TsoaResponse } from "tsoa";
+import { Body, Controller, Get, Post, Request, Route, Tags,Security } from "tsoa";
 import { IUserAuth } from "../mappers";
 import { AuthService, IRefreshMessage, IAuthService } from "../services";
 import { ValidateLoginModel, ValidateUserCreateModel } from "../validations";
 import { Service } from "typedi";
 import { UserRole } from "../models";
+
+const cookieOptions = {
+  httpOnly: true,
+  maxAge:3600000*5,
+  secure:true,
+  sameSite:'none',
+}
+
 
 @Service()
 @Route("auth")
@@ -23,6 +31,7 @@ export class AuthController extends Controller {
    /**
    * Allow user get their profile if token in cookie is still valid
    */
+  @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR, UserRole.CUSTOMER])
   @Get("/user")
   public async getUserProfile(@Request() req: express.Request): Promise<IUserAuth|null> {
         const token = req.cookies.token;
@@ -38,15 +47,11 @@ export class AuthController extends Controller {
     this.setCookies({
       token: {
         value: result.accessToken,
-        options: {
-          httpOnly: true
-        }
+        options: {...cookieOptions}
       },
       refreshToken: {
         value: result.refreshToken,
-        options: {
-          httpOnly: true
-        }
+        options:  {...cookieOptions}
       }
     });
     return result.profile
@@ -60,15 +65,11 @@ export class AuthController extends Controller {
     this.setCookies({
       token: {
         value: result.accessToken,
-        options: {
-          httpOnly: true
-        }
+        options:  {...cookieOptions}
       },
       refreshToken: {
         value: result.refreshToken,
-        options: {
-          httpOnly: true
-        }
+        options: {...cookieOptions}
       }
     });
     return result.profile
@@ -77,6 +78,7 @@ export class AuthController extends Controller {
   /**
    * Allow admin and editor get their profile if token in cookie is still valid
    */
+  @Security("jwt", [UserRole.ADMIN, UserRole.EDITOR])
   @Get("/admin")
   public async getAdminProfile(@Request() req: express.Request ): Promise<IUserAuth|null> {
         const token = req.cookies.token;
@@ -93,15 +95,11 @@ export class AuthController extends Controller {
     this.setCookies({
       token: {
         value: result.accessToken,
-        options: {
-          httpOnly: true
-        }
+        options:  {...cookieOptions}
       },
       refreshToken: {
         value: result.refreshToken,
-        options: {
-          httpOnly: true
-        }
+        options:  {...cookieOptions}
       }
     });
     return result.profile
@@ -116,9 +114,7 @@ export class AuthController extends Controller {
     this.setCookies({
       token: {
         value: result.token,
-        options: {
-          httpOnly: true
-        }
+        options:  {...cookieOptions}
       }
     })
     return { message: "Refresh access token successfully" }
@@ -131,15 +127,11 @@ export class AuthController extends Controller {
      this.setCookies({
        token: {
          value: "",
-         options: {
-           httpOnly: true
-         }
+         options:  {...cookieOptions}
        },
        refreshToken: {
          value: "",
-         options: {
-           httpOnly: true
-         }
+         options:  {...cookieOptions}
        }
      });
       

@@ -12,7 +12,7 @@ export function expressAuthentication(request: express.Request, securityName: st
       return new Promise((resolve, reject) => {
           let token = request?.cookies?.token;
           if (!token) {
-              reject(new OperationalError(OperationalErrorMessage.NO_TOKEN, HttpCode.UNAUTHORIZED));
+              reject(new OperationalError(OperationalErrorMessage.INVALID_TOKEN, HttpCode.UNAUTHORIZED));
           }
           jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, function (err: any, decoded: any) {
               if (err) {
