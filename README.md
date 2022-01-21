@@ -109,4 +109,11 @@ Verify the deployment by navigating to your server address in your preferred bro
 127.0.0.1:8000
 ```
 
+# Resources
+- [Main template was cloned and modified from Belle Ecommerce template](https://themeforest.net/item/belle-multipurpose-bootstrap-4-html-template/24652217)
+- [Admin panel was used and modifie from MUI Admin Dashboard](https://mui.com/getting-started/templates/dashboard/)
+
+# References
+- [Building REST API with Express, TypeScript and Swagger](https://rsbh.dev/blog/rest-api-with-express-typescript)
+- [Using Axios interceptors for refreshing your API token.](https://thedutchlab.com/blog/using-axios-interceptors-for-refreshing-your-api-token)
  
