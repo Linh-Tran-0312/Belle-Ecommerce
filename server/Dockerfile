@@ -12,4 +12,4 @@ RUN npm install --production
 COPY --from=builder ./app/public ./public
 COPY --from=builder ./app/build ./build
 EXPOSE 8000
-CMD ["node", "start"]
+CMD ["npm", "start"]
