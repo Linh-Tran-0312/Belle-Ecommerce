@@ -7,26 +7,26 @@ Beller-ecommerce is an full-stack wep application built using PERN (Postgres, Ex
 # Features!
 
 ##### Browsing
-  - Blog page: search blogs by titles and topics, read blog content, leave comments on blogs (incomlete)
-  - Product page: browse products by their categories, brands and price ranges, leave comments on products (incomplete), review products after purchase.
-  - Cart functinality: enable users to add, update quantity and delete items from cart, check out and place order.
+  - Blog: search for blog posts by titles and topics, view and comment (incomplete) on blog content.
+  - Product: allow customers to browse products by their name, category, brand and price range, comments on products (incomplete), review products after purchase.
+  - Shopping cart feature: enable users to add, update quantity and delete items from cart, check out and place order.
 ##### Administration (admin role and editor role)
-- Blog (editor role): create, update and delete blog categories and blogs.
+- Blog (editor role): create, update and delete blog topics and blog posts.
 - Product (editor role): create, update and delete product, product properties (category, brand, size, color) and product variants.
-- User (admin role): create, update user profiles and search users by their info (name, email, phone, address).
-- Order (admin role): search orders by customers' name, phone, address, order ID, order status,...
-- Report (admin role): present the overview of current month (number of new users, new orders and sales), release (daily, monthly) sales and order statistic and list of top-selling products.
+- User (admin role): create, update user profiles and search for users by their info (name, email, phone, address).
+- Order (admin role): search orders by customers' name, phone, address, order ID, order status,... and update order status.
+- Report (admin role): present the overview of current month (number of new users, new orders and sales), release (daily, monthly) sales and order statistics and list of top-selling products.
 
  
 # Technology
 
 #### Backend
-- Postgres - database
+- Postgres - SQL database for storing data
 - TypeORM - ORM used to create and query data from database
  - Express - build web server (used with Typescript)
  - TSOA - build OpenAPI-compliant REST APIs using TypeScript and Node
  - JsonWebToken - generate and verify access token and refress token
- - Morgan and Winston - info and error logging during both development and production environment
+ - Morgan and Winston - info and error logging for both development and production environment
 
 #### Frontend
 - React and Material UI (v4) - building user interface
@@ -89,25 +89,7 @@ HEROKU_POSTGRES_DB=<postgres db name in heroku>
 ### Docker
 Belle-Ecommerce is also containerized with Docker and delivered in Docker Hub.
 
-By default, the Docker will expose port 8080, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
-
-```sh
-cd dillinger
-docker build -t joemccann/dillinger:${package.json.version} .
-```
-This will create the dillinger image and pull in the necessary dependencies. Be sure to swap out `${package.json.version}` with the actual version of Dillinger.
-
-Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 8000 of the host to port 8080 of the Docker (or whatever port was exposed in the Dockerfile):
-
-```sh
-docker run -d -p 8000:8080 --restart="always" <youruser>/dillinger:${package.json.version}
-```
-
-Verify the deployment by navigating to your server address in your preferred browser.
-
-```sh
-127.0.0.1:8000
-```
+(Work in progress...)
 
 # Resources
 - [Main template was cloned and customized from Belle Ecommerce template](https://themeforest.net/item/belle-multipurpose-bootstrap-4-html-template/24652217)
